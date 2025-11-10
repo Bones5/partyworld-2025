@@ -1,0 +1,91 @@
+// =============================================================================
+// HOME PAGE CUSTOM STYLES
+// =============================================================================
+
+.home {
+    // Custom home page container
+    &-hero {
+        position: relative;
+        margin-bottom: 2rem;
+        
+        &__content {
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        &__title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        &__subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+    }
+    
+    // Featured products section
+    &-featured {
+        padding: 2rem 0;
+        
+        &__title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .productGrid {
+            margin-bottom: 2rem;
+        }
+    }
+    
+    // New products section
+    &-new {
+        padding: 2rem 0;
+        background-color: #f9f9f9;
+        
+        &__title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+    }
+    
+    // Top sellers section
+    &-top {
+        padding: 2rem 0;
+        
+        &__title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+    }
+    
+    // Custom sections
+    &-custom {
+        padding: 2rem 0;
+        
+        &__section {
+            margin-bottom: 2rem;
+        }
+    }
+}
+
+// Enhanced carousel for home page
+.heroCarousel {
+    .heroCarousel-slide {
+        transition: transform 0.3s ease;
+    }
+}
+
+// Card hover effects
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    &--hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+}

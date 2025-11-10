@@ -19,20 +19,28 @@ product:
         {{> components/common/alert/alert-info message}}
     {{/each}}
 
-    <div>
-        {{> components/products/product-view}}
+    <div class="product-custom">
+        <div class="product-custom__layout">
+            {{> components/products/product-view}}
+        </div>
 
         {{{region name="product_below_content"}}}
 
         {{#if product.videos.list.length}}
-            {{> components/products/videos product.videos}}
+            <div class="product-custom__videos">
+                {{> components/products/videos product.videos}}
+            </div>
         {{/if}}
 
         {{#all settings.show_product_reviews theme_settings.show_product_reviews (if theme_settings.show_product_details_tabs '!==' true)}}
-            {{> components/products/reviews reviews=product.reviews product=product urls=urls}}
+            <div class="product-custom__reviews">
+                {{> components/products/reviews reviews=product.reviews product=product urls=urls}}
+            </div>
         {{/all}}
 
-        {{> components/products/tabs}}
+        <div class="product-custom__tabs">
+            {{> components/products/tabs}}
+        </div>
     </div>
 
     {{> components/products/schema}}

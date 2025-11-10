@@ -25,19 +25,28 @@ blog:
         {{> components/common/alert/alert-info message}}
     {{/each}}
 
-<div class="main full">
+<div class="main full home">
     {{#if products.featured}}
-        {{> components/products/featured products=products.featured columns=theme_settings.homepage_featured_products_column_count}}
+        <section class="home-featured">
+            <h2 class="home-featured__title">Featured Products</h2>
+            {{> components/products/featured products=products.featured columns=theme_settings.homepage_featured_products_column_count}}
+        </section>
     {{/if}}
     {{{region name="home_below_featured_products"}}}
 
     {{#if products.top_sellers}}
-        {{> components/products/top products=products.top_sellers columns=theme_settings.homepage_top_products_column_count}}
+        <section class="home-top">
+            <h2 class="home-top__title">Top Sellers</h2>
+            {{> components/products/top products=products.top_sellers columns=theme_settings.homepage_top_products_column_count}}
+        </section>
     {{/if}}
     {{{region name="home_below_top_products"}}}
 
     {{#if products.new}}
-        {{> components/products/new products=products.new columns=theme_settings.homepage_new_products_column_count}}
+        <section class="home-new">
+            <h2 class="home-new__title">New Arrivals</h2>
+            {{> components/products/new products=products.new columns=theme_settings.homepage_new_products_column_count}}
+        </section>
     {{/if}}
     {{{region name="home_below_new_products"}}}
 </div>
