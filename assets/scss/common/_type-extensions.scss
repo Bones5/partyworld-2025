@@ -1,0 +1,27 @@
+// =============================================================================
+// TYPE EXTENSIONS (Custom utilities)
+// =============================================================================
+// Lightweight utility classes for newly introduced display / hero / nav sizes.
+// Keep usage minimal and prefer semantic selectors in components where possible.
+// -----------------------------------------------------------------------------
+
+.u-displayXL {
+    font-family: $fontFamily-headings;
+    font-size: $fontSize-displayXL;
+    line-height: $lineHeight-displayXL;
+    font-weight: $fontWeight-bold;
+}
+
+.u-heroLarge {
+    font-family: $fontFamily-headings;
+    font-size: $fontSize-heroLarge;
+    line-height: $lineHeight-heroLarge;
+    font-weight: $fontWeight-bold;
+}
+
+.u-navText {
+    font-family: $fontFamily-headings;
+    font-size: $fontSize-nav;
+    line-height: $lineHeight-nav;
+    font-weight: $fontWeight-semibold;
+}

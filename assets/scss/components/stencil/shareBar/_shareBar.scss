@@ -1,0 +1,36 @@
+// =============================================================================
+// SHARE BAR (CSS)
+// =============================================================================
+
+.c-shareBar {
+    display: flex;
+    gap: $spacing-third;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: $spacing-single 0;
+}
+
+.c-shareBar__item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sixth;
+    padding: $spacing-sixth $spacing-third;
+    background: $color-white;
+    border: 1px solid stencilColor("input-border-color");
+    color: $color-textBase;
+    text-decoration: none;
+    font-size: $fontSize-tiny;
+    border-radius: 4px;
+}
+
+.c-shareBar__item:hover,
+.c-shareBar__item:focus {
+    background: $color-primaryLight;
+    color: $color-white;
+}
+
+.c-shareBar__icon {
+    width: 1em;
+    height: 1em;
+}

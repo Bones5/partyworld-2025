@@ -35,6 +35,8 @@ $fontFamily-hero:               stencilFontFamily("headings-font"), Arial, Helve
 $fontSize-root:                 stencilNumber("fontSize-root"); // 1
 $fontSize-base:                 1rem; // 2
 $fontSize-hero:                 50px;
+$fontSize-heroLarge:            57px; // New: larger hero heading size
+$fontSize-displayXL:            114px; // New: extra large display size for marketing headlines
 $fontSize-largest:              stencilNumber("fontSize-h1");
 $fontSize-larger:               stencilNumber("fontSize-h2");
 $fontSize-large:                stencilNumber("fontSize-h3");
@@ -52,6 +54,8 @@ $fontSize-logo-small:           $fontSize-logo-medium - 0.25vw;
 
 $lineHeight-base:               1.5; // 3
 $lineHeight-hero:               50px;
+$lineHeight-heroLarge:          60px; // New line-height for larger hero
+$lineHeight-displayXL:          120px; // New line-height supporting displayXL
 $lineHeight-largest:            37px;
 $lineHeight-larger:             32px;
 $lineHeight-large:              29px;
@@ -82,3 +86,7 @@ $letterSpacing-large:           0.25px;
 $letterSpacing-small:           0.25px;
 $letterSpacing-smaller:         0.25px;
 $letterSpacing-smallest:        0.25px;
+
+// Navigation specific sizing (desktop main nav items)
+$fontSize-nav:                  24px;
+$lineHeight-nav:                24px;
