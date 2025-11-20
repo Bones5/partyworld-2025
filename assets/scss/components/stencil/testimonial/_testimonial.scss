@@ -1,0 +1,30 @@
+// =============================================================================
+// TESTIMONIAL (CSS)
+// =============================================================================
+
+.c-testimonial {
+    background: $color-white;
+    border: 1px solid stencilColor("input-border-color");
+    padding: $spacing-single;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.c-testimonial__stars {
+    display: flex;
+    gap: $spacing-sixth;
+    margin-bottom: $spacing-third;
+    line-height: 1;
+}
+
+.c-testimonial__body {
+    font-size: $fontSize-small;
+    line-height: $lineHeight-small;
+    margin-bottom: $spacing-third;
+}
+
+.c-testimonial__author {
+    font-size: $fontSize-small;
+    font-weight: $fontWeight-semibold;
+}

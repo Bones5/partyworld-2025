@@ -1,0 +1,21 @@
+{{!-- Share Bar component partial --}}
+<div class="c-shareBar" role="group" aria-label="Share or save this product">
+  <a class="c-shareBar__item" href="{{shareUrl}}" target="_blank" rel="noopener" aria-label="Share on social">
+    <svg class="c-shareBar__icon" aria-hidden="true" focusable="false">
+      <use xlink:href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-share"></use>
+    </svg>
+    Share
+  </a>
+  <button class="c-shareBar__item" type="button" data-action="add-to-wishlist" aria-label="Add to wishlist">
+    <svg class="c-shareBar__icon" aria-hidden="true" focusable="false">
+      <use xlink:href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-heart"></use>
+    </svg>
+    Wishlist
+  </button>
+  <button class="c-shareBar__item" type="button" data-action="add-to-cart" aria-label="Add to cart">
+    <svg class="c-shareBar__icon" aria-hidden="true" focusable="false">
+      <use xlink:href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-cart"></use>
+    </svg>
+    Add To Cart
+  </button>
+</div>

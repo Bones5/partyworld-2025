@@ -1,0 +1,45 @@
+// =============================================================================
+// CATEGORY CARD (CSS)
+// =============================================================================
+
+.c-categoryCard {
+    display: flex;
+    flex-direction: column;
+    background: $color-white;
+    border: 1px solid stencilColor("input-border-color");
+    text-align: left;
+    position: relative;
+}
+
+.c-categoryCard__media {
+    width: 100%;
+    aspect-ratio: 4 / 2.5; // approximate Figma ratio
+    overflow: hidden;
+    display: block;
+}
+
+.c-categoryCard__body {
+    padding: $spacing-single;
+}
+
+.c-categoryCard__title {
+    font-size: $fontSize-small;
+    line-height: $lineHeight-small;
+    font-weight: $fontWeight-semibold;
+    margin: 0 0 $spacing-third;
+}
+
+.c-categoryCard__cta {
+    display: inline-block;
+    background: $color-primary;
+    color: $color-white;
+    padding: $spacing-sixth $spacing-third;
+    text-decoration: none;
+    font-size: $fontSize-tiny;
+    border-radius: 4px;
+}
+
+.c-categoryCard__cta:hover,
+.c-categoryCard__cta:focus {
+    background: $color-primaryLight;
+}
