@@ -32,6 +32,7 @@
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/preset-env": "^7.12.17",
     "@bigcommerce/citadel": "^2.15.1",
+    "@playwright/test": "^1.56.1",
     "@stylistic/stylelint-plugin": "^3.1.2",
     "babel-jest": "^30.0.5",
     "babel-loader": "^8.2.2",
@@ -73,6 +74,10 @@
     "lighthouse": "npx lighthouse --config-path=lighthouse-config.js --quiet --output html --chrome-flags=\"--headless\" $URL",
     "test": "npx jest",
     "test:watch": "npx jest --watch",
+    "test:acceptance": "npx playwright test",
+    "test:acceptance:headed": "npx playwright test --headed",
+    "test:acceptance:update": "npx playwright test --update-snapshots",
+    "test:acceptance:report": "npx playwright show-report tests/acceptance/results/html-report",
     "stylelint": "npx stylelint **/*.scss",
     "stylelint:fix": "npx stylelint --fix **/*.scss"
   }

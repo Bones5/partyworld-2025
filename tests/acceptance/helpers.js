@@ -1,0 +1,138 @@
+/**
+ * Common test utilities and helpers for acceptance tests
+ */
+
+/**
+ * Wait for all images to load on the page
+ * @param {import('@playwright/test').Page} page 
+ */
+async function waitForImages(page) {
+  await page.evaluate(() => {
+    const images = Array.from(document.querySelectorAll('img'));
+    return Promise.all(
+      images
+        .filter(img => !img.complete)
+        .map(img => new Promise(resolve => {
+          img.onload = img.onerror = resolve;
+        }))
+    );
+  });
+}
+
+/**
+ * Wait for fonts to load
+ * @param {import('@playwright/test').Page} page 
+ */
+async function waitForFonts(page) {
+  await page.evaluate(() => document.fonts.ready);
+}
+
+/**
+ * Disable animations for more consistent screenshots
+ * @param {import('@playwright/test').Page} page 
+ */
+async function disableAnimations(page) {
+  await page.addStyleTag({
+    content: `
+      *, *::before, *::after {
+        animation-duration: 0s !important;
+        animation-delay: 0s !important;
+        transition-duration: 0s !important;
+        transition-delay: 0s !important;
+      }
+    `
+  });
+}
+
+/**
+ * Wait for page to be fully stable (network idle + images + fonts)
+ * @param {import('@playwright/test').Page} page 
+ */
+async function waitForPageStable(page) {
+  await page.waitForLoadState('networkidle');
+  await waitForImages(page);
+  await waitForFonts(page);
+  // Small buffer for any final rendering
+  await page.waitForTimeout(500);
+}
+
+/**
+ * Hide elements with dynamic content (timestamps, etc.)
+ * @param {import('@playwright/test').Page} page 
+ * @param {string[]} selectors - Array of CSS selectors to hide
+ */
+async function hideDynamicElements(page, selectors) {
+  for (const selector of selectors) {
+    await page.locator(selector).evaluateAll(elements => {
+      elements.forEach(el => {
+        el.style.visibility = 'hidden';
+      });
+    });
+  }
+}
+
+/**
+ * Get common screenshot options with sensible defaults
+ * @param {object} overrides - Override default options
+ * @returns {object} Screenshot options
+ */
+function getScreenshotOptions(overrides = {}) {
+  return {
+    fullPage: false,
+    maxDiffPixels: 100,
+    maxDiffPixelRatio: 0.01,
+    threshold: 0.2,
+    animations: 'disabled',
+    ...overrides,
+  };
+}
+
+/**
+ * Mock API responses for consistent testing
+ * @param {import('@playwright/test').Page} page 
+ * @param {string} url - URL pattern to match
+ * @param {object} response - Mock response data
+ */
+async function mockApiResponse(page, url, response) {
+  await page.route(url, route => {
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(response),
+    });
+  });
+}
+
+/**
+ * Accept cookie consent if present
+ * @param {import('@playwright/test').Page} page 
+ */
+async function acceptCookieConsent(page) {
+  const cookieButton = page.locator('[data-cookie-accept], .cookie-accept, #cookie-accept').first();
+  if (await cookieButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+    await cookieButton.click();
+    await page.waitForTimeout(500);
+  }
+}
+
+/**
+ * Scroll element into view with better visibility
+ * @param {import('@playwright/test').Page} page 
+ * @param {string} selector 
+ */
+async function scrollToElement(page, selector) {
+  await page.locator(selector).scrollIntoViewIfNeeded();
+  await page.waitForTimeout(300); // Wait for scroll to complete
+}
+
+module.exports = {
+  waitForImages,
+  waitForFonts,
+  disableAnimations,
+  waitForPageStable,
+  hideDynamicElements,
+  getScreenshotOptions,
+  mockApiResponse,
+  acceptCookieConsent,
+  scrollToElement,
+};

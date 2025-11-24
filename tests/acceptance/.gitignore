@@ -1,0 +1,18 @@
+# Playwright test results
+results/
+test-results/
+
+# Playwright reports
+html-report/
+playwright-report/
+
+# Failure artifacts
+screenshots/failures/
+
+# Videos and traces
+videos/
+traces/
+
+# OS files
+.DS_Store
+Thumbs.db

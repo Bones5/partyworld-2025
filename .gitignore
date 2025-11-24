@@ -11,3 +11,7 @@ vendor/bundle
 *.js.map
 *.zip
 .idea/
+
+# Playwright
+/playwright-report/
+/test-results/
