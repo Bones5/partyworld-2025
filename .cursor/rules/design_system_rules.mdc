@@ -360,6 +360,21 @@ All existing color tokens (`$color-primary`, `$color-secondary`, etc.) are defin
 
 Spacing rhythm based on `$spacingRhythm = $fontSize-root * $lineHeight-base` (24px at default 16px root) provides the foundation. Compose existing spacing tokens (`$spacing-single`, `$spacing-double`, etc.) for most layouts. Use the Figma-specific tokens (`$spacing-hero-vertical`, `$spacing-container-wide`) only where exact design alignment is required.
 
+#### Color Palette & Mapping (Figma → Stencil)
+This table records each Figma color style imported for Node `114-3848` and its mapping to Theme Editor key and SCSS variable. Add new rows whenever additional Figma color variables are exported.
+
+| Figma Token | Hex | Theme Editor Key | SCSS Variable | Status |
+| Brand | #D30006 | `color-primary` | `$color-primary` | Mapped |
+| Secondary Color | #DCDCDC | `color-secondary` | `$color-secondary` | Mapped |
+
+Guidelines:
+1. If a Figma color does not yet exist in the theme, first add a Theme Editor key in `schema.json` & default value in `config.json`, then declare the SCSS variable via `stencilColor("<key>")` in `_color.scss`.
+2. Never hardcode hex values in component SCSS; always consume the variable (e.g., `$color-secondary`).
+3. When a Figma color is an alias of an existing key (same hex), prefer reusing the existing Theme Editor key rather than introducing a duplicate.
+4. After adding or remapping a color, update this table and include a brief PR note citing any replaced hex values.
+
+Pending Figma colors: Export additional brand accent, success, warning, and error palette tokens; map them following the process above.
+
 ---
 Recent implementations (Completed):
 - ✅ Layout width updated: `$layout-widthMax` now `remCalc(1280px)` (was 1200px) for desktop fidelity.
