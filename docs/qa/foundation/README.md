@@ -16,8 +16,8 @@ This directory contains QA artifacts for foundation token alignment with Partywo
 - `$fontSize-nav: 24px` with `$lineHeight-nav: 24px` - Navigation text size
 
 ### Header Tokens ✅
-- `$header-height-bar: 56px` - Announcement bar height
-- `$header-height-primary: 201px` - Composite logo/search/user zone height
+- `$header-height-bar: remCalc(56px)` - Announcement bar height
+- `$header-height-primary: remCalc(201px)` - Composite logo/search/user zone height
 
 ### Utility Classes ✅
 - `.u-displayXL` - Apply display XL typography styling

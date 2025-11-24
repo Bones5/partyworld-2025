@@ -338,8 +338,8 @@ This section documents all foundation tokens aligned with the Partyworld Figma d
 ### Header Tokens
 | Token Name | Value | Location | Purpose |
 |------------|-------|----------|---------|
-| `$header-height-bar` | `56px` | `settings/layouts/header/_settings.scss` | Announcement bar height from Figma |
-| `$header-height-primary` | `201px` | `settings/layouts/header/_settings.scss` | Composite height of logo/search/user zone |
+| `$header-height-bar` | `remCalc(56px)` | `settings/layouts/header/_settings.scss` | Announcement bar height from Figma |
+| `$header-height-primary` | `remCalc(201px)` | `settings/layouts/header/_settings.scss` | Composite height of logo/search/user zone |
 
 ### Utility Classes
 | Class Name | Properties | Location | Purpose |
@@ -366,7 +366,7 @@ Recent implementations (Completed):
 - ✅ New typography tokens added: `$fontSize-displayXL: 114px`, `$lineHeight-displayXL: 120px`, `$fontSize-heroLarge: 57px`, `$lineHeight-heroLarge: 60px`, `$fontSize-nav: 24px`, `$lineHeight-nav: 24px`.
 - ✅ Utility classes added (`_type-extensions.scss`): `.u-displayXL`, `.u-heroLarge`, `.u-navText`.
 - ✅ Spacing tokens added: `$spacing-hero-vertical: remCalc(73px)`, `$spacing-container-wide: remCalc(80px)`.
-- ✅ Header tokens added: `$header-height-bar: 56px`, `$header-height-primary: 201px`.
+- ✅ Header tokens added: `$header-height-bar: remCalc(56px)`, `$header-height-primary: remCalc(201px)`.
 - ✅ Component scaffolding: Testimonial, Category Card, Share Bar components implemented.
 - ✅ Stylelint validation passed.
 - ✅ Build verification passed.

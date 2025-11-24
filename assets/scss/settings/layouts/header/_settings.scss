@@ -9,7 +9,7 @@ $header-logo-marginVertical:                spacing("half");
 $header-logo-paddingVertical:               $header-logo-marginVertical;
 
 // Figma-specific header tokens (Node 114-3848)
-$header-height-bar:                         56px; // Announcement bar height from Figma
-$header-height-primary:                     201px; // Composite area of logo/search/user zone
+$header-height-bar:                         remCalc(56px); // Announcement bar height from Figma
+$header-height-primary:                     remCalc(201px); // Composite area of logo/search/user zone
 
 $storeName-color:                           stencilColor("storeName-color");
