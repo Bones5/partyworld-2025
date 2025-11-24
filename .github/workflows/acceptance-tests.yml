@@ -12,6 +12,9 @@ jobs:
     name: Run Acceptance Tests with Visual Regression
     runs-on: ubuntu-latest
     
+    permissions:
+      contents: read
+    
     strategy:
       matrix:
         node: [20.x]
