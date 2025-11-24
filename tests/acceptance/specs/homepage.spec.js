@@ -1,4 +1,5 @@
 const { test, expect } = require('@playwright/test');
+const { ANIMATION_DURATION } = require('../constants');
 
 /**
  * Example acceptance test with visual regression
@@ -62,7 +63,7 @@ test.describe('Homepage Interaction Tests', () => {
       await menuToggle.click();
       
       // Wait for menu to animate
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(ANIMATION_DURATION);
       
       // Capture screenshot with menu open
       await expect(page).toHaveScreenshot('homepage-mobile-menu-open.png');
@@ -77,7 +78,7 @@ test.describe('Homepage Interaction Tests', () => {
     const searchToggle = page.locator('[data-search]').first();
     if (await searchToggle.count() > 0) {
       await searchToggle.click();
-      await page.waitForTimeout(300);
+      await page.waitForTimeout(ANIMATION_DURATION);
       
       // Capture screenshot with search visible
       await expect(page).toHaveScreenshot('homepage-search-visible.png');

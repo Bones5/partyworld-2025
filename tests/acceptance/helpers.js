@@ -2,6 +2,16 @@
  * Common test utilities and helpers for acceptance tests
  */
 
+const { 
+  PAGE_STABLE_BUFFER, 
+  ANIMATION_DURATION, 
+  COOKIE_BANNER_TIMEOUT, 
+  SCROLL_COMPLETE,
+  DEFAULT_MAX_DIFF_PIXELS,
+  DEFAULT_MAX_DIFF_RATIO,
+  DEFAULT_THRESHOLD
+} = require('./constants');
+
 /**
  * Wait for all images to load on the page
  * @param {import('@playwright/test').Page} page 
@@ -47,9 +57,9 @@ async function disableAnimations(page) {
 /**
  * Wait for page to be fully stable (network idle + images + fonts)
  * @param {import('@playwright/test').Page} page 
- * @param {number} bufferMs - Additional buffer time for final rendering (default: 300ms)
+ * @param {number} bufferMs - Additional buffer time for final rendering (default from constants)
  */
-async function waitForPageStable(page, bufferMs = 300) {
+async function waitForPageStable(page, bufferMs = PAGE_STABLE_BUFFER) {
   await page.waitForLoadState('networkidle');
   await waitForImages(page);
   await waitForFonts(page);
@@ -80,9 +90,9 @@ async function hideDynamicElements(page, selectors) {
 function getScreenshotOptions(overrides = {}) {
   return {
     fullPage: false,
-    maxDiffPixels: 100,
-    maxDiffPixelRatio: 0.01,
-    threshold: 0.2,
+    maxDiffPixels: DEFAULT_MAX_DIFF_PIXELS,
+    maxDiffPixelRatio: DEFAULT_MAX_DIFF_RATIO,
+    threshold: DEFAULT_THRESHOLD,
     animations: 'disabled',
     ...overrides,
   };
@@ -107,13 +117,13 @@ async function mockApiResponse(page, url, response) {
 /**
  * Accept cookie consent if present
  * @param {import('@playwright/test').Page} page 
- * @param {number} timeout - Maximum time to wait for cookie banner (default: 1000ms)
+ * @param {number} timeout - Maximum time to wait for cookie banner (default from constants)
  */
-async function acceptCookieConsent(page, timeout = 1000) {
+async function acceptCookieConsent(page, timeout = COOKIE_BANNER_TIMEOUT) {
   const cookieButton = page.locator('[data-cookie-accept], .cookie-accept, #cookie-accept').first();
   if (await cookieButton.isVisible({ timeout }).catch(() => false)) {
     await cookieButton.click();
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(ANIMATION_DURATION);
   }
 }
 
@@ -124,7 +134,7 @@ async function acceptCookieConsent(page, timeout = 1000) {
  */
 async function scrollToElement(page, selector) {
   await page.locator(selector).scrollIntoViewIfNeeded();
-  await page.waitForTimeout(300); // Wait for scroll to complete
+  await page.waitForTimeout(SCROLL_COMPLETE); // Wait for scroll to complete
 }
 
 module.exports = {
