@@ -41,8 +41,8 @@ $spacing-sixth:                 remCalc(round($spacingRhythm / 6));
 $spacing-eighth:                remCalc(round($spacingRhythm / 8));
 
 // Figma-specific spacing tokens for precise design alignment
-$spacing-hero-vertical:         73px; // Hero section top margin from Figma
-$spacing-container-wide:        80px; // Wide container horizontal gutters (desktop 1440px frames)
+$spacing-hero-vertical:         remCalc(73px); // Hero section top margin from Figma
+$spacing-container-wide:        remCalc(80px); // Wide container horizontal gutters (desktop 1440px frames)
 
 
 

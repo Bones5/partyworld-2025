@@ -322,8 +322,8 @@ This section documents all foundation tokens aligned with the Partyworld Figma d
 | Token Name | Value | Location | Purpose |
 |------------|-------|----------|---------|
 | `$layout-widthMax` | `remCalc(1280px)` | `settings/global/layout/_layout.scss` | Maximum content width for desktop (1440px frame with 80px gutters) |
-| `$spacing-container-wide` | `80px` | `settings/global/layout/_layout.scss` | Horizontal gutters for wide containers on desktop |
-| `$spacing-hero-vertical` | `73px` | `settings/global/layout/_layout.scss` | Vertical spacing for hero sections |
+| `$spacing-container-wide` | `remCalc(80px)` | `settings/global/layout/_layout.scss` | Horizontal gutters for wide containers on desktop |
+| `$spacing-hero-vertical` | `remCalc(73px)` | `settings/global/layout/_layout.scss` | Vertical spacing for hero sections |
 
 ### Typography Tokens
 | Token Name | Value | Location | Purpose |
@@ -365,7 +365,7 @@ Recent implementations (Completed):
 - ✅ Layout width updated: `$layout-widthMax` now `remCalc(1280px)` (was 1200px) for desktop fidelity.
 - ✅ New typography tokens added: `$fontSize-displayXL: 114px`, `$lineHeight-displayXL: 120px`, `$fontSize-heroLarge: 57px`, `$lineHeight-heroLarge: 60px`, `$fontSize-nav: 24px`, `$lineHeight-nav: 24px`.
 - ✅ Utility classes added (`_type-extensions.scss`): `.u-displayXL`, `.u-heroLarge`, `.u-navText`.
-- ✅ Spacing tokens added: `$spacing-hero-vertical: 73px`, `$spacing-container-wide: 80px`.
+- ✅ Spacing tokens added: `$spacing-hero-vertical: remCalc(73px)`, `$spacing-container-wide: remCalc(80px)`.
 - ✅ Header tokens added: `$header-height-bar: 56px`, `$header-height-primary: 201px`.
 - ✅ Component scaffolding: Testimonial, Category Card, Share Bar components implemented.
 - ✅ Stylelint validation passed.

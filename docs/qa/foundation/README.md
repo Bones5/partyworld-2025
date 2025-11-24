@@ -7,8 +7,8 @@ This directory contains QA artifacts for foundation token alignment with Partywo
 
 ### Layout Tokens ✅
 - `$layout-widthMax: remCalc(1280px)` - Maximum content width aligned with Figma desktop (1440px with 80px gutters)
-- `$spacing-container-wide: 80px` - Horizontal gutters for wide containers
-- `$spacing-hero-vertical: 73px` - Hero section vertical spacing
+- `$spacing-container-wide: remCalc(80px)` - Horizontal gutters for wide containers
+- `$spacing-hero-vertical: remCalc(73px)` - Hero section vertical spacing
 
 ### Typography Tokens ✅
 - `$fontSize-displayXL: 114px` with `$lineHeight-displayXL: 120px` - Extra large display headings
