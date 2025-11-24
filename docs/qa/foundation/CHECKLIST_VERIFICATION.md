@@ -233,7 +233,27 @@ webpack 5.101.3 compiled successfully in ~10s
 
 ---
 
-### 🔲 QA Item 4: Manual regression testing (Requires local Stencil server)
+### ✅ QA Item 4: CHANGELOG.md Entry
+
+**Status:** COMPLETE ✅
+
+**Entry Added:**
+```
+- Align foundation tokens with Partyworld Figma design (Node 114-3848): Add spacing tokens ($spacing-hero-vertical, $spacing-container-wide), header tokens ($header-height-bar, $header-height-primary), and comprehensive documentation [#4](https://github.com/Bones5/partyworld-2025/pull/4)
+```
+
+**Location:** `CHANGELOG.md` line 9, in the "Draft" section
+
+**Format:** Follows Keep a Changelog format with:
+- Clear description of changes
+- Reference to specific tokens added
+- Link to pull request #4
+
+**Verification:** Entry added to Draft section, ready for release
+
+---
+
+### 🔲 QA Item 5: Manual regression testing (Requires local Stencil server)
 
 **Status:** PENDING - REQUIRES LOCAL ENVIRONMENT
 
@@ -267,7 +287,7 @@ Complete manual testing checklist documented in `docs/qa/foundation/README.md` (
 
 ---
 
-### 🔲 QA Item 5: Capture desktop + mobile screenshots
+### 🔲 QA Item 6: Capture desktop + mobile screenshots
 
 **Status:** PENDING - REQUIRES LOCAL ENVIRONMENT
 
@@ -301,7 +321,7 @@ Complete manual testing checklist documented in `docs/qa/foundation/README.md` (
 
 ## Summary
 
-### Completed Items: 7/9 (78%)
+### Completed Items: 8/11 (73%)
 
 **✅ Implementation Checklist: 5/5 (100%)**
 1. ✅ Audit current token usage vs. Figma tokens
@@ -310,12 +330,13 @@ Complete manual testing checklist documented in `docs/qa/foundation/README.md` (
 4. ✅ Record tokens in design_system_rules.mdc
 5. ✅ Regenerate utility classes and verify imports
 
-**✅ QA Checklist: 2/5 (40%)**
+**✅ QA Checklist: 3/5 (60%)**
 1. ✅ Run `npm run stylelint` - PASSED
 2. ✅ Run `npm run lint` (if applicable) - NOT APPLICABLE (no JS/TS changes)
 3. ✅ Build verification - PASSED
-4. 🔲 Manual regression testing - PENDING (requires local environment)
-5. 🔲 Capture screenshots - PENDING (requires local environment)
+4. ✅ CHANGELOG.md entry added - COMPLETED
+5. 🔲 Manual regression testing - PENDING (requires local environment)
+6. 🔲 Capture screenshots - PENDING (requires local environment)
 
 ### Code-Complete Status
 
@@ -339,7 +360,7 @@ These pending items are documented with complete instructions in `docs/qa/founda
 
 ## Files Changed
 
-### Modified Files (4):
+### Modified Files (5):
 1. `assets/scss/settings/global/layout/_layout.scss`
    - Added spacing tokens (lines 44-45)
 
@@ -350,10 +371,13 @@ These pending items are documented with complete instructions in `docs/qa/founda
    - Added "Figma Tokens Canonical" section (lines 317-372)
    - Updated "Recent implementations" status (lines 364-372)
 
-4. `package-lock.json`
+4. `CHANGELOG.md`
+   - Added entry for foundation token alignment in Draft section (line 9)
+
+5. `package-lock.json`
    - Version bump (auto-generated)
 
-### Created Files (1):
+### Created Files (2):
 1. `docs/qa/foundation/README.md`
    - Comprehensive QA documentation (119 lines)
    - Token implementation status
@@ -361,6 +385,12 @@ These pending items are documented with complete instructions in `docs/qa/founda
    - Validation results
    - Manual testing checklist
    - Screenshot capture guidelines
+
+2. `docs/qa/foundation/CHECKLIST_VERIFICATION.md`
+   - Detailed verification of all checklist items (390+ lines)
+   - Evidence for each completed item
+   - Status tracking for pending items
+   - Complete file change summary
 
 ### Verified Existing Files (Not Modified by This PR):
 1. `assets/scss/settings/global/typography/_typography.scss`
