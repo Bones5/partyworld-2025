@@ -382,6 +382,7 @@ Recent implementations (Completed):
 - ✅ Utility classes added (`_type-extensions.scss`): `.u-displayXL`, `.u-heroLarge`, `.u-navText`.
 - ✅ Spacing tokens added: `$spacing-hero-vertical: remCalc(73px)`, `$spacing-container-wide: remCalc(80px)`.
 - ✅ Header tokens added: `$header-height-bar: remCalc(56px)`, `$header-height-primary: remCalc(201px)`.
+- ✅ Brand colors mapped to config.json: Primary `#D30006` (was `#757575`), Secondary `#DCDCDC` (was `#ffffff`), with corresponding dark/light variants.
 - ✅ Component scaffolding: Testimonial, Category Card, Share Bar components implemented.
 - ✅ Stylelint validation passed.
 - ✅ Build verification passed.
