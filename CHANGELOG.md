@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Draft
 
+- Align foundation tokens with Partyworld Figma design (Node 114-3848): Add spacing tokens ($spacing-hero-vertical, $spacing-container-wide), header tokens ($header-height-bar, $header-height-primary), and comprehensive documentation [#4](https://github.com/Bones5/partyworld-2025/pull/4)
 - Update Cornerstone documentation url [#2575](https://github.com/bigcommerce/cornerstone/pull/2575)
 - Fix keyboard navigation on the swatch options [#2576](https://github.com/bigcommerce/cornerstone/pull/2576)
 
