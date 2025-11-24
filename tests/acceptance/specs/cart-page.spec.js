@@ -7,7 +7,8 @@ const { test, expect } = require('@playwright/test');
 test.describe('Cart Page Visual Regression', () => {
   test.skip('should display empty cart correctly', async ({ page }) => {
     // Skip by default since we need the cart URL
-    // Update this with your actual cart URL
+    // TODO: Update with your actual cart URL - may vary by store
+    // Common patterns: '/cart.php', '/cart', or custom URL
     await page.goto('/cart.php');
     await page.waitForLoadState('networkidle');
     

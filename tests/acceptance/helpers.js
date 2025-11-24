@@ -47,13 +47,14 @@ async function disableAnimations(page) {
 /**
  * Wait for page to be fully stable (network idle + images + fonts)
  * @param {import('@playwright/test').Page} page 
+ * @param {number} bufferMs - Additional buffer time for final rendering (default: 300ms)
  */
-async function waitForPageStable(page) {
+async function waitForPageStable(page, bufferMs = 300) {
   await page.waitForLoadState('networkidle');
   await waitForImages(page);
   await waitForFonts(page);
   // Small buffer for any final rendering
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(bufferMs);
 }
 
 /**
@@ -106,10 +107,11 @@ async function mockApiResponse(page, url, response) {
 /**
  * Accept cookie consent if present
  * @param {import('@playwright/test').Page} page 
+ * @param {number} timeout - Maximum time to wait for cookie banner (default: 1000ms)
  */
-async function acceptCookieConsent(page) {
+async function acceptCookieConsent(page, timeout = 1000) {
   const cookieButton = page.locator('[data-cookie-accept], .cookie-accept, #cookie-accept').first();
-  if (await cookieButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+  if (await cookieButton.isVisible({ timeout }).catch(() => false)) {
     await cookieButton.click();
     await page.waitForTimeout(500);
   }

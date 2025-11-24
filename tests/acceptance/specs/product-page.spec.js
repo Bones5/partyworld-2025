@@ -10,7 +10,8 @@ test.describe('Product Page Visual Regression', () => {
   
   test.skip('should display product page correctly', async ({ page }) => {
     // Skip by default since we need a real product URL
-    // Update this with an actual product URL from your store
+    // TODO: Update with an actual product URL from your BigCommerce store
+    // Example: await page.goto('/sample-product/');
     await page.goto('/products/sample-product');
     await page.waitForLoadState('networkidle');
     
