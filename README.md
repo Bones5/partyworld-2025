@@ -134,7 +134,70 @@ with `icon-` prepended. e.g. `xlink:href="#icon-facebook"`.
 Simply add your new icon SVG file to the icons folder, and run `grunt svgstore`,
 or just `grunt`.
 
-#### License
+## Testing
+
+This theme includes comprehensive testing capabilities to ensure code quality and prevent regressions.
+
+### Available Test Types
+
+#### 1. Unit Tests (Jest)
+Test individual JavaScript modules and functions in isolation.
+
+```bash
+npm test              # Run all unit tests
+npm run test:watch    # Run tests in watch mode
+```
+
+#### 2. Acceptance Tests with Visual Regression (Playwright)
+Test complete user workflows and capture screenshots to detect visual changes.
+
+```bash
+npm run test:acceptance              # Run acceptance tests
+npm run test:acceptance:headed       # Run with browser visible
+npm run test:acceptance:update       # Update baseline screenshots
+npm run test:acceptance:report       # View test results
+```
+
+**First time setup**:
+```bash
+npx playwright install chromium
+```
+
+#### 3. Linting and Code Quality
+
+```bash
+npx grunt check          # Run all checks (ESLint + Stylelint + Jest)
+npx grunt check:js       # JavaScript linting
+npx grunt check:css      # SCSS linting
+npm run stylelint:fix    # Auto-fix style issues
+```
+
+### Visual Regression Testing
+
+The acceptance tests include visual regression capabilities to automatically detect unintended UI changes:
+
+- **Screenshot comparison**: Automatically compares page screenshots against baseline images
+- **Cross-browser testing**: Tests on Chromium, mobile, and tablet viewports
+- **Detailed reports**: View visual diffs in HTML reports when changes are detected
+- **CI/CD ready**: Configured for automated testing in GitHub Actions
+
+**Example test**:
+```javascript
+test('homepage displays correctly', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+  await expect(page).toHaveScreenshot('homepage.png', {
+    fullPage: true,
+    maxDiffPixels: 100
+  });
+});
+```
+
+For detailed testing documentation, see:
+- [TESTING.md](TESTING.md) - Complete testing guide
+- [tests/acceptance/README.md](tests/acceptance/README.md) - Acceptance testing guide
+
+### License
 
 (The MIT License)
 Copyright (C) 2015-present BigCommerce Inc.
