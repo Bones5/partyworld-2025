@@ -313,13 +313,76 @@ Consume in components: `padding-top: $spacing-hero-vertical;` or convert to exis
 If more specific design tokens (color styles, text styles) are exported later, append them under a new section `Figma Tokens Canonical` and map each to `stencilColor` / `stencilNumber` keys. Prefer adding theme editor keys rather than hard-coded overrides.
 
 ---
-Recent implementations:
-- Layout width updated: `$layout-widthMax` now `remCalc(1280px)` (was 1200px) for desktop fidelity.
-- New typography tokens added: `$fontSize-displayXL: 114px`, `$lineHeight-displayXL: 120px`, `$fontSize-heroLarge: 57px`, `$lineHeight-heroLarge: 60px`, `$fontSize-nav: 24px`, `$lineHeight-nav: 24px`.
-- Utility classes added (`_type-extensions.scss`): `.u-displayXL`, `.u-heroLarge`, `.u-navText`.
 
-Pending next actions:
-1. Scaffold testimonial component (stars + quote + author) in `components/stencil/testimonial/` + `templates/components/testimonial.html`.
-2. Scaffold category card component for grids (image + heading + CTA) + partial.
-3. Add product share bar component (share + wishlist + cart) and integrate into product view.
-4. Stylelint run & visual QA for new typography.
+## Figma Tokens Canonical (Node 114-3848)
+
+This section documents all foundation tokens aligned with the Partyworld Figma design (Node 114-3848) as implemented in the theme. These tokens are the source of truth for design-to-code mapping.
+
+### Layout Tokens
+| Token Name | Value | Location | Purpose |
+|------------|-------|----------|---------|
+| `$layout-widthMax` | `remCalc(1280px)` | `settings/global/layout/_layout.scss` | Maximum content width for desktop (1440px frame with 80px gutters) |
+| `$spacing-container-wide` | `remCalc(80px)` | `settings/global/layout/_layout.scss` | Horizontal gutters for wide containers on desktop |
+| `$spacing-hero-vertical` | `remCalc(73px)` | `settings/global/layout/_layout.scss` | Vertical spacing for hero sections |
+
+### Typography Tokens
+| Token Name | Value | Location | Purpose |
+|------------|-------|----------|---------|
+| `$fontSize-displayXL` | `114px` | `settings/global/typography/_typography.scss` | Extra large display headings for marketing |
+| `$lineHeight-displayXL` | `120px` | `settings/global/typography/_typography.scss` | Line height for displayXL |
+| `$fontSize-heroLarge` | `57px` | `settings/global/typography/_typography.scss` | Large hero headings for promotional banners |
+| `$lineHeight-heroLarge` | `60px` | `settings/global/typography/_typography.scss` | Line height for heroLarge |
+| `$fontSize-nav` | `24px` | `settings/global/typography/_typography.scss` | Primary navigation text size |
+| `$lineHeight-nav` | `24px` | `settings/global/typography/_typography.scss` | Line height for navigation |
+
+### Header Tokens
+| Token Name | Value | Location | Purpose |
+|------------|-------|----------|---------|
+| `$header-height-bar` | `remCalc(56px)` | `settings/layouts/header/_settings.scss` | Announcement bar height from Figma |
+| `$header-height-primary` | `remCalc(201px)` | `settings/layouts/header/_settings.scss` | Composite height of logo/search/user zone |
+
+### Utility Classes
+| Class Name | Properties | Location | Purpose |
+|------------|------------|----------|---------|
+| `.u-displayXL` | `font-family`, `font-size: $fontSize-displayXL`, `line-height`, `font-weight: bold` | `common/_type-extensions.scss` | Apply display XL styling |
+| `.u-heroLarge` | `font-family`, `font-size: $fontSize-heroLarge`, `line-height`, `font-weight: bold` | `common/_type-extensions.scss` | Apply large hero styling |
+| `.u-navText` | `font-family`, `font-size: $fontSize-nav`, `line-height`, `font-weight: semibold` | `common/_type-extensions.scss` | Apply navigation text styling |
+
+### Component Implementations
+| Component | Location | Status | Notes |
+|-----------|----------|--------|-------|
+| Testimonial | `components/stencil/testimonial/` | ✅ Implemented | Stars, body, author structure |
+| Category Card | `components/stencil/categoryCard/` | ✅ Implemented | Image, heading, CTA with aspect-ratio support |
+| Share Bar | `components/stencil/shareBar/` | ✅ Implemented | Social sharing with hover states |
+
+### Color & Spacing System
+All existing color tokens (`$color-primary`, `$color-secondary`, etc.) are defined via `stencilColor()` in `settings/global/color/_color.scss` and map to Theme Editor keys for dynamic theming.
+
+Spacing rhythm based on `$spacingRhythm = $fontSize-root * $lineHeight-base` (24px at default 16px root) provides the foundation. Compose existing spacing tokens (`$spacing-single`, `$spacing-double`, etc.) for most layouts. Use the Figma-specific tokens (`$spacing-hero-vertical`, `$spacing-container-wide`) only where exact design alignment is required.
+
+#### Color Palette & Mapping (Figma → Stencil)
+This table records each Figma color style imported for Node `114-3848` and its mapping to Theme Editor key and SCSS variable. Add new rows whenever additional Figma color variables are exported.
+
+| Figma Token | Hex | Theme Editor Key | SCSS Variable | Status |
+| Brand | #D30006 | `color-primary` | `$color-primary` | Mapped |
+| Secondary Color | #DCDCDC | `color-secondary` | `$color-secondary` | Mapped |
+
+Guidelines:
+1. If a Figma color does not yet exist in the theme, first add a Theme Editor key in `schema.json` & default value in `config.json`, then declare the SCSS variable via `stencilColor("<key>")` in `_color.scss`.
+2. Never hardcode hex values in component SCSS; always consume the variable (e.g., `$color-secondary`).
+3. When a Figma color is an alias of an existing key (same hex), prefer reusing the existing Theme Editor key rather than introducing a duplicate.
+4. After adding or remapping a color, update this table and include a brief PR note citing any replaced hex values.
+
+Pending Figma colors: Export additional brand accent, success, warning, and error palette tokens; map them following the process above.
+
+---
+Recent implementations (Completed):
+- ✅ Layout width updated: `$layout-widthMax` now `remCalc(1280px)` (was 1200px) for desktop fidelity.
+- ✅ New typography tokens added: `$fontSize-displayXL: 114px`, `$lineHeight-displayXL: 120px`, `$fontSize-heroLarge: 57px`, `$lineHeight-heroLarge: 60px`, `$fontSize-nav: 24px`, `$lineHeight-nav: 24px`.
+- ✅ Utility classes added (`_type-extensions.scss`): `.u-displayXL`, `.u-heroLarge`, `.u-navText`.
+- ✅ Spacing tokens added: `$spacing-hero-vertical: remCalc(73px)`, `$spacing-container-wide: remCalc(80px)`.
+- ✅ Header tokens added: `$header-height-bar: remCalc(56px)`, `$header-height-primary: remCalc(201px)`.
+- ✅ Brand colors mapped to config.json: Primary `#D30006` (was `#757575`), Secondary `#DCDCDC` (was `#ffffff`), with corresponding dark/light variants.
+- ✅ Component scaffolding: Testimonial, Category Card, Share Bar components implemented.
+- ✅ Stylelint validation passed.
+- ✅ Build verification passed.
