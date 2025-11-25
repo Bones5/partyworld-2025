@@ -6,13 +6,13 @@
 // Uses Theme Editor-backed tokens for theming and Figma-aligned sizing.
 //
 // 1. Height matches Figma spec ($header-height-bar: 56px)
-// 2. Background uses $color-highlight from Theme Editor
+// 2. Background uses $color-primary (brand red #D30006) per Partyworld Figma
 // 3. Centered content with container max-width
 //
 // -----------------------------------------------------------------------------
 
 .c-announcementBar {
-    background-color: $color-highlight;
+    background-color: $color-primary;
     min-height: $header-height-bar;
     width: 100%;
     display: flex;
@@ -32,7 +32,7 @@
 }
 
 .c-announcementBar__content {
-    color: $color-white;
+    color: $color-greyLightest;
     font-size: fontSize("smaller");
     line-height: $lineHeight-smaller;
 
