@@ -398,7 +398,8 @@
         padding: 0 0.75rem !important; // 1
 
         .navPages-action {
-            font-size: fontSize("smaller"); // Reset to smaller for submenu items
+            // Submenu items use smaller font to distinguish from main nav (24px)
+            font-size: fontSize("smaller");
             text-transform: none;
             width: 100%;
         }
