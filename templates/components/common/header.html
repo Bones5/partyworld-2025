@@ -1,18 +1,10 @@
 <a href="#main-content" class="skip-to-main-link">{{lang 'header.skip_to_main'}}</a>
-{{#if banners.top}}
-<div class="banners" data-banner-location="top">
-    {{#each (limit banners.top_metadata 1)}}
-    <div class="banner" data-event-type="promotion" data-entity-id="{{this.id}}" data-name="{{this.banner-name}}" data-position="{{this.location}}" data-banner-id="{{this.banner-name}}">
-        <div data-event-type="promotion-click">
-            {{{this.content}}}
-        </div>
-    </div>
-    {{/each}}
-</div>
-{{/if}}
+{{!-- Announcement Bar (Figma: 56px height, $color-highlight background) --}}
+{{> components/common/announcement-bar}}
+
 <header class="header" role="banner">
-    <a href="#" class="mobileMenu-toggle" data-mobile-menu-toggle="menu">
-        <span class="mobileMenu-toggleIcon">Toggle menu</span>
+    <a href="#" class="mobileMenu-toggle" data-mobile-menu-toggle="menu" aria-label="Toggle menu">
+        <span class="mobileMenu-toggleIcon" aria-hidden="true">Toggle menu</span>
     </a>
     {{> components/common/navigation}}
 

@@ -1,0 +1,48 @@
+// =============================================================================
+// ANNOUNCEMENT BAR (CSS)
+// =============================================================================
+//
+// Promotional announcement bar displayed at the top of the page.
+// Uses Theme Editor-backed tokens for theming and Figma-aligned sizing.
+//
+// 1. Height matches Figma spec ($header-height-bar: 56px)
+// 2. Background uses $color-highlight from Theme Editor
+// 3. Centered content with container max-width
+//
+// -----------------------------------------------------------------------------
+
+.c-announcementBar {
+    background-color: $color-highlight;
+    min-height: $header-height-bar;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.c-announcementBar__container {
+    max-width: $layout-widthMax;
+    width: 100%;
+    padding: spacing("quarter") spacing("single");
+    text-align: center;
+
+    @include breakpoint("medium") {
+        padding: spacing("quarter") $spacing-container-wide;
+    }
+}
+
+.c-announcementBar__content {
+    color: $color-white;
+    font-size: fontSize("smaller");
+    line-height: $lineHeight-smaller;
+
+    a {
+        color: inherit;
+        text-decoration: underline;
+
+        &:hover,
+        &:focus {
+            text-decoration: none;
+        }
+    }
+}

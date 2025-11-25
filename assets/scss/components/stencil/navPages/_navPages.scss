@@ -8,6 +8,8 @@
 // I use it here to grab the max width centering.
 // 2. Prevent document scrolling by clipping its body
 // 3. Prevent inertia scrolling of document
+// 4. Figma spec: 24px typography for main nav ($fontSize-nav)
+// 5. Figma spec: ~80px gaps between nav items ($header-nav-gap)
 //
 // -----------------------------------------------------------------------------
 
@@ -104,14 +106,21 @@
     margin: 0;
 
     @include breakpoint("medium") {
-        display: inline-block;
+        display: inline-flex; // Use flexbox for gap control // 5
         float: none;
+        gap: $header-nav-gap; // ~80px gaps per Figma // 5
     }
 
     + .navPages-list {
         border-top: 1px solid $navPages-list--user-borderColor;
         margin-top: spacing("half");
         padding-top: spacing("half");
+    }
+}
+
+.navPages-item {
+    @include breakpoint("medium") {
+        display: inline-block;
     }
 }
 
@@ -193,7 +202,9 @@
 
     @include breakpoint("medium") {
         display: inline-block;
-        padding: spacing("half") (spacing("half") + spacing("quarter")) (spacing("half") + spacing("quarter"));
+        font-size: $fontSize-nav; // 24px per Figma // 4
+        line-height: $lineHeight-nav; // 4
+        padding: spacing("half") 0; // Simplified padding since gap handles spacing
 
         &.is-open {
             background-color: $navPage-subMenu-item--is-highlighted-background;
@@ -217,6 +228,7 @@
     }
 
     &:hover,
+    &:focus,
     &.activePage {
         color: $navPage-subMenu-item--is-highlighted-color;
 
@@ -224,6 +236,12 @@
             fill: $navPage-subMenu-item--is-highlighted-color;
             stroke: $navPage-subMenu-item--is-highlighted-color;
         }
+    }
+
+    // Focus-visible state for keyboard navigation
+    &:focus-visible {
+        outline: 2px solid stencilColor("navPages-color");
+        outline-offset: 2px;
     }
 
     svg {
@@ -380,6 +398,7 @@
         padding: 0 0.75rem !important; // 1
 
         .navPages-action {
+            font-size: fontSize("smaller"); // Reset to smaller for submenu items
             text-transform: none;
             width: 100%;
         }

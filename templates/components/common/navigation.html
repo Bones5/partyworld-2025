@@ -40,15 +40,19 @@
             </li>
             <li class="navUser-item navUser-item--divider">|</li>
         {{/if}}
-        <li class="navUser-item">
+        <li class="navUser-item navUser-item--search">
             <button class="navUser-action navUser-action--quickSearch"
                type="button"
                id="quick-search-expand"
                data-search="quickSearch"
                aria-controls="quickSearch"
+               aria-expanded="false"
                aria-label="{{lang 'common.search'}}"
             >
-                {{lang 'common.search'}}
+                <svg class="navUser-icon" aria-hidden="true" focusable="false">
+                    <use href="#icon-search"></use>
+                </svg>
+                <span class="u-hiddenVisually">{{lang 'common.search'}}</span>
             </button>
         </li>
         {{#if settings.gift_certificates_enabled}}
@@ -63,11 +67,14 @@
         {{/if}}
         <li class="navUser-item navUser-item--account">
             {{#if customer}}
-                <a class="navUser-action"
+                <a class="navUser-action navUser-action--account"
                    href="{{urls.account.index}}"
                    aria-label="{{lang 'common.account'}}"
                 >
-                    {{lang 'common.account'}}
+                    <svg class="navUser-icon" aria-hidden="true" focusable="false">
+                        <use href="#icon-account"></use>
+                    </svg>
+                    <span class="u-hiddenVisually">{{lang 'common.account'}}</span>
                 </a>
                 <a class="navUser-action"
                    href="{{urls.auth.logout}}"
@@ -76,11 +83,14 @@
                     {{lang 'common.logout'}}
                 </a>
             {{else}}
-                <a class="navUser-action"
+                <a class="navUser-action navUser-action--account"
                    href="{{urls.auth.login}}"
                    aria-label="{{lang 'common.login'}}"
                 >
-                    {{lang 'common.login'}}
+                    <svg class="navUser-icon" aria-hidden="true" focusable="false">
+                        <use href="#icon-account"></use>
+                    </svg>
+                    <span class="u-hiddenVisually">{{lang 'common.login'}}</span>
                 </a>
                 {{#if settings.account_creation_enabled}}
                     <span class="navUser-or">{{lang 'common.or'}}</span>
@@ -94,14 +104,17 @@
             {{/if}}
         </li>
         <li class="navUser-item navUser-item--cart">
-            <a class="navUser-action"
+            <a class="navUser-action navUser-action--cart"
                data-cart-preview
                data-dropdown="cart-preview-dropdown"
                data-options="align:right"
                href="{{urls.cart}}"
                aria-label="{{lang 'cart.nav_aria_label'}}"
             >
-                <span class="navUser-item-cartLabel">{{lang 'common.cart'}}</span>
+                <svg class="navUser-icon" aria-hidden="true" focusable="false">
+                    <use href="#icon-cart"></use>
+                </svg>
+                <span class="u-hiddenVisually">{{lang 'common.cart'}}</span>
                 <span class="countPill cart-quantity"></span>
             </a>
 
