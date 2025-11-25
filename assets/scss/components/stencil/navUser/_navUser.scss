@@ -74,11 +74,16 @@
 
 // Icon styling for search, account, cart (24px per Figma spec) // 9
 .navUser-icon {
-    @include square($header-icon-size);
+    @include square($navUser-icon-size-lg);
     display: inline-block;
     fill: none;
     stroke: stencilColor("navUser-color");
     vertical-align: middle;
+}
+
+// Default smaller icon size (18px)
+.navUser-icon--sm {
+    @include square($navUser-icon-size);
 }
 
 .navUser-action {

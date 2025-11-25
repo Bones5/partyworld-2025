@@ -4,3 +4,7 @@
 
 
 $dropdown--quickSearch-backgroundColor: stencilColor("dropdown--quickSearch-backgroundColor");
+
+// Icon size tokens (Figma spec: 18px default, 24px primary actions)
+$navUser-icon-size: 18px;
+$navUser-icon-size-lg: 24px;
