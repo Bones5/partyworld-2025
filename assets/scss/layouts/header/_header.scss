@@ -251,15 +251,14 @@
 
     .contact-bar-link {
         color: stencilColor("navUser-color");
-        text-decoration: none;
-        font-family: $fontFamily-headings;
-        font-weight: stencilFontWeight("headings-font");
-        text-transform: uppercase;
+        text-decoration: underline;
+        font-family: stencilFontFamily("body-font"); // Inter
+        font-weight: stencilFontWeight("body-font");
+        text-transform: none;
 
         &:hover,
         &:focus {
             color: stencilColor("navUser-color-hover");
-            text-decoration: underline;
             text-underline-offset: 0.15em;
         }
     }
