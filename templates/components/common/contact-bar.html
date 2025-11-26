@@ -2,16 +2,28 @@
     <a class="contact-bar-link contact-bar-link--contact" href="{{urls.contact_us}}">
         {{lang 'common.contact_us'}}
     </a>
+
     {{#if settings.phone_number}}
         <span class="contact-bar-separator">•</span>
         <a class="contact-bar-link contact-bar-link--phone" href="tel:{{settings.phone_number}}">
             {{settings.phone_number}}
         </a>
+    {{else}}
+        <span class="contact-bar-separator">•</span>
+        <span class="contact-bar-link contact-bar-link--phone">
+            {{lang 'common.phone_placeholder' default='Call us'}}
+        </span>
     {{/if}}
+
     {{#if settings.store_email}}
         <span class="contact-bar-separator">•</span>
         <a class="contact-bar-link contact-bar-link--email" href="mailto:{{settings.store_email}}">
             {{settings.store_email}}
         </a>
+    {{else}}
+        <span class="contact-bar-separator">•</span>
+        <span class="contact-bar-link contact-bar-link--email">
+            {{lang 'common.email_placeholder' default='Email us'}}
+        </span>
     {{/if}}
 </div>
