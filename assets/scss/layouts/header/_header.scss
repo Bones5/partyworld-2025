@@ -240,6 +240,31 @@
     }
 }
 
+.contact-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: spacing("half");
+
+    .contact-bar-separator {
+        opacity: 0.7;
+    }
+
+    .contact-bar-link {
+        color: stencilColor("navUser-color");
+        text-decoration: none;
+        font-family: $fontFamily-headings;
+        font-weight: stencilFontWeight("headings-font");
+        text-transform: uppercase;
+
+        &:hover,
+        &:focus {
+            color: stencilColor("navUser-color-hover");
+            text-decoration: underline;
+            text-underline-offset: 0.15em;
+        }
+    }
+}
+
 .header-row--main {
     @include breakpoint("medium") {
         grid-template-columns: auto 1fr auto;
