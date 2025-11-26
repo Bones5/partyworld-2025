@@ -6,17 +6,43 @@
     <a href="#" class="mobileMenu-toggle" data-mobile-menu-toggle="menu" aria-label="Toggle menu">
         <span class="mobileMenu-toggleIcon" aria-hidden="true">Toggle menu</span>
     </a>
-    <!-- {{> components/common/navigation}} -->
-
-    {{#if page_type '===' 'default'}}
-        <h1 class="header-logo header-logo--{{theme_settings.logo-position}}">
-            {{> components/common/store-logo}}
-        </h1>
-    {{else}}
-        <div class="header-logo header-logo--{{theme_settings.logo-position}}">
-            {{> components/common/store-logo}}
+    <div class="header-logo header-logo--{{theme_settings.logo-position}} header-logo--mobileOnly">
+        {{> components/common/store-logo}}
+    </div>
+    <div class="header-grid">
+        <div class="header-row header-row--meta">
+            <div class="header-meta header-meta--left">
+                {{{region name="header_meta_left--global"}}}
+            </div>
+            <div class="header-meta header-meta--right">
+                {{{region name="header_meta_right--global"}}}
+            </div>
         </div>
-    {{/if}}
+
+        <div class="header-row header-row--main">
+            <div class="header-col header-col--logo">
+                {{#if page_type '===' 'default'}}
+                    <h1 class="header-logo header-logo--{{theme_settings.logo-position}}">
+                        {{> components/common/store-logo}}
+                    </h1>
+                {{else}}
+                    <div class="header-logo header-logo--{{theme_settings.logo-position}}">
+                        {{> components/common/store-logo}}
+                    </div>
+                {{/if}}
+            </div>
+
+            <div class="header-col header-col--tools">
+                {{> components/common/search-box}}
+                {{> components/common/currency-selector}}
+            </div>
+
+            <div class="header-col header-col--nav">
+                {{> components/common/navigation}}
+            </div>
+        </div>
+    </div>
+
     <div class="navPages-container" id="menu" data-menu>
         {{> components/common/navigation-menu}}
     </div>

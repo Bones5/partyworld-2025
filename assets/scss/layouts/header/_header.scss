@@ -205,6 +205,63 @@
 }
 
 //
+// Header Grid Layout (desktop+)
+// - Hide grid on mobile to preserve original compact header
+// - Show a mobile-only logo instead
+// -----------------------------------------------------------------------------
+
+.header-logo--mobileOnly {
+    @include breakpoint("medium") {
+        display: none;
+    }
+}
+
+.header-grid {
+    display: none;
+
+    @include breakpoint("medium") {
+        display: grid;
+        row-gap: spacing("half");
+        padding: spacing("half") 0;
+    }
+}
+
+.header-row {
+    @include breakpoint("medium") {
+        display: grid;
+        align-items: center;
+        column-gap: spacing("single");
+    }
+}
+
+.header-row--meta {
+    @include breakpoint("medium") {
+        grid-template-columns: 1fr auto;
+    }
+}
+
+.header-row--main {
+    @include breakpoint("medium") {
+        grid-template-columns: auto 1fr auto;
+    }
+}
+
+.header-col--tools {
+    @include breakpoint("medium") {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: spacing("single");
+    }
+}
+
+.header-col--nav {
+    @include breakpoint("medium") {
+        justify-self: end;
+    }
+}
+
+//
 // Mobile Menu Toggle
 //
 // 1. Animate lines from 'x' to hamburger

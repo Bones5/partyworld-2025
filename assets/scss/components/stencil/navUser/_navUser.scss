@@ -75,12 +75,15 @@
 // Icon styling for search, account, cart (24px per Figma spec) // 9
 .navUser-icon {
     @include square($navUser-icon-size-lg);
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     fill: none;
     stroke: stencilColor("color-primary");
     vertical-align: middle;
     border-radius: 50%;
     background-color: color("whites", "bright"); // white circle background
+    padding: 0.75em; // make the icon appear larger
 }
 
 // Default smaller icon size (18px)
@@ -90,7 +93,8 @@
 
 .navUser-action {
     color: stencilColor("navUser-color");
-    font-weight: fontWeight("bold");
+    font-weight: stencilFontWeight("headings-font");
+    font-family: $fontFamily-headings;
     padding: spacing("base") spacing("half");
     text-decoration: none;
     text-transform: uppercase;
@@ -105,6 +109,12 @@
             stroke: stencilColor("color-primary"); // keep red stroke on hover
             background-color: color("whites", "bright"); // keep white background
             border-radius: 50%;
+            display: inline-block;
+            box-sizing: content-box;
+            width: 1.25em;
+            height: 1.25em;
+            padding: 0;
+            stroke-width: 4px;
         }
 
         .navUser-icon {
@@ -132,10 +142,17 @@
     }
 
     svg {
+        overflow: visible;
         fill: transparent;
         stroke: stencilColor("color-primary");
         background-color: color("whites", "bright");
         border-radius: 50%;
+        display: inline-block;
+        box-sizing: content-box;
+        width: 1.25em;
+        height: 1.25em;
+        padding: 0.5em;
+        stroke-width: 2px;
         transition: all 0.15s ease;
     }
 }

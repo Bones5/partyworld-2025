@@ -195,7 +195,8 @@
     color: stencilColor("navPages-color");
     display: block;
     font-size: fontSize("smaller");
-    font-weight: fontWeight("bold");
+    font-weight: stencilFontWeight("headings-font");
+    font-family: $fontFamily-headings;
     padding: spacing("half") 0;
     text-decoration: none;
     text-transform: uppercase;
@@ -251,11 +252,15 @@
         text-underline-offset: 0.15em;
     }
 
-    svg {
-        fill: stencilColor("navPages-color");
-        stroke: stencilColor("navPages-color");
-        transition: all 0.15s ease;
-    }
+        svg {
+            fill: stencilColor("navPages-color");
+            stroke: stencilColor("navPages-color");
+            transition: all 0.15s ease;
+            display: inline-block;
+            box-sizing: content-box;
+            padding: 0.25em;
+            stroke-width: 2px;
+        }
 }
 
 .navPages-action--storeCredit {
