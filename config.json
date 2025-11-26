@@ -1,11 +1,11 @@
 {
-  "name": "Cornerstone",
+  "name": "Partyworld 2025",
   "version": "6.17.0",
   "template_engine": "handlebars_v4",
   "meta": {
     "price": 0,
     "documentation_url": "https://support.bigcommerce.com/s/article/Cornerstone-Theme-Manual",
-    "author_name": "BigCommerce",
+    "author_name": "bones.dev",
     "author_email": "support@bigcommerce.com",
     "author_support_url": "https://support.bigcommerce.com/",
     "composed_image": "composed.png",
