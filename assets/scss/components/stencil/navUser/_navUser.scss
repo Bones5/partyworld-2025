@@ -77,8 +77,10 @@
     @include square($navUser-icon-size-lg);
     display: inline-block;
     fill: none;
-    stroke: stencilColor("navUser-color");
+    stroke: stencilColor("color-primary");
     vertical-align: middle;
+    border-radius: 50%;
+    background-color: color("whites", "bright"); // white circle background
 }
 
 // Default smaller icon size (18px)
@@ -99,19 +101,29 @@
         color: stencilColor("navUser-color-hover");
 
         svg {
-            fill: stencilColor("navUser-color-hover");
-            stroke: stencilColor("navUser-color-hover");
+            fill: transparent;
+            stroke: stencilColor("color-primary"); // keep red stroke on hover
+            background-color: color("whites", "bright"); // keep white background
+            border-radius: 50%;
         }
 
         .navUser-icon {
-            stroke: stencilColor("navUser-color-hover");
+            stroke: stencilColor("color-primary");
+            background-color: color("whites", "bright");
+            border-radius: 50%;
         }
+
+        // Add white underline for contrast on red header
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
     }
 
     // Focus-visible state for keyboard navigation
     &:focus-visible {
         outline: 2px solid stencilColor("navUser-color");
         outline-offset: 2px;
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
     }
 
     .icon {
@@ -120,8 +132,10 @@
     }
 
     svg {
-        fill: stencilColor("navUser-color");
-        stroke: stencilColor("navUser-color");
+        fill: transparent;
+        stroke: stencilColor("color-primary");
+        background-color: color("whites", "bright");
+        border-radius: 50%;
         transition: all 0.15s ease;
     }
 }

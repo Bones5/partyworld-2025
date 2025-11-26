@@ -69,6 +69,16 @@
             "group": "i18n.SourceSansPro",
             "label": "i18n.SourceSansPro",
             "value": "Google_Source+Sans+Pro_400"
+          },
+          {
+            "group": "Inter",
+            "label": "Inter Regular",
+            "value": "Google_Inter_400"
+          },
+          {
+            "group": "Inter",
+            "label": "Inter SemiBold",
+            "value": "Google_Inter_600"
           }
         ]
       },
@@ -167,6 +177,16 @@
             "group": "i18n.Volkhov",
             "label": "i18n.Volkhov",
             "value": "Google_Volkhov_400"
+          },
+          {
+            "group": "Londrina Solid",
+            "label": "Londrina Solid Regular",
+            "value": "Google_Londrina+Solid_400"
+          },
+          {
+            "group": "Londrina Solid",
+            "label": "Londrina Solid Black",
+            "value": "Google_Londrina+Solid_900"
           }
         ]
       },

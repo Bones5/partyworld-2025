@@ -233,15 +233,22 @@
         color: $navPage-subMenu-item--is-highlighted-color;
 
         svg {
-            fill: $navPage-subMenu-item--is-highlighted-color;
-            stroke: $navPage-subMenu-item--is-highlighted-color;
+            fill: transparent; // transparent background on hover
+            stroke: $navPage-subMenu-item--is-highlighted-color; // white stroke (via hover color)
+            background-color: transparent;
         }
+
+        // Add white underline for contrast on red header
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
     }
 
     // Focus-visible state for keyboard navigation
     &:focus-visible {
         outline: 2px solid stencilColor("navPages-color");
         outline-offset: 2px;
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
     }
 
     svg {
@@ -252,11 +259,13 @@
 }
 
 .navPages-action--storeCredit {
-    color: stencilColor("color-textSecondary");
-}
-
-.navPages-action--compare {
-    display: none;
+            svg {
+                fill: transparent;
+                stroke: stencilColor("color-primary");
+                background-color: color("whites", "bright");
+                border-radius: 50%;
+                transition: all 0.15s ease;
+            }
 
     &.show {
         display: block;
