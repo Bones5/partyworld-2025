@@ -1,28 +1,26 @@
 <div class="contact-bar">
-    <a class="contact-bar-link contact-bar-link--contact" href="{{urls.contact_us}}">
-        {{lang 'common.contact_us'}}
-    </a>
-
     {{#if settings.phone_number}}
-        <span class="contact-bar-separator">•</span>
         <a class="contact-bar-link contact-bar-link--phone" href="tel:{{settings.phone_number}}">
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-phone"></use></svg>
             {{settings.phone_number}}
         </a>
     {{else}}
-        <span class="contact-bar-separator">•</span>
         <span class="contact-bar-link contact-bar-link--phone">
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-phone"></use></svg>
             {{lang 'common.phone_placeholder' default='Call us'}}
         </span>
     {{/if}}
 
+    <span class="contact-bar-separator">•</span>
+
     {{#if settings.store_email}}
-        <span class="contact-bar-separator">•</span>
         <a class="contact-bar-link contact-bar-link--email" href="mailto:{{settings.store_email}}">
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-envelope"></use></svg>
             {{settings.store_email}}
         </a>
     {{else}}
-        <span class="contact-bar-separator">•</span>
         <span class="contact-bar-link contact-bar-link--email">
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-envelope"></use></svg>
             {{lang 'common.email_placeholder' default='Email us'}}
         </span>
     {{/if}}
