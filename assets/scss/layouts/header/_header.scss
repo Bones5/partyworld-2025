@@ -253,7 +253,7 @@
         color: stencilColor("navUser-color");
         text-decoration: underline;
         font-family: stencilFontFamily("body-font"); // Inter
-        font-weight: stencilFontWeight("body-font");
+        font-weight: 700;
         text-transform: none;
 
         &:hover,
