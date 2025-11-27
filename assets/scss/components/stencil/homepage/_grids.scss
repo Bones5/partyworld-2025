@@ -1,30 +1,30 @@
 // Homepage Theme & Celebrate grids
 .c-themeGrid__items {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: spacing("single");
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: spacing("single");
 }
 .c-celebrateGrid__items {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: spacing("single");
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: spacing("single");
 }
 .c-themeCard__image {
-  width: 100%;
-  height: auto;
-  display: block;
+    width: 100%;
+    height: auto;
+    display: block;
 }
 .c-celebrateCard__image {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  object-fit: cover;
-  display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
 }
 
 // Section headings color
 // Increase specificity so type.scss heading rules don't override
 .c-themeGrid .c-themeGrid__heading,
 .c-celebrateGrid .c-celebrateGrid__heading {
-  color: #000000; // use black per requirement
+    color: #000000; // use black per requirement
 }
