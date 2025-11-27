@@ -30,7 +30,7 @@ $layout-widthFixed:             100%;
 // Base Spacing
 $spacingRhythm:                 $fontSize-root * $lineHeight-base;
 
-$spacing-base:                  1rem;
+$spacing-base:                  1.25rem;
 $spacing-single:                remCalc($spacingRhythm);
 $spacing-double:                remCalc($spacingRhythm * 2);
 $spacing-half:                  remCalc(round($spacingRhythm / 2));

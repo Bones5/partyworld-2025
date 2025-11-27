@@ -2,6 +2,53 @@
 // SEARCH
 // =============================================================================
 
+.form-prefixPostfix {
+    position: relative;
+
+    .form-input {
+        padding-right: 2.5em; // room for icon button
+    }
+}
+
+.search-box-submit {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s ease;
+    position: absolute;
+    right: spacing("half");
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2em;
+    height: 2em;
+
+    svg {
+        width: 2em;
+        height: 2em;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2px;
+        transition: color 0.2s ease, stroke 0.2s ease;
+    }
+
+    &:hover svg,
+    &:focus svg {
+        stroke: currentColor;
+    }
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
+    }
+}
+
 .search-suggestion {
     margin-bottom: spacing("single") + spacing("third");
 

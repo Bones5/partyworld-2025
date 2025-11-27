@@ -73,7 +73,7 @@
 
     @include breakpoint("medium") {
         height: auto;
-        margin: (spacing("double") + spacing("base")) auto (spacing("double") + spacing("single"));
+        margin: 0;
         padding: 0;
 
         .header.fixed & {
@@ -201,6 +201,111 @@
 
     @include breakpoint("medium") {
         max-height: none;
+    }
+}
+
+//
+// Header Grid Layout (desktop+)
+// - Hide grid on mobile to preserve original compact header
+// - Show a mobile-only logo instead
+// -----------------------------------------------------------------------------
+
+.header-logo--mobileOnly {
+    @include breakpoint("medium") {
+        display: none;
+    }
+}
+
+.header-grid {
+    display: none;
+
+    @include breakpoint("medium") {
+        display: grid;
+        row-gap: spacing("single") + spacing("half");
+        padding: spacing("single") 5rem ;
+    }
+}
+
+.header-row {
+    @include breakpoint("medium") {
+        display: grid;
+        align-items: center;
+        column-gap: spacing("single");
+    }
+}
+
+.header-row--meta {
+    @include breakpoint("medium") {
+        grid-template-columns: 1fr auto;
+    }
+}
+
+.contact-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: spacing("half");
+
+    .contact-bar-separator {
+        opacity: 0.7;
+    }
+
+    .contact-bar-link {
+        color: stencilColor("navUser-color");
+        text-decoration: underline;
+        font-family: stencilFontFamily("body-font"); // Inter
+        font-weight: 700;
+        text-transform: none;
+
+        &:hover,
+        &:focus {
+            color: stencilColor("navUser-color-hover");
+            text-underline-offset: 0.15em;
+        }
+    }
+}
+
+.header-row--main {
+    @include breakpoint("medium") {
+        grid-template-columns: auto 1fr auto;
+    }
+}
+
+.header-col--tools {
+    @include breakpoint("medium") {
+        justify-self: stretch;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: spacing("single");
+
+        // Tighten vertical spacing for tools controls
+        .form,
+        .form-field {
+            margin-top: 0;
+            margin-bottom: 0;
+            flex-grow:1;
+            max-width: 35em;
+            
+        }
+
+        .form-label {
+            margin: 0;
+        }
+
+        .form-select,
+        .form-input {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+
+    }
+}
+
+.header-col--nav {
+    @include breakpoint("medium") {
+        justify-self: end;
     }
 }
 

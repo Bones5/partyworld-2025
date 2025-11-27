@@ -92,15 +92,26 @@ Example — add a new visual component:
 - Source files: `assets/icons/*.svg`.
 - Sprite generation: `grunt svgstore` builds `assets/img/icon-sprite.svg` with IDs like `icon-<filename>`.
   - Config: `grunt/svgstore.js` sets `prefix: 'icon-'` and outputs to `./assets/img/icon-sprite.svg`.
-- Template usage:
+- **Icon size tokens** (per Figma spec):
+  - `$navUser-icon-size: 18px;` - Default utility icon size
+  - `$navUser-icon-size-lg: 24px;` - Primary action icons (search, account, cart)
+- **Template usage** (modern `href` instead of legacy `xlink:href`):
 ```html
 <svg class="c-icon c-icon--facebook" aria-hidden="true" focusable="false">
-  <use xlink:href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-facebook"></use>
-  <title>Facebook</title>
-  <desc>Link to Facebook page</desc>
-  <span class="u-hiddenVisually">Facebook</span>
+  <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-facebook"></use>
 </svg>
+<span class="u-hiddenVisually">Facebook</span>
 ```
+- **NavUser icons** (search, account, cart):
+```html
+<svg class="navUser-icon" aria-hidden="true" focusable="false">
+  <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-search"></use>
+</svg>
+<span class="u-hiddenVisually">{{lang 'common.search'}}</span>
+```
+- **Icon colors** (Theme Editor keys):
+  - `navUser-color` - Default icon color
+  - `navUser-color-hover` - Hover/focus icon color
 - CSS usage (as mask):
 ```scss
 .c-icon--facebook {
@@ -110,6 +121,7 @@ Example — add a new visual component:
   mask: url("{{cdn 'assets/img/icon-sprite.svg'}}#icon-facebook") no-repeat 50% 50%;
 }
 ```
+
 
 ### Styling Approach
 - Import order (see `assets/scss/theme.scss`):

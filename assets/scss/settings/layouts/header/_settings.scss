@@ -2,7 +2,7 @@
 // HEADER (Settings)
 // =============================================================================
 
-$header-bg:                                 stencilColor("header-backgroundColor");
+$header-bg:                                 stencilColor("color-primary");
 $header-height:                             55px;
 $header-toggle-width:                       $header-height;
 $header-logo-marginVertical:                spacing("half");
@@ -12,4 +12,17 @@ $header-logo-paddingVertical:               $header-logo-marginVertical;
 $header-height-bar:                         remCalc(56px); // Announcement bar height from Figma
 $header-height-primary:                     remCalc(201px); // Composite area of logo/search/user zone
 
+// Header meta row settings
+$header-meta-fontSize:                      fontSize("tiny");
+$header-meta-color:                         stencilColor("color-textSecondary");
+
+// Primary navigation gap (Figma: ~80px gaps between main nav items)
+$header-nav-gap:                            spacing("double");
+
+// Icon sizes (Figma spec: 24px icons)
+$header-icon-size:                          24px;
+
 $storeName-color:                           stencilColor("storeName-color");
+
+// Header font color for mobile toggle
+$header-font-color:                         stencilColor("navPages-color");

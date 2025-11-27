@@ -1,30 +1,48 @@
 <a href="#main-content" class="skip-to-main-link">{{lang 'header.skip_to_main'}}</a>
-{{#if banners.top}}
-<div class="banners" data-banner-location="top">
-    {{#each (limit banners.top_metadata 1)}}
-    <div class="banner" data-event-type="promotion" data-entity-id="{{this.id}}" data-name="{{this.banner-name}}" data-position="{{this.location}}" data-banner-id="{{this.banner-name}}">
-        <div data-event-type="promotion-click">
-            {{{this.content}}}
+{{!-- Announcement Bar (Figma: 56px height, $color-highlight background) --}}
+{{> components/common/announcement-bar}}
+
+<header class="header" role="banner">
+    <a href="#" class="mobileMenu-toggle" data-mobile-menu-toggle="menu" aria-label="Toggle menu">
+        <span class="mobileMenu-toggleIcon" aria-hidden="true">Toggle menu</span>
+    </a>
+    <div class="header-logo header-logo--{{theme_settings.logo-position}} header-logo--mobileOnly">
+        {{> components/common/store-logo}}
+    </div>
+    <div class="header-grid">
+        <div class="header-row header-row--meta">
+            <div class="header-meta header-meta--left">
+                {{> components/common/contact-bar}}
+            </div>
+            <div class="header-meta header-meta--right">
+                {{> components/common/trustpilot-badge}}
+            </div>
+        </div>
+
+        <div class="header-row header-row--main">
+            <div class="header-col header-col--logo">
+                {{#if page_type '===' 'default'}}
+                    <h1 class="header-logo header-logo--{{theme_settings.logo-position}}">
+                        {{> components/common/store-logo}}
+                    </h1>
+                {{else}}
+                    <div class="header-logo header-logo--{{theme_settings.logo-position}}">
+                        {{> components/common/store-logo}}
+                    </div>
+                {{/if}}
+            </div>
+
+            <div class="header-col header-col--tools">
+                {{> components/common/search-box}}
+                {{> components/common/currency-selector}}
+            </div>
+
+            <div class="header-col header-col--nav">
+                {{> components/common/navigation}}
+            </div>
         </div>
     </div>
-    {{/each}}
-</div>
-{{/if}}
-<header class="header" role="banner">
-    <a href="#" class="mobileMenu-toggle" data-mobile-menu-toggle="menu">
-        <span class="mobileMenu-toggleIcon">Toggle menu</span>
-    </a>
-    {{> components/common/navigation}}
 
-    {{#if page_type '===' 'default'}}
-        <h1 class="header-logo header-logo--{{theme_settings.logo-position}}">
-            {{> components/common/store-logo}}
-        </h1>
-    {{else}}
-        <div class="header-logo header-logo--{{theme_settings.logo-position}}">
-            {{> components/common/store-logo}}
-        </div>
-    {{/if}}
     <div class="navPages-container" id="menu" data-menu>
         {{> components/common/navigation-menu}}
     </div>

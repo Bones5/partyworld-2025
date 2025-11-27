@@ -13,6 +13,7 @@
 //    position, nudge dropdown away from the side of viewport in mobile viewport.
 // 8. This corrects mini cart dropdown arrow alignment in mobile viewport by
 //    setting the previous styles to medium breakpoint and adjusts for nudge in (7).
+// 9. Icon size 24px per Figma spec
 //
 // -----------------------------------------------------------------------------
 
@@ -25,7 +26,7 @@
     z-index: zIndex("lowest"); // 5.
 
     @include breakpoint("medium") {
-        padding: 0 spacing("single");
+        padding: 0;
         position: relative;
         right: auto;
         top: auto;
@@ -71,21 +72,68 @@
     }
 }
 
+// Icon styling for search, account, cart (24px per Figma spec) // 9
+.navUser-icon {
+    @include square($navUser-icon-size-lg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    fill: none;
+    stroke: stencilColor("color-primary");
+    vertical-align: middle;
+    border-radius: 50%;
+    background-color: color("whites", "bright"); // white circle background
+    padding: 0.75em; // make the icon appear larger
+}
+
+// Default smaller icon size (18px)
+.navUser-icon--sm {
+    @include square($navUser-icon-size);
+}
+
 .navUser-action {
     color: stencilColor("navUser-color");
-    font-weight: fontWeight("bold");
-    padding: spacing("base") spacing("half");
+    font-weight: stencilFontWeight("headings-font");
+    font-family: $fontFamily-headings;
+    padding: spacing("base") spacing("quarter");
     text-decoration: none;
     text-transform: uppercase;
 
     &:hover,
+    &:focus,
     &.is-open {
         color: stencilColor("navUser-color-hover");
 
         svg {
-            fill: stencilColor("navUser-color-hover");
-            stroke: stencilColor("navUser-color-hover");
+            fill: transparent;
+            stroke: stencilColor("color-primary"); // keep red stroke on hover
+            background-color: color("whites", "bright"); // keep white background
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: content-box;
+            width: 2em;
+            height: 2em;
+            padding: 0.5em;
+            stroke-width: 2.5px;
         }
+
+        .navUser-icon {
+            stroke: stencilColor("color-primary");
+            background-color: color("whites", "bright");
+            border-radius: 50%;
+        }
+
+        // Add white underline for contrast on red header
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+    }
+
+    // Focus-visible state for keyboard navigation
+    &:focus-visible {
+        outline: 2px solid stencilColor("navUser-color");
+        outline-offset: 2px;
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
     }
 
     .icon {
@@ -94,9 +142,25 @@
     }
 
     svg {
-        fill: stencilColor("navUser-color");
-        stroke: stencilColor("navUser-color");
+        overflow: visible;
+        fill: transparent;
+        stroke: stencilColor("color-primary");
+        background-color: color("whites", "bright");
+        border-radius: 50%;
+        display: inline-block;
+        box-sizing: content-box;
+        width: 2em;
+        height: 2em;
+        padding: 0.5em;
+        stroke-width: 2px;
         transition: all 0.15s ease;
+    }
+
+    &:hover svg,
+    &:focus svg,
+    &.is-open svg {
+        stroke: stencilColor("navUser-color-hover");
+        background-color: color("whites", "bright");
     }
 }
 
@@ -153,6 +217,15 @@
     }
 }
 
+// Search item visible on mobile for icon-based search
+.navUser-item--search {
+    display: block;
+
+    @include breakpoint("medium") {
+        display: block;
+    }
+}
+
 .navUser-item--cart {
     display: block;
 
@@ -179,6 +252,7 @@
             left: auto !important; // 7
             right: remCalc(5px); // 7
             top: auto !important; // 7
+
             @include breakpoint("medium") {
                 right: 0; // 7
             }
@@ -190,6 +264,7 @@
 
             &::before {
                 right: spacing("half") - remCalc(5px); // 8
+
                 @include breakpoint("medium") {
                     right: spacing("half"); // 8
                 }
@@ -197,6 +272,7 @@
 
             &::after {
                 right: spacing("half") - remCalc(3px); // 8
+
                 @include breakpoint("medium") {
                     right: spacing("half") + remCalc(2px); // 8
                 }
@@ -222,6 +298,13 @@
 }
 
 .navUser-item--account {
+    // Show account icon on mobile
+    display: block;
+
+    @include breakpoint("medium") {
+        display: block;
+    }
+
     .navUser-or {
         + .navUser-action {
             margin-right: -0.5rem; // 1
