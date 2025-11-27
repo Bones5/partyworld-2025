@@ -1,0 +1,32 @@
+{{!-- Testimonial section component partial --}}
+{{!-- Usage: {{> components/testimonial-section title="Our Happy Customers"}} --}}
+<section class="c-testimonialSection" aria-labelledby="testimonial-section-title">
+  <div class="container">
+    <header class="c-testimonialSection__header">
+      <h2 id="testimonial-section-title" class="c-testimonialSection__title">
+        {{#if title}}{{title}}{{else}}Our Happy Customers{{/if}}
+      </h2>
+    </header>
+    <div class="c-testimonialSection__grid">
+      {{!-- Example testimonials - replace with dynamic data as needed --}}
+      {{> components/testimonial
+        stars=5
+        body="Fantastic selection of party supplies! Everything arrived on time and looked amazing at my daughter's birthday party."
+        author="Sarah M."
+        role="Verified Buyer"
+      }}
+      {{> components/testimonial
+        stars=5
+        body="The quality of the decorations exceeded my expectations. Will definitely be ordering again for our next celebration!"
+        author="James T."
+        role="Verified Buyer"
+      }}
+      {{> components/testimonial
+        stars=5
+        body="Great prices and fast delivery. The helium balloons were perfect and lasted throughout the entire party weekend."
+        author="Emma L."
+        role="Verified Buyer"
+      }}
+    </div>
+  </div>
+</section>

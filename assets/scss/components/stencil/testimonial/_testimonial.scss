@@ -5,10 +5,13 @@
 .c-testimonial {
     background: $color-white;
     border: 1px solid stencilColor("input-border-color");
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba($color-black, 0.12);
     padding: $spacing-single;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    height: 100%;
 }
 
 .c-testimonial__stars {
@@ -18,13 +21,69 @@
     line-height: 1;
 }
 
+.c-testimonial__stars .c-icon--star {
+    width: 18px;
+    height: 18px;
+    fill: stencilColor("icon-ratingFull");
+}
+
 .c-testimonial__body {
+    color: $color-textBase;
     font-size: $fontSize-small;
     line-height: $lineHeight-small;
-    margin-bottom: $spacing-third;
+    margin: 0 0 $spacing-third;
+    flex-grow: 1;
 }
 
 .c-testimonial__author {
+    margin-top: auto;
+}
+
+.c-testimonial__name {
+    display: block;
+    color: $color-textBase;
     font-size: $fontSize-small;
     font-weight: $fontWeight-semibold;
+}
+
+.c-testimonial__role {
+    display: block;
+    color: $color-textSecondary;
+    font-size: $fontSize-tiny;
+    font-weight: $fontWeight-normal;
+}
+
+
+// Testimonial Section (container for multiple cards)
+// -----------------------------------------------------------------------------
+
+.c-testimonialSection {
+    padding: $spacing-double 0;
+}
+
+.c-testimonialSection__header {
+    text-align: center;
+    margin-bottom: $spacing-single;
+}
+
+.c-testimonialSection__title {
+    font-family: $fontFamily-headings;
+    font-size: $fontSize-larger;
+    font-weight: $fontWeight-bold;
+    color: $color-textBase;
+    margin: 0 0 $spacing-half;
+}
+
+.c-testimonialSection__grid {
+    display: grid;
+    gap: $spacing-single;
+    grid-template-columns: 1fr;
+
+    @include breakpoint("small") {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include breakpoint("medium") {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }

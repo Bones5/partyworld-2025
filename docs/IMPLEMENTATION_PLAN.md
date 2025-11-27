@@ -200,11 +200,11 @@ This document outlines the implementation plan for aligning the Partyworld 2025 
 - `assets/icons/icon-star.svg` updates (if new variants needed)
 
 **Implementation Checklist**
-- [ ] Create testimonial card markup (quote, author, role, rating stars) with accessible aria-labels for ratings.
-- [ ] Style cards with `spacing()`, `$color-textBase`, drop shadows per design.
-- [ ] Add slider controls or grid layout per responsive breakpoints; ensure keyboard operable.
-- [ ] Hook component into the home page (and any other page) via partial include.
-- [ ] Update design doc pending actions list to mark testimonials as implemented.
+- [x] Create testimonial card markup (quote, author, role, rating stars) with accessible aria-labels for ratings.
+- [x] Style cards with `spacing()`, `$color-textBase`, drop shadows per design.
+- [x] Add slider controls or grid layout per responsive breakpoints; ensure keyboard operable.
+- [x] Hook component into the home page (and any other page) via partial include.
+- [x] Update design doc pending actions list to mark testimonials as implemented.
 
 **QA & Screenshots**
 - `npm run stylelint`
