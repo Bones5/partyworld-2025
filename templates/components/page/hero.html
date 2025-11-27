@@ -12,13 +12,40 @@
 <section class="c-hero">
     <div class="c-hero__media">
         {{#if image}}
-            <img 
-                src="{{cdn image}}" 
-                alt="" 
-                class="c-hero__image lazyload"
-                loading="lazy"
-                data-sizes="auto"
-            />
+            {{!-- Support both string paths and Page Builder image objects --}}
+            {{#if image.url}}
+                <img 
+                    src="{{image.url}}" 
+                    alt="" 
+                    class="c-hero__image lazyload"
+                    loading="lazy"
+                    data-sizes="auto"
+                />
+            {{else if image.data}}
+                <img 
+                    src="{{image.data}}" 
+                    alt="" 
+                    class="c-hero__image lazyload"
+                    loading="lazy"
+                    data-sizes="auto"
+                />
+            {{else if image.source}}
+                <img 
+                    src="{{image.source}}" 
+                    alt="" 
+                    class="c-hero__image lazyload"
+                    loading="lazy"
+                    data-sizes="auto"
+                />
+            {{else}}
+                <img 
+                    src="{{cdn image}}" 
+                    alt="" 
+                    class="c-hero__image lazyload"
+                    loading="lazy"
+                    data-sizes="auto"
+                />
+            {{/if}}
         {{/if}}
     </div>
     <div class="c-hero__content">

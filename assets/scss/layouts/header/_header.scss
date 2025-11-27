@@ -221,7 +221,7 @@
 
     @include breakpoint("medium") {
         display: grid;
-        row-gap: spacing("single") + spacing("half");
+        row-gap: spacing("single");
         padding: spacing("single") 5rem ;
     }
 }
