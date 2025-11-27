@@ -73,7 +73,7 @@
 
     @include breakpoint("medium") {
         height: auto;
-        margin: (spacing("double") + spacing("base")) auto (spacing("double") + spacing("single"));
+        margin: 0;
         padding: 0;
 
         .header.fixed & {
@@ -221,8 +221,8 @@
 
     @include breakpoint("medium") {
         display: grid;
-        row-gap: spacing("half");
-        padding: spacing("half") 0;
+        row-gap: spacing("single") + spacing("half");
+        padding: spacing("single") 5rem ;
     }
 }
 

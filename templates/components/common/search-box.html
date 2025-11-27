@@ -4,7 +4,16 @@
             <label class="form-label is-srOnly" for="search_query_adv">{{lang 'search.results.form_label'}}</label>
             <div class="form-prefixPostfix wrap">
                 <input class="form-input" id="search_query_adv" name="search_query_adv" value="{{forms.search.query}}">
-                <input class="button button--primary form-prefixPostfix-button--postfix" type="submit" value="{{lang 'search.results.form_button_text'}}">
+                <button
+                    class="search-box-submit form-prefixPostfix-button--postfix"
+                    type="submit"
+                    aria-label="{{lang 'search.results.form_button_text'}}"
+                >
+                    <svg aria-hidden="true" focusable="false">
+                        <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-search"></use>
+                    </svg>
+                    <span class="is-srOnly">{{lang 'search.results.form_button_text'}}</span>
+                </button>
             </div>
         </div>
     </fieldset>

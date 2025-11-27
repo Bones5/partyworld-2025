@@ -51,7 +51,7 @@
         background: transparent;
         display: block;
         height: auto;
-        padding: 0;
+        padding: spacing("half") 5rem;
         position: relative;
     }
 
@@ -72,12 +72,12 @@
     padding: spacing("single");
 
     @include breakpoint("medium") {
-        @include grid-row(); // 1
+        @include grid-row("nest"); // 1
         @include nav($style: "navBar", $wrapper: "nav");
         background: none;
         font-size: 0; // 1
         overflow-y: visible;
-        padding: 0;
+        padding: spacing("half");
         text-align: center;
     }
 
@@ -107,8 +107,10 @@
 
     @include breakpoint("medium") {
         display: inline-flex; // Use flexbox for gap control // 5
+        flex-wrap: nowrap;
         float: none;
         gap: $header-nav-gap; // ~80px gaps per Figma // 5
+        white-space: nowrap;
     }
 
     + .navPages-list {
@@ -203,8 +205,8 @@
 
     @include breakpoint("medium") {
         display: inline-block;
-        font-size: $fontSize-nav; // 24px per Figma // 4
-        line-height: $lineHeight-nav; // 4
+        font-size: $fontSize-nav; 
+        line-height: $lineHeight-nav;
         padding: spacing("half") 0; // Simplified padding since gap handles spacing
 
         &.is-open {
