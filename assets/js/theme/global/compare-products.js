@@ -28,8 +28,9 @@ function updateCounterNav(counter, $link, urls) {
  * Announces compare status changes to screen readers
  * @param {boolean} added - Whether the product was added (true) or removed (false)
  * @param {number} count - Current number of products in compare list
+ * @param {string} productName - Name of the product being added/removed
  */
-function announceCompareChange(added, count) {
+function announceCompareChange(added, count, productName) {
     let $announcer = $('#compare-aria-announcer');
 
     // Create the aria-live region if it doesn't exist
@@ -43,7 +44,8 @@ function announceCompareChange(added, count) {
     }
 
     const action = added ? 'added to' : 'removed from';
-    const message = `Product ${action} compare list. ${count} product${count !== 1 ? 's' : ''} selected for comparison.`;
+    const displayName = productName || 'Product';
+    const message = `${displayName} ${action} compare list. ${count} product${count !== 1 ? 's' : ''} selected for comparison.`;
 
     // Clear and update the announcement
     $announcer.text('');
@@ -70,6 +72,7 @@ export default function ({ noCompareMessage, urls }) {
         const product = event.currentTarget.value;
         const $clickedCompareLink = $('a[data-compare-nav]');
         const isAdded = event.currentTarget.checked;
+        const productName = $(event.currentTarget).data('product-name') || '';
 
         if (isAdded) {
             incrementCounter(compareCounter, product);
@@ -80,7 +83,7 @@ export default function ({ noCompareMessage, urls }) {
         updateCounterNav(compareCounter, $clickedCompareLink, urls);
 
         // Announce the change to screen readers
-        announceCompareChange(isAdded, compareCounter.length);
+        announceCompareChange(isAdded, compareCounter.length, productName);
     });
 
     $('body').on('click', 'a[data-compare-nav]', () => {
