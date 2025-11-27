@@ -14,7 +14,7 @@
 --}}
 <article class="c-categoryCard{{#if modifier}} c-categoryCard--{{modifier}}{{/if}}">
   <a href="{{url}}" class="c-categoryCard__media" aria-label="{{title}}">
-    {{!-- Support both string paths and Page Builder image objects --}}
+    {{!-- Support Page Builder image objects --}}
     {{#if image.url}}
       <img 
         src="{{image.url}}" 
@@ -34,14 +34,6 @@
     {{else if image.source}}
       <img 
         src="{{image.source}}" 
-        alt="{{title}}" 
-        class="lazyload"
-        loading="lazy"
-        data-sizes="auto"
-      />
-    {{else}}
-      <img 
-        src="{{cdn image}}" 
         alt="{{title}}" 
         class="lazyload"
         loading="lazy"

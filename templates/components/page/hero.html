@@ -12,7 +12,7 @@
 <section class="c-hero">
     <div class="c-hero__media">
         {{#if image}}
-            {{!-- Support both string paths and Page Builder image objects --}}
+            {{!-- Support Page Builder image objects --}}
             {{#if image.url}}
                 <img 
                     src="{{image.url}}" 
@@ -32,14 +32,6 @@
             {{else if image.source}}
                 <img 
                     src="{{image.source}}" 
-                    alt="" 
-                    class="c-hero__image lazyload"
-                    loading="lazy"
-                    data-sizes="auto"
-                />
-            {{else}}
-                <img 
-                    src="{{cdn image}}" 
                     alt="" 
                     class="c-hero__image lazyload"
                     loading="lazy"
