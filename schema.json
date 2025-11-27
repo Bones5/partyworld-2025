@@ -1030,6 +1030,35 @@
       },
       {
         "type": "heading",
+        "content": "Hero Banner"
+      },
+      {
+        "type": "text",
+        "label": "Hero Heading",
+        "id": "homepage_hero_heading"
+      },
+      {
+        "type": "text",
+        "label": "Hero Subheading",
+        "id": "homepage_hero_subheading"
+      },
+      {
+        "type": "text",
+        "label": "Hero CTA Text",
+        "id": "homepage_hero_cta_text"
+      },
+      {
+        "type": "text",
+        "label": "Hero CTA URL",
+        "id": "homepage_hero_cta_url"
+      },
+      {
+        "type": "imageDimension",
+        "label": "Hero Background Image",
+        "id": "homepage_hero_image"
+      },
+      {
+        "type": "heading",
         "content": "i18n.Products"
       },
       {

@@ -1,0 +1,37 @@
+{{!-- Hero Banner component partial --}}
+{{!-- 
+  Usage:
+    {{> components/page/hero 
+        image="/assets/img/hero-background.jpg"
+        heading="Welcome to Partyworld"
+        subheading="Your one-stop party shop"
+        ctaText="Shop Now"
+        ctaUrl="/categories"
+    }}
+--}}
+<section class="c-hero">
+    <div class="c-hero__media">
+        {{#if image}}
+            <img 
+                src="{{cdn image}}" 
+                alt="" 
+                class="c-hero__image lazyload"
+                loading="lazy"
+                data-sizes="auto"
+            />
+        {{/if}}
+    </div>
+    <div class="c-hero__content">
+        {{#if heading}}
+            <h1 class="c-hero__heading">{{heading}}</h1>
+        {{/if}}
+        {{#if subheading}}
+            <p class="c-hero__subheading">{{subheading}}</p>
+        {{/if}}
+        {{#if ctaText}}
+            <a href="{{ctaUrl}}" class="c-hero__cta button button--primary">
+                {{ctaText}}
+            </a>
+        {{/if}}
+    </div>
+</section>

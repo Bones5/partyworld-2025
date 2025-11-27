@@ -1,0 +1,31 @@
+{{!-- Category Grid component partial --}}
+{{!-- 
+  Usage:
+    {{> components/page/category-grid 
+        heading="Shop by Category"
+        columns=4
+        categories=categories
+    }}
+  
+  Columns:
+    - 3: 3-column grid on desktop
+    - 4: 4-column grid on desktop (default)
+--}}
+<section class="c-categoryGrid">
+    {{#if heading}}
+        <h2 class="c-categoryGrid__heading">{{heading}}</h2>
+    {{/if}}
+    <div class="c-categoryGrid__items c-categoryGrid__items--col{{default columns 4}}">
+        {{#each categories}}
+            <div class="c-categoryGrid__item">
+                {{> components/category-card 
+                    url=url 
+                    image=image 
+                    title=title 
+                    ctaText=(default ctaText "Shop Now")
+                    modifier=modifier
+                }}
+            </div>
+        {{/each}}
+    </div>
+</section>

@@ -1,7 +1,26 @@
 {{!-- Category Card component partial --}}
-<article class="c-categoryCard">
+{{!-- 
+  Usage:
+    {{> components/category-card 
+        url="/categories/balloons"
+        image="assets/img/categories/balloons.jpg"
+        title="Balloons"
+        ctaText="Shop Now"
+        modifier="occasion"
+    }}
+  
+  Modifiers:
+    - "occasion": Square aspect ratio for occasion cards (232px x 232px)
+--}}
+<article class="c-categoryCard{{#if modifier}} c-categoryCard--{{modifier}}{{/if}}">
   <a href="{{url}}" class="c-categoryCard__media" aria-label="{{title}}">
-    <img src="{{image}}" alt="" loading="lazy" />
+    <img 
+      src="{{cdn image}}" 
+      alt="" 
+      class="lazyload"
+      loading="lazy"
+      data-sizes="auto"
+    />
   </a>
   <div class="c-categoryCard__body">
     <h3 class="c-categoryCard__title">{{title}}</h3>
