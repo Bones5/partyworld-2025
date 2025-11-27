@@ -2,7 +2,7 @@
 <section class="c-celebrateGrid">
   <h2 class="c-celebrateGrid__heading">{{default heading 'Celebrate Every Occasion'}}</h2>
   <div class="c-celebrateGrid__items">
-    {{#each (slice occasions 0 5)}}
+    {{#each occasions}}
       <div class="c-celebrateGrid__item">
         {{> components/page/celebrate-card url=url image=image title=title }}
       </div>
