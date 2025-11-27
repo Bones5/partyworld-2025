@@ -368,6 +368,9 @@ This section documents all foundation tokens aligned with the Partyworld Figma d
 | Category Grid | `components/stencil/categoryGrid/` | ✅ Implemented | Responsive grid layout (1-col mobile, 2-col tablet, 3/4-col desktop) with `--col3` and `--col4` variants |
 | Hero | `components/stencil/hero/` | ✅ Implemented | Full-width banner with background media, heading (`$fontSize-displayXL`), subheading, and CTA button |
 | Share Bar | `components/stencil/shareBar/` | ✅ Implemented | Social sharing with hover states |
+| Newsletter | `components/stencil/newsletter/` | ✅ Implemented | Accessible form with validation, icon button CTA |
+| Footer | `layouts/footer/` | ✅ Implemented | Responsive grid with newsletter, nav links, social, payment icons |
+| Social Links | `components/stencil/socialLinks/` | ✅ Updated | Button-style icons (40px circular), accessible focus states |
 
 ### Hero Component Settings (Theme Editor)
 | Setting ID | Type | Description |
@@ -412,5 +415,9 @@ Recent implementations (Completed):
 - ✅ Category Card enhanced: Added `.c-categoryCard--occasion` modifier for square aspect ratio, lazy loading with lazysizes, CDN helper integration, and hover/focus states.
 - ✅ Home page integration: Hero and category grid sections wired into `templates/pages/home.html` with Theme Editor settings.
 - ✅ Theme Editor settings: Hero banner settings added to `schema.json` and `config.json` for heading, subheading, CTA, and background image.
+- ✅ Newsletter component: Full SCSS styling with accessible form, validation states, icon button CTA, and success messaging.
+- ✅ Footer layout: Updated to Partyworld design with newsletter section, responsive column grid, social icons in bottom bar.
+- ✅ Social links updated: 24px icons with 40px circular button styling and accessible focus states.
+- ✅ Newsletter JS validation: Client-side email validation with `aria-describedby` and inline error handling.
 - ✅ Stylelint validation passed.
 - ✅ Build verification passed.

@@ -1,0 +1,24 @@
+// =============================================================================
+// NEWSLETTER (Settings)
+// =============================================================================
+
+$newsletter-background:                     stencilColor("footer-backgroundColor");
+$newsletter-heading-fontColor:              stencilColor("footer-heading-fontColor");
+$newsletter-text-color:                     stencilColor("color-textSecondary");
+
+// Input sizing
+$newsletter-input-height:                   remCalc(48px);
+$newsletter-input-border-radius:            4px;
+
+// Button sizing
+$newsletter-button-height:                  remCalc(48px);
+$newsletter-button-width:                   remCalc(48px);
+$newsletter-button-border-radius:           4px;
+
+// Spacing
+$newsletter-form-gap:                       spacing("half");
+$newsletter-section-padding:                spacing("double");
+
+// Error states
+$newsletter-error-color:                    stencilColor("color-error");
+$newsletter-success-color:                  stencilColor("color-success");

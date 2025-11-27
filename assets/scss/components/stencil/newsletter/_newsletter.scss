@@ -1,0 +1,199 @@
+// =============================================================================
+// NEWSLETTER (CSS)
+// =============================================================================
+//
+// Newsletter signup component with validation states and accessible error handling.
+// Uses Foundation form patterns with Partyworld design tokens.
+//
+// 1. Flex layout for input/button alignment.
+// 2. Inline error messages with proper aria association.
+// 3. Icon button with arrow for submit action.
+//
+// -----------------------------------------------------------------------------
+
+.newsletter {
+    padding: $newsletter-section-padding 0;
+}
+
+.newsletter-heading {
+    color: $newsletter-heading-fontColor;
+    font-size: fontSize("larger");
+    line-height: $lineHeight-larger;
+    margin-bottom: spacing("half");
+}
+
+.newsletter-description {
+    color: $newsletter-text-color;
+    font-size: fontSize("base");
+    line-height: $lineHeight-base;
+    margin-bottom: spacing("single");
+}
+
+// Form wrapper
+// -----------------------------------------------------------------------------
+
+.newsletter-form {
+    width: 100%;
+}
+
+.newsletter-form-fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.newsletter-form-field {
+    margin-bottom: spacing("half");
+    position: relative;
+}
+
+// Input and button row
+// -----------------------------------------------------------------------------
+//
+// 1. Flex container for inline layout.
+// 2. Gap between input and button.
+//
+// -----------------------------------------------------------------------------
+
+.newsletter-input-group {
+    display: flex; // 1
+    flex-wrap: nowrap;
+    gap: $newsletter-form-gap; // 2
+
+    @include breakpoint("medium") {
+        flex-wrap: nowrap;
+        max-width: remCalc(400px);
+    }
+}
+
+.newsletter-input {
+    background-color: stencilColor("input-bg-color");
+    border: 1px solid stencilColor("input-border-color");
+    border-radius: $newsletter-input-border-radius;
+    color: stencilColor("input-font-color");
+    flex: 1 1 auto;
+    font-size: fontSize("base");
+    height: $newsletter-input-height;
+    min-width: 0;
+    padding: spacing("third") spacing("half");
+    transition: border-color 0.15s ease;
+
+    &::placeholder {
+        color: stencilColor("input-disabled-color");
+    }
+
+    &:focus {
+        border-color: stencilColor("input-border-color-active");
+        outline: none;
+    }
+
+    &:hover {
+        border-color: stencilColor("input-border-color-active");
+    }
+}
+
+// Error state for input
+.newsletter-form-field--error {
+    .newsletter-input {
+        border-color: $newsletter-error-color;
+    }
+}
+
+// Success state for input
+.newsletter-form-field--success {
+    .newsletter-input {
+        border-color: $newsletter-success-color;
+    }
+}
+
+// Submit button (icon button variant)
+// -----------------------------------------------------------------------------
+//
+// 1. Square button with arrow icon.
+// 2. Primary color styling.
+// 3. Hover/focus states.
+//
+// -----------------------------------------------------------------------------
+
+.newsletter-button {
+    align-items: center;
+    background-color: stencilColor("button--primary-backgroundColor");
+    border: 0;
+    border-radius: $newsletter-button-border-radius;
+    color: stencilColor("button--primary-color");
+    cursor: pointer;
+    display: flex;
+    flex-shrink: 0;
+    height: $newsletter-button-height;
+    justify-content: center;
+    padding: 0;
+    transition: background-color 0.15s ease;
+    width: $newsletter-button-width;
+
+    &:hover {
+        background-color: stencilColor("button--primary-backgroundColorHover");
+    }
+
+    &:focus {
+        background-color: stencilColor("button--primary-backgroundColorActive");
+        outline: 2px solid stencilColor("button--primary-backgroundColorHover");
+        outline-offset: 2px;
+    }
+
+    &:active {
+        background-color: stencilColor("button--primary-backgroundColorActive");
+    }
+
+    svg {
+        fill: stencilColor("button--primary-color");
+        height: 20px;
+        width: 20px;
+    }
+}
+
+// Alternative text-based button (fallback or configurable)
+.newsletter-button--text {
+    padding: spacing("third") spacing("single");
+    width: auto;
+}
+
+// Validation messages
+// -----------------------------------------------------------------------------
+//
+// 1. Hidden by default, shown with modifier classes.
+// 2. Positioned below input group.
+// 3. Associated with input via aria-describedby.
+//
+// -----------------------------------------------------------------------------
+
+.newsletter-message {
+    display: none; // 1
+    font-size: fontSize("smallest");
+    line-height: $lineHeight-smallest;
+    margin-top: spacing("quarter");
+    padding-left: spacing("quarter");
+}
+
+.newsletter-message--error {
+    color: $newsletter-error-color;
+    display: block;
+}
+
+.newsletter-message--success {
+    color: $newsletter-success-color;
+    display: block;
+}
+
+// Success overlay / message area
+.newsletter-success {
+    display: none;
+}
+
+.newsletter-success--visible {
+    display: block;
+}
+
+// Hidden form when success is shown
+.newsletter-form--hidden {
+    display: none;
+}
