@@ -12,7 +12,7 @@
 // -----------------------------------------------------------------------------
 
 .c-announcementBar {
-    background-color: $color-primary;
+    background-color: #2F3842;
     min-height: $header-height-bar;
     width: 100%;
     display: flex;
@@ -33,6 +33,7 @@
 
 .c-announcementBar__content {
     color: $color-greyLightest;
+    font-family: $fontFamily-headings;
     font-size: fontSize("smaller");
     line-height: $lineHeight-smaller;
 
@@ -44,5 +45,8 @@
         &:focus {
             text-decoration: none;
         }
+    }
+    p {
+        margin-bottom: 0
     }
 }

@@ -51,8 +51,9 @@
         background: transparent;
         display: block;
         height: auto;
-        padding: spacing("half") 5rem;
+        padding: 0 5rem;
         position: relative;
+        overflow: scroll;
     }
 
     &.is-open {
@@ -254,25 +255,25 @@
         text-underline-offset: 0.15em;
     }
 
-        svg {
-            fill: stencilColor("navPages-color");
-            stroke: stencilColor("navPages-color");
-            transition: all 0.15s ease;
-            display: inline-block;
-            box-sizing: content-box;
-            padding: 0.25em;
-            stroke-width: 2px;
-        }
+    svg {
+        fill: stencilColor("navPages-color");
+        stroke: stencilColor("navPages-color");
+        transition: all 0.15s ease;
+        display: inline-block;
+        box-sizing: content-box;
+        padding: 0.25em;
+        stroke-width: 2px;
+    }
 }
 
 .navPages-action--storeCredit {
-            svg {
-                fill: transparent;
-                stroke: stencilColor("color-primary");
-                background-color: color("whites", "bright");
-                border-radius: 50%;
-                transition: all 0.15s ease;
-            }
+    svg {
+        fill: transparent;
+        stroke: stencilColor("color-primary");
+        background-color: color("whites", "bright");
+        border-radius: 50%;
+        transition: all 0.15s ease;
+    }
 
     &.show {
         display: block;
