@@ -1,0 +1,36 @@
+// =============================================================================
+// PRODUCT SETTINGS
+// =============================================================================
+//
+// Settings for product detail page components including share bar, wishlist,
+// quantity selector, and add-to-cart buttons.
+//
+// -----------------------------------------------------------------------------
+
+// Share Bar Settings
+// -----------------------------------------------------------------------------
+
+$shareBar-icon-size:                 18px; // Icon size for share/wishlist buttons
+$shareBar-item-padding:              spacing("sixth") spacing("third");
+$shareBar-item-gap:                  spacing("sixth");
+$shareBar-gap:                       spacing("third");
+$shareBar-border-radius:             4px;
+$shareBar-border-color:              stencilColor("input-border-color");
+
+// Share bar colors
+$shareBar-bg:                        $color-white;
+$shareBar-color:                     $color-textBase;
+$shareBar-bg-hover:                  $color-primary;
+$shareBar-color-hover:               $color-white;
+$shareBar-bg-focus:                  $color-primaryLight;
+$shareBar-color-focus:               $color-white;
+
+// Wishlist button specific
+$shareBar-wishlist-active-color:     $color-primary;
+
+// Product Gallery Settings
+// -----------------------------------------------------------------------------
+
+$productGallery-thumbnail-spacing:   spacing("quarter");
+$productGallery-pagination-dot-size: 8px;
+$productGallery-pagination-dot-gap:  spacing("sixth");

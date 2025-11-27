@@ -1,0 +1,69 @@
+{{!-- Product Share Bar component partial --}}
+{{!-- Provides share and wishlist CTA buttons for product detail page --}}
+<div class="c-shareBar productView-shareBar" role="group" aria-label="{{lang 'products.share_bar_label' fallback='Share or save this product'}}">
+    {{!-- Share button with social links dropdown --}}
+    {{#if settings.add_this.buttons}}
+        {{assignVar 'encodedUrl' (encodeURI url)}}
+        {{assignVar 'encodedTitle' (encodeURI product.title)}}
+        <div class="c-shareBar__group" data-dropdown="share-dropdown">
+            <button class="c-shareBar__item" type="button" aria-controls="share-dropdown" aria-expanded="false" aria-label="{{lang 'products.share' fallback='Share'}}">
+                <svg class="c-shareBar__icon" aria-hidden="true" focusable="false">
+                    <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-share"></use>
+                </svg>
+                <span class="c-shareBar__text">{{lang 'products.share' fallback='Share'}}</span>
+            </button>
+            <ul class="c-shareBar__dropdown dropdown-menu" id="share-dropdown" aria-hidden="true">
+                {{#each settings.add_this.buttons}}
+                    <li class="c-shareBar__dropdownItem">
+                        {{#if service '===' 'facebook'}}
+                        <a class="c-shareBar__dropdownLink" href="https://facebook.com/sharer/sharer.php?u={{getVar 'encodedUrl'}}" target="_blank" rel="noopener" aria-label="{{lang 'products.share_on' fallback='Share on'}} Facebook">
+                            <svg class="c-shareBar__icon" aria-hidden="true" focusable="false">
+                                <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-facebook"></use>
+                            </svg>
+                            <span>Facebook</span>
+                        </a>
+                        {{else if service '===' 'email'}}
+                        <a class="c-shareBar__dropdownLink" href="mailto:?subject={{getVar 'encodedTitle'}}&amp;body={{getVar 'encodedUrl'}}" target="_self" aria-label="{{lang 'products.share_via' fallback='Share via'}} Email">
+                            <svg class="c-shareBar__icon" aria-hidden="true" focusable="false">
+                                <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-envelope"></use>
+                            </svg>
+                            <span>Email</span>
+                        </a>
+                        {{else if service '===' 'twitter'}}
+                        <a class="c-shareBar__dropdownLink" href="https://x.com/intent/tweet/?text={{getVar 'encodedTitle'}}&amp;url={{getVar 'encodedUrl'}}" target="_blank" rel="noopener" aria-label="{{lang 'products.share_on' fallback='Share on'}} X">
+                            <svg class="c-shareBar__icon" aria-hidden="true" focusable="false">
+                                <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-x"></use>
+                            </svg>
+                            <span>X</span>
+                        </a>
+                        {{else if service '===' 'pinterest'}}
+                        <a class="c-shareBar__dropdownLink" href="https://pinterest.com/pin/create/button/?url={{getVar 'encodedUrl'}}&amp;media={{getImageSrcset ../product.main_image (cdn ../theme_settings.default_image_product) 1x=../theme_settings.zoom_size}}&amp;description={{getVar 'encodedTitle'}}" target="_blank" rel="noopener" aria-label="{{lang 'products.share_on' fallback='Share on'}} Pinterest">
+                            <svg class="c-shareBar__icon" aria-hidden="true" focusable="false">
+                                <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-pinterest"></use>
+                            </svg>
+                            <span>Pinterest</span>
+                        </a>
+                        {{else if service '===' 'print'}}
+                        <a class="c-shareBar__dropdownLink" href="#" onclick="window.print();return false;" aria-label="{{lang 'products.print' fallback='Print this page'}}">
+                            <svg class="c-shareBar__icon" aria-hidden="true" focusable="false">
+                                <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-print"></use>
+                            </svg>
+                            <span>Print</span>
+                        </a>
+                        {{/if}}
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    {{/if}}
+
+    {{!-- Wishlist button --}}
+    {{#if settings.show_wishlist}}
+        <button class="c-shareBar__item c-shareBar__item--wishlist" type="button" data-wishlist-add aria-label="{{lang 'account.wishlists.add_item' fallback='Add to wishlist'}}" aria-live="polite">
+            <svg class="c-shareBar__icon" aria-hidden="true" focusable="false">
+                <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-heart"></use>
+            </svg>
+            <span class="c-shareBar__text">{{lang 'account.wishlists.add_item' fallback='Wishlist'}}</span>
+        </button>
+    {{/if}}
+</div>

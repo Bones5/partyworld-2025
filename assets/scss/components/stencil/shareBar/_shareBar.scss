@@ -4,33 +4,132 @@
 
 .c-shareBar {
     display: flex;
-    gap: $spacing-third;
+    gap: $shareBar-gap;
     align-items: center;
     flex-wrap: wrap;
     margin: $spacing-single 0;
+}
+
+.c-shareBar__group {
+    position: relative;
+    display: inline-flex;
 }
 
 .c-shareBar__item {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: $spacing-sixth;
-    padding: $spacing-sixth $spacing-third;
-    background: $color-white;
-    border: 1px solid stencilColor("input-border-color");
-    color: $color-textBase;
+    gap: $shareBar-item-gap;
+    padding: $shareBar-item-padding;
+    background: $shareBar-bg;
+    border: 1px solid $shareBar-border-color;
+    color: $shareBar-color;
     text-decoration: none;
     font-size: $fontSize-tiny;
-    border-radius: 4px;
-}
+    border-radius: $shareBar-border-radius;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 
-.c-shareBar__item:hover,
-.c-shareBar__item:focus {
-    background: $color-primaryLight;
-    color: $color-white;
+    &:hover {
+        background: $shareBar-bg-hover;
+        border-color: $shareBar-bg-hover;
+        color: $shareBar-color-hover;
+    }
+
+    &:focus {
+        background: $shareBar-bg-focus;
+        border-color: $shareBar-bg-focus;
+        color: $shareBar-color-focus;
+        outline: 2px solid $shareBar-bg-hover;
+        outline-offset: 2px;
+    }
+
+    &:active {
+        background: $shareBar-bg-hover;
+        color: $shareBar-color-hover;
+    }
+
+    // Hidden text variant (icon-only buttons)
+    &--iconOnly {
+        .c-shareBar__text {
+            @include u-hiddenVisually;
+        }
+    }
 }
 
 .c-shareBar__icon {
-    width: 1em;
-    height: 1em;
+    width: $shareBar-icon-size;
+    height: $shareBar-icon-size;
+    flex-shrink: 0;
+}
+
+.c-shareBar__text {
+    white-space: nowrap;
+}
+
+// Wishlist button active state (when item is already in wishlist)
+.c-shareBar__item--wishlist {
+    &.is-active {
+        .c-shareBar__icon {
+            fill: $shareBar-wishlist-active-color;
+        }
+    }
+}
+
+// Dropdown menu for share options
+.c-shareBar__dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: zIndex("higher");
+    min-width: 150px;
+    margin-top: spacing("eighth");
+    padding: spacing("sixth") 0;
+    background: $shareBar-bg;
+    border: 1px solid $shareBar-border-color;
+    border-radius: $shareBar-border-radius;
+    box-shadow: 0 2px 8px rgba($color-black, 0.12);
+    list-style: none;
+}
+
+.c-shareBar__dropdownItem {
+    margin: 0;
+}
+
+.c-shareBar__dropdownLink {
+    display: flex;
+    align-items: center;
+    gap: $shareBar-item-gap;
+    padding: spacing("sixth") spacing("third");
+    color: $shareBar-color;
+    text-decoration: none;
+    font-size: $fontSize-tiny;
+    transition: background-color 0.15s ease;
+
+    &:hover,
+    &:focus {
+        background: $color-greyLightest;
+        color: $shareBar-bg-hover;
+    }
+}
+
+// Social sharing buttons row variant
+.c-shareBar--social {
+    .c-shareBar__item {
+        padding: $shareBar-item-gap;
+
+        &:hover,
+        &:focus {
+            transform: scale(1.05);
+        }
+    }
+}
+
+// Product view specific positioning
+.productView-shareBar {
+    margin-top: $spacing-half;
+
+    @include breakpoint("small") {
+        text-align: left;
+    }
 }

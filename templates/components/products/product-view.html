@@ -258,11 +258,15 @@
                     {{/if}}
                 {{/if}}
             </form>
+            {{!-- Wishlist dropdown for logged-in users with multiple wishlists --}}
             {{#if settings.show_wishlist}}
-                {{> components/common/wishlist-dropdown}}
+                {{#if customer.wishlists}}
+                    {{> components/common/wishlist-dropdown}}
+                {{/if}}
             {{/if}}
         </div>
-        {{> components/common/share url=product.url}}
+        {{!-- Share and wishlist CTA bar --}}
+        {{> components/products/share-bar url=product.url}}
     </section>
 
     <article class="productView-description">
