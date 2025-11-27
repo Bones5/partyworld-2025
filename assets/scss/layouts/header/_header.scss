@@ -272,10 +272,34 @@
 
 .header-col--tools {
     @include breakpoint("medium") {
+        justify-self: stretch;
+        width: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: spacing("single");
+
+        // Tighten vertical spacing for tools controls
+        .form,
+        .form-field {
+            margin-top: 0;
+            margin-bottom: 0;
+            flex-grow:1;
+            max-width: 35em;
+            
+        }
+
+        .form-label {
+            margin: 0;
+        }
+
+        .form-select,
+        .form-input {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+
     }
 }
 

@@ -14,10 +14,12 @@
             {{#if private_id}} data-field-type="{{private_id}}" {{/if}}
     >
         {{#if options}}
-        <option value="">{{chooseprefix}}</option>
+        {{#if chooseprefix}}<option value="">{{chooseprefix}}</option>{{/if}}
         {{#each options}}
         <option {{#if selected}} selected {{/if}} value="{{value}}">{{{label}}}</option>
         {{/each}}
         {{/if}}
+
+        {{> @partial-block}}
     </select>
 </div>

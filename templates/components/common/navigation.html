@@ -1,7 +1,5 @@
 <nav class="navUser">
-    {{#or customer (unless settings.hide_price_from_guests)}}
-        {{> components/common/currency-selector}}
-    {{/or}}
+
 
     {{#if theme_settings.show_channels}}
         {{> components/common/channel-selector}}
