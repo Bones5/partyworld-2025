@@ -21,6 +21,13 @@ blog:
         ctaUrl=theme_settings.homepage_hero_cta_url
         image=theme_settings.homepage_hero_image
     }}
+    {{!-- Theme and Celebrate sections --}}
+    {{#if themes}}
+        {{> components/page/theme-grid heading="Shop by Theme" themes=themes }}
+    {{/if}}
+    {{#if occasions}}
+        {{> components/page/celebrate-grid heading="Celebrate Every Occasion" occasions=occasions }}
+    {{/if}}
     {{{region name="home_below_carousel"}}}
 {{/partial}}
 

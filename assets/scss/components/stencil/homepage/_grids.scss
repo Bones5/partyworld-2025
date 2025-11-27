@@ -1,0 +1,23 @@
+// Homepage Theme & Celebrate grids
+.c-themeGrid__items {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: spacing("single");
+}
+.c-celebrateGrid__items {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: spacing("single");
+}
+.c-themeCard__image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.c-celebrateCard__image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
