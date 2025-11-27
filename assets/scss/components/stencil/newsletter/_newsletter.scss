@@ -61,7 +61,6 @@
     gap: $newsletter-form-gap; // 2
 
     @include breakpoint("medium") {
-        flex-wrap: nowrap;
         max-width: remCalc(400px);
     }
 }

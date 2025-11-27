@@ -1,5 +1,3 @@
-import utils from '@bigcommerce/stencil-utils';
-
 /**
  * Newsletter signup form handler
  *
@@ -60,10 +58,13 @@ export default class Newsletter {
 
     /**
      * Validate email input
+     * Uses the browser's built-in email validation via checkValidity()
+     * as the input has type="email"
      * @returns {boolean} - True if valid, false otherwise
      */
     validateEmail() {
         const email = this.$input.val().trim();
+        const inputElement = this.$input[0];
 
         // Empty check
         if (!email) {
@@ -71,9 +72,8 @@ export default class Newsletter {
             return false;
         }
 
-        // Basic email format validation
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(email)) {
+        // Use browser's built-in email validation
+        if (!inputElement.checkValidity()) {
             this.showError('newsletter.email_invalid');
             return false;
         }
@@ -124,19 +124,15 @@ export default class Newsletter {
      * @returns {string} - Translated message or fallback
      */
     getMessage(key) {
-        // Fallback messages if i18n is not available
+        // Fallback messages - in Stencil, the actual translation happens
+        // server-side in the template via {{lang}} helper. These fallbacks
+        // are used only if JavaScript needs to display a message dynamically.
         const fallbacks = {
             'newsletter.email_required': 'Please enter your email address.',
             'newsletter.email_invalid': 'Please enter a valid email address.',
             'newsletter.subscribe_error': 'There was an error subscribing. Please try again.',
             'newsletter.subscribe_success': 'Thank you for subscribing!',
         };
-
-        // Try to get localized message from data attribute or fallback
-        if (typeof utils !== 'undefined' && utils.api && utils.api.getPage) {
-            // In a real implementation, this would use the lang helper
-            return fallbacks[key] || key;
-        }
 
         return fallbacks[key] || key;
     }
