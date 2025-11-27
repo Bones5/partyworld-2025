@@ -10,13 +10,13 @@
     }}
   
   Modifiers:
-    - "occasion": Square aspect ratio for occasion cards (232px x 232px)
+    - "occasion": Square aspect ratio for occasion cards
 --}}
 <article class="c-categoryCard{{#if modifier}} c-categoryCard--{{modifier}}{{/if}}">
   <a href="{{url}}" class="c-categoryCard__media" aria-label="{{title}}">
     <img 
       src="{{cdn image}}" 
-      alt="" 
+      alt="{{title}}" 
       class="lazyload"
       loading="lazy"
       data-sizes="auto"

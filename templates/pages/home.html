@@ -35,6 +35,12 @@ blog:
 
 <div class="main full">
     {{!-- Category Grid Section --}}
+    {{!-- 
+        Category Grid Section
+        Note: The 'categories' data should be provided by the BigCommerce backend 
+        or configured via Content Blocks / Widget Regions.
+        See: https://developer.bigcommerce.com/docs/storefront/stencil
+    --}}
     {{#if categories}}
         {{> components/page/category-grid 
             heading="Shop by Category"
@@ -49,7 +55,12 @@ blog:
     {{/if}}
     {{{region name="home_below_featured_products"}}}
 
-    {{!-- Occasion Grid Section --}}
+    {{!-- 
+        Occasion Grid Section
+        Note: The 'occasions' data should be provided by the BigCommerce backend
+        or configured via Content Blocks / Widget Regions.
+        This uses the 'occasion' modifier for square aspect ratio cards.
+    --}}
     {{#if occasions}}
         {{> components/page/category-grid 
             heading="Shop by Occasion"
