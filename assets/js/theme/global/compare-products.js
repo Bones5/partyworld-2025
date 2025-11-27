@@ -24,6 +24,34 @@ function updateCounterNav(counter, $link, urls) {
     }
 }
 
+/**
+ * Announces compare status changes to screen readers
+ * @param {boolean} added - Whether the product was added (true) or removed (false)
+ * @param {number} count - Current number of products in compare list
+ */
+function announceCompareChange(added, count) {
+    let $announcer = $('#compare-aria-announcer');
+
+    // Create the aria-live region if it doesn't exist
+    if ($announcer.length === 0) {
+        $announcer = $('<div>', {
+            id: 'compare-aria-announcer',
+            class: 'aria-description--hidden',
+            'aria-live': 'polite',
+            'aria-atomic': 'true',
+        }).appendTo('body');
+    }
+
+    const action = added ? 'added to' : 'removed from';
+    const message = `Product ${action} compare list. ${count} product${count !== 1 ? 's' : ''} selected for comparison.`;
+
+    // Clear and update the announcement
+    $announcer.text('');
+    setTimeout(() => {
+        $announcer.text(message);
+    }, 100);
+}
+
 export default function ({ noCompareMessage, urls }) {
     let compareCounter = [];
 
@@ -41,14 +69,18 @@ export default function ({ noCompareMessage, urls }) {
     $('body').on('click', '[data-compare-id]', event => {
         const product = event.currentTarget.value;
         const $clickedCompareLink = $('a[data-compare-nav]');
+        const isAdded = event.currentTarget.checked;
 
-        if (event.currentTarget.checked) {
+        if (isAdded) {
             incrementCounter(compareCounter, product);
         } else {
             decrementCounter(compareCounter, product);
         }
 
         updateCounterNav(compareCounter, $clickedCompareLink, urls);
+
+        // Announce the change to screen readers
+        announceCompareChange(isAdded, compareCounter.length);
     });
 
     $('body').on('click', 'a[data-compare-nav]', () => {

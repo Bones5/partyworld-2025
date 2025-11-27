@@ -14,7 +14,6 @@
     transition: all 0.15s ease;
 }
 
-
 // Outline Icon Modifier
 // -----------------------------------------------------------------------------
 //
@@ -28,5 +27,19 @@
         fill: none;
         stroke: currentColor;
         stroke-width: 2px;
+    }
+}
+
+// Icon size modifiers
+// -----------------------------------------------------------------------------
+// Per Figma spec, filter accordion icons use 18px sizing
+
+.c-icon--sm {
+    width: 18px;
+    height: 18px;
+
+    svg {
+        width: 18px;
+        height: 18px;
     }
 }

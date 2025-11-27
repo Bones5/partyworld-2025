@@ -27,6 +27,21 @@
         border-bottom-right-radius: 0;
         margin-bottom: 0;
     }
+
+    // Focus state for accessibility
+    &:focus {
+        outline: $facetedSearch-focus-outline-width solid $facetedSearch-focus-outline-color;
+        outline-offset: $facetedSearch-focus-outline-offset;
+    }
+
+    &:focus:not(:focus-visible) {
+        outline: none;
+    }
+
+    &:focus-visible {
+        outline: $facetedSearch-focus-outline-width solid $facetedSearch-focus-outline-color;
+        outline-offset: $facetedSearch-focus-outline-offset;
+    }
 }
 
 .facetedSearch-toggle-text,
@@ -125,4 +140,57 @@
 
 .reset-filters {
     display: none;
+}
+
+
+// Faceted search accordion enhancements (per Figma spec)
+// -----------------------------------------------------------------------------
+//
+// Improved accordion headers with proper height, icon sizing, and focus states.
+//
+// -----------------------------------------------------------------------------
+
+.accordion--navList {
+    .accordion-navigation {
+        min-height: $facetedSearch-accordion-header-height;
+        padding: spacing("half") spacing("single") spacing("half") 0;
+
+        // Icon sizing for accordion indicators
+        .accordion-indicator {
+            width: $facetedSearch-accordion-icon-size;
+            height: $facetedSearch-accordion-icon-size;
+        }
+
+        // Focus state for keyboard navigation
+        &:focus {
+            outline: $facetedSearch-focus-outline-width solid $facetedSearch-focus-outline-color;
+            outline-offset: $facetedSearch-focus-outline-offset;
+        }
+
+        &:focus:not(:focus-visible) {
+            outline: none;
+        }
+
+        &:focus-visible {
+            outline: $facetedSearch-focus-outline-width solid $facetedSearch-focus-outline-color;
+            outline-offset: $facetedSearch-focus-outline-offset;
+        }
+    }
+}
+
+// Facet item link focus states
+.navList-action {
+    &:focus {
+        outline: $facetedSearch-focus-outline-width solid $facetedSearch-focus-outline-color;
+        outline-offset: $facetedSearch-focus-outline-offset;
+    }
+
+    &:focus:not(:focus-visible) {
+        outline: none;
+    }
+
+    &:focus-visible {
+        outline: $facetedSearch-focus-outline-width solid $facetedSearch-focus-outline-color;
+        outline-offset: $facetedSearch-focus-outline-offset;
+    }
 }

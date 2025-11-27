@@ -3,7 +3,13 @@
 // =============================================================================
 
 $facetLabel-backgroundColor:                container("fill", "dark");
-$facetLabel-borderRadius:                   4px;
+$facetLabel-borderRadius:                   9999px; // Full pill shape per Figma
 $facetLabel-removeIcon-width:               14px;
 $facetLabel-removeIcon-height:              14px;
 $facetLabel-removeIcon-color:               $small-font-color;
+
+// Chip/pill interaction states
+$facetLabel-backgroundColor-hover:          darken(container("fill", "dark"), 5%);
+$facetLabel-transition:                     background-color 0.15s ease, box-shadow 0.15s ease;
+$facetLabel-focus-outline-color:            stencilColor("color-primary");
+$facetLabel-focus-outline-width:            2px;
