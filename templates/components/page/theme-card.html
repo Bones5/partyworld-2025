@@ -1,18 +1,18 @@
 {{!-- Theme Card: large image, title, CTA --}}
 <article class="c-themeCard">
-  <a href="{{url}}" class="c-themeCard__media" aria-label="{{title}}">
+  <a href="{{url}}" class="c-themeCard__media" aria-label="{{default name title}}">
     {{#if image.url}}
-      <img src="{{image.url}}" alt="{{title}}" class="c-themeCard__image" />
+      <img src="{{image.url}}" alt="{{default name title}}" class="c-themeCard__image" />
     {{else if image.data}}
-      <img src="{{image.data}}" alt="{{title}}" class="c-themeCard__image" />
+      <img src="{{image.data}}" alt="{{default name title}}" class="c-themeCard__image" />
     {{else if image.source}}
-      <img src="{{image.source}}" alt="{{title}}" class="c-themeCard__image" />
+      <img src="{{image.source}}" alt="{{default name title}}" class="c-themeCard__image" />
     {{else if image}}
-      <img src="{{cdn image}}" alt="{{title}}" class="c-themeCard__image" />
+      <img src="{{cdn image}}" alt="{{default name title}}" class="c-themeCard__image" />
     {{/if}}
   </a>
   <div class="c-themeCard__body">
-    <h3 class="c-themeCard__title">{{title}}</h3>
+    <h3 class="c-themeCard__title">{{default name title}}</h3>
     {{#if ctaText}}
       <a href="{{url}}" class="c-themeCard__cta button button--primary">{{ctaText}}</a>
     {{/if}}
