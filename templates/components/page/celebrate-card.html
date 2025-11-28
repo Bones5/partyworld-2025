@@ -1,17 +1,17 @@
 {{!-- Celebrate Card: round image and title --}}
 <article class="c-celebrateCard">
-  <a href="{{url}}" class="c-celebrateCard__media" aria-label="{{default name title}}">
+  <a href="{{url}}" class="c-celebrateCard__media" aria-label="{{name}}">
     {{#if image.url}}
-      <img src="{{image.url}}" alt="{{default name title}}" class="c-celebrateCard__image" />
+      <img src="{{image.url}}" alt="{{name}}" class="c-celebrateCard__image" />
     {{else if image.data}}
-      <img src="{{image.data}}" alt="{{default name title}}" class="c-celebrateCard__image" />
+      <img src="{{image.data}}" alt="{{name}}" class="c-celebrateCard__image" />
     {{else if image.source}}
-      <img src="{{image.source}}" alt="{{default name title}}" class="c-celebrateCard__image" />
+      <img src="{{image.source}}" alt="{{name}}" class="c-celebrateCard__image" />
     {{else if image}}
-      <img src="{{cdn image}}" alt="{{default name title}}" class="c-celebrateCard__image" />
+      <img src="{{cdn image}}" alt="{{name}}" class="c-celebrateCard__image" />
     {{/if}}
   </a>
   <div class="c-celebrateCard__body">
-    <h3 class="c-celebrateCard__title">{{default name title}}</h3>
+    <h3 class="c-celebrateCard__title">{{name}}</h3>
   </div>
 </article>
