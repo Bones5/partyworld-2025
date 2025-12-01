@@ -1,0 +1,47 @@
+// Homepage Theme & Celebrate grids
+.c-themeGrid__items {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: spacing("single");
+}
+.c-celebrateGrid__items {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: spacing("single");
+}
+.c-themeCard__image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+.c-celebrateCard__image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+// Section headings color
+// Increase specificity so type.scss heading rules don't override
+.c-themeGrid .c-themeGrid__heading,
+.c-celebrateGrid .c-celebrateGrid__heading {
+    color: #000000; // use black per requirement
+    text-align: center;
+}
+
+// Celebrate grid header layout: title left, View All right
+.c-celebrateGrid__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: spacing("half");
+}
+
+.c-celebrateGrid__heading {
+    margin: 0; // remove default margins when inside header
+}
+
+.c-celebrateGrid__viewAll {
+    text-decoration: none;
+}

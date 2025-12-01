@@ -101,8 +101,18 @@
 
 // Category Card
 @import "stencil/categoryCard/component";
+
+// Category Grid
+@import "stencil/categoryGrid/component";
+
+// Hero
+@import "stencil/hero/component";
+
 // Social Links
 @import "stencil/socialLinks/component";
+
+// Homepage Grids (Theme & Celebrate)
+@import "stencil/homepage/grids";
 
 // Hero Carousel
 @import "stencil/heroCarousel/component";

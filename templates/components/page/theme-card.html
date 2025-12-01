@@ -1,0 +1,20 @@
+{{!-- Theme Card: large image, title, CTA --}}
+<article class="c-themeCard">
+  <a href="{{url}}" class="c-themeCard__media" aria-label="{{name}}">
+    {{#if image.url}}
+      <img src="{{image.url}}" alt="{{name}}" class="c-themeCard__image" />
+    {{else if image.data}}
+      <img src="{{image.data}}" alt="{{name}}" class="c-themeCard__image" />
+    {{else if image.source}}
+      <img src="{{image.source}}" alt="{{name}}" class="c-themeCard__image" />
+    {{else if image}}
+      <img src="{{cdn image}}" alt="{{name}}" class="c-themeCard__image" />
+    {{/if}}
+  </a>
+  <div class="c-themeCard__body">
+    <h3 class="c-themeCard__title">{{name}}</h3>
+    {{#if ctaText}}
+      <a href="{{url}}" class="c-themeCard__cta button button--primary">{{ctaText}}</a>
+    {{/if}}
+  </div>
+</article>

@@ -1,0 +1,67 @@
+// =============================================================================
+// CATEGORY GRID (CSS)
+// =============================================================================
+// Responsive grid layout for category cards per Partyworld Figma (Node 114-3848).
+// Desktop: 3/4-column layout, Mobile: 1-column layout.
+// Uses width() helpers and spacing() gutters.
+// -----------------------------------------------------------------------------
+
+.c-categoryGrid {
+    margin-bottom: spacing("double");
+}
+
+.c-categoryGrid__heading {
+    font-family: $fontFamily-headings;
+    font-size: $fontSize-larger;
+    line-height: $lineHeight-larger;
+    font-weight: $fontWeight-bold;
+    margin: 0 0 spacing("single");
+    text-align: center;
+
+    @include breakpoint("medium") {
+        font-size: $fontSize-largest;
+        line-height: $lineHeight-largest;
+        text-align: left;
+    }
+}
+
+.c-categoryGrid__items {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: spacing("single");
+
+    // 3-column variant
+    &.c-categoryGrid__items--col3 {
+        @include breakpoint("small") {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @include breakpoint("medium") {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    // 4-column variant (default)
+    &.c-categoryGrid__items--col4 {
+        @include breakpoint("small") {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @include breakpoint("medium") {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        @include breakpoint("large") {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+}
+
+.c-categoryGrid__item {
+    display: flex;
+
+    // Ensure cards fill the grid cell
+    .c-categoryCard {
+        width: 100%;
+    }
+}

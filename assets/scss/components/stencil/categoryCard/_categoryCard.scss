@@ -1,6 +1,9 @@
 // =============================================================================
 // CATEGORY CARD (CSS)
 // =============================================================================
+// Styles for category card component per Partyworld Figma (Node 114-3848).
+// Supports modifiers: .c-categoryCard--occasion for square aspect ratio cards.
+// -----------------------------------------------------------------------------
 
 .c-categoryCard {
     display: flex;
@@ -9,6 +12,11 @@
     border: 1px solid stencilColor("input-border-color");
     text-align: left;
     position: relative;
+    transition: box-shadow 0.2s ease;
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba($color-black, 0.12);
+    }
 }
 
 .c-categoryCard__media {
@@ -16,6 +24,23 @@
     aspect-ratio: 4 / 2.5; // approximate Figma ratio
     overflow: hidden;
     display: block;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    &:hover img,
+    &:focus img {
+        transform: scale(1.05);
+    }
+
+    &:focus {
+        outline: 2px solid $color-primary;
+        outline-offset: -2px;
+    }
 }
 
 .c-categoryCard__body {
@@ -37,9 +62,24 @@
     text-decoration: none;
     font-size: $fontSize-tiny;
     border-radius: 4px;
+    transition: background-color 0.2s ease;
+
+    &:hover,
+    &:focus {
+        background: $color-primaryDark;
+        color: $color-white;
+        text-decoration: none;
+    }
+
+    &:focus {
+        outline: 2px solid $color-primary;
+        outline-offset: 2px;
+    }
 }
 
-.c-categoryCard__cta:hover,
-.c-categoryCard__cta:focus {
-    background: $color-primaryLight;
+// Occasion modifier: square aspect ratio for occasion cards (per Figma design)
+.c-categoryCard--occasion {
+    .c-categoryCard__media {
+        aspect-ratio: 1 / 1;
+    }
 }

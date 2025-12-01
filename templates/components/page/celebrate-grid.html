@@ -1,0 +1,14 @@
+{{!-- Celebrate Grid: heading + 5 celebrate cards --}}
+<section class="c-celebrateGrid">
+  <div class="c-celebrateGrid__header">
+    <h2 class="c-celebrateGrid__heading">{{default heading 'Celebrate Every Occasion'}}</h2>
+      <a class="c-celebrateGrid__viewAll btn btn--primary" href="{{viewAllUrl}}">View All</a>
+  </div>
+  <div class="c-celebrateGrid__items">
+    {{#each occasions}}
+      <div class="c-celebrateGrid__item">
+        {{> components/page/celebrate-card url=url image=image title=title }}
+      </div>
+    {{/each}}
+  </div>
+</section>

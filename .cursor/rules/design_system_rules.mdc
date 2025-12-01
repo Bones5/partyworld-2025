@@ -364,8 +364,19 @@ This section documents all foundation tokens aligned with the Partyworld Figma d
 | Component | Location | Status | Notes |
 |-----------|----------|--------|-------|
 | Testimonial | `components/stencil/testimonial/` | ✅ Implemented | Stars, body, author structure |
-| Category Card | `components/stencil/categoryCard/` | ✅ Implemented | Image, heading, CTA with aspect-ratio support |
+| Category Card | `components/stencil/categoryCard/` | ✅ Implemented | Image, heading, CTA with aspect-ratio support; `.c-categoryCard--occasion` modifier for square aspect ratio |
+| Category Grid | `components/stencil/categoryGrid/` | ✅ Implemented | Responsive grid layout (1-col mobile, 2-col tablet, 3/4-col desktop) with `--col3` and `--col4` variants |
+| Hero | `components/stencil/hero/` | ✅ Implemented | Full-width banner with background media, heading (`$fontSize-displayXL`), subheading, and CTA button |
 | Share Bar | `components/stencil/shareBar/` | ✅ Implemented | Social sharing with hover states |
+
+### Hero Component Settings (Theme Editor)
+| Setting ID | Type | Description |
+|------------|------|-------------|
+| `homepage_hero_heading` | text | Main heading text for hero banner |
+| `homepage_hero_subheading` | text | Subheading text for hero banner |
+| `homepage_hero_cta_text` | text | CTA button label |
+| `homepage_hero_cta_url` | text | CTA button URL |
+| `homepage_hero_image` | imageDimension | Background image for hero banner |
 
 ### Color & Spacing System
 All existing color tokens (`$color-primary`, `$color-secondary`, etc.) are defined via `stencilColor()` in `settings/global/color/_color.scss` and map to Theme Editor keys for dynamic theming.
@@ -396,5 +407,10 @@ Recent implementations (Completed):
 - ✅ Header tokens added: `$header-height-bar: remCalc(56px)`, `$header-height-primary: remCalc(201px)`.
 - ✅ Brand colors mapped to config.json: Primary `#D30006` (was `#757575`), Secondary `#DCDCDC` (was `#ffffff`), with corresponding dark/light variants.
 - ✅ Component scaffolding: Testimonial, Category Card, Share Bar components implemented.
+- ✅ Hero component: Full-width banner with responsive typography (`$fontSize-displayXL` on desktop, `$fontSize-heroLarge` on tablet, 40px on mobile), background media, and styled CTA button with accessible focus states.
+- ✅ Category Grid component: Responsive grid layout using CSS Grid with `--col3` and `--col4` variants for different column counts.
+- ✅ Category Card enhanced: Added `.c-categoryCard--occasion` modifier for square aspect ratio, lazy loading with lazysizes, CDN helper integration, and hover/focus states.
+- ✅ Home page integration: Hero and category grid sections wired into `templates/pages/home.html` with Theme Editor settings.
+- ✅ Theme Editor settings: Hero banner settings added to `schema.json` and `config.json` for heading, subheading, CTA, and background image.
 - ✅ Stylelint validation passed.
 - ✅ Build verification passed.

@@ -1,0 +1,11 @@
+{{!-- Theme Grid: heading + 3 theme cards --}}
+<section class="c-themeGrid">
+  <h2 class="c-themeGrid__heading">{{default heading 'Shop by Theme'}}</h2>
+  <div class="c-themeGrid__items">
+    {{#each  themes}}
+      <div class="c-themeGrid__item">
+        {{> components/page/theme-card url=url image=image title=title ctaText=(default ctaText 'Shop Now') }}
+      </div>
+    {{/each}}
+  </div>
+</section>
