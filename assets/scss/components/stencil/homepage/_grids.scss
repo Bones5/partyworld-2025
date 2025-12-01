@@ -27,4 +27,21 @@
 .c-themeGrid .c-themeGrid__heading,
 .c-celebrateGrid .c-celebrateGrid__heading {
     color: #000000; // use black per requirement
+    text-align: center;
+}
+
+// Celebrate grid header layout: title left, View All right
+.c-celebrateGrid__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: spacing("half");
+}
+
+.c-celebrateGrid__heading {
+    margin: 0; // remove default margins when inside header
+}
+
+.c-celebrateGrid__viewAll {
+    text-decoration: none;
 }

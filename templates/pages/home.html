@@ -17,15 +17,7 @@ categories:
 ---
 {{#partial "hero"}}
     {{{region name="home_below_menu"}}}
-    {{!-- Theme and Celebrate sections populated from category tree --}}
-    {{#each categories}}
-        {{#if name '==' 'Themes'}}
-            {{> components/page/theme-grid heading="Shop by Theme" themes=(limit children 3) }}
-        {{/if}}
-        {{#if name '==' 'Occasions'}}
-            {{> components/page/celebrate-grid heading="Celebrate Every Occasion" occasions=(limit children 5) }}
-        {{/if}}
-    {{/each}}
+
     {{{region name="home_below_carousel"}}}
 {{/partial}}
 
@@ -33,6 +25,21 @@ categories:
 
     {{#each shipping_messages}}
         {{> components/common/alert/alert-info message}}
+    {{/each}}
+
+        {{!-- Theme and Celebrate sections populated from category tree --}}
+    {{!-- First pass: render Themes --}}
+    {{#each categories}}
+        {{#if name '==' 'Themes'}}
+            {{> components/page/theme-grid heading="Shop by Theme" themes=(limit children 3) }}
+        {{/if}}
+    {{/each}}
+
+    {{!-- Second pass: render Occasions --}}
+    {{#each categories}}
+        {{#if name '==' 'Occasions'}}
+            {{> components/page/celebrate-grid heading="Celebrate Every Occasion" occasions=(limit children 5) }}
+        {{/if}}
     {{/each}}
 
 <div class="main full">
