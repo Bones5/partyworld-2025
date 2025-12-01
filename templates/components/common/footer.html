@@ -78,7 +78,9 @@
                 {{> components/common/payment-icons}}
             </article>
         </section>
-        {{> components/common/environment-selector}}
+        {{#if theme_settings.show_environments}}
+            {{> components/common/environment-selector}}
+        {{/if}}
         {{#if theme_settings.show_powered_by}}
             <div class="footer-copyright">
                 <p class="powered-by">{{lang 'footer.powered_by'}} <a href="https://www.bigcommerce.com?utm_source=merchant&amp;utm_medium=poweredbyBC" rel="nofollow">BigCommerce</a></p>
