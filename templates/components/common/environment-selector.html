@@ -1,0 +1,40 @@
+{{#if theme_settings.show_environments}}
+{{#if theme_settings.environments.length '>' 1}}
+<ul class="navUser-section navUser-section--environment">
+    <li class="navUser-item">
+        <a href="#"
+           class="navUser-action navUser-action--environmentSelector has-dropdown"
+           data-dropdown="environmentSelection"
+           aria-controls="environmentSelection"
+           aria-expanded="false"
+        >
+            {{#each theme_settings.environments}}
+                {{#if is_active}}
+                    {{lang 'common.environment' code=code}}
+                {{/if}}
+            {{/each}}
+            <i class="icon" aria-hidden="true">
+                <svg>
+                    <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-chevron-down"/>
+                </svg>
+            </i>
+        </a>
+        <ul class="dropdown-menu" id="environmentSelection" data-dropdown-content aria-hidden="true" tabindex="-1">
+            {{#each theme_settings.environments}}
+                {{#if switch_url}}
+                <li class="dropdown-menu-item">
+                    <a href="{{{switch_url}}}" data-environment-code="{{{code}}}" data-warning="{{lang 'common.environment_switch_warning'}}">
+                        {{#if is_active}}
+                            <strong>{{name}}</strong>
+                        {{else}}
+                            {{name}}
+                        {{/if}}
+                    </a>
+                </li>
+                {{/if}}
+            {{/each}}
+        </ul>
+    </li>
+</ul>
+{{/if}}
+{{/if}}

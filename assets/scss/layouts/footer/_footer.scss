@@ -173,3 +173,59 @@
 .footer-newsletter-summary {
     text-align: left;
 }
+
+// Environment selector in footer
+// -----------------------------------------------------------------------------
+.navUser-section--environment {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin: spacing("single") 0;
+    padding: 0;
+
+    @include breakpoint("small") {
+        justify-content: flex-start;
+    }
+
+    .navUser-item {
+        display: block;
+    }
+
+    .navUser-action {
+        color: stencilColor("color-textSecondary");
+        font-size: fontSize("base");
+        padding: spacing("quarter") spacing("half");
+        text-decoration: none;
+
+        &:hover,
+        &:focus,
+        &.is-open {
+            color: stencilColor("color-textSecondary--hover");
+        }
+    }
+
+    .dropdown-menu {
+        background-color: stencilColor("container-fill-base");
+        border: 1px solid stencilColor("container-border-global-color-base");
+        box-shadow: container("dropShadow");
+        list-style: none;
+        margin: 0;
+        padding: spacing("quarter") 0;
+        position: absolute;
+        z-index: zIndex("high");
+
+        .dropdown-menu-item {
+            a {
+                color: stencilColor("color-textSecondary");
+                display: block;
+                padding: spacing("quarter") spacing("single");
+                text-decoration: none;
+
+                &:hover {
+                    color: stencilColor("color-textSecondary--hover");
+                    background-color: stencilColor("container-fill-dark");
+                }
+            }
+        }
+    }
+}

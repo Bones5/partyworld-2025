@@ -741,6 +741,11 @@
         "id": "show_channels"
       },
       {
+        "type": "checkbox",
+        "label": "i18n.EnvironmentSelector",
+        "id": "show_environments"
+      },
+      {
         "type": "color",
         "label": "i18n.TextColor",
         "id": "navUser-color"

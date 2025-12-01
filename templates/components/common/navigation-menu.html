@@ -73,6 +73,11 @@
                 {{> components/common/channel-selector-mobile}}
             </li>
         {{/if}}
+        {{#if theme_settings.show_environments}}
+            <li class="navPages-item">
+                {{> components/common/environment-selector-mobile}}
+            </li>
+        {{/if}}
         {{#if settings.gift_certificates_enabled}}
             <li class="navPages-item">
                 <a class="navPages-action"

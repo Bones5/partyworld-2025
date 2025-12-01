@@ -1652,6 +1652,25 @@
     "pl": "Selektor witryny sklepu",
     "ja": "ストアフロントセレクターを表示"
   },
+  "i18n.EnvironmentSelector": {
+    "default": "Show environment selector",
+    "fr": "Afficher le sélecteur d'environnement",
+    "it": "Mostra selettore ambiente",
+    "zh": "显示环境选择器",
+    "de": "Umgebungsauswahl anzeigen",
+    "es": "Mostrar selector de entorno",
+    "nl": "Omgevingskiezer weergeven",
+    "pt": "Exibir seletor de ambiente",
+    "pt-BR": "Exibir seletor de ambiente",
+    "sv": "Visa miljöväljare",
+    "es-MX": "Selector de entorno",
+    "es-419": "Selector de entorno",
+    "da": "Vis miljøvælger",
+    "no": "Vis miljøvelger",
+    "ko": "환경 선택기 표시",
+    "pl": "Selektor środowiska",
+    "ja": "環境セレクターを表示"
+  },
   "i18n.TextColor": {
     "default": "Text color",
     "fr": "Couleur du texte",

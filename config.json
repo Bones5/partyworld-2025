@@ -67,6 +67,23 @@
       }
     ],
     "show_channels": false,
+    "environments": [
+      {
+        "id": 1,
+        "name": "Staging",
+        "code": "staging",
+        "is_active": true,
+        "switch_url": ""
+      },
+      {
+        "id": 2,
+        "name": "Production",
+        "code": "production",
+        "is_active": false,
+        "switch_url": ""
+      }
+    ],
+    "show_environments": false,
     "hide_breadcrumbs": false,
     "hide_page_heading": false,
     "hide_category_page_heading": false,

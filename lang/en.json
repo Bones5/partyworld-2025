@@ -145,6 +145,8 @@
         "currency_switch_promotion" : "Promotions and gift certificates that don't apply to the new currency will be removed from your cart. Are you sure you want to continue?",
         "channel": "Store: {code}",
         "channel_switch_warning" : "Warning text for store switching",
+        "environment": "Environment: {code}",
+        "environment_switch_warning": "You are switching to a different environment. Are you sure you want to continue?",
         "newsletter_signup": "Register for our newsletter",
         "form_submit": "Submit",
         "no_preference": "No Preference",

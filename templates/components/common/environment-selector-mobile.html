@@ -1,0 +1,46 @@
+{{#if theme_settings.show_environments}}
+{{#if theme_settings.environments.length '>' 1}}
+<a href="#"
+   class="navPages-action has-subMenu"
+   data-collapsible="navPages-environment"
+   aria-controls="navPages-environment"
+   aria-expanded="false"
+   aria-label="
+    {{#each theme_settings.environments}}
+        {{#if is_active}}
+            {{lang 'common.environment' code=code}}
+        {{/if}}
+    {{/each}}
+   "
+>
+    {{#each theme_settings.environments}}
+        {{#if is_active}}
+            {{lang 'common.environment' code=code}}
+        {{/if}}
+    {{/each}}
+    <i class="icon navPages-action-moreIcon" aria-hidden="true">
+        <svg>
+            <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-chevron-down"></use>
+        </svg>
+    </i>
+</a>
+<div class="navPage-subMenu" id="navPages-environment" aria-hidden="true" tabindex="-1">
+    <ul class="navPage-subMenu-list">
+        {{#each theme_settings.environments}}
+        {{#if switch_url}}
+        <li class="navPage-subMenu-item">
+            <a href="{{{switch_url}}}"
+               class="navPage-subMenu-action navPages-action"
+               aria-label="{{name}}"
+               data-environment-code="{{{code}}}"
+               data-warning="{{lang 'common.environment_switch_warning'}}"
+            >
+                {{name}}
+            </a>
+        </li>
+        {{/if}}
+        {{/each}}
+    </ul>
+</div>
+{{/if}}
+{{/if}}
