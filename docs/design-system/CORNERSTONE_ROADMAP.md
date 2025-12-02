@@ -38,7 +38,7 @@ These files contain hardcoded hex values that should be replaced with token vari
 | `components/stencil/homepage/_grids.scss` | 29 | `#000000` hardcoded | Use `$color-textBase` or `stencilColor("color-textHeading")` |
 | `components/stencil/paymentMethods/_paymentMethods.scss` | 30 | `#e5e5e5` hardcoded | Use `$color-greyLight` or define token |
 | `components/stencil/paymentMethods/_paymentMethods.scss` | 41 | `#fff` hardcoded | Use `$color-white` |
-| `components/stencil/announcementBar/_component.scss` | 15 | `#2F3842` hardcoded | Create/use `$color-announcementBar-bg` token |
+| `components/stencil/announcementBar/_component.scss` | 15 | `#2F3842` hardcoded | Create/use `$color-announcementBar-bg` token (Note: Comment mentions `$color-primary` red but actual color is dark blue-grey - design intent should be clarified) |
 
 #### Inline Styles (Priority: Medium)
 Some inline styles exist in templates for JS-controlled visibility. These are acceptable for:

@@ -188,7 +188,7 @@ Template usage with CDN helper and icon sprite:
 <article class="c-card c-card--raised">
   <header class="c-card__header">
     <svg class="c-icon" aria-hidden="true" focusable="false">
-      <use xlink:href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-info"></use>
+      <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-info"></use>
     </svg>
     <h3 class="c-card__title">{{title}}</h3>
   </header>
