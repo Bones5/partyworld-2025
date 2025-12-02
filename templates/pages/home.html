@@ -18,6 +18,15 @@ categories:
 {{#partial "hero"}}
     {{{region name="home_below_menu"}}}
 
+    {{!-- Hero Banner Section - Editable via Theme Editor --}}
+    {{> components/page/hero 
+        image=theme_settings.homepage_hero_image
+        heading=theme_settings.homepage_hero_heading
+        subheading=theme_settings.homepage_hero_subheading
+        ctaText=theme_settings.homepage_hero_cta_text
+        ctaUrl=theme_settings.homepage_hero_cta_url
+    }}
+
     {{{region name="home_below_carousel"}}}
 {{/partial}}
 

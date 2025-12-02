@@ -1035,27 +1035,32 @@
       {
         "type": "text",
         "label": "Hero Heading",
-        "id": "homepage_hero_heading"
+        "id": "homepage_hero_heading",
+        "force_reload": true
       },
       {
         "type": "text",
         "label": "Hero Subheading",
-        "id": "homepage_hero_subheading"
+        "id": "homepage_hero_subheading",
+        "force_reload": true
       },
       {
         "type": "text",
         "label": "Hero CTA Text",
-        "id": "homepage_hero_cta_text"
+        "id": "homepage_hero_cta_text",
+        "force_reload": true
       },
       {
         "type": "text",
         "label": "Hero CTA URL",
-        "id": "homepage_hero_cta_url"
+        "id": "homepage_hero_cta_url",
+        "force_reload": true
       },
       {
-        "type": "imageDimension",
+        "type": "text",
         "label": "Hero Background Image",
-        "id": "homepage_hero_image"
+        "id": "homepage_hero_image",
+        "force_reload": true
       },
       {
         "type": "heading",
