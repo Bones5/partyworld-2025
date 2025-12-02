@@ -56,6 +56,50 @@ Consider adding Theme Editor settings for:
 - Section heading colors
 - Payment method card backgrounds
 
+### ⚠️ Uncustomized Theme Config Settings (Priority: Medium)
+
+The following `config.json` settings still use default Cornerstone values and should be reviewed against the Partyworld brand design:
+
+#### Buttons (High Priority)
+| Setting | Current Value | Issue |
+|---------|---------------|-------|
+| `button--primary-backgroundColor` | `#444444` | Generic grey; should use brand color (e.g., `$color-primary` = `#D30006`) |
+| `button--primary-backgroundColorHover` | `#666666` | Grey hover; needs brand-aligned hover state |
+| `button--primary-backgroundColorActive` | `#000000` | Black active; needs brand-aligned active state |
+| `button--default-color` | `#666666` | Grey secondary button text |
+| `button--default-borderColor` | `#8F8F8F` | Grey border |
+
+#### Icons & Rating Stars
+| Setting | Current Value | Issue |
+|---------|---------------|-------|
+| `icon-color` | `#757575` | Default grey icon color |
+| `icon-ratingEmpty` | `#8F8F8F` | Grey empty stars |
+| `icon-ratingFull` | `#474747` | Dark grey filled stars; consider brand accent |
+| `button--icon-svg-color` | `#757575` | Grey icon buttons |
+
+#### Carousel/Slider
+| Setting | Current Value | Issue |
+|---------|---------------|-------|
+| `carousel-title-color` | `#444444` | Generic grey |
+| `carousel-dot-color` | `#333333` | Dark grey dots |
+| `carousel-dot-color-active` | `#757575` | Grey active dot |
+| `carousel-arrow-color` | `#8f8f8f` | Grey arrows |
+
+#### Product Cards
+| Setting | Current Value | Issue |
+|---------|---------------|-------|
+| `card-title-color` | `#333333` | May need brand alignment |
+| `card-title-color-hover` | `#757575` | Grey hover |
+
+#### Navigation
+| Setting | Current Value | Issue |
+|---------|---------------|-------|
+| `navPages-subMenu-backgroundColor` | `#e5e5e5` | Grey submenu background |
+| `dropdown--quickSearch-backgroundColor` | `#e5e5e5` | Grey search dropdown |
+
+#### Checkout Page (Full Review Needed)
+The checkout page settings (`optimizedCheckout-*`) all use default Cornerstone values and should be comprehensively reviewed for brand alignment.
+
 ### 📋 Implementation Roadmap
 
 #### Phase 1: Fix Hardcoded Colors (1-2 hours)
@@ -108,7 +152,37 @@ Per the existing implementation plan in `docs/IMPLEMENTATION_PLAN.md`:
    - Newsletter form refinement
    - Footer layout updates
 
-#### Phase 3: Documentation & QA (Ongoing)
+#### Phase 3: Theme Config Brand Alignment (2-4 hours)
+Update `config.json` settings from Cornerstone defaults to Partyworld brand values:
+
+1. [ ] **Primary Button Colors**
+   - Update `button--primary-backgroundColor` to use brand red (`#D30006` or aligned value)
+   - Update hover/active states to brand-aligned colors
+   - Test across all button instances (Add to Cart, Checkout, etc.)
+
+2. [ ] **Secondary Button Colors**
+   - Review `button--default-*` settings
+   - Align border and text colors with brand palette
+
+3. [ ] **Icon & Rating Colors**
+   - Update `icon-color` and hover state
+   - Update `icon-ratingEmpty` and `icon-ratingFull` for brand alignment
+   - Consider using brand accent for filled stars
+
+4. [ ] **Carousel Colors**
+   - Update dot colors for brand alignment
+   - Review arrow colors against backgrounds
+
+5. [ ] **Navigation Dropdowns**
+   - Review `navPages-subMenu-backgroundColor`
+   - Review `dropdown--quickSearch-backgroundColor`
+
+6. [ ] **Checkout Page Branding**
+   - Full audit of `optimizedCheckout-*` settings
+   - Update primary button to brand colors
+   - Ensure consistent typography with main theme
+
+#### Phase 4: Documentation & QA (Ongoing)
 1. [ ] Update `design_system_rules.md` with any new tokens
 2. [ ] Capture desktop/mobile screenshots for each section
 3. [ ] Keyboard navigation testing
