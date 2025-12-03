@@ -2,6 +2,7 @@
 // ICONS (CSS)
 //
 // 1. Hide the SVG sprite with CSS, not inline styles
+// 2. Outline icons use stroke instead of fill for coloring
 // =============================================================================
 
 .icons-svg-sprite {
@@ -11,4 +12,21 @@
 .icon,
 .icon svg {
     transition: all 0.15s ease;
+}
+
+
+// Outline Icon Modifier
+// -----------------------------------------------------------------------------
+//
+// Use for stroke-based SVG icons (e.g., cart, account, search).
+// Sets stroke to currentColor so the icon inherits the parent's text color.
+//
+// -----------------------------------------------------------------------------
+
+.icon--outline { // 2
+    svg {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2px;
+    }
 }
