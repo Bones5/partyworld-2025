@@ -8,7 +8,17 @@
         ctaText="Shop Now"
         ctaUrl="/categories"
     }}
+
+  Or with theme_settings:
+    {{> components/page/hero 
+        image=theme_settings.homepage_hero_image
+        heading=theme_settings.homepage_hero_heading
+        subheading=theme_settings.homepage_hero_subheading
+        ctaText=theme_settings.homepage_hero_cta_text
+        ctaUrl=theme_settings.homepage_hero_cta_url
+    }}
 --}}
+{{#or heading subheading ctaText image}}
 <section class="c-hero">
     <div class="c-hero__media">
         {{#if image}}
@@ -37,6 +47,15 @@
                     loading="lazy"
                     data-sizes="auto"
                 />
+            {{else}}
+                {{!-- Support direct string URL (from theme_settings) --}}
+                <img 
+                    src="{{cdn image}}" 
+                    alt="" 
+                    class="c-hero__image lazyload"
+                    loading="lazy"
+                    data-sizes="auto"
+                />
             {{/if}}
         {{/if}}
     </div>
@@ -48,9 +67,13 @@
             <p class="c-hero__subheading">{{subheading}}</p>
         {{/if}}
         {{#if ctaText}}
-            <a href="{{ctaUrl}}" class="c-hero__cta button button--primary">
-                {{ctaText}}
-            </a>
+            {{#if ctaUrl}}
+                {{!-- ctaUrl comes from trusted theme_settings configured by store admin, same pattern as carousel --}}
+                <a href="{{ctaUrl}}" class="c-hero__cta button button--primary">
+                    {{ctaText}}
+                </a>
+            {{/if}}
         {{/if}}
     </div>
 </section>
+{{/or}}
