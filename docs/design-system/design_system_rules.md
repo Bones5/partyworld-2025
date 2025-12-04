@@ -1,0 +1,416 @@
+# Design System Rules — Partyworld 2025 (BigCommerce Stencil)
+
+This document aligns Figma design tokens, components, and patterns with this Stencil theme’s SCSS, templates, and JS so designs translate into code consistently and safely.
+
+## Design System Structure
+
+### Token Definitions
+- Colors: Defined via Citadel + Theme Editor and exposed as SCSS variables using `stencilColor(...)` in `assets/scss/settings/global/color/_color.scss`.
+  - Example keys: `color-primary`, `color-secondary`, `color-textBase`, `color-error`, etc.
+  - Usage in settings: `$color-primary: stencilColor("color-primary");`
+- Typography: Font families and size scale in `assets/scss/settings/global/typography/_typography.scss`.
+  - Fonts via `stencilFontFamily(...)` (Theme Editor): `$fontFamily-headings: stencilFontFamily("headings-font"), Arial, Helvetica, sans-serif;`
+  - Numeric tokens via `stencilNumber(...)` (Theme Editor): `$fontSize-root: stencilNumber("fontSize-root");`
+- Spacing: Rhythmic spacing scale in `assets/scss/settings/global/layout/_layout.scss`.
+  - Scale variables: `$spacing-single`, `$spacing-double`, `$spacing-half`, etc.
+  - Function API (Citadel): `spacing("single")`, `spacing("double")`, etc.
+- Layout widths and grid: `width($key)` function in the same layout file (e.g., `width("6/12")`).
+- Where to override tokens:
+  - Prefer Theme Editor for colors/typography/numbers so `stencilColor`, `stencilFontFamily`, and `stencilNumber` resolve dynamically.
+  - For code-based overrides, use `assets/scss/settings/stencil/_stencil.scss` and its per-component settings folders, or specific maps under `assets/scss/settings/global/**`.
+
+Code example — mapping a Figma color to SCSS usage:
+```scss
+// assets/scss/settings/global/color/_color.scss
+$color-primary: stencilColor("color-primary");
+
+// Component (SCSS)
+.c-cta {
+  background: $color-primary;
+  color: $color-white;
+}
+```
+
+Code example — using spacing scale from Figma spacing tokens:
+```scss
+.c-card {
+  padding: spacing("single");
+}
+.c-card--roomy {
+  padding: spacing("double");
+}
+```
+
+### Component Library
+- SCSS components:
+  - Entry: `assets/scss/components/_components.scss`
+  - Groups: Foundation, Citadel, Stencil, Vendor.
+  - Add new theme components under `assets/scss/components/stencil/<component>/` and import in `_components.scss`.
+- Template components (Handlebars): `templates/components/**` with partials used across pages.
+- JavaScript behavior:
+  - Pattern: Page classes extending `PageManager` in `assets/js/theme/**` (e.g., `global.js`).
+  - Compose features via small modules (carousel, quickView, svgInjector, etc.).
+
+Example — add a new visual component:
+```scss
+// assets/scss/components/stencil/badge/_component.scss
+.c-badge {
+  display: inline-block;
+  padding: spacing("sixth") spacing("third");
+  border-radius: 9999px;
+  background: $color-secondary;
+  color: $color-white;
+  font: inherit;
+}
+```
+```scss
+// assets/scss/components/_components.scss
+@import "stencil/badge/component";
+```
+```html
+{{!-- templates/components/badge.html --}}
+<span class="c-badge">{{text}}</span>
+```
+
+### Frameworks & Libraries
+- Core: jQuery, Foundation Sites (via Citadel), BigCommerce `@bigcommerce/stencil-utils`.
+- Styling: SCSS with Citadel (`@bigcommerce/citadel`) providing tokens, utilities, and component primitives.
+- JS Bundling: Webpack 5 (`webpack.common.js`, `webpack.dev.js`, `webpack.prod.js`).
+- Linting/Quality: Stylelint, ESLint, Jest.
+- Grunt: `grunt-svgstore` for icon sprites, `grunt-stylelint`, `grunt-eslint`.
+
+### Asset Management
+- Images: `assets/img/**` (including the generated `icon-sprite.svg`).
+- Icons (source): `assets/icons/**/*.svg` combined into a single sprite by Grunt.
+- Web delivery: Reference assets through BigCommerce CDN helper in templates:
+```html
+<img src="{{cdn 'assets/img/coming-soon.jpg'}}" alt="Coming soon">
+```
+- Performance: Lazy loading via `lazysizes` (entry `head_async`), image sprites for SVG, lodash tree-shaking.
+
+### Icon System
+- Source files: `assets/icons/*.svg`.
+- Sprite generation: `grunt svgstore` builds `assets/img/icon-sprite.svg` with IDs like `icon-<filename>`.
+  - Config: `grunt/svgstore.js` sets `prefix: 'icon-'` and outputs to `./assets/img/icon-sprite.svg`.
+- **Icon size tokens** (per Figma spec):
+  - `$navUser-icon-size: 18px;` - Default utility icon size
+  - `$navUser-icon-size-lg: 24px;` - Primary action icons (search, account, cart)
+- **Template usage** (modern `href` instead of legacy `xlink:href`):
+```html
+<svg class="c-icon c-icon--facebook" aria-hidden="true" focusable="false">
+  <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-facebook"></use>
+</svg>
+<span class="u-hiddenVisually">Facebook</span>
+```
+- **NavUser icons** (search, account, cart):
+```html
+<svg class="navUser-icon" aria-hidden="true" focusable="false">
+  <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-search"></use>
+</svg>
+<span class="u-hiddenVisually">{{lang 'common.search'}}</span>
+```
+- **Icon colors** (Theme Editor keys):
+  - `navUser-color` - Default icon color
+  - `navUser-color-hover` - Hover/focus icon color
+- CSS usage (as mask):
+```scss
+.c-icon--facebook {
+  width: 1em; height: 1em;
+  background: currentColor;
+  -webkit-mask: url("{{cdn 'assets/img/icon-sprite.svg'}}#icon-facebook") no-repeat 50% 50%;
+  mask: url("{{cdn 'assets/img/icon-sprite.svg'}}#icon-facebook") no-repeat 50% 50%;
+}
+```
+
+
+### Styling Approach
+- Import order (see `assets/scss/theme.scss`):
+  1) Tools, 2) Settings (Global, Citadel, Normalize/Foundation/BigCommerce, Stencil overrides), 3) Utilities, 4) Components, 5) Layouts.
+- Methodology: Citadel provides consistent tokens, utilities, and component primitives. Favor composition and BEM-like naming (e.g., `.c-card`, `.c-card--variant`).
+- Responsive: Use Citadel/Foundation breakpoint utilities defined in `assets/scss/settings/global/screensizes/` and associated mixins from Citadel.
+- Accessibility: Common helpers in `assets/scss/common/_aria.scss` and `_focus-tooltip.scss`; ensure focus states meet contrast and use existing `focusTooltip` tokens.
+
+### Project Structure
+- Tokens/Settings: `assets/scss/settings/**` (global tokens, per-component settings in `settings/stencil/**`).
+- Utilities: `assets/scss/utilities/_utilities.scss` (and Citadel utilities imported in `theme.scss`).
+- Components: `assets/scss/components/**` with a clear import tree in `_components.scss`.
+- Layouts: `assets/scss/layouts/**` for Header, Footer, Container, etc.
+- Templates: `templates/components/**` and page views under `templates/pages/**` and `templates/layout/**`.
+- JS behavior: `assets/js/theme/**` organized by feature and page type.
+
+## Figma → Code Workflow
+
+1) Token mapping
+- Colors: Define/confirm palette in Figma; bind to Stencil Theme Editor keys (e.g., `color-primary`). In code, consume via `$color-primary` (backed by `stencilColor("color-primary")`).
+- Typography: Map Figma families/sizes to Theme Editor fields (`body-font`, `headings-font`, `fontSize-h1..h6`, `fontSize-root`).
+- Spacing: Align Figma spacing scale to the existing `spacing("*")` keys. Prefer using the function over hardcoded pixel values.
+
+2) Component specs → SCSS + Template
+- Structure partials in `templates/components/<component>.html` and styles under `assets/scss/components/stencil/<component>/`.
+- Use settings layer for configurable component tokens in `assets/scss/settings/stencil/<component>/_settings.scss`.
+
+3) Icons
+- Export monochrome vectors from Figma as individual SVGs to `assets/icons/` with lowercase, kebab-case filenames.
+- Run the sprite task and reference with `#icon-<name>` IDs.
+
+4) QA and accessibility
+- Verify contrast ratios for text and focus states using tokenized colors.
+- Validate with Jest (if applicable to JS), Stylelint, and manual keyboard testing.
+
+## Examples
+
+Add a new semantic color (via Theme Editor + SCSS fallback):
+```scss
+// assets/scss/settings/global/color/_color.scss
+$color-accent: stencilColor("color-accent"); // add color in Theme Editor
+
+// assets/scss/components/stencil/banner/_component.scss
+.c-banner {
+  background: $color-accent;
+  color: $color-white;
+}
+```
+
+Introduce an elevated card variant with existing tokens:
+```scss
+.c-card {
+  background: $color-white;
+  border: 1px solid stencilColor("input-border-color");
+  padding: spacing("single");
+}
+.c-card--raised {
+  box-shadow: 0 4px 12px rgba($color-black, 0.12);
+}
+```
+
+Template usage with CDN helper and icon sprite:
+```html
+<article class="c-card c-card--raised">
+  <header class="c-card__header">
+    <svg class="c-icon" aria-hidden="true" focusable="false">
+      <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-info"></use>
+    </svg>
+    <h3 class="c-card__title">{{title}}</h3>
+  </header>
+  <div class="c-card__body">{{{body}}}</div>
+  <img src="{{cdn 'assets/img/coming-soon.jpg'}}" alt="" loading="lazy">
+  <footer class="c-card__footer">{{{footer}}}</footer>
+  <span class="u-hiddenVisually">Supplemental info</span>
+  </article>
+```
+
+## Commands
+- Build JS bundles:
+```sh
+npm run build
+```
+- Dev bundles with watch/source maps:
+```sh
+npm run buildDev
+```
+- Lint SCSS:
+```sh
+npm run stylelint
+```
+- Generate SVG sprite:
+```sh
+npx grunt svgstore
+```
+
+## Conventions & Tips
+- Prefer functional tokens (`stencilColor`, `stencilFontFamily`, `stencilNumber`, `spacing`) over literals to stay Theme Editor–compatible.
+- Place per-component configurable values in `assets/scss/settings/stencil/<component>/_settings.scss` and consume them inside the component SCSS.
+- Keep component names kebab-cased and classnames prefixed (e.g., `.c-` for components, `.u-` for utilities) to avoid collisions with Foundation classes.
+- Use BigCommerce `{{cdn}}` to reference theme assets for cache-busting and CDN delivery.
+
+## Pointers to Source
+- `assets/scss/theme.scss` (import order and layers)
+- `assets/scss/settings/global/**` (core tokens for color, typography, spacing, layout)
+- `assets/scss/settings/stencil/**` (theme/component settings overrides)
+- `assets/scss/components/_components.scss` (component registry)
+- `templates/components/**` (partials)
+- `assets/icons/**` + `grunt/svgstore.js` (icon sprite pipeline)
+- `webpack.common.js` (bundling), `Gruntfile.js` (tasks)
+
+## Figma Frame → Theme Mapping (File `Partyworld`, Node `114-3848`)
+
+The imported Figma section contains multiple device frames (Desktop 1440px wide, Mobile 375px wide variants) representing header, navigation, category grids, product cards, filters/sidebar, promotional banners, blog items, and newsletter signup. Below is how each should map to theme architecture and tokens for implementation.
+
+### Layout & Grid
+- Figma desktop frame width: 1440px with an inner content width of ~1280px (80px horizontal gutters). Existing SCSS uses `$layout-widthMax: remCalc(1200px);`.
+  - Option A: Keep 1200px max width; treat Figma 1280 content width as visual guidance only.
+  - Option B: Override `$layout-widthMax` to `remCalc(1280px)` for closer fidelity (update in `assets/scss/settings/global/layout/_layout.scss`).
+- Horizontal gutters (80px) can map to container padding variables:
+  - `$container-padding-base` currently = `$spacing-single` (~ base rhythm). If insufficient, create a new variable `$container-padding-wide` or adjust `$container-padding-large` to match 80px target (≈ 5rem at 16px root). Use a calculated value: `calc(80px / 16)` rem if sticking to rem scale.
+
+### Breakpoints
+- Figma mobile frame width: 375px, aligns below `$screen-small: 551px;` so mobile view logic is in small breakpoint ranges.
+- Ensure component responsive adjustments rely on existing Citadel/Foundation mixins (`@include breakpoint($screen-small) { ... }`). If precise design wants tablet states (e.g. 768), consider adding `$screen-tablet: 769px;` in `_screensizes.scss` plus updating `media-query-list.js` per comment.
+
+### Spacing Translation
+- Figma vertical rhythm examples: Header bar heights (56px, 64px), section top margins (40px, 73px), card paddings (~30px). Map to spacing scale:
+  - 56px ≈ `spacing("double") + spacing("third")` (if base rhythm around 24px) or define `$spacing-header-bar: 56px` in a header settings override.
+  - 40px ≈ `spacing("single") + spacing("third")` (if single ~24px). Verify actual computed `remCalc($spacingRhythm)` value.
+  - 30px ≈ `spacing("single") + spacing("sixth")`.
+- Add helper function wrappers only if repeated beyond 3 instances; otherwise compose existing spacing tokens directly.
+
+### Typography Mapping
+Figma text heights (approx character box heights) appear: 24px (nav items), 33px (category headings), 38px (section titles), 43px (hero small headings), 57px (promo subheads), 114px (large display). Map to SCSS tokens:
+- 24px → `$fontSize-small` or `$fontSize-base` depending on current theme scale; if mismatch create `$fontSize-nav` variable in `settings/stencil/navPages/settings`.
+- 33px / 38px → Likely `$fontSize-large` / `$fontSize-largest` depending on root; if not, define `$fontSize-sectionTitle`.
+- 57px → Could align with `$fontSize-hero` (50px) + slight override; define `$fontSize-heroLarge: 57px` if needed for banners.
+- 114px display → Consider adding `$fontSize-displayXL: 114px` in typography settings; ensure line-height accommodates multi-line wrapping (`line-height: 1.05`).
+
+Suggested addition in `typography/_typography.scss` (only if required):
+```scss
+$fontSize-displayXL: 114px; // Figma large display
+$lineHeight-displayXL: 1.05;
+```
+Then consume: `.c-displayXL { font-size: $fontSize-displayXL; line-height: $lineHeight-displayXL; }`
+
+### Component Mapping
+| Figma Element (Name) | Theme Template / SCSS | Notes |
+| -------------------- | --------------------- | ----- |
+| Top shipping bar (Frame 10) | Likely `templates/components/common/` or header partial; implement as `.c-announcementBar` | Height 56px; background color token `$color-highlight` or new accent.
+| Contact info + reviews (Frame 78) | Header top meta; add `.c-headerMeta` | Flex spacing using existing grid utilities.
+| Logo/Search/Currency/User/Wishlist/Cart (Frame 77) | `templates/components/common/`, `navUser`, `search` components | Align icon sizes to existing 24px icons; spacing via `$spacing-third`.
+| Primary nav (Frame 3) | `navPages` component | Items 24px font, horizontal spacing ~80px start; use `display: flex; gap: spacing("double")`.
+| Hero category grid (Frames 63, 20, etc.) | Category card partial (new) `templates/components/products/category-card.html` | Cards width 400/390; adapt responsive to width map (e.g. `width("4/12")`).
+| Occasion grid (Frame 76) | Could reuse same card partial with modifier `.c-card--occasion` | Variation: square images 232px.
+| Shop by Category multi-row (Frame 75) | Use existing category component; ensure lazy loading via `lazysizes`.
+| Clearance sale banner | `banners` component | Large heading maps to hero font.
+| Product carousel / top picks | Existing Stencil productCarousel or create `c-productGrid` variant.
+| Reviews (Our happy customers) | New `testimonial` component folder under `components/stencil/testimonial` | Stars already exist (icons), use existing rating component tokens.
+| Blog cards | Use `templates/pages/blog.html` partials; map card spacing to container padding.
+| Newsletter signup | Existing `subscribe` form; refine SCSS under `components/stencil/previewCart` or create `newsletter` component.
+| Filters sidebar (Frame 42 / 88) | Faceted search / filter; align with existing `facetedSearch` component tokens; add collapsible sections using existing accordion.
+| Product list cards (Soccer Party Cups etc.) | Existing productCard (if present) or create `.c-productTile` | Use consistent aspect ratio wrappers.
+| Product detail (Helium Balloon Cylinder page frames) | `productView` component settings; add share bar `.c-productShare`.
+
+### Icon & Interaction States
+- Figma uses hover examples (section `Hover example`). Map to existing `.is-hover` or `:hover` states; ensure accessible focus states use `$color-primaryLight` backgrounds + `$color-textLink`.
+- Create SCSS variable bucket for interactive states if not present: `$interactive-bg-hover`, `$interactive-bg-active` referencing existing color tokens.
+
+### Filters & Accordions
+- Collapse/expand icons sized 18px; align with existing icon sizes (24px standard). Either:
+  - Increase to 24px for consistency, OR
+  - Introduce size modifier `.c-icon--sm` for 18px: `width: 18px; height: 18px;`.
+
+### Token Gaps & Additions
+Add only if Figma spec demands exact fidelity:
+```scss
+// In a new settings file: assets/scss/settings/stencil/header/_settings.scss
+$header-height-bar: 56px;
+$header-height-primary: 201px; // composite area of logo/search/user zone
+
+// Spacing alias for large hero vertical gap
+$spacing-hero-vertical: 73px;
+```
+Consume in components: `padding-top: $spacing-hero-vertical;` or convert to existing rhythm multiples if close.
+
+### Accessibility Notes from Frames
+- Ensure large blocks of promotional text maintain contrast ratio: use `$color-textBase` on light backgrounds; for colored banners test with `$color-highlight` derivatives.
+- Add visually hidden helper text inside icon-only buttons (`<span class="u-hiddenVisually">Search</span>`), consistent with existing aria utilities.
+
+### Implementation Checklist per Frame
+1. Header announcement: Create partial + add token variables for height and background.
+2. Header meta & primary nav: Verify spacing and font size tokens; add nav-specific spacing overrides.
+3. Category/product grid: Reusable card partial; image ratio wrappers using `aspect-ratio` or padding hacks; consistent focus ring.
+4. Filters sidebar: Reuse accordion; ensure keyboard navigation with arrow keys (foundation accessible patterns).
+5. Product detail: Add share bar component; map quantity selector to existing forms styling.
+6. Testimonials: Create new testimonial component using existing rating stars.
+7. Newsletter: Validate aria labels, associate input with button via `aria-describedby` if needed.
+
+### Updating The Doc After Further Figma Nodes
+If more specific design tokens (color styles, text styles) are exported later, append them under a new section `Figma Tokens Canonical` and map each to `stencilColor` / `stencilNumber` keys. Prefer adding theme editor keys rather than hard-coded overrides.
+
+---
+
+## Figma Tokens Canonical (Node 114-3848)
+
+This section documents all foundation tokens aligned with the Partyworld Figma design (Node 114-3848) as implemented in the theme. These tokens are the source of truth for design-to-code mapping.
+
+### Layout Tokens
+| Token Name | Value | Location | Purpose |
+|------------|-------|----------|---------|
+| `$layout-widthMax` | `remCalc(1280px)` | `settings/global/layout/_layout.scss` | Maximum content width for desktop (1440px frame with 80px gutters) |
+| `$spacing-container-wide` | `remCalc(80px)` | `settings/global/layout/_layout.scss` | Horizontal gutters for wide containers on desktop |
+| `$spacing-hero-vertical` | `remCalc(73px)` | `settings/global/layout/_layout.scss` | Vertical spacing for hero sections |
+
+### Typography Tokens
+| Token Name | Value | Location | Purpose |
+|------------|-------|----------|---------|
+| `$fontSize-displayXL` | `114px` | `settings/global/typography/_typography.scss` | Extra large display headings for marketing |
+| `$lineHeight-displayXL` | `120px` | `settings/global/typography/_typography.scss` | Line height for displayXL |
+| `$fontSize-heroLarge` | `57px` | `settings/global/typography/_typography.scss` | Large hero headings for promotional banners |
+| `$lineHeight-heroLarge` | `60px` | `settings/global/typography/_typography.scss` | Line height for heroLarge |
+| `$fontSize-nav` | `24px` | `settings/global/typography/_typography.scss` | Primary navigation text size |
+| `$lineHeight-nav` | `24px` | `settings/global/typography/_typography.scss` | Line height for navigation |
+
+### Header Tokens
+| Token Name | Value | Location | Purpose |
+|------------|-------|----------|---------|
+| `$header-height-bar` | `remCalc(56px)` | `settings/layouts/header/_settings.scss` | Announcement bar height from Figma |
+| `$header-height-primary` | `remCalc(201px)` | `settings/layouts/header/_settings.scss` | Composite height of logo/search/user zone |
+
+### Utility Classes
+| Class Name | Properties | Location | Purpose |
+|------------|------------|----------|---------|
+| `.u-displayXL` | `font-family`, `font-size: $fontSize-displayXL`, `line-height`, `font-weight: bold` | `common/_type-extensions.scss` | Apply display XL styling |
+| `.u-heroLarge` | `font-family`, `font-size: $fontSize-heroLarge`, `line-height`, `font-weight: bold` | `common/_type-extensions.scss` | Apply large hero styling |
+| `.u-navText` | `font-family`, `font-size: $fontSize-nav`, `line-height`, `font-weight: semibold` | `common/_type-extensions.scss` | Apply navigation text styling |
+
+### Component Implementations
+| Component | Location | Status | Notes |
+|-----------|----------|--------|-------|
+| Testimonial | `components/stencil/testimonial/` | ✅ Implemented | Stars, body, author structure |
+| Category Card | `components/stencil/categoryCard/` | ✅ Implemented | Image, heading, CTA with aspect-ratio support; `.c-categoryCard--occasion` modifier for square aspect ratio |
+| Category Grid | `components/stencil/categoryGrid/` | ✅ Implemented | Responsive grid layout (1-col mobile, 2-col tablet, 3/4-col desktop) with `--col3` and `--col4` variants |
+| Hero | `components/stencil/hero/` | ✅ Implemented | Full-width banner with background media, heading (`$fontSize-displayXL`), subheading, and CTA button |
+| Share Bar | `components/stencil/shareBar/` | ✅ Implemented | Social sharing with hover states |
+
+### Hero Component Settings (Theme Editor)
+| Setting ID | Type | Description |
+|------------|------|-------------|
+| `homepage_hero_heading` | text | Main heading text for hero banner |
+| `homepage_hero_subheading` | text | Subheading text for hero banner |
+| `homepage_hero_cta_text` | text | CTA button label |
+| `homepage_hero_cta_url` | text | CTA button URL |
+| `homepage_hero_image` | imageDimension | Background image for hero banner |
+
+### Color & Spacing System
+All existing color tokens (`$color-primary`, `$color-secondary`, etc.) are defined via `stencilColor()` in `settings/global/color/_color.scss` and map to Theme Editor keys for dynamic theming.
+
+Spacing rhythm based on `$spacingRhythm = $fontSize-root * $lineHeight-base` (24px at default 16px root) provides the foundation. Compose existing spacing tokens (`$spacing-single`, `$spacing-double`, etc.) for most layouts. Use the Figma-specific tokens (`$spacing-hero-vertical`, `$spacing-container-wide`) only where exact design alignment is required.
+
+#### Color Palette & Mapping (Figma → Stencil)
+This table records each Figma color style imported for Node `114-3848` and its mapping to Theme Editor key and SCSS variable. Add new rows whenever additional Figma color variables are exported.
+
+| Figma Token | Hex | Theme Editor Key | SCSS Variable | Status |
+| Brand | #D30006 | `color-primary` | `$color-primary` | Mapped |
+| Secondary Color | #DCDCDC | `color-secondary` | `$color-secondary` | Mapped |
+
+Guidelines:
+1. If a Figma color does not yet exist in the theme, first add a Theme Editor key in `schema.json` & default value in `config.json`, then declare the SCSS variable via `stencilColor("<key>")` in `_color.scss`.
+2. Never hardcode hex values in component SCSS; always consume the variable (e.g., `$color-secondary`).
+3. When a Figma color is an alias of an existing key (same hex), prefer reusing the existing Theme Editor key rather than introducing a duplicate.
+4. After adding or remapping a color, update this table and include a brief PR note citing any replaced hex values.
+
+Pending Figma colors: Export additional brand accent, success, warning, and error palette tokens; map them following the process above.
+
+---
+Recent implementations (Completed):
+- ✅ Layout width updated: `$layout-widthMax` now `remCalc(1280px)` (was 1200px) for desktop fidelity.
+- ✅ New typography tokens added: `$fontSize-displayXL: 114px`, `$lineHeight-displayXL: 120px`, `$fontSize-heroLarge: 57px`, `$lineHeight-heroLarge: 60px`, `$fontSize-nav: 24px`, `$lineHeight-nav: 24px`.
+- ✅ Utility classes added (`_type-extensions.scss`): `.u-displayXL`, `.u-heroLarge`, `.u-navText`.
+- ✅ Spacing tokens added: `$spacing-hero-vertical: remCalc(73px)`, `$spacing-container-wide: remCalc(80px)`.
+- ✅ Header tokens added: `$header-height-bar: remCalc(56px)`, `$header-height-primary: remCalc(201px)`.
+- ✅ Brand colors mapped to config.json: Primary `#D30006` (was `#757575`), Secondary `#DCDCDC` (was `#ffffff`), with corresponding dark/light variants.
+- ✅ Component scaffolding: Testimonial, Category Card, Share Bar components implemented.
+- ✅ Hero component: Full-width banner with responsive typography (`$fontSize-displayXL` on desktop, `$fontSize-heroLarge` on tablet, 40px on mobile), background media, and styled CTA button with accessible focus states.
+- ✅ Category Grid component: Responsive grid layout using CSS Grid with `--col3` and `--col4` variants for different column counts.
+- ✅ Category Card enhanced: Added `.c-categoryCard--occasion` modifier for square aspect ratio, lazy loading with lazysizes, CDN helper integration, and hover/focus states.
+- ✅ Home page integration: Hero and category grid sections wired into `templates/pages/home.html` with Theme Editor settings.
+- ✅ Theme Editor settings: Hero banner settings added to `schema.json` and `config.json` for heading, subheading, CTA, and background image.
+- ✅ Stylelint validation passed.
+- ✅ Build verification passed.
