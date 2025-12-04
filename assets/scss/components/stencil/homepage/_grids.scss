@@ -26,7 +26,7 @@
 // Increase specificity so type.scss heading rules don't override
 .c-themeGrid .c-themeGrid__heading,
 .c-celebrateGrid .c-celebrateGrid__heading {
-    color: #000000; // use black per requirement
+    color: $color-textBase;
     text-align: center;
 }
 

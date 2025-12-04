@@ -27,7 +27,7 @@
 }
 
 .paymentMethod {
-    background-color: #e5e5e5;
+    background-color: $color-greyLight;
     border: container("border");
     border-radius: remCalc(3px);
     display: flex;
@@ -38,7 +38,7 @@
         padding: 1.5rem;
 
         &:first-child {
-            background-color: #fff;
+            background-color: $color-white;
         }
 
         &:last-child {
