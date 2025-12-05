@@ -11,6 +11,12 @@ Colors: stencilColor("<key>") (no raw hex in SCSS).
 Numbers: stencilNumber("<key>").
 Fonts: stencilFontFamily("<key>").
 Spacing: spacing("<scale>").
+Follow the latest layout map (docs/THEME_MAP.md):
+- Header meta row = left contact bar, right Trustpilot badge.
+- Home page order: hero/theme slider -> celebrate grid -> marketing banner -> category grid -> featured products -> top sellers -> large sale banner -> new products -> customer review grid -> intro & promise -> blog teaser.
+- Category page: insert `shop-by-category` partial (when subcategories exist), then `category-bestsellers` before the main product grid.
+- PDP right column sequence: product title + inline share button → badges grid → description → product video → tabs block.
+- PDP cross-sell rows: alternate suggestions then also-bought before quick view modal.
 Place files in the correct layers:
 SCSS components: assets/scss/components/stencil/<component>/_component.scss
 Component settings: assets/scss/settings/stencil/<component>/_settings.scss
