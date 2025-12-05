@@ -263,7 +263,10 @@
             {{/if}}
         </div>
         {{> components/common/share url=product.url}}
+        {{> components/page/product-confidence-grid}}
     </section>
+
+    {{> components/products/product-video}}
 
     <article class="productView-description">
         {{#if theme_settings.show_product_details_tabs}}
@@ -273,6 +276,9 @@
         {{/if}}
     </article>
 </div>
+
+{{> components/products/alternate-suggestions}}
+{{> components/products/also-bought}}
 
 <div id="previewModal" class="modal modal--large" data-reveal>
     {{> components/common/modal/modal-close-btn }}

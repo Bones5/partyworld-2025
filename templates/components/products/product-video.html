@@ -1,0 +1,51 @@
+{{!-- Product Video: Separate video content partial --}}
+{{#if product.videos.list.length}}
+<section class="productView-video toggle videoGallery" data-video-gallery>
+    <h4 class="toggle-title">
+        {{lang 'products.videos.header'}}
+        <a href="#productVideoGallery-content" class="toggleLink is-open" data-collapsible>
+            <span class="toggleLink-text toggleLink-text--on">
+                {{lang 'products.videos.hide'}}
+            </span>
+            <span class="toggleLink-text toggleLink-text--off">
+                {{lang 'products.videos.show'}}
+            </span>
+        </a>
+    </h4>
+
+    <div class="toggle-content is-open" id="productVideoGallery-content">
+        <div class="videoGallery-main widescreen">
+            <iframe
+                id="productVideoPlayer"
+                class="lazyload"
+                type="text/html"
+                width="640"
+                height="390"
+                frameborder="0"
+                webkitAllowFullScreen
+                mozallowfullscreen
+                allowFullScreen
+                data-src="//www.youtube.com/embed/{{product.videos.featured.id}}?rel=0"
+                data-video-player>
+            </iframe>
+        </div>
+        {{#if product.videos.list.length '>' 1}}
+        <ul class="videoGallery-list">
+        {{#each product.videos.list}}
+            <li class="videoGallery-item">
+                <a href="#" class="video {{#if @first}}is-active{{/if}}" data-video-item data-video-id="{{id}}">
+                    <div class="video-figure">
+                        <img class="lazyload" data-sizes="auto" src="{{cdn 'img/loading.svg'}}" data-src="//i.ytimg.com/vi/{{id}}/default.jpg"/>
+                    </div>
+                    <div class="video-body">
+                        <h5 class="video-title">{{title_long}}</h5>
+                        <p class="video-description">{{description_short}}</p>
+                    </div>
+                </a>
+            </li>
+        {{/each}}
+        </ul>
+        {{/if}}
+    </div>
+</section>
+{{/if}}
