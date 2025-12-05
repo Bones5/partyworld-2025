@@ -11,3 +11,19 @@ vendor/bundle
 *.js.map
 *.zip
 .idea/
+
+# Environment secrets (configs are safe to commit)
+environments/*.secrets.json
+
+# Image transfer working directories
+scripts/image-transfer/downloaded-images/
+scripts/image-transfer/*.csv
+
+# Exports (settings, backups)
+exports/
+
+# Transfer scripts output (images, CSVs, temp files)
+scripts/image-transfer/transfer-production-to-staging/*.csv
+scripts/image-transfer/transfer-production-to-staging/*.json
+scripts/image-transfer/transfer-production-to-staging/category-images/
+scripts/image-transfer/transfer-production-to-staging/page-builder-content/

@@ -1,0 +1,11 @@
+{
+  "normalStoreUrl": "https://partyworld.ie",
+  "storeHash": "63na2lr4oh",
+  "port": 3000,
+  "customLayouts": {
+    "brand": {},
+    "category": {},
+    "page": {},
+    "product": {}
+  }
+}
