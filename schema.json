@@ -1064,6 +1064,80 @@
       },
       {
         "type": "heading",
+        "content": "Marketing Banner"
+      },
+      {
+        "type": "text",
+        "label": "Marketing Banner Heading",
+        "id": "marketing_banner_heading",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Marketing Banner Subcopy",
+        "id": "marketing_banner_subcopy",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Marketing Banner CTA Text",
+        "id": "marketing_banner_cta_text",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Marketing Banner CTA URL",
+        "id": "marketing_banner_cta_url",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Marketing Banner Background Image",
+        "id": "marketing_banner_image",
+        "force_reload": true
+      },
+      {
+        "type": "heading",
+        "content": "Sale Banner"
+      },
+      {
+        "type": "text",
+        "label": "Sale Banner Badge Text",
+        "id": "sale_banner_badge",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Sale Banner Heading",
+        "id": "sale_banner_heading",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Sale Banner Subcopy",
+        "id": "sale_banner_subcopy",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Sale Banner CTA Text",
+        "id": "sale_banner_cta_text",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Sale Banner CTA URL",
+        "id": "sale_banner_cta_url",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Sale Banner Background Image",
+        "id": "sale_banner_image",
+        "force_reload": true
+      },
+      {
+        "type": "heading",
         "content": "i18n.Products"
       },
       {
