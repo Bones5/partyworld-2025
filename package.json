@@ -74,6 +74,23 @@
     "test": "npx jest",
     "test:watch": "npx jest --watch",
     "stylelint": "npx stylelint **/*.scss",
-    "stylelint:fix": "npx stylelint --fix **/*.scss"
+    "stylelint:fix": "npx stylelint --fix **/*.scss",
+    "start": "stencil start",
+    "start:staging": "node scripts/env-switch.js staging && stencil start",
+    "start:prod": "node scripts/env-switch.js production && stencil start",
+    "env:staging": "node scripts/env-switch.js staging",
+    "env:prod": "node scripts/env-switch.js production",
+    "env:list": "node scripts/env-switch.js --list",
+    "env:current": "node scripts/env-switch.js --current",
+    "env:init": "node scripts/env-switch.js --init",
+    "images:download": "node scripts/image-transfer/download-images.js",
+    "images:upload": "node scripts/image-transfer/upload-to-cdn.js",
+    "images:update-csv": "node scripts/image-transfer/update-csv-urls.js",
+    "images:transfer": "node scripts/image-transfer/transfer-images.js",
+    "pages:transfer": "node scripts/image-transfer/transfer-pages.js",
+    "pages:export": "node scripts/image-transfer/transfer-pages.js --export",
+    "settings:show": "node scripts/image-transfer/transfer-settings.js --show",
+    "settings:transfer": "node scripts/image-transfer/transfer-settings.js",
+    "settings:export": "node scripts/image-transfer/transfer-settings.js --export"
   }
 }

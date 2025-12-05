@@ -1,0 +1,11 @@
+{
+  "normalStoreUrl": "https://partyworldie-sandbox.mybigcommerce.com/",
+  "storeHash": "ma3w17th1k",
+  "port": 3000,
+  "customLayouts": {
+    "brand": {},
+    "category": {},
+    "page": {},
+    "product": {}
+  }
+}
