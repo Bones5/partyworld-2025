@@ -227,7 +227,7 @@
 
 // Accessibility: Screen reader live region
 .heroThemeSlider-announce {
-    @include u-hidden-visually;
+    @include u-hidden("visually");
 }
 
 // Section wrapper with optional heading
