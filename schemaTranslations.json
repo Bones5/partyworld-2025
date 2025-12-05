@@ -3362,6 +3362,9 @@
     "pl": "Strona kategorii",
     "ja": "カテゴリページ"
   },
+  "i18n.CategoryBestsellersCount": {
+    "default": "Category bestsellers count"
+  },
   "i18n.BrandPage": {
     "default": "Brand page",
     "fr": "Page de la marque",

@@ -1,0 +1,24 @@
+{{!--
+    Category Bestsellers Component
+    Surfaces top selling products for the current category.
+    Uses existing product card partial and productGrid styles.
+    Item count is configurable via theme_settings.category_bestsellers_count.
+--}}
+{{#if products}}
+<section class="category-bestsellers" aria-labelledby="category-bestsellers-heading">
+    <h2 id="category-bestsellers-heading" class="page-heading">{{lang 'category.bestsellers'}}</h2>
+    <ul class="productGrid productGrid--maxCol4" data-product-type="category_bestsellers" data-list-name="Category Bestsellers">
+        {{#each products}}
+        <li class="product">
+            {{> components/products/card
+                settings=../settings
+                theme_settings=../theme_settings
+                customer=../customer
+                event="list"
+                position=(add @index 1)
+            }}
+        </li>
+        {{/each}}
+    </ul>
+</section>
+{{/if}}

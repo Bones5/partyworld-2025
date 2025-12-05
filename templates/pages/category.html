@@ -2,6 +2,9 @@
 category:
     products:
         limit: {{theme_settings.categorypage_products_per_page}}
+products:
+    top_sellers:
+        limit: {{theme_settings.category_bestsellers_count}}
 ---
 {{inject "categoryProductsPerPage" theme_settings.categorypage_products_per_page}}
 {{#partial "head"}}
@@ -29,6 +32,15 @@ category:
     {{{region name="category_below_header"}}}
 {{/unless}}
 {{{category.description}}}
+
+{{!-- Shop by Category section: shows subcategories if present --}}
+{{> components/category/shop-by-category}}
+
+{{!-- Category Bestsellers section: shows top sellers for this category --}}
+{{#if products.top_sellers}}
+    {{> components/products/category-bestsellers products=products.top_sellers}}
+{{/if}}
+
 <div class="page">
     {{#if category.faceted_search_enabled}}
         <aside class="page-sidebar" id="faceted-search-container">
