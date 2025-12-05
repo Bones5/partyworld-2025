@@ -238,7 +238,7 @@
         "filter_select_announcement": "The filter has been applied",
         "shop_by_category": "Shop by Category",
         "shop_now": "Shop Now",
-        "bestsellers": "Bestsellers",
+        "top_sellers": "Top Sellers",
         "view_all": {
             "name": "All {category}"
         }

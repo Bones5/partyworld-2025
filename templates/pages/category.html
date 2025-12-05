@@ -36,7 +36,7 @@ products:
 {{!-- Shop by Category section: shows subcategories if present --}}
 {{> components/category/shop-by-category}}
 
-{{!-- Category Bestsellers section: shows top sellers for this category --}}
+{{!-- Top Sellers section: shows top selling products from the store --}}
 {{#if products.top_sellers}}
     {{> components/products/category-bestsellers products=products.top_sellers}}
 {{/if}}
