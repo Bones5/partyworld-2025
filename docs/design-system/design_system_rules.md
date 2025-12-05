@@ -368,6 +368,19 @@ This section documents all foundation tokens aligned with the Partyworld Figma d
 | Category Grid | `components/stencil/categoryGrid/` | ✅ Implemented | Responsive grid layout (1-col mobile, 2-col tablet, 3/4-col desktop) with `--col3` and `--col4` variants |
 | Hero | `components/stencil/hero/` | ✅ Implemented | Full-width banner with background media, heading (`$fontSize-displayXL`), subheading, and CTA button |
 | Share Bar | `components/stencil/shareBar/` | ✅ Implemented | Social sharing with hover states |
+| Hero & Theme Slider | `templates/components/page/hero-theme-slider.html` + `assets/scss/components/stencil/hero-theme-slider/` | Planned | Combined hero + three-up themed cards driven by Theme Editor slots |
+| Marketing Banner | `templates/components/page/marketing-banner.html` | Planned | Secondary promotional hero inserted below Celebrate grid |
+| Sale Banner | `templates/components/page/sale-banner.html` | Planned | Full-width large sale callout with Theme Editor headline/body/CTA |
+| Customer Review Grid | `templates/components/page/customer-review-grid.html` | Planned | Grid of testimonial cards; ensure cards reuse testimonial styles |
+| Intro & Promise | `templates/components/page/intro-promise.html` | Planned | Two-column brand intro with icon/key promise list |
+| Blog Teaser | `templates/components/page/blog-teaser.html` | Planned | Recent blog carousel/grid with thumbnail, excerpt, and CTA |
+| Shop by Category | `templates/components/category/shop-by-category.html` | Planned | Renders child category tiles when available above grid |
+| Category Bestsellers | `templates/components/products/category-bestsellers.html` | Planned | Highlights top sellers per category before main grid |
+| Product Confidence Grid | `templates/components/page/product-confidence-grid.html` | Planned | Four-up badges section replacing legacy share bar |
+| Product Description Content | `templates/components/products/description-content.html` | Planned | Rich PDP description block in main product column |
+| Product Video | `templates/components/products/product-video.html` | Planned | Embeds product media beneath description |
+| Alternate Suggestions | `templates/components/products/alternate-suggestions.html` | Planned | Carousel row titled "Not what you are looking for? Try one of these instead" |
+| Also Bought | `templates/components/products/also-bought.html` | Planned | Cross-sell grid titled "Other customers also bought these" |
 
 ### Hero Component Settings (Theme Editor)
 | Setting ID | Type | Description |
@@ -377,6 +390,12 @@ This section documents all foundation tokens aligned with the Partyworld Figma d
 | `homepage_hero_cta_text` | text | CTA button label |
 | `homepage_hero_cta_url` | text | CTA button URL |
 | `homepage_hero_image` | imageDimension | Background image for hero banner |
+
+### Layout Reference Summary (docs/THEME_MAP.md alignment)
+- Header meta row: left column renders `components/common/contact-bar.html`; right column renders `components/common/trustpilot-badge.html`.
+- Home page section order (top to bottom): hero & theme slider, celebrate grid, marketing banner, category grid, featured products, top sellers, large sale banner, new products, customer review grid, intro & promise, blog teaser.
+- Category page injects `shop-by-category` when child categories exist, followed by `category-bestsellers` before the default product grid and paginator.
+- PDP product info column sequence: product title partial (with inline share button), product badges grid, rich description block, product video, tabs/accordion block. Cross-sells render `alternate-suggestions` first, then `also-bought`, followed by the quick view modal partial.
 
 ### Color & Spacing System
 All existing color tokens (`$color-primary`, `$color-secondary`, etc.) are defined via `stencilColor()` in `settings/global/color/_color.scss` and map to Theme Editor keys for dynamic theming.

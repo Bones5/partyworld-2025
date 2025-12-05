@@ -89,18 +89,23 @@ A visual guide to the template structure and component organization of the Party
 │  └─────────────────────────────────────────────────────────────────────────┘    │
 │                                                                                  │
 │  ┌─────────────────────────────────────────────────────────────────────────┐    │
-│  │ Contact Bar (contact-bar.html)                                           │    │
-│  │ • Phone, Email, Store hours                                              │    │
+│  │ Header Meta Row (header-row--meta)                                       │    │
+│  │ ┌───────────────────────────┐ ┌──────────────────────────────────────┐  │    │
+│  │ │ Contact Bar               │ │ Store Reviews                        │  │    │
+│  │ │ (contact-bar.html)        │ │ (trustpilot-badge.html)              │  │    │
+│  │ │ • Phone, Email            │ │ • Trustpilot badge                   │  │    │
+│  │ └───────────────────────────┘ └──────────────────────────────────────┘  │    │
 │  └─────────────────────────────────────────────────────────────────────────┘    │
 │                                                                                  │
 │  ┌─────────────────────────────────────────────────────────────────────────┐    │
 │  │ Main Header Row                                                          │    │
-│  │ ┌──────────────┐ ┌───────────────────────┐ ┌─────────────────────────┐  │    │
-│  │ │ Store Logo   │ │ Search Box            │ │ User Actions            │  │    │
-│  │ │ (store-      │ │ (search-box.html)     │ │ • Wishlist dropdown     │  │    │
-│  │ │  logo.html)  │ │ (quick-search.html)   │ │ • Account link          │  │    │
-│  │ │              │ │                       │ │ • Cart preview          │  │    │
-│  │ └──────────────┘ └───────────────────────┘ └─────────────────────────┘  │    │
+│  │ ┌──────────────┐ ┌───────────────────────────────┐ ┌─────────────────┐  │    │
+│  │ │ Store Logo   │ │ Search & Currency             │ │ User Actions    │  │    │
+│  │ │ (store-      │ │ (search-box.html,             │ │ • Wishlist      │  │    │
+│  │ │  logo.html)  │ │  currency-selector.html,      │ │   dropdown      │  │    │
+│  │ │              │ │  quick-search.html)           │ │ • Account link  │  │    │
+│  │ │              │ │                               │ │ • Cart preview  │  │    │
+│  │ └──────────────┘ └───────────────────────────────┘ └─────────────────┘  │    │
 │  └─────────────────────────────────────────────────────────────────────────┘    │
 │                                                                                  │
 │  ┌─────────────────────────────────────────────────────────────────────────┐    │
@@ -108,11 +113,7 @@ A visual guide to the template structure and component organization of the Party
 │  │ • navigation-menu.html    • navigation-list.html                        │    │
 │  │ • navigation-dropdown.html                                              │    │
 │  └─────────────────────────────────────────────────────────────────────────┘    │
-│                                                                                  │
-│  ┌─────────────────────────────────────────────────────────────────────────┐    │
-│  │ Currency/Channel Selectors                                               │    │
-│  │ • currency-selector.html  • channel-selector.html                       │    │
-│  └─────────────────────────────────────────────────────────────────────────┘    │
+│                                                                                 │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -126,24 +127,21 @@ A visual guide to the template structure and component organization of the Party
 │  │ Newsletter Subscription (subscription-form.html)                         │    │
 │  └─────────────────────────────────────────────────────────────────────────┘    │
 │                                                                                  │
-│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────────────┐   │
-│  │ Footer       │ │ Customer     │ │ Quick        │ │ Contact Info /       │   │
-│  │ Navigation   │ │ Service      │ │ Links        │ │ Store Locator        │   │
-│  │ Links        │ │ Links        │ │              │ │                      │   │
-│  └──────────────┘ └──────────────┘ └──────────────┘ └──────────────────────┘   │
-│                                                                                  │
 │  ┌─────────────────────────────────────────────────────────────────────────┐    │
-│  │ Social Links (social-links.html)                                         │    │
-│  │ • Facebook, Instagram, Twitter, Pinterest, YouTube                       │    │
+│  │ Footer Links Row                                                        │    │
+│  │ ┌────────────────┐ ┌────────────────┐ ┌────────────────┐ ┌────────────────┐ │    │
+│  │ │ About          │ │ Costumes       │ │ Party Items    │ │ Hen Party      │ │    │
+│  │ │ Partyworld     │ │ (menu links)   │ │ (menu links)   │ │ (menu links)   │ │    │
+│  │ └────────────────┘ └────────────────┘ └────────────────┘ └────────────────┘ │    │
 │  └─────────────────────────────────────────────────────────────────────────┘    │
 │                                                                                  │
 │  ┌─────────────────────────────────────────────────────────────────────────┐    │
-│  │ Payment Icons (payment-icons.html)                                       │    │
-│  │ • Visa, Mastercard, PayPal, etc.                                        │    │
-│  └─────────────────────────────────────────────────────────────────────────┘    │
-│                                                                                  │
-│  ┌─────────────────────────────────────────────────────────────────────────┐    │
-│  │ Copyright / Trust Badges (trustpilot-badge.html)                         │    │
+│  │ Footer Trust & Social Row                                              │    │
+│  │ ┌────────────────┐ ┌────────────────┐ ┌────────────────┐ ┌────────────────┐ │    │
+│  │ │ Our Reviews    │ │ Secure Logo    │ │ Safe Shopping  │ │ Follow Us      │ │    │
+│  │ │ (trustpilot-   │ │ (ssl_site_     │ │ (payment-      │ │ (social-links  │ │    │
+│  │ │ badge.html)    │ │ seal region)   │ │ icons.html)    │ │ .html)         │ │    │
+│  │ └────────────────┘ └────────────────┘ └────────────────┘ └────────────────┘ │    │
 │  └─────────────────────────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -161,23 +159,24 @@ A visual guide to the template structure and component organization of the Party
 │  {{{region name="home_below_menu"}}}                                            │
 │                                                                                  │
 │  ┌─────────────────────────────────────────────────────────────────────────┐    │
-│  │ HERO SECTION (components/page/hero.html)                                 │    │
-│  │ • Background image     • Heading/Subheading                             │    │
-│  │ • CTA Button           • Configurable via Theme Editor                  │    │
+│  │ HERO & THEME SLIDER (components/page/hero-theme-slider.html)             │    │
+│  │ • Slider showcases 3 configurable cards per frame                       │    │
+│  │ • Combines hero copy, media, and CTA with themed card content           │    │
+│  │ • Managed via Theme Editor (images, text, button links)                 │    │
 │  └─────────────────────────────────────────────────────────────────────────┘    │
 │                                                                                  │
 │  {{{region name="home_below_carousel"}}}                                        │
 │                                                                                  │
 │  ┌─────────────────────────────────────────────────────────────────────────┐    │
-│  │ THEME GRID (components/page/theme-grid.html)                             │    │
-│  │ • "Shop by Theme" heading                                                │    │
-│  │ • theme-card.html × 3                                                    │    │
-│  └─────────────────────────────────────────────────────────────────────────┘    │
-│                                                                                  │
-│  ┌─────────────────────────────────────────────────────────────────────────┐    │
 │  │ CELEBRATE GRID (components/page/celebrate-grid.html)                     │    │
 │  │ • "Celebrate Every Occasion" heading                                     │    │
 │  │ • celebrate-card.html × 5                                                │    │
+│  └─────────────────────────────────────────────────────────────────────────┘    │
+│                                                                                  │
+│  ┌─────────────────────────────────────────────────────────────────────────┐    │
+│  │ MARKETING BANNER (components/page/marketing-banner.html)                 │    │
+│  │ • Theme Editor-configurable hero banner slot                             │    │
+│  │ • Supports background image, headline, subcopy, CTA                      │    │
 │  └─────────────────────────────────────────────────────────────────────────┘    │
 │                                                                                  │
 │  ┌─────────────────────────────────────────────────────────────────────────┐    │
@@ -198,9 +197,40 @@ A visual guide to the template structure and component organization of the Party
 │  {{{region name="home_below_top_products"}}}                                    │
 │                                                                                  │
 │  ┌─────────────────────────────────────────────────────────────────────────┐    │
+│  │ LARGE SALE BANNER (components/page/sale-banner.html)                    │    │
+│  │ • Full-width promotional banner with bold sale messaging                │    │
+│  │ • Theme Editor controls for headline, supporting copy, CTA link         │    │
+│  │ • Optional countdown or badge overlay support                           │    │
+│  └─────────────────────────────────────────────────────────────────────────┘    │
+│                                                                                  │
+│  ┌─────────────────────────────────────────────────────────────────────────┐    │
 │  │ NEW PRODUCTS (components/products/new.html)                              │    │
 │  └─────────────────────────────────────────────────────────────────────────┘    │
+│  ┌─────────────────────────────────────────────────────────────────────────┐    │
+│  │ PERSONALISED PARTY SUPPLIES BANNER                                      │    │
+│  │ • Full-width promotional banner with bold sale messaging                │    │
+│  │ • Theme Editor controls for headline, supporting copy, CTA link         │    │
+│  │ • Optional countdown or badge overlay support                           │    │
+│  └─────────────────────────────────────────────────────────────────────────┘    │
 │  {{{region name="home_below_new_products"}}}                                    │
+│                                                                                  │
+│  ┌─────────────────────────────────────────────────────────────────────────┐    │
+│  │ CUSTOMER REVIEW GRID (components/page/customer-review-grid.html)        │    │
+│  │ • 3x2 Grid of testimonial cards populated from Trustpilot.              │    │
+│  │ • Supports rating, quote, customer name.                                │    │
+│  └─────────────────────────────────────────────────────────────────────────┘    │
+│                                                                                  │
+│  ┌─────────────────────────────────────────────────────────────────────────┐    │
+│  │ INTRO & PROMISE (components/page/intro-promise.html)                    │    │
+│  │ • Two-column content: brand introduction + key promises/guarantees      │    │
+│  │ • Configurable icons, headings, supporting copy                         │    │
+│  └─────────────────────────────────────────────────────────────────────────┘    │
+│                                                                                  │
+│  ┌─────────────────────────────────────────────────────────────────────────┐    │
+│  │ BROWSE BLOG POSTS (components/page/blog-teaser.html)                    │    │
+│  │ • 1x3 grid of recent blog entries                                       │    │
+│  │ • Pulls title, excerpt and thumbnail                                    │    │
+│  └─────────────────────────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -223,14 +253,24 @@ A visual guide to the template structure and component organization of the Party
 │  │ faceted-search/    │  │ • Grid/List toggle                               │  │
 │  │ index.html         │  │ • Items per page                                 │  │
 │  │                    │  ├──────────────────────────────────────────────────┤  │
-│  │ • selected-        │  │ PRODUCT GRID                                     │  │
-│  │   facets.html      │  │ components/products/grid.html                    │  │
-│  │ • facets/          │  │ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐             │  │
-│  │   └─ [facet        │  │ │ card │ │ card │ │ card │ │ card │             │  │
-│  │       types]       │  │ │ .html│ │ .html│ │ .html│ │ .html│             │  │
-│  │ • show-more-       │  │ └──────┘ └──────┘ └──────┘ └──────┘             │  │
-│  │   facets.html      │  │ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐             │  │
-│  │ • range-form.html  │  │ │ card │ │ card │ │ card │ │ card │             │  │
+│  │ • selected-        │  │ SHOP BY CATEGORY                                 │  │
+│  │   facets.html      │  │ (components/category/shop-by-category.html)      │  │
+│  │ • facets/          │  │ • Renders child categories when they exist       │  │
+│  │   └─ [facet        │  │ • Uses category-card.html tiles                  │  │
+│  │       types]       │  ├──────────────────────────────────────────────────┤  │
+│  │ • show-more-       │  │ CATEGORY BESTSELLERS                             │  │
+│  │   facets.html      │  │ (components/products/category-bestsellers.html)   │  │
+│  │ • range-form.html  │  │ • Highlights top sellers for active category      │  │
+│  │                    │  │ • Item count configurable via Theme Editor        │  │
+│  │                    │  ├──────────────────────────────────────────────────┤  │
+│  │                    │  │ PRODUCT GRID                                     │  │
+│  │                    │  │ components/products/grid.html                    │  │
+│  │                    │  │ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐             │  │
+│  │                    │  │ │ card │ │ card │ │ card │ │ card │             │  │
+│  │                    │  │ │ .html│ │ .html│ │ .html│ │ .html│             │  │
+│  │                    │  │ └──────┘ └──────┘ └──────┘ └──────┘             │  │
+│  │                    │  │ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐             │  │
+│  │                    │  │ │ card │ │ card │ │ card │ │ card │             │  │
 │  │                    │  │ └──────┘ └──────┘ └──────┘ └──────┘             │  │
 │  │                    │  ├──────────────────────────────────────────────────┤  │
 │  │                    │  │ Pagination (components/common/paginator.html)    │  │
@@ -253,10 +293,12 @@ A visual guide to the template structure and component organization of the Party
 │  │ ┌────────────────────────┐  ┌────────────────────────────────────────┐  │    │
 │  │ │ IMAGE GALLERY          │  │ PRODUCT INFO                            │  │    │
 │  │ │                        │  │ • product-info.html                     │  │    │
-│  │ │ • Main image           │  │ • product-badge.html                    │  │    │
-│  │ │ • Thumbnails           │  │ • ratings.html                          │  │    │
-│  │ │ • Zoom functionality   │  │ • price.html                            │  │    │
-│  │ │ • videos.html          │  │ • bulk-discount-rates.html              │  │    │
+│  │ │ • Main image           │  │ • product-title.html (includes inline   │  │    │
+│  │ │ • Thumbnails           │  │   share button)                         │  │    │
+│  │ │ • Zoom functionality   │  │ • product-badge.html                    │  │    │
+│  │ │ • videos.html          │  │ • ratings.html                          │  │    │
+│  │ │                        │  │ • price.html                            │  │    │
+│  │ │                        │  │ • bulk-discount-rates.html              │  │    │
 │  │ │                        │  │                                          │  │    │
 │  │ │                        │  │ OPTIONS                                  │  │    │
 │  │ │                        │  │ components/products/options/             │  │    │
@@ -267,21 +309,39 @@ A visual guide to the template structure and component organization of the Party
 │  │ │                        │  │ • Add to cart button                     │  │    │
 │  │ │                        │  │ • Wishlist button                        │  │    │
 │  │ │                        │  │                                          │  │    │
-│  │ │                        │  │ SHARE BAR (share-bar.html)              │  │    │
-│  │ │                        │  │ • Social sharing links                   │  │    │
+│  │ │                        │  │ CONFIDENCE BADGES GRID                  │  │    │
+│  │ │                        │  │ (components/page/product-confidence-     │  │    │
+│  │ │                        │  │  grid.html)                              │  │    │
+│  │ │                        │  │ • Four-up delivery & customer assurance  │  │    │
+│  │ │                        │  │   badges                                 │  │    │
+│  │ │                        │  │                                          │  │    │
+│  │ │                        │  │ PRODUCT DESCRIPTION                      │  │    │
+│  │ │                        │  │ (components/products/description-        │  │    │
+│  │ │                        │  │  content.html)                           │  │    │
+│  │ │                        │  │ • Rich text block for PDP narrative       │  │    │
+│  │ │                        │  │                                          │  │    │
+│  │ │                        │  │ PRODUCT VIDEO                            │  │    │
+│  │ │                        │  │ (components/products/product-video.html) │  │    │
+│  │ │                        │  │ • Embedded media player                   │  │    │
+│  │ │                        │  │                                          │  │    │
+│  │ │                        │  │ TABS/ACCORDIONS                          │  │    │
+│  │ │                        │  │ (tabs.html / description-tabs.html)      │  │    │
+│  │ │                        │  │ • Additional Details (custom-fields.html) │  │    │
+│  │ │                        │  │ • Reviews (reviews.html)                  │  │    │
+│  │ │                        │  │ • Schema (schema.html) data block         │  │    │
 │  │ └────────────────────────┘  └────────────────────────────────────────┘  │    │
 │  └─────────────────────────────────────────────────────────────────────────┘    │
 │                                                                                  │
 │  ┌─────────────────────────────────────────────────────────────────────────┐    │
-│  │ TABS/ACCORDIONS (tabs.html / description-tabs.html)                      │    │
-│  │ • Description (description.html)                                         │    │
-│  │ • Custom Fields (custom-fields.html)                                     │    │
-│  │ • Reviews (reviews.html)                                                 │    │
-│  │ • Schema (schema.html) - structured data                                 │    │
+│  │ NOT WHAT YOU ARE LOOKING FOR? TRY ONE OF THESE INSTEAD                   │    │
+│  │ (components/products/alternate-suggestions.html)                         │    │
+│  │ • Carousel of adjacent categories or popular alternatives                │    │
 │  └─────────────────────────────────────────────────────────────────────────┘    │
 │                                                                                  │
 │  ┌─────────────────────────────────────────────────────────────────────────┐    │
-│  │ RELATED PRODUCTS (components/products/related.html)                      │    │
+│  │ OTHER CUSTOMERS ALSO BOUGHT THESE                                        │    │
+│  │ (components/products/also-bought.html)                                   │    │
+│  │ • Cross-sell grid leveraging order affinity data                          │    │
 │  └─────────────────────────────────────────────────────────────────────────┘    │
 │                                                                                  │
 │  ┌─────────────────────────────────────────────────────────────────────────┐    │
@@ -306,7 +366,7 @@ A visual guide to the template structure and component organization of the Party
 │                                                                                  │
 │  ┌─────────────────────────────────────────────────────────────────────────┐    │
 │  │ CART CONTENT (components/cart/content.html)                              │    │
-│  │ ┌────────────────────────────────────────┐  ┌────────────────────────┐  │    │
+│  │ ┌────────────────────────────────────────-┐  ┌────────────────────────┐  │    │
 │  │ │ Cart Items                              │  │ Cart Summary           │  │    │
 │  │ │ • Product image                         │  │                        │  │    │
 │  │ │ • Product name/options                  │  │ totals.html            │  │    │
