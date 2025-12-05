@@ -1,0 +1,97 @@
+{{!-- Hero Theme Slider Component --}}
+{{!--
+  Combined hero/theme slider with three-card frames.
+  
+  Usage:
+    {{> components/page/hero-theme-slider 
+        sectionHeading="Shop Party Themes"
+        slides=theme_settings_slides
+    }}
+
+  Or with inline slides:
+    {{> components/page/hero-theme-slider 
+        sectionHeading="Shop Party Themes"
+        slide1_card1_image=theme_settings.hero_slider_slide1_card1_image
+        slide1_card1_heading=theme_settings.hero_slider_slide1_card1_heading
+        slide1_card1_cta_text=theme_settings.hero_slider_slide1_card1_cta_text
+        slide1_card1_cta_url=theme_settings.hero_slider_slide1_card1_cta_url
+        ...
+    }}
+--}}
+
+{{#or slide1_card1_image slide1_card2_image slide1_card3_image}}
+<section class="heroThemeSlider-section" aria-labelledby="heroThemeSlider-heading">
+    {{#if sectionHeading}}
+        <h2 id="heroThemeSlider-heading" class="heroThemeSlider-section__heading">
+            {{sectionHeading}}
+        </h2>
+    {{/if}}
+
+    <div class="heroThemeSlider" 
+         data-slick='{
+            "slidesToShow": 1,
+            "slidesToScroll": 1,
+            "infinite": false,
+            "adaptiveHeight": false
+         }'
+         aria-roledescription="carousel"
+         aria-label="{{default sectionHeading 'Theme slider'}}">
+
+        {{!-- Live region for screen reader announcements --}}
+        <div class="heroThemeSlider-announce" aria-live="polite" aria-atomic="true" data-carousel-content-change-message>
+        </div>
+
+        {{!-- Slide 1 --}}
+        {{#or slide1_card1_image slide1_card2_image slide1_card3_image}}
+        <div class="heroThemeSlider-slide" role="group" aria-roledescription="slide" aria-label="{{lang 'carousel.slide_number' slide_number=1}}">
+            <div class="heroThemeSlider-cards">
+                {{> components/page/hero-theme-slider-card
+                    image=slide1_card1_image
+                    heading=slide1_card1_heading
+                    ctaText=slide1_card1_cta_text
+                    ctaUrl=slide1_card1_cta_url
+                }}
+                {{> components/page/hero-theme-slider-card
+                    image=slide1_card2_image
+                    heading=slide1_card2_heading
+                    ctaText=slide1_card2_cta_text
+                    ctaUrl=slide1_card2_cta_url
+                }}
+                {{> components/page/hero-theme-slider-card
+                    image=slide1_card3_image
+                    heading=slide1_card3_heading
+                    ctaText=slide1_card3_cta_text
+                    ctaUrl=slide1_card3_cta_url
+                }}
+            </div>
+        </div>
+        {{/or}}
+
+        {{!-- Slide 2 (if configured) --}}
+        {{#or slide2_card1_image slide2_card2_image slide2_card3_image}}
+        <div class="heroThemeSlider-slide" role="group" aria-roledescription="slide" aria-label="{{lang 'carousel.slide_number' slide_number=2}}">
+            <div class="heroThemeSlider-cards">
+                {{> components/page/hero-theme-slider-card
+                    image=slide2_card1_image
+                    heading=slide2_card1_heading
+                    ctaText=slide2_card1_cta_text
+                    ctaUrl=slide2_card1_cta_url
+                }}
+                {{> components/page/hero-theme-slider-card
+                    image=slide2_card2_image
+                    heading=slide2_card2_heading
+                    ctaText=slide2_card2_cta_text
+                    ctaUrl=slide2_card2_cta_url
+                }}
+                {{> components/page/hero-theme-slider-card
+                    image=slide2_card3_image
+                    heading=slide2_card3_heading
+                    ctaText=slide2_card3_cta_text
+                    ctaUrl=slide2_card3_cta_url
+                }}
+            </div>
+        </div>
+        {{/or}}
+    </div>
+</section>
+{{/or}}
