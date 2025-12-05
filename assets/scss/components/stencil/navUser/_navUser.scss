@@ -106,7 +106,7 @@
 
         svg {
             fill: transparent;
-            stroke: stencilColor("color-primary"); // red stroke on hover
+            stroke: color("whites", "bright"); // white stroke on hover
             background-color: transparent; // no background on hover
             border-radius: 50%;
             display: inline-block;
@@ -118,7 +118,7 @@
         }
 
         .navUser-icon {
-            stroke: stencilColor("color-primary");
+            stroke: color("whites", "bright"); // white stroke on hover
             background-color: transparent; // no background on hover
             border-radius: 50%;
         }
@@ -159,7 +159,7 @@
     &:hover svg,
     &:focus svg,
     &.is-open svg {
-        stroke: stencilColor("color-primary"); // red stroke on hover
+        stroke: color("whites", "bright"); // white stroke on hover
         background-color: transparent; // no background on hover
     }
 }
