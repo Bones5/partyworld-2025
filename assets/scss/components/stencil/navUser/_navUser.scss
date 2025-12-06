@@ -78,8 +78,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    fill: none;
-    stroke: stencilColor("color-primary");
+    fill: stencilColor("color-primary"); // use fill for filled icons
+    stroke: none; // remove stroke to prevent artifacts
     vertical-align: middle;
     border-radius: 50%;
     background-color: color("whites", "bright"); // white circle background
@@ -105,8 +105,8 @@
         color: stencilColor("navUser-color-hover");
 
         svg {
-            fill: transparent;
-            stroke: color("whites", "bright"); // white stroke on hover
+            fill: color("whites", "bright"); // white fill on hover
+            stroke: none; // remove stroke to prevent artifacts
             background-color: transparent; // no background on hover
             border-radius: 50%;
             display: inline-block;
@@ -114,11 +114,11 @@
             width: 2em;
             height: 2em;
             padding: 0.5em;
-            stroke-width: 2.5px;
         }
 
         .navUser-icon {
-            stroke: color("whites", "bright"); // white stroke on hover
+            fill: color("whites", "bright"); // white fill on hover
+            stroke: none; // remove stroke to prevent artifacts
             background-color: transparent; // no background on hover
             border-radius: 50%;
         }
@@ -143,8 +143,8 @@
 
     svg {
         overflow: visible;
-        fill: transparent;
-        stroke: stencilColor("color-primary");
+        fill: stencilColor("color-primary"); // use fill for filled icons
+        stroke: none; // remove stroke to prevent artifacts
         background-color: color("whites", "bright");
         border-radius: 50%;
         display: inline-block;
@@ -152,14 +152,14 @@
         width: 2em;
         height: 2em;
         padding: 0.5em;
-        stroke-width: 2px;
         transition: all 0.15s ease;
     }
 
     &:hover svg,
     &:focus svg,
     &.is-open svg {
-        stroke: color("whites", "bright"); // white stroke on hover
+        fill: color("whites", "bright"); // white fill on hover
+        stroke: none; // remove stroke to prevent artifacts
         background-color: transparent; // no background on hover
     }
 }
