@@ -78,8 +78,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    fill: stencilColor("color-primary") !important; // use fill for filled icons - !important to override link/nav styles
-    stroke: none !important; // remove stroke to prevent artifacts
+    fill: stencilColor("color-primary"); // use fill for filled icons
+    stroke: none; // remove stroke to prevent artifacts
     vertical-align: middle;
     border-radius: 50%;
     background-color: color("whites", "bright"); // white circle background
@@ -105,8 +105,8 @@
         color: stencilColor("navUser-color-hover");
 
         svg {
-            fill: color("whites", "bright") !important; // white fill on hover - !important to override link/nav styles
-            stroke: none !important; // remove stroke to prevent artifacts
+            fill: color("whites", "bright"); // white fill on hover
+            stroke: none; // remove stroke to prevent artifacts
             background-color: transparent; // no background on hover
             border-radius: 50%;
             display: inline-block;
@@ -117,8 +117,8 @@
         }
 
         .navUser-icon {
-            fill: color("whites", "bright") !important; // white fill on hover - !important to override link/nav styles
-            stroke: none !important; // remove stroke to prevent artifacts
+            fill: color("whites", "bright"); // white fill on hover
+            stroke: none; // remove stroke to prevent artifacts
             background-color: transparent; // no background on hover
             border-radius: 50%;
         }
@@ -143,8 +143,8 @@
 
     svg {
         overflow: visible;
-        fill: stencilColor("color-primary") !important; // use fill for filled icons - !important to override link/nav styles
-        stroke: none !important; // remove stroke to prevent artifacts
+        fill: stencilColor("color-primary"); // use fill for filled icons
+        stroke: none; // remove stroke to prevent artifacts
         background-color: color("whites", "bright");
         border-radius: 50%;
         display: inline-block;
@@ -158,8 +158,8 @@
     &:hover svg,
     &:focus svg,
     &.is-open svg {
-        fill: color("whites", "bright") !important; // white fill on hover - !important to override link/nav styles
-        stroke: none !important; // remove stroke to prevent artifacts
+        fill: color("whites", "bright"); // white fill on hover
+        stroke: none; // remove stroke to prevent artifacts
         background-color: transparent; // no background on hover
     }
 }
