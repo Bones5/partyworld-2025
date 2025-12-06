@@ -7,3 +7,12 @@ $facetedSearch-toggle-borderWidth:          $accordion-navList-borderWidth;
 $facetedSearch-toggle-borderRadius:         $global-radius;
 $facetedSearch-toggle-padding:              spacing("base");
 $facetedSearch-toggle-verticalSpacing:      spacing("single") + spacing("third");
+
+// Accordion header settings (per Figma spec)
+$facetedSearch-accordion-header-height:     48px;
+$facetedSearch-accordion-icon-size:         18px;
+
+// Focus state colors
+$facetedSearch-focus-outline-color:         stencilColor("color-primary");
+$facetedSearch-focus-outline-width:         2px;
+$facetedSearch-focus-outline-offset:        2px;

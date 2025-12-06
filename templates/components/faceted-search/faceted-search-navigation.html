@@ -3,16 +3,18 @@
          class="accordion-navigation toggleLink{{#unless start_collapsed}} is-open{{/unless}}"
          data-collapsible="#facetedSearch-content--{{dashcase facet}}"
          aria-label="{{lang 'search.faceted.toggleSection' title=title}}"
+         aria-expanded="{{#if start_collapsed}}false{{else}}true{{/if}}"
+         aria-controls="facetedSearch-content--{{dashcase facet}}"
     >
         <span class="accordion-title">
             {{title}}
         </span>
 
         <span>
-            <svg class="icon accordion-indicator toggleLink-text toggleLink-text--off">
+            <svg class="icon c-icon--sm accordion-indicator toggleLink-text toggleLink-text--off" aria-hidden="true" focusable="false">
                 <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-add" />
             </svg>
-            <svg class="icon accordion-indicator toggleLink-text toggleLink-text--on">
+            <svg class="icon c-icon--sm accordion-indicator toggleLink-text toggleLink-text--on" aria-hidden="true" focusable="false">
                 <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-remove" />
             </svg>
         </span>

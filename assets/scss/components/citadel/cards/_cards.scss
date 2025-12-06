@@ -44,6 +44,12 @@
 }
 
 .card-img-container {
+    // Aspect ratio wrapper for consistent image sizing per Figma
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: stencilColor("card--alternate-backgroundColor");
 
     @include lazy-loaded-padding("productgallery_size");
     max-width: get-width(stencilString("productgallery_size"));
@@ -84,6 +90,21 @@
         display: block;
         text-decoration: $card-title-textDecoration;
 
+        // Focus state for accessibility
+        &:focus {
+            outline: 2px solid stencilColor("color-primary");
+            outline-offset: 2px;
+        }
+
+        &:focus:not(:focus-visible) {
+            outline: none;
+        }
+
+        &:focus-visible {
+            outline: 2px solid stencilColor("color-primary");
+            outline-offset: 2px;
+        }
+
         &:hover {
             color: $card-title-color-hover;
         }
@@ -98,6 +119,23 @@
         color: inherit;
         font-size: inherit;
     }
+}
+
+// Star rating styling for product cards
+.card-rating {
+    margin-bottom: spacing("quarter");
+}
+
+// Brand name styling
+.card-brand {
+    color: stencilColor("color-textSecondary");
+    font-size: fontSize("smaller");
+    margin-bottom: spacing("eighth");
+}
+
+// Price stack styling per Figma
+.card-price {
+    margin-top: spacing("quarter");
 }
 
 .card-figcaption-button {
@@ -119,6 +157,55 @@
 
     + .card-figcaption-button {
         margin: $card-figcaption-button-margin;
+    }
+}
+
+// Compare checkbox styling per Figma
+// Using custom checkbox with inline checkmark for consistency
+.card-compare {
+    display: inline-flex;
+    align-items: center;
+    gap: spacing("eighth");
+
+    input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        border: 2px solid stencilColor("input-border-color");
+        border-radius: 3px;
+        background-color: stencilColor("input-bg-color");
+        cursor: pointer;
+        transition: all 0.15s ease;
+        margin: 0;
+
+        &:checked {
+            background-color: stencilColor("color-primary");
+            border-color: stencilColor("color-primary");
+            // SVG checkmark using same pattern as Citadel forms
+            background-image: $check-pip-backgroundImage;
+            background-size: 12px;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        &:focus {
+            outline: 2px solid stencilColor("color-primary");
+            outline-offset: 2px;
+        }
+
+        &:focus:not(:focus-visible) {
+            outline: none;
+        }
+
+        &:focus-visible {
+            outline: 2px solid stencilColor("color-primary");
+            outline-offset: 2px;
+        }
+
+        &:hover:not(:checked) {
+            border-color: stencilColor("color-primary");
+        }
     }
 }
 

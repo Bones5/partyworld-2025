@@ -2,17 +2,73 @@
 // FACET LABEL (CSS)
 // =============================================================================
 
+// Chip/pill styles for active filters (per Figma spec)
+// -----------------------------------------------------------------------------
+//
+// Modern pill-shaped chips with hover states, focus states, and smooth transitions.
+//
+// -----------------------------------------------------------------------------
+
 .facetLabel {
+    align-items: center;
     background: $facetLabel-backgroundColor;
     border-radius: $facetLabel-borderRadius;
+    display: inline-flex;
+    gap: spacing("eighth");
     padding: spacing("eighth") spacing("third") spacing("eighth") (spacing("third") + spacing("eighth"));
     text-decoration: none;
+    transition: $facetLabel-transition;
+
+    // Hover state
+    &:hover {
+        background: $facetLabel-backgroundColor-hover;
+        text-decoration: none;
+
+        .icon {
+            fill: stencilColor("color-primary");
+        }
+    }
+
+    // Focus state for accessibility
+    &:focus {
+        outline: $facetLabel-focus-outline-width solid $facetLabel-focus-outline-color;
+        outline-offset: 2px;
+    }
+
+    &:focus:not(:focus-visible) {
+        outline: none;
+    }
+
+    &:focus-visible {
+        outline: $facetLabel-focus-outline-width solid $facetLabel-focus-outline-color;
+        outline-offset: 2px;
+    }
+
+    // Active/pressed state
+    &:active {
+        transform: scale(0.98);
+    }
 
     .icon {
         @include square(12px);
         display: inline-block;
         fill: $facetLabel-removeIcon-color;
-        position: relative; // Vertical align the icon
-        top: -1px; // Vertical align the icon
+        flex-shrink: 0;
+        position: relative;
+        top: 0;
+        transition: fill 0.15s ease;
+    }
+}
+
+// Filter chips list container
+// -----------------------------------------------------------------------------
+
+.inlineList--labels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: spacing("quarter");
+
+    li {
+        margin: 0;
     }
 }
