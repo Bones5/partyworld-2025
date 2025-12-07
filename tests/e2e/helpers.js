@@ -73,7 +73,7 @@ function getContrastRatio(color1, color2) {
  * @param {string} name
  */
 async function takeScreenshot(page, name) {
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const timestamp = new Date().toISOString().replace(/:/g, '-').replace(/\./g, '-');
   await page.screenshot({ path: `test-results/${name}-${timestamp}.png`, fullPage: true });
 }
 
