@@ -30,7 +30,7 @@ All design system rules and patterns are validated and passing.
 ## PR Rebase Analysis
 
 ### Current Master
-- **SHA:** fe06eb157ac27a93aa54bc08cd6c051363e9783d
+- **SHA:** fe06eb1 (fe06eb157ac27a93aa54bc08cd6c051363e9783d)
 - **Commit:** "Merge pull request #42 from Bones5:copilot/fix-e2e-test-failures"
 
 ### PRs Requiring Rebase
@@ -61,20 +61,20 @@ All checked PRs are based on older commit `9d1cf6202dd5304117f5812809ca632853eaa
 #### PR #34: Hero & theme slider
 - **Branch:** copilot/implement-hero-theme-slider
 - **Base SHA:** 9d1cf6202dd5304117f5812809ca632853eaa8cc (outdated)
-- **Status:** Likely needs rebase (not fully checked)
-- **Action Needed:** Verify and rebase to master
+- **Status:** Not fully analyzed (mergeable status not retrieved via API)
+- **Action Needed:** Check GitHub UI for conflicts, then rebase to master
 
 #### PR #18: Newsletter + footer CTAs
 - **Branch:** copilot/update-newsletter-footer-ctas
 - **Base SHA:** 9d1cf6202dd5304117f5812809ca632853eaa8cc (outdated)
-- **Status:** Likely needs rebase (not fully checked)
-- **Action Needed:** Verify and rebase to master
+- **Status:** Not fully analyzed (mergeable status not retrieved via API)
+- **Action Needed:** Check GitHub UI for conflicts, then rebase to master
 
 #### PR #16: PDP share/wishlist bar
 - **Branch:** copilot/implement-partyworld-pdp-layout
 - **Base SHA:** 9d1cf6202dd5304117f5812809ca632853eaa8cc (outdated)
-- **Status:** Likely needs rebase (not fully checked)
-- **Action Needed:** Verify and rebase to master
+- **Status:** Not fully analyzed (mergeable status not retrieved via API)
+- **Action Needed:** Check GitHub UI for conflicts, then rebase to master
 
 ## How to Rebase PRs
 
@@ -122,7 +122,7 @@ git push origin copilot/[branch-name]
 1. **Priority:** Resolve PR #35 first (has merge conflicts)
 2. **Then:** Update remaining PRs in dependency order
 3. **Verify:** Run `npm run test:e2e` on each updated branch
-4. **Automate:** Consider setting up branch protection rules requiring up-to-date branches before merge
+4. **Automate:** Consider enabling "Require branches to be up to date before merging" in GitHub Settings → Branches → Branch protection rules for master. This ensures PRs are automatically kept current.
 
 ## Test Environment Setup
 
