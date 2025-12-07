@@ -26,7 +26,7 @@
     &::before {
         transform: rotateZ(30deg) scaleX(1) scaleY(1) scaleZ(1);
     }
-    
+
     &::after {
         transform: rotateZ(60deg) scaleX(1) scaleY(1) scaleZ(1);
     }
@@ -68,6 +68,20 @@
             transform: scale(0.7);
         }
     }
+    .sale-flag-sash,
+    .sold-out-flag-sash {
+        top: 24px;
+
+        @include breakpoint("small") {
+            left: -20px;
+            top: 19px;
+        }
+
+        @include breakpoint("large") {
+            left: -15px;
+            top: 24px;
+        }
+    }
 }
 
 %base-text-burst {
@@ -96,12 +110,12 @@
     .sale-flag-star::after {
         background: stencilColor("color_hover_product_sale_badges");
     }
-    
+
     .sold-out-flag-star,
     .sold-out-flag-star::before,
     .sold-out-flag-star::after {
         background: stencilColor("color_hover_product_sold_out_badges");
-    }    
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -123,12 +137,18 @@
 
 .sale-flag-side {
     @extend %base-flag-side;
-    @include setFlagColors("color_badge_product_sale_badges", "color_text_product_sale_badges");
+    @include setFlagColors(
+        "color_badge_product_sale_badges",
+        "color_text_product_sale_badges"
+    );
 }
 
 .sold-out-flag-side {
     @extend %base-flag-side;
-    @include setFlagColors("color_badge_product_sold_out_badges", "color_text_product_sold_out_badges");
+    @include setFlagColors(
+        "color_badge_product_sold_out_badges",
+        "color_text_product_sold_out_badges"
+    );
 }
 
 .product:hover .sale-flag-side {
@@ -160,30 +180,18 @@
 
 .sale-flag-sash {
     @extend %base-flag-sash;
-    @include setFlagColors("color_badge_product_sale_badges", "color_text_product_sale_badges");
+    @include setFlagColors(
+        "color_badge_product_sale_badges",
+        "color_text_product_sale_badges"
+    );
 }
 
 .sold-out-flag-sash {
     @extend %base-flag-sash;
-    @include setFlagColors("color_badge_product_sold_out_badges", "color_text_product_sold_out_badges");
-}
-
-.listItem-figure {
-    .sale-flag-sash,
-    .sold-out-flag-sash {
-        top: 24px;
-
-        @include breakpoint("small") {
-            left: -20px;
-            top: 19px;
-        }
-
-        @include breakpoint("large") {
-            left: -15px;
-            top: 24px;
-        }
-
-    }
+    @include setFlagColors(
+        "color_badge_product_sold_out_badges",
+        "color_text_product_sold_out_badges"
+    );
 }
 
 .product:hover .sale-flag-sash {
