@@ -1,6 +1,6 @@
 /**
- * Tests for redundant CSS detection using stylelint
- * 
+ * Tests for redundant CSS detection using stylelint.
+ *
  * These tests verify that stylelint correctly identifies redundant CSS patterns:
  * - Duplicate properties within the same rule
  * - Shorthand properties overriding longhand properties
@@ -11,6 +11,31 @@
 const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+
+/**
+ * Helper function to run stylelint and capture output
+ * @param {string} filePath - Path to the file to lint
+ * @param {string} projectRoot - Project root directory
+ * @returns {{output: string, exitCode: number}} Stylelint output and exit code
+ */
+function runStylelint(filePath, projectRoot) {
+    let output;
+    let exitCode;
+
+    try {
+        output = execSync(
+            `npx stylelint "${filePath}" --formatter json --ignore-path /dev/null 2>&1`,
+            { encoding: 'utf8', cwd: projectRoot }
+        );
+        exitCode = 0;
+    } catch (error) {
+        // When stylelint finds errors, it uses stderr for the JSON output
+        output = error.output ? error.output.join('') : (error.stdout || error.stderr || '');
+        exitCode = error.status;
+    }
+
+    return { output, exitCode };
+}
 
 describe('Redundant CSS Detection', () => {
     // Use process.cwd() to get the project root
@@ -24,17 +49,7 @@ describe('Redundant CSS Detection', () => {
         let exitCode;
 
         beforeAll(() => {
-            try {
-                output = execSync(
-                    `npx stylelint "${invalidFixture}" --formatter json --ignore-path /dev/null 2>&1`,
-                    { encoding: 'utf8', cwd: projectRoot }
-                );
-                exitCode = 0;
-            } catch (error) {
-                // When stylelint finds errors, it uses stderr for the JSON output
-                output = error.output ? error.output.join('') : (error.stdout || error.stderr || '');
-                exitCode = error.status;
-            }
+            ({ output, exitCode } = runStylelint(invalidFixture, projectRoot));
         });
 
         it('should detect errors in invalid fixture', () => {
@@ -87,16 +102,7 @@ describe('Redundant CSS Detection', () => {
         let exitCode;
 
         beforeAll(() => {
-            try {
-                output = execSync(
-                    `npx stylelint "${validFixture}" --formatter json --ignore-path /dev/null 2>&1`,
-                    { encoding: 'utf8', cwd: projectRoot }
-                );
-                exitCode = 0;
-            } catch (error) {
-                output = error.output ? error.output.join('') : (error.stdout || error.stderr || '');
-                exitCode = error.status;
-            }
+            ({ output, exitCode } = runStylelint(validFixture, projectRoot));
         });
 
         it('should not detect errors in valid fixture', () => {
