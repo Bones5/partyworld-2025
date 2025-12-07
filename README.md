@@ -4,6 +4,35 @@
 
 Partyworld 2025 is a customized BigCommerce theme based on Cornerstone.
 
+## Testing
+
+### Unit Tests (Jest)
+Run JavaScript unit tests:
+```bash
+npm test
+```
+
+### E2E Tests (Playwright)
+Run end-to-end regression tests for design system validation:
+```bash
+npm run test:e2e
+```
+
+See [Playwright Testing Guide](docs/PLAYWRIGHT_TESTING.md) for detailed information on:
+- Running tests against local or deployed stores
+- Writing new tests
+- CI/CD integration
+- Debugging test failures
+
+The E2E tests validate:
+- Icon system implementation
+- Accessibility requirements (WCAG)
+- Component patterns and BEM naming
+- Asset management (CDN, lazy loading)
+- Responsive design
+- Typography scale
+- SCSS token usage
+
 ### Stencil Utils
 [Stencil-utils](https://github.com/bigcommerce/stencil-utils) is our supporting library for our events and remote interactions.
 

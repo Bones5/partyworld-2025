@@ -28,3 +28,8 @@ scripts/image-transfer/transfer-production-to-staging/*.json
 scripts/image-transfer/transfer-production-to-staging/category-images/
 scripts/image-transfer/transfer-production-to-staging/page-builder-content/
 scripts/image-transfer/transfer-production-to-staging/images/
+
+# Playwright artifacts
+test-results/
+playwright-report/
+playwright/.cache/
