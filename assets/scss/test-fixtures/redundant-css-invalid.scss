@@ -1,0 +1,45 @@
+// Test fixtures for redundant CSS patterns that should be caught by stylelint
+
+// Example 1: Duplicate properties in same rule
+.duplicate-property {
+    color: red;
+    margin: 10px;
+    color: blue; // Duplicate - should fail
+}
+
+// Example 2: Shorthand overriding longhand
+.shorthand-override {
+    margin-top: 10px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    margin: 5px; // Overrides all longhand properties - should fail
+}
+
+// Example 3: Longhand after shorthand (allowed by consecutive-duplicates-with-different-values)
+.longhand-after-shorthand {
+    margin: 10px;
+    margin-top: 20px; // This is OK - refining shorthand
+}
+
+// Example 4: Duplicate selectors
+.duplicate-selector {
+    color: red;
+}
+
+.another-selector {
+    font-size: 14px;
+}
+
+.duplicate-selector {
+    background: blue; // Duplicate selector - should fail
+}
+
+// Example 5: Duplicate mixin definition
+@mixin test-mixin {
+    color: red;
+}
+
+@mixin test-mixin {
+    color: blue; // Duplicate mixin - should fail
+}

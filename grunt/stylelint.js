@@ -14,5 +14,6 @@ module.exports = {
         '!assets/scss/vendor/**/*.scss',
         '!assets/scss/invoice.scss',
         '!assets/scss/maintenance.scss',
+        '!assets/scss/test-fixtures/**/*.scss',
     ],
 };

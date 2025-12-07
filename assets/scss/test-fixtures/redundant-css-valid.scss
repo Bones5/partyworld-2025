@@ -1,0 +1,60 @@
+// Test fixtures for valid CSS patterns that should NOT be flagged as redundant
+
+// Example 1: No duplicate properties
+.no-duplicates {
+    color: red;
+    margin: 10px;
+    padding: 5px;
+}
+
+// Example 2: Consecutive duplicates with different values (for browser fallbacks)
+.fallback-values {
+    display: inline-block;
+    display: flex; // This is OK - browser fallback pattern
+}
+
+// Example 3: Longhand refining shorthand
+.refine-shorthand {
+    margin: 10px;
+    margin-top: 20px; // This is OK - refining the shorthand
+    padding: 5px;
+    padding-bottom: 10px; // This is OK - refining the shorthand
+}
+
+// Example 4: Different selectors
+.selector-one {
+    color: red;
+}
+
+.selector-two {
+    color: blue;
+}
+
+// Example 5: Unique mixin definitions
+@mixin mixin-one {
+    color: red;
+}
+
+@mixin mixin-two {
+    color: blue;
+}
+
+// Example 6: Nested selectors (not duplicate)
+.parent {
+    color: red;
+
+    .child {
+        color: blue;
+    }
+}
+
+// Example 7: Media query variations (not duplicate)
+.responsive {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    .responsive {
+        font-size: 16px;
+    }
+}

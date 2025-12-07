@@ -1,0 +1,2 @@
+# Test fixtures - intentionally contain invalid CSS for testing
+assets/scss/test-fixtures/**/*.scss
