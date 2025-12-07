@@ -26,12 +26,13 @@ describe('Redundant CSS Detection', () => {
         beforeAll(() => {
             try {
                 output = execSync(
-                    `npx stylelint "${invalidFixture}" --formatter json`,
-                    { encoding: 'utf8', cwd: projectRoot, stdio: 'pipe' }
+                    `npx stylelint "${invalidFixture}" --formatter json --ignore-path /dev/null 2>&1`,
+                    { encoding: 'utf8', cwd: projectRoot }
                 );
                 exitCode = 0;
             } catch (error) {
-                output = error.stdout || error.stderr || '';
+                // When stylelint finds errors, it uses stderr for the JSON output
+                output = error.output ? error.output.join('') : (error.stdout || error.stderr || '');
                 exitCode = error.status;
             }
         });
@@ -88,12 +89,12 @@ describe('Redundant CSS Detection', () => {
         beforeAll(() => {
             try {
                 output = execSync(
-                    `npx stylelint "${validFixture}" --formatter json`,
-                    { encoding: 'utf8', cwd: projectRoot, stdio: 'pipe' }
+                    `npx stylelint "${validFixture}" --formatter json --ignore-path /dev/null 2>&1`,
+                    { encoding: 'utf8', cwd: projectRoot }
                 );
                 exitCode = 0;
             } catch (error) {
-                output = error.stdout || error.stderr || '';
+                output = error.output ? error.output.join('') : (error.stdout || error.stderr || '');
                 exitCode = error.status;
             }
         });
@@ -103,11 +104,6 @@ describe('Redundant CSS Detection', () => {
         });
 
         it('should have no warnings for valid patterns', () => {
-            // If output is empty, stylelint found no issues
-            if (!output || output.trim() === '') {
-                expect(true).toBe(true);
-                return;
-            }
             const results = JSON.parse(output);
             expect(results[0].warnings.length).toBe(0);
         });
@@ -116,12 +112,6 @@ describe('Redundant CSS Detection', () => {
             const css = fs.readFileSync(validFixture, 'utf8');
             expect(css).toContain('display: inline-block');
             expect(css).toContain('display: flex');
-            
-            // If output is empty, stylelint found no issues, which is what we want
-            if (!output || output.trim() === '') {
-                expect(true).toBe(true);
-                return;
-            }
             
             const results = JSON.parse(output);
             const warnings = results[0].warnings;
@@ -135,12 +125,6 @@ describe('Redundant CSS Detection', () => {
             const css = fs.readFileSync(validFixture, 'utf8');
             expect(css).toContain('margin: 10px');
             expect(css).toContain('margin-top: 20px');
-            
-            // If output is empty, stylelint found no issues, which is what we want
-            if (!output || output.trim() === '') {
-                expect(true).toBe(true);
-                return;
-            }
             
             const results = JSON.parse(output);
             const warnings = results[0].warnings;
