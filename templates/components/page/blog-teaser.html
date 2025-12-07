@@ -1,0 +1,52 @@
+{{!-- Blog Teaser component partial --}}
+{{!-- 
+  Usage:
+    {{> components/page/blog-teaser 
+        heading="From the Blog"
+        posts=blog.recent_posts
+        ctaText="Read More"
+        ctaUrl="/blog/"
+    }}
+  
+  Surfaces recent blog posts with thumbnail, excerpt, and CTA.
+--}}
+<section class="c-blogTeaser">
+    <div class="c-blogTeaser__header">
+        {{#if heading}}
+            <h2 class="c-blogTeaser__heading">{{heading}}</h2>
+        {{/if}}
+        {{#if ctaUrl}}
+            <a href="{{ctaUrl}}" class="c-blogTeaser__viewAll btn btn--primary">
+                {{default ctaText "View All Posts"}}
+            </a>
+        {{/if}}
+    </div>
+    <div class="c-blogTeaser__items">
+        {{#each posts}}
+            <article class="c-blogTeaser__item">
+                {{#if thumbnail}}
+                    <a href="{{url}}" class="c-blogTeaser__imageLink" aria-label="{{title}}">
+                        <img 
+                            class="c-blogTeaser__image" 
+                            src="{{getImage thumbnail '300x200'}}" 
+                            alt="{{title}}"
+                            loading="lazy"
+                        />
+                    </a>
+                {{/if}}
+                <div class="c-blogTeaser__content">
+                    <h3 class="c-blogTeaser__title">
+                        <a href="{{url}}">{{title}}</a>
+                    </h3>
+                    {{#if summary}}
+                        <p class="c-blogTeaser__excerpt">{{truncate summary 120}}</p>
+                    {{/if}}
+                    <a href="{{url}}" class="c-blogTeaser__cta">
+                        {{lang 'blog.read_more'}} →
+                    </a>
+                </div>
+            </article>
+        {{/each}}
+    </div>
+    {{{region name="home_blog_teaser"}}}
+</section>

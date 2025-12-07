@@ -1,0 +1,43 @@
+{{!-- Intro Promise component partial --}}
+{{!-- 
+  Usage:
+    {{> components/page/intro-promise 
+        heading="Welcome to Partyworld"
+        intro="Your one-stop shop for all party supplies..."
+        promises=promises
+    }}
+  
+  Two-column layout: brand intro on left + key promises with icon list on right.
+--}}
+<section class="c-introPromise">
+    <div class="c-introPromise__container">
+        <div class="c-introPromise__intro">
+            {{#if heading}}
+                <h2 class="c-introPromise__heading">{{heading}}</h2>
+            {{/if}}
+            {{#if intro}}
+                <div class="c-introPromise__text">
+                    {{{intro}}}
+                </div>
+            {{/if}}
+        </div>
+        <div class="c-introPromise__promises">
+            {{#if promisesHeading}}
+                <h3 class="c-introPromise__promisesHeading">{{promisesHeading}}</h3>
+            {{/if}}
+            <ul class="c-introPromise__list">
+                {{#each promises}}
+                    <li class="c-introPromise__item">
+                        {{#if icon}}
+                            <svg class="c-introPromise__icon" width="24" height="24" aria-hidden="true">
+                                <use href="#icon-{{icon}}"></use>
+                            </svg>
+                        {{/if}}
+                        <span class="c-introPromise__itemText">{{text}}</span>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+    {{{region name="home_intro_promise"}}}
+</section>
