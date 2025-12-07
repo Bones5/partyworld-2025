@@ -170,6 +170,7 @@ Update the subscription form to POST directly to Klaviyo's API:
            }
            
            // Additional regex validation as fallback
+           // Note: Relies primarily on browser validation; this is a basic check
            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
            if (!emailRegex.test(email)) {
                showMessage(messageDiv, 'Please enter a valid email address.', 'error');
@@ -311,9 +312,11 @@ BigCommerce doesn't natively support custom API endpoints in themes, but you can
 
 Here's a Node.js serverless function example (AWS Lambda, Netlify, etc.):
 
+**Note**: This example uses the built-in `fetch` API available in Node.js 18+. For older versions, you may need to install a fetch polyfill.
+
 ```javascript
 // serverless-function/klaviyo-subscribe.js
-const fetch = require('node-fetch');
+// Requires Node.js 18+ for native fetch support
 
 exports.handler = async (event) => {
     // Parse request body
@@ -324,12 +327,13 @@ exports.handler = async (event) => {
     
     try {
         // Klaviyo API v3 - Subscribe to List
+        // Check https://developers.klaviyo.com/en/reference/api_overview for latest API version
         const response = await fetch('https://a.klaviyo.com/api/profiles/', {
             method: 'POST',
             headers: {
                 'Authorization': `Klaviyo-API-Key ${KLAVIYO_PRIVATE_KEY}`,
                 'Content-Type': 'application/json',
-                'revision': '2024-07-15'
+                'revision': '2024-10-15' // Update to latest revision from Klaviyo docs
             },
             body: JSON.stringify({
                 data: {
@@ -357,7 +361,7 @@ exports.handler = async (event) => {
             headers: {
                 'Authorization': `Klaviyo-API-Key ${KLAVIYO_PRIVATE_KEY}`,
                 'Content-Type': 'application/json',
-                'revision': '2024-07-15'
+                'revision': '2024-10-15' // Update to latest revision from Klaviyo docs
             },
             body: JSON.stringify({
                 data: [
@@ -703,5 +707,5 @@ For integration support:
 ---
 
 **Document Version**: 1.0  
-**Last Updated**: December 2025  
+**Last Updated**: December 2024  
 **Maintained By**: Partyworld Development Team
