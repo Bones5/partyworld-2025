@@ -126,7 +126,7 @@ Update the subscription form to POST directly to Klaviyo's API:
                           type="email"
                           value="{{customer.email}}"
                           placeholder="{{lang 'newsletter.email_placeholder'}}"
-                          aria-describedby="klaviyo-message-text"
+                          aria-describedby="klaviyo-message"
                           aria-required="true"
                           autocomplete="email"
                           required
@@ -162,7 +162,8 @@ Update the subscription form to POST directly to Klaviyo's API:
            const messageDiv = document.getElementById('klaviyo-message');
            const submitButton = form.querySelector('button[type="submit"]');
 
-           if (!email) {
+           // Validate email using browser's built-in validation
+           if (!email || !emailInput.validity.valid) {
                showMessage(messageDiv, 'Please enter a valid email address.', 'error');
                return;
            }
@@ -173,31 +174,35 @@ Update the subscription form to POST directly to Klaviyo's API:
 
            try {
                // Use Klaviyo's client-side API
+               // Note: This example uses Klaviyo's identify + track approach
+               // For direct list subscription, you may need to use server-side API v3
                if (typeof window._learnq !== 'undefined') {
                    window._learnq.push(['identify', { '$email': email }]);
                    
-                   // Subscribe to list
-                   const response = await fetch('https://a.klaviyo.com/api/v2/list/YOUR_LIST_ID/subscribe?api_key=YOUR_PUBLIC_KEY', {
+                   // Track subscription event (recommended approach)
+                   // For actual list subscription via API, use Klaviyo's server-side v3 API
+                   // See "Method 3: Use Klaviyo's API with Server-Side Processing" for production use
+                   window._learnq.push(['track', 'Newsletter Signup', {
+                       'source': 'footer',
+                       '$email': email
+                   }]);
+                   
+                   // Alternative: Subscribe to list using server-side endpoint
+                   // This example endpoint would need to be created on your backend
+                   const response = await fetch('/api/klaviyo/subscribe', {
                        method: 'POST',
                        headers: {
                            'Content-Type': 'application/json',
                        },
                        body: JSON.stringify({
-                           profiles: [{
-                               email: email
-                           }]
+                           email: email,
+                           listId: 'YOUR_LIST_ID'
                        })
                    });
 
                    if (response.ok) {
                        showMessage(messageDiv, 'Thank you for subscribing to our newsletter!', 'success');
                        emailInput.value = '';
-                       
-                       // Track subscription event
-                       window._learnq.push(['track', 'Newsletter Signup', {
-                           'source': 'footer',
-                           '$email': email
-                       }]);
                    } else {
                        throw new Error('Subscription failed');
                    }
@@ -438,6 +443,15 @@ Test different form variations:
 - Klaviyo handles duplicates automatically by email
 - Check that email is being passed correctly
 - Consider using Klaviyo's built-in deduplication
+
+#### Issue: API version compatibility
+
+**Solution:**
+- This guide references both client-side (onsite tracking) and API approaches
+- Klaviyo has migrated from API v2 to v3 with different authentication methods
+- For production implementations, use Klaviyo v3 REST API with Bearer token authentication
+- Server-side integrations should use the official Klaviyo SDK or v3 API endpoints
+- See [Klaviyo API v3 Documentation](https://developers.klaviyo.com/en/reference/api_overview) for current specifications
 
 ### Debug Mode
 
