@@ -104,23 +104,17 @@
     &.is-open {
         color: stencilColor("navUser-color-hover");
 
-        svg {
-            fill: color("whites", "bright"); // white fill on hover
-            stroke: none; // remove stroke to prevent artifacts
-            background-color: transparent; // no background on hover
-            border-radius: 50%;
-            display: inline-block;
-            box-sizing: content-box;
-            width: 2em;
-            height: 2em;
-            padding: 0.5em;
-        }
-
         .navUser-icon {
             fill: color("whites", "bright"); // white fill on hover
             stroke: none; // remove stroke to prevent artifacts
             background-color: transparent; // no background on hover
             border-radius: 50%;
+        }
+
+        svg {
+            fill: color("whites", "bright"); // white fill on hover
+            stroke: none; // remove stroke to prevent artifacts
+            background-color: transparent; // no background on hover
         }
 
         // Add white underline for contrast on red header
@@ -153,14 +147,6 @@
         height: 2em;
         padding: 0.5em;
         transition: all 0.15s ease;
-    }
-
-    &:hover svg,
-    &:focus svg,
-    &.is-open svg {
-        fill: color("whites", "bright"); // white fill on hover
-        stroke: none; // remove stroke to prevent artifacts
-        background-color: transparent; // no background on hover
     }
 }
 
@@ -222,7 +208,6 @@
     display: block;
 
     @include breakpoint("medium") {
-        display: block;
     }
 }
 
@@ -237,7 +222,6 @@
     }
 
     .navUser-action {
-        color: stencilColor("navUser-color");
 
         &:hover,
         &.is-open {
@@ -302,7 +286,6 @@
     display: block;
 
     @include breakpoint("medium") {
-        display: block;
     }
 
     .navUser-or {
