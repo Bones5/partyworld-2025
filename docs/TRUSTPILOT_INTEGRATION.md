@@ -375,16 +375,19 @@ Create a serverless function that fetches reviews:
 ```javascript
 // Example: Fetch reviews from Trustpilot API
 async function getTrustpilotReviews() {
+    const businessUnitId = '{{YOUR_BUSINESS_UNIT_ID}}';
+    const apiKey = '{{YOUR_API_KEY}}';
+    const params = new URLSearchParams({
+        stars: '4,5',
+        perPage: '6',
+        language: 'en'
+    });
+    
     const response = await fetch(
-        `https://api.trustpilot.com/v1/business-units/${'{{YOUR_BUSINESS_UNIT_ID}}'}/reviews`,
+        `https://api.trustpilot.com/v1/business-units/${businessUnitId}/reviews?${params}`,
         {
             headers: {
-                'apikey': '{{YOUR_API_KEY}}'
-            },
-            params: {
-                stars: '4,5',
-                perPage: 6,
-                language: 'en'
+                'apikey': apiKey
             }
         }
     );
@@ -398,6 +401,13 @@ async function getTrustpilotReviews() {
 Add to `assets/js/theme/home.js`:
 
 ```javascript
+// Helper function to escape HTML and prevent XSS
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 async function loadTrustpilotReviews() {
     try {
         const data = await fetch('/api/trustpilot-reviews').then(r => r.json());
