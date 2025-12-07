@@ -189,12 +189,16 @@ test.describe('Component Patterns', () => {
         // Should not have Tailwind-like utility classes
         expect(classList).not.toMatch(/\b(flex-1|grid-cols-|bg-|text-lg|p-\d+|m-\d+)\b/);
         
-        // Should not have Bootstrap-like classes mixed with custom
+        // Should not have Bootstrap-like classes mixed with custom components
         const hasCustom = classList.includes('c-');
         const hasBootstrap = classList.match(/\b(container-fluid|col-md-|row)\b/);
         
-        // This is informational - not strictly an error
-        expect(typeof hasBootstrap).toBe('object');
+        // If element has custom component classes, it should not also have Bootstrap grid classes
+        if (hasCustom && hasBootstrap) {
+          // This is a warning - some mixing may be acceptable
+          // but custom components should ideally use consistent system
+          expect(hasBootstrap).toBeNull();
+        }
       }
     }
   });

@@ -144,11 +144,14 @@ test.describe('Accessibility Requirements', () => {
         const currentLevel = parseInt(tagName.replace('h', ''));
         
         if (previousLevel > 0) {
-          // Next heading should not jump more than 1 level
-          expect(currentLevel - previousLevel).toBeLessThanOrEqual(1);
+          // Next heading should not skip levels (e.g., h1 to h3)
+          // It can stay at same level or go up any amount, but down only by 1
+          if (currentLevel > previousLevel) {
+            expect(currentLevel).toBeLessThanOrEqual(previousLevel + 1);
+          }
         }
         
-        previousLevel = Math.min(previousLevel, currentLevel);
+        previousLevel = currentLevel;
       }
     }
   });
