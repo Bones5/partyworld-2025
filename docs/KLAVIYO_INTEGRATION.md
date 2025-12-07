@@ -161,9 +161,17 @@ Update the subscription form to POST directly to Klaviyo's API:
            const email = emailInput.value.trim();
            const messageDiv = document.getElementById('klaviyo-message');
            const submitButton = form.querySelector('button[type="submit"]');
+           const originalButtonText = submitButton.textContent;
 
-           // Validate email using browser's built-in validation
-           if (!email || !emailInput.validity.valid) {
+           // Validate email using browser's built-in validation with fallback
+           if (!email || (emailInput.validity && !emailInput.validity.valid)) {
+               showMessage(messageDiv, 'Please enter a valid email address.', 'error');
+               return;
+           }
+           
+           // Additional regex validation as fallback
+           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+           if (!emailRegex.test(email)) {
                showMessage(messageDiv, 'Please enter a valid email address.', 'error');
                return;
            }
@@ -175,37 +183,29 @@ Update the subscription form to POST directly to Klaviyo's API:
            try {
                // Use Klaviyo's client-side API
                // Note: This example uses Klaviyo's identify + track approach
-               // For direct list subscription, you may need to use server-side API v3
+               // which is the recommended method for client-side implementations
                if (typeof window._learnq !== 'undefined') {
                    window._learnq.push(['identify', { '$email': email }]);
                    
-                   // Track subscription event (recommended approach)
-                   // For actual list subscription via API, use Klaviyo's server-side v3 API
-                   // See "Method 3: Use Klaviyo's API with Server-Side Processing" for production use
+                   // Track subscription event
+                   // Klaviyo will automatically create/update the profile
                    window._learnq.push(['track', 'Newsletter Signup', {
                        'source': 'footer',
                        '$email': email
                    }]);
                    
-                   // Alternative: Subscribe to list using server-side endpoint
-                   // This example endpoint would need to be created on your backend
-                   const response = await fetch('/api/klaviyo/subscribe', {
-                       method: 'POST',
-                       headers: {
-                           'Content-Type': 'application/json',
-                       },
-                       body: JSON.stringify({
-                           email: email,
-                           listId: 'YOUR_LIST_ID'
-                       })
-                   });
+                   // Show success message
+                   showMessage(messageDiv, 'Thank you for subscribing to our newsletter!', 'success');
+                   emailInput.value = '';
+                   
+                   // Note: To add to a specific list, you'll need server-side integration
+                   // See "Method 3: Use Klaviyo's API with Server-Side Processing" below
+                   // Server-side approach would require:
+                   // 1. Creating a serverless function or webhook
+                   // 2. Using Klaviyo v3 API with your Private API Key
+                   // 3. Example endpoint: POST to your backend at '/webhook/klaviyo-subscribe'
+                   //    which then calls Klaviyo's API server-to-server
 
-                   if (response.ok) {
-                       showMessage(messageDiv, 'Thank you for subscribing to our newsletter!', 'success');
-                       emailInput.value = '';
-                   } else {
-                       throw new Error('Subscription failed');
-                   }
                } else {
                    throw new Error('Klaviyo is not loaded');
                }
@@ -213,9 +213,9 @@ Update the subscription form to POST directly to Klaviyo's API:
                console.error('Klaviyo subscription error:', error);
                showMessage(messageDiv, 'An error occurred. Please try again later.', 'error');
            } finally {
-               // Re-enable submit button
+               // Re-enable submit button with original text
                submitButton.disabled = false;
-               submitButton.textContent = 'Subscribe';
+               submitButton.textContent = originalButtonText;
            }
        });
 
@@ -291,37 +291,183 @@ Update the subscription form to POST directly to Klaviyo's API:
 
 ### Method 3: Use Klaviyo's API with Server-Side Processing
 
-For enhanced security, handle subscriptions server-side:
+For enhanced security and to add subscribers to specific lists, implement server-side processing:
 
-1. Create a custom BigCommerce webhook or serverless function
-2. Accept form submissions
-3. Use Klaviyo's Server-Side API to add subscribers
-4. This requires additional backend development
+#### Option A: BigCommerce Serverless Functions (Recommended)
+
+BigCommerce doesn't natively support custom API endpoints in themes, but you can use:
+
+1. **BigCommerce Webhooks + External Service**:
+   - Set up a serverless function (AWS Lambda, Netlify Functions, Cloudflare Workers)
+   - Configure form to POST to the serverless endpoint
+   - Serverless function uses Klaviyo v3 API with Private Key to add to list
+
+2. **Script Web API (requires BigCommerce app)**:
+   - Create a custom BigCommerce app with API endpoint
+   - Form POSTs to your app's endpoint
+   - App uses Klaviyo SDK to manage subscriptions
+
+#### Option B: Example Serverless Function
+
+Here's a Node.js serverless function example (AWS Lambda, Netlify, etc.):
+
+```javascript
+// serverless-function/klaviyo-subscribe.js
+const fetch = require('node-fetch');
+
+exports.handler = async (event) => {
+    // Parse request body
+    const { email, listId } = JSON.parse(event.body);
+    
+    // Klaviyo Private API Key (store as environment variable)
+    const KLAVIYO_PRIVATE_KEY = process.env.KLAVIYO_PRIVATE_KEY;
+    
+    try {
+        // Klaviyo API v3 - Subscribe to List
+        const response = await fetch('https://a.klaviyo.com/api/profiles/', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Klaviyo-API-Key ${KLAVIYO_PRIVATE_KEY}`,
+                'Content-Type': 'application/json',
+                'revision': '2024-07-15'
+            },
+            body: JSON.stringify({
+                data: {
+                    type: 'profile',
+                    attributes: {
+                        email: email,
+                        properties: {
+                            'Newsletter Source': 'Website Footer'
+                        }
+                    }
+                }
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error('Klaviyo API error');
+        }
+        
+        // Add profile to list
+        const profileData = await response.json();
+        const profileId = profileData.data.id;
+        
+        await fetch(`https://a.klaviyo.com/api/lists/${listId}/relationships/profiles/`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Klaviyo-API-Key ${KLAVIYO_PRIVATE_KEY}`,
+                'Content-Type': 'application/json',
+                'revision': '2024-07-15'
+            },
+            body: JSON.stringify({
+                data: [
+                    {
+                        type: 'profile',
+                        id: profileId
+                    }
+                ]
+            })
+        });
+        
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ success: true })
+        };
+    } catch (error) {
+        console.error('Error:', error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ success: false, error: error.message })
+        };
+    }
+};
+```
+
+Then update your form JavaScript to POST to your serverless endpoint:
+
+```javascript
+const response = await fetch('https://your-function-url.netlify.app/.netlify/functions/klaviyo-subscribe', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        email: email,
+        listId: 'YOUR_LIST_ID'
+    })
+});
+```
+
+**Important Security Notes:**
+- Never expose Private API Keys in client-side code
+- Always use environment variables for sensitive credentials
+- Implement rate limiting on serverless functions to prevent abuse
+- Add CORS headers appropriately for your domain
 
 ---
 
 ## Configuration Variables
 
-Add these to your theme's configuration if using the custom integration:
+### Important: API Key Storage
 
-File: `config.json`
+**⚠️ Security Warning**: Never store API keys directly in theme files that are committed to version control.
+
+### Recommended Approach
+
+1. **For Klaviyo App Users**: API keys are securely managed by the app
+2. **For Script Manager**: Public Key in script tag is acceptable (it's meant to be public)
+3. **For Theme Settings**: Only store non-sensitive configuration
+
+### Theme Configuration (config.json)
+
+You can add non-sensitive settings to `config.json`:
 
 ```json
 {
   "settings": {
-    "klaviyo_enabled": true,
-    "klaviyo_public_key": "YOUR_PUBLIC_KEY",
-    "klaviyo_list_id": "YOUR_LIST_ID"
+    "klaviyo_enabled": {
+      "type": "checkbox",
+      "label": "Enable Klaviyo Integration",
+      "default": false
+    },
+    "klaviyo_list_name": {
+      "type": "text",
+      "label": "Newsletter List Name",
+      "default": "Newsletter Subscribers"
+    }
   }
 }
 ```
 
-Then update the JavaScript to use these values:
+**Never add Private API Keys to config.json or any theme files.**
 
-```javascript
-const KLAVIYO_PUBLIC_KEY = '{{settings.klaviyo_public_key}}';
-const KLAVIYO_LIST_ID = '{{settings.klaviyo_list_id}}';
-```
+### Using BigCommerce Store Settings
+
+For sensitive data like API keys (if not using the Klaviyo app):
+
+1. Store in BigCommerce environment variables (requires app development)
+2. Use Script Manager for the public-facing script (public key only)
+3. Implement server-side functions for operations requiring private keys
+
+### Alternative: Script Manager Variables
+
+If using Script Manager for configuration:
+
+1. Create script with data attributes:
+   ```html
+   <script 
+       data-klaviyo-public-key="YOUR_PUBLIC_KEY" 
+       src="/path/to/your-klaviyo-script.js">
+   </script>
+   ```
+
+2. Access in your JavaScript:
+   ```javascript
+   const script = document.querySelector('[data-klaviyo-public-key]');
+   const publicKey = script.getAttribute('data-klaviyo-public-key');
+   ```
+
+**Remember**: Public keys are safe to expose, but Private API Keys must never be in client-side code or theme files.
 
 ---
 
