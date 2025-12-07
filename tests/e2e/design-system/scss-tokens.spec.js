@@ -169,9 +169,10 @@ test.describe('SCSS Token Usage (CSS Output Validation)', () => {
       return count;
     });
     
-    // Some !important usage is OK for utilities, but should be minimal
     // Per design rules: "Do not use !important in CSS/SCSS"
-    expect(importantCount).toBeGreaterThanOrEqual(0);
+    // Allow a small number for utility classes, but should be minimal
+    const maxAllowedImportant = 50; // Adjust based on your theme's needs
+    expect(importantCount).toBeLessThanOrEqual(maxAllowedImportant);
   });
 
   test('should use rem units for typography', async ({ page }) => {

@@ -29,7 +29,7 @@ test.describe('Responsive Design', () => {
     await page.goto('/');
     
     // Should have mobile menu toggle
-    const mobileMenuToggle = await page.locator('[class*="mobileMenu"], [class*="mobile-menu"], button[aria-label*="menu" i]').count();
+    const mobileMenuToggle = await page.locator('[class*="mobileMenu"], [class*="mobile-menu"], button[aria-label*="menu"], button[aria-label*="Menu"]').count();
     
     expect(mobileMenuToggle).toBeGreaterThanOrEqual(0);
   });

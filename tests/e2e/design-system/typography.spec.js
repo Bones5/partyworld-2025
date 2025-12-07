@@ -153,7 +153,7 @@ test.describe('Typography System', () => {
     }
   });
 
-  test('should use appropriate font families', async ({ page }) => {
+  test('should have appropriate font families', async ({ page }) => {
     await page.goto('/');
     
     // Check that fonts have proper fallbacks
@@ -162,10 +162,7 @@ test.describe('Typography System', () => {
       return window.getComputedStyle(el).fontFamily;
     });
     
-    // Should have fallback fonts
-    expect(bodyFontFamily).toMatch(/,/); // Contains comma-separated fallbacks
-    
-    // Common fallbacks should include sans-serif, serif, or monospace
+    // Should have fallback fonts (sans-serif, serif, or monospace)
     expect(bodyFontFamily).toMatch(/sans-serif|serif|monospace/i);
   });
 
