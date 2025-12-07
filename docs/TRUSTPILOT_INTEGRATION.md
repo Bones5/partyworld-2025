@@ -66,7 +66,7 @@ Edit `templates/components/common/trustpilot-badge.html`:
     <div class="trustpilot-widget" 
          data-locale="en-US"
          data-template-id="5419b6a8b0d04a076446a9ad"
-         data-businessunit-id="YOUR_BUSINESS_UNIT_ID_HERE"
+         data-businessunit-id="{{YOUR_BUSINESS_UNIT_ID}}"
          data-style-height="24px"
          data-style-width="100%"
          data-theme="light">
@@ -77,7 +77,7 @@ Edit `templates/components/common/trustpilot-badge.html`:
 </div>
 ```
 
-**Replace** `YOUR_BUSINESS_UNIT_ID_HERE` with your actual Business Unit ID.
+**Replace** `{{YOUR_BUSINESS_UNIT_ID}}` with your actual Business Unit ID.
 
 #### Step 4: Add Trustpilot Script
 
@@ -238,7 +238,7 @@ Edit `templates/components/page/customer-review-grid.html`:
         <div class="trustpilot-widget" 
              data-locale="en-US"
              data-template-id="539ad0ffdec7e10e686debd7"
-             data-businessunit-id="YOUR_BUSINESS_UNIT_ID_HERE"
+             data-businessunit-id="{{YOUR_BUSINESS_UNIT_ID}}"
              data-style-height="500px"
              data-style-width="100%"
              data-theme="light"
@@ -376,10 +376,10 @@ Create a serverless function that fetches reviews:
 // Example: Fetch reviews from Trustpilot API
 async function getTrustpilotReviews() {
     const response = await fetch(
-        `https://api.trustpilot.com/v1/business-units/${BUSINESS_UNIT_ID}/reviews`,
+        `https://api.trustpilot.com/v1/business-units/${'{{YOUR_BUSINESS_UNIT_ID}}'}/reviews`,
         {
             headers: {
-                'apikey': YOUR_API_KEY
+                'apikey': '{{YOUR_API_KEY}}'
             },
             params: {
                 stars: '4,5',
