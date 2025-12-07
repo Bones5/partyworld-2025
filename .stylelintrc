@@ -20,6 +20,15 @@
     "value-no-vendor-prefix": null,
     "scss/no-global-function-names": null,
     "@stylistic/indentation": 4,
-    "@stylistic/string-quotes": "double"
+    "@stylistic/string-quotes": "double",
+    "declaration-block-no-duplicate-properties": [
+      true,
+      {
+        "ignore": ["consecutive-duplicates-with-different-values"]
+      }
+    ],
+    "declaration-block-no-shorthand-property-overrides": true,
+    "no-duplicate-selectors": true,
+    "scss/no-duplicate-mixins": true
   }
 }
