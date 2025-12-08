@@ -29,8 +29,10 @@ jobs:
       env:
         CI: true
     
+    # Note: Coverage upload is conditional as coverage collection is not enabled by default
+    # To enable, uncomment 'collectCoverage: true' in jest.config.js
     - name: Upload test coverage
-      if: always()
+      if: always() && hashFiles('coverage/**') != ''
       uses: actions/upload-artifact@v4
       with:
         name: test-coverage
