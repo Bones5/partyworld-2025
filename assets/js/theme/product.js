@@ -37,6 +37,7 @@ export default class Product extends PageManager {
         videoGallery();
 
         this.bulkPricingHandler();
+        this.bindPrintHandler();
 
         const $reviewForm = classifyForm('.writeReview-form');
 
@@ -81,5 +82,12 @@ export default class Product extends PageManager {
         if (this.url.indexOf('#bulk_pricing') !== -1) {
             this.$bulkPricingLink.trigger('click');
         }
+    }
+
+    bindPrintHandler() {
+        $('body').on('click', '[data-print-page]', (event) => {
+            event.preventDefault();
+            window.print();
+        });
     }
 }
