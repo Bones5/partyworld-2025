@@ -2,6 +2,8 @@
 
 This directory contains the GitHub Actions workflows for the Partyworld 2025 theme.
 
+> 📖 **For detailed CI setup and branch protection configuration, see [CI_SETUP.md](./CI_SETUP.md)**
+
 ## Workflows
 
 ### update-branches-on-merge.yml
@@ -45,3 +47,10 @@ This directory contains the GitHub Actions workflows for the Partyworld 2025 the
 **Purpose**: Validates that the theme can be successfully bundled using Stencil CLI.
 
 **Trigger**: Runs on pull requests and pushes to `master`/`main` branches.
+
+### unit-tests.yml
+**Purpose**: Runs Jest unit tests to validate JavaScript modules and components.
+
+**Trigger**: Runs on push to `master`/`main`/`develop` branches and on pull requests targeting those branches.
+
+**Note**: Jest is configured to only run unit tests from `assets/js/test-unit/` and explicitly excludes e2e tests in `tests/e2e/`.
