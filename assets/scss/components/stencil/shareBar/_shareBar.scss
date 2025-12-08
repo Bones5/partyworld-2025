@@ -52,7 +52,14 @@
     // Hidden text variant (icon-only buttons)
     &--iconOnly {
         .c-shareBar__text {
-            @include u-hiddenVisually;
+            // Visually hidden but accessible to screen readers
+            clip: rect(0, 0, 0, 0);
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            width: 1px;
         }
     }
 }
