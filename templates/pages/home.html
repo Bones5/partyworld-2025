@@ -116,6 +116,30 @@ categories:
         {{> components/products/new products=products.new columns=theme_settings.homepage_new_products_column_count}}
     {{/if}}
     {{{region name="home_below_new_products"}}}
+
+    {{!-- Customer Reviews Section --}}
+    {{> components/page/customer-review-grid 
+        heading="What Our Customers Say"
+        reviews=theme_settings.homepage_reviews
+    }}
+
+    {{!-- Brand Intro & Promises Section --}}
+    {{> components/page/intro-promise 
+        heading=theme_settings.homepage_intro_heading
+        intro=theme_settings.homepage_intro_text
+        promisesHeading=theme_settings.homepage_promises_heading
+        promises=theme_settings.homepage_promises
+    }}
+
+    {{!-- Blog Teaser Section --}}
+    {{#if blog.recent_posts}}
+        {{> components/page/blog-teaser 
+            heading="From the Blog"
+            posts=blog.recent_posts
+            ctaText="View All Posts"
+            ctaUrl="/blog/"
+        }}
+    {{/if}}
 </div>
 {{/partial}}
 {{> layout/base}}

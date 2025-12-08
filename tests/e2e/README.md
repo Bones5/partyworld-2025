@@ -151,6 +151,13 @@ Tests are configured in `playwright.config.js` with the following settings:
 - **Retries**: 2 retries on CI, 0 locally
 - **Screenshots**: Captured on failure
 - **Trace**: Captured on first retry
+- **Test Server**: Automatically starts a Node.js test server serving mock HTML
+
+### Test Server
+
+By default, tests run against a mock test server (`tests/e2e/test-server.js`) that serves HTML pages with all the design patterns that need validation. This allows tests to run in CI/CD without requiring BigCommerce store credentials.
+
+See [TEST_SERVER.md](./TEST_SERVER.md) for detailed documentation on the test server architecture and maintenance.
 
 ### Setting Base URL
 
@@ -160,9 +167,13 @@ For testing against a live store:
 BASE_URL=https://your-store.mybigcommerce.com npx playwright test
 ```
 
-For testing local development:
+For testing local Stencil development server:
 
 ```bash
+# Start Stencil server first
+npm run start
+
+# Then in another terminal
 BASE_URL=http://localhost:3000 npx playwright test
 ```
 
