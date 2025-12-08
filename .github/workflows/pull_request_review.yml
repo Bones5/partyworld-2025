@@ -13,6 +13,9 @@ on:
 jobs:
   build:
 
+    permissions:
+      contents: read
+
     strategy:
       matrix:
         os: [ubuntu-latest]
