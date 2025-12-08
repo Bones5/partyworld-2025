@@ -58,7 +58,7 @@ The Jest configuration explicitly excludes e2e tests using:
 
 **Steps:**
 1. Checkout code
-2. Setup Node.js 18
+2. Setup Node.js 20
 3. Install dependencies (`npm ci`)
 4. Install Playwright browsers
 5. Run E2E tests (`npm run test:e2e`)
@@ -158,7 +158,7 @@ Use the same settings as `main`/`master`, or optionally:
 # https://cli.github.com/
 
 # Set up branch protection for main branch
-# Replace :owner/:repo with your actual repository (e.g., Bones5/partyworld-2025)
+# Replace :owner/:repo with actual values (e.g., gh api repos/Bones5/partyworld-2025/branches/main/protection)
 gh api repos/:owner/:repo/branches/main/protection \
   --method PUT \
   --field required_status_checks='{"strict":true,"contexts":["Run Jest Unit Tests","Run Playwright E2E Tests","build (ubuntu-latest, 20.x)"]}' \

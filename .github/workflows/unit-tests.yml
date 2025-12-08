@@ -21,8 +21,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        # Using Node.js 20 to match .nvmrc and pull_request_review.yml
-        # Note: playwright.yml uses Node.js 18 for compatibility with Playwright
+        # Using Node.js 20 to match .nvmrc for consistency across all workflows
         node-version: '20'
         cache: 'npm'
     
@@ -34,12 +33,13 @@ jobs:
       env:
         CI: true
     
-    # Note: Coverage upload is conditional as coverage collection is not enabled by default
-    # To enable, uncomment 'collectCoverage: true' in jest.config.js
+    # Note: Coverage upload requires coverage to be generated
+    # Enable by uncommenting 'collectCoverage: true' in jest.config.js
     - name: Upload test coverage
-      if: always() && hashFiles('coverage/**') != ''
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: test-coverage
         path: coverage/
         retention-days: 30
+        if-no-files-found: ignore
