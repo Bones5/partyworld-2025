@@ -14,8 +14,8 @@
 // -----------------------------------------------------------------------------
 
 .footer {
-    background-color: $footer-background;
-    border-top: container("border");
+    background-color: stencilColor("color-greyDarkest");
+    border-top: none;
     padding: spacing("double") 0;
     position: relative;
     transform: translateZ(0); // 3
@@ -43,12 +43,21 @@
 // -----------------------------------------------------------------------------
 
 .footer-newsletter {
-    border-bottom: 1px solid stencilColor("color-greyLight");
+    background-color: stencilColor("color-primary");
+    border-bottom: none;
+    color: stencilColor("color-white");
+    margin: 0 calc(-1 * #{container("padding")});
     margin-bottom: spacing("single");
-    padding-bottom: spacing("double");
+    padding: spacing("double") container("padding");
+    text-align: center;
 
     @include breakpoint("medium") {
         margin-bottom: 0;
+    }
+
+    // Ensure summary text inherits white color
+    .footer-newsletter-summary {
+        color: stencilColor("color-white");
     }
 }
 
@@ -58,6 +67,50 @@
 .footer-info {
     @include grid-row($behavior: nest);
     font-size: 0; // 1
+}
+
+// Footer Links Row
+// -----------------------------------------------------------------------------
+
+.footer-links-row {
+    @include grid-row($behavior: nest);
+    border-bottom: 1px solid stencilColor("color-greyLight");
+    font-size: 0; // 1
+    margin-bottom: spacing("double");
+    padding-bottom: spacing("double");
+}
+
+.footer-links-col {
+    @include grid-column(12);
+    color: stencilColor("color-greyLighter");
+    display: inline-block;
+    float: none;
+    font-size: fontSize("base"); // 2
+    margin-bottom: spacing("single");
+    overflow-wrap: break-word;
+    text-align: center;
+    vertical-align: top;
+    // TODO: specifically use vendor only for IE11 since overflow-wrap is not supported here
+    -ms-word-break: break-all;
+
+    @include breakpoint("small") {
+        margin-bottom: spacing("half");
+        text-align: left;
+        width: width("6/12");
+    }
+
+    @include breakpoint("medium") {
+        margin-bottom: 0;
+        width: width("3/12");
+    }
+
+    > :first-child {
+        margin-top: 0;
+    }
+
+    > :last-child {
+        margin-bottom: 0;
+    }
 }
 
 .footer-info-col {
@@ -93,7 +146,26 @@
     }
 }
 
-// Column variants for responsive stacking
+// Column variants for footer links row
+.footer-links-col--about,
+.footer-links-col--costumes,
+.footer-links-col--party-items {
+    @include breakpoint("medium") {
+        width: width("3/12");
+    }
+}
+
+// Column variants for trust/social row
+.footer-trust-col--reviews,
+.footer-trust-col--secure,
+.footer-trust-col--payment,
+.footer-trust-col--social {
+    @include breakpoint("medium") {
+        flex-basis: auto;
+    }
+}
+
+// Legacy column support (keep for backwards compatibility)
 .footer-info-col--nav,
 .footer-info-col--categories,
 .footer-info-col--brands,
@@ -140,7 +212,7 @@
 // -----------------------------------------------------------------------------
 
 .footer-info-heading {
-    color: $footer-heading-fontColor;
+    color: stencilColor("color-greyLighter");
     font-size: fontSize("base");
     font-weight: fontWeight("bold");
     margin-bottom: spacing("half");
@@ -156,12 +228,12 @@
     }
 
     a {
-        color: stencilColor("color-textSecondary");
+        color: stencilColor("color-greyLighter");
         text-decoration: none;
         transition: color 0.15s ease;
 
         &:hover {
-            color: stencilColor("color-textSecondary--hover");
+            color: stencilColor("color-white");
         }
 
         &:focus {
@@ -202,46 +274,45 @@
 // Footer bottom bar
 // -----------------------------------------------------------------------------
 
-.footer-bottom {
-    align-items: center;
-    border-top: 1px solid stencilColor("color-greyLight");
+.footer-trust-social {
+    background-color: stencilColor("color-greyDarker");
+    border-bottom: none;
+    color: stencilColor("color-greyLighter");
     display: flex;
     flex-direction: column;
     gap: spacing("single");
-    margin-top: spacing("double");
-    padding-top: spacing("double");
+    justify-content: center;
+    margin: 0 calc(-1 * #{container("padding")});
+    margin-bottom: spacing("double");
+    padding: spacing("double") container("padding");
     text-align: center;
 
     @include breakpoint("medium") {
         flex-direction: row;
-        justify-content: space-between;
-        text-align: left;
+        justify-content: center;
+        text-align: center;
     }
 }
 
-.footer-social {
-    order: 1;
+.footer-trust-col {
+    color: stencilColor("color-greyLighter");
+    flex: 1;
+    min-width: 0;
 
     @include breakpoint("medium") {
-        order: 0;
+        flex-basis: width("3/12");
     }
 }
 
-.footer-payment {
-    order: 2;
-
-    @include breakpoint("medium") {
-        order: 1;
-    }
-}
+// Copyright & Legal
+// -----------------------------------------------------------------------------
 
 .footer-legal {
     color: stencilColor("color-textSecondary");
     font-size: fontSize("tiny");
-    order: 3;
+    text-align: center;
 
     @include breakpoint("medium") {
-        order: 2;
         text-align: right;
     }
 }
@@ -319,8 +390,7 @@
 }
 
 .footer-newsletter-summary {
-    color: stencilColor("color-textSecondary");
     font-size: fontSize("smallest");
     margin-top: spacing("half");
-    text-align: left;
+    text-align: center;
 }
