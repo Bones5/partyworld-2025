@@ -2,7 +2,13 @@
 // SOCIAL LINKS (Settings)
 // =============================================================================
 
-$socialLinks-iconSize:                  20px;
+$socialLinks-iconSize:                  24px;
 
-$socialLinks-alt-iconSize:              21px;
+$socialLinks-alt-iconSize:              24px;
 $socialLinks-alt-iconColor:             stencilColor("color-textSecondary");
+
+// Button styling for social icon buttons
+$socialLinks-button-size:               40px;
+$socialLinks-button-border-radius:      50%;
+$socialLinks-button-background:         transparent;
+$socialLinks-button-background-hover:   stencilColor("color-greyLightest");

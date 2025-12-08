@@ -30,6 +30,31 @@
     width: 1px;
 }
 
+// Footer content wrapper
+// -----------------------------------------------------------------------------
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: spacing("double");
+}
+
+// Newsletter section
+// -----------------------------------------------------------------------------
+
+.footer-newsletter {
+    border-bottom: 1px solid stencilColor("color-greyLight");
+    margin-bottom: spacing("single");
+    padding-bottom: spacing("double");
+
+    @include breakpoint("medium") {
+        margin-bottom: 0;
+    }
+}
+
+// Footer grid layout
+// -----------------------------------------------------------------------------
+
 .footer-info {
     @include grid-row($behavior: nest);
     font-size: 0; // 1
@@ -41,18 +66,22 @@
     display: inline-block;
     float: none;
     font-size: fontSize("base"); // 2
+    margin-bottom: spacing("single");
     overflow-wrap: break-word;
     text-align: center;
     vertical-align: top;
     // TODO: specifically use vendor only for IE11 since overflow-wrap is not supported here
     -ms-word-break: break-all;
+
     @include breakpoint("small") {
+        margin-bottom: spacing("half");
         text-align: left;
         width: width("6/12");
     }
 
     @include breakpoint("medium") {
-        width: width("4/12");
+        margin-bottom: 0;
+        width: width("3/12");
     }
 
     > :first-child {
@@ -64,6 +93,17 @@
     }
 }
 
+// Column variants for responsive stacking
+.footer-info-col--nav,
+.footer-info-col--categories,
+.footer-info-col--brands,
+.footer-info-col--contact {
+    @include breakpoint("medium") {
+        width: width("3/12");
+    }
+}
+
+// Legacy small column support
 .footer-info-col--small {
     @include breakpoint("medium") {
         width: width("2/12");
@@ -102,6 +142,8 @@
 .footer-info-heading {
     color: $footer-heading-fontColor;
     font-size: fontSize("base");
+    font-weight: fontWeight("bold");
+    margin-bottom: spacing("half");
     text-transform: inherit;
 }
 
@@ -109,6 +151,107 @@
     list-style: none;
     margin-left: 0;
 
+    li {
+        margin-bottom: spacing("quarter");
+    }
+
+    a {
+        color: stencilColor("color-textSecondary");
+        text-decoration: none;
+        transition: color 0.15s ease;
+
+        &:hover {
+            color: stencilColor("color-textSecondary--hover");
+        }
+
+        &:focus {
+            outline: 2px solid stencilColor("color-primary");
+            outline-offset: 2px;
+        }
+    }
+}
+
+// Address styling
+.footer-address {
+    color: stencilColor("color-textSecondary");
+    font-style: normal;
+    line-height: lineHeight("base");
+    margin-bottom: spacing("half");
+}
+
+.footer-phone {
+    margin-bottom: 0;
+}
+
+.footer-phone-link {
+    color: stencilColor("color-textSecondary");
+    font-weight: fontWeight("semibold");
+    text-decoration: none;
+    transition: color 0.15s ease;
+
+    &:hover {
+        color: stencilColor("color-textSecondary--hover");
+    }
+
+    &:focus {
+        outline: 2px solid stencilColor("color-primary");
+        outline-offset: 2px;
+    }
+}
+
+// Footer bottom bar
+// -----------------------------------------------------------------------------
+
+.footer-bottom {
+    align-items: center;
+    border-top: 1px solid stencilColor("color-greyLight");
+    display: flex;
+    flex-direction: column;
+    gap: spacing("single");
+    margin-top: spacing("double");
+    padding-top: spacing("double");
+    text-align: center;
+
+    @include breakpoint("medium") {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+    }
+}
+
+.footer-social {
+    order: 1;
+
+    @include breakpoint("medium") {
+        order: 0;
+    }
+}
+
+.footer-payment {
+    order: 2;
+
+    @include breakpoint("medium") {
+        order: 1;
+    }
+}
+
+.footer-legal {
+    color: stencilColor("color-textSecondary");
+    font-size: fontSize("tiny");
+    order: 3;
+
+    @include breakpoint("medium") {
+        order: 2;
+        text-align: right;
+    }
+}
+
+.footer-copyright-text,
+.footer-powered-by {
+    margin: 0;
+}
+
+.footer-powered-by {
     a {
         color: stencilColor("color-textSecondary");
         text-decoration: none;
@@ -119,6 +262,7 @@
     }
 }
 
+// Legacy copyright class support
 .footer-copyright {
     text-align: center;
 
@@ -142,6 +286,9 @@
     }
 }
 
+// Payment icons
+// -----------------------------------------------------------------------------
+
 .footer-payment-icons {
     display: flex;
     flex-wrap: wrap;
@@ -152,10 +299,11 @@
 
     @include breakpoint("small") {
         justify-content: normal;
+        margin-top: 0;
     }
 
     @include breakpoint("medium") {
-        margin-top: spacing("double");
+        margin-top: 0;
     }
 
     .footer-payment-icon {
@@ -171,5 +319,8 @@
 }
 
 .footer-newsletter-summary {
+    color: stencilColor("color-textSecondary");
+    font-size: fontSize("smallest");
+    margin-top: spacing("half");
     text-align: left;
 }

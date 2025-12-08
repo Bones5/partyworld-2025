@@ -1,0 +1,61 @@
+// Confidence Grid (Product Page)
+// -----------------------------------------------------------------------------
+// Delivery/assurance badges beneath add-to-cart block
+// -----------------------------------------------------------------------------
+
+.c-confidenceGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: spacing("half");
+    margin-top: spacing("single");
+    padding: spacing("single") 0;
+    border-top: container("border");
+
+    @include breakpoint("medium") {
+        grid-template-columns: repeat(4, 1fr);
+        gap: spacing("single");
+    }
+}
+
+.c-confidenceGrid__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.c-confidenceGrid__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: remCalc(40px);
+    height: remCalc(40px);
+    margin-bottom: spacing("quarter");
+    color: stencilColor("color-primary");
+
+    svg {
+        width: remCalc(24px);
+        height: remCalc(24px);
+        fill: currentColor;
+    }
+
+    @include breakpoint("medium") {
+        width: remCalc(48px);
+        height: remCalc(48px);
+
+        svg {
+            width: remCalc(32px);
+            height: remCalc(32px);
+        }
+    }
+}
+
+.c-confidenceGrid__text {
+    font-size: fontSize("smallest");
+    color: stencilColor("color-textSecondary");
+    line-height: lineHeight("small");
+
+    @include breakpoint("medium") {
+        font-size: fontSize("smaller");
+    }
+}
