@@ -117,6 +117,9 @@
 // Hero Carousel
 @import "stencil/heroCarousel/component";
 
+// Hero Theme Slider
+@import "stencil/hero-theme-slider/component";
+
 // Write a Review
 @import "stencil/writeReview/component";
 
@@ -137,7 +140,13 @@
 // Product View
 @import "stencil/productView/component";
 
-// Product View
+// Confidence Grid (PDP)
+@import "stencil/confidenceGrid/component";
+
+// Cross-Sell Sections (PDP)
+@import "stencil/crossSell/component";
+
+// Price
 @import "stencil/price/component";
 
 // Compare
@@ -199,6 +208,14 @@
 // Contact-Us Form
 @import "stencil/contact/component";
 
+// Marketing Banner
+@import "stencil/marketing-banner/component";
+
+// Sale Banner
+@import "stencil/sale-banner/component";
+
+// Newsletter
+@import "stencil/newsletter/component";
 // Customer Review Grid
 @import "stencil/customerReviewGrid/component";
 

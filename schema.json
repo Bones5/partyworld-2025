@@ -1064,6 +1064,184 @@
       },
       {
         "type": "heading",
+        "content": "Hero Theme Slider"
+      },
+      {
+        "type": "text",
+        "label": "Theme Slider Section Heading",
+        "id": "hero_slider_section_heading",
+        "force_reload": true
+      },
+      {
+        "type": "heading",
+        "content": "Theme Slider - Slide 1, Card 1"
+      },
+      {
+        "type": "text",
+        "label": "Card 1 Image",
+        "id": "hero_slider_slide1_card1_image",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 1 Heading",
+        "id": "hero_slider_slide1_card1_heading",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 1 CTA Text",
+        "id": "hero_slider_slide1_card1_cta_text",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 1 CTA URL",
+        "id": "hero_slider_slide1_card1_cta_url",
+        "force_reload": true
+      },
+      {
+        "type": "heading",
+        "content": "Theme Slider - Slide 1, Card 2"
+      },
+      {
+        "type": "text",
+        "label": "Card 2 Image",
+        "id": "hero_slider_slide1_card2_image",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 2 Heading",
+        "id": "hero_slider_slide1_card2_heading",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 2 CTA Text",
+        "id": "hero_slider_slide1_card2_cta_text",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 2 CTA URL",
+        "id": "hero_slider_slide1_card2_cta_url",
+        "force_reload": true
+      },
+      {
+        "type": "heading",
+        "content": "Theme Slider - Slide 1, Card 3"
+      },
+      {
+        "type": "text",
+        "label": "Card 3 Image",
+        "id": "hero_slider_slide1_card3_image",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 3 Heading",
+        "id": "hero_slider_slide1_card3_heading",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 3 CTA Text",
+        "id": "hero_slider_slide1_card3_cta_text",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 3 CTA URL",
+        "id": "hero_slider_slide1_card3_cta_url",
+        "force_reload": true
+      },
+      {
+        "type": "heading",
+        "content": "Theme Slider - Slide 2, Card 1"
+      },
+      {
+        "type": "text",
+        "label": "Card 1 Image",
+        "id": "hero_slider_slide2_card1_image",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 1 Heading",
+        "id": "hero_slider_slide2_card1_heading",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 1 CTA Text",
+        "id": "hero_slider_slide2_card1_cta_text",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 1 CTA URL",
+        "id": "hero_slider_slide2_card1_cta_url",
+        "force_reload": true
+      },
+      {
+        "type": "heading",
+        "content": "Theme Slider - Slide 2, Card 2"
+      },
+      {
+        "type": "text",
+        "label": "Card 2 Image",
+        "id": "hero_slider_slide2_card2_image",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 2 Heading",
+        "id": "hero_slider_slide2_card2_heading",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 2 CTA Text",
+        "id": "hero_slider_slide2_card2_cta_text",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 2 CTA URL",
+        "id": "hero_slider_slide2_card2_cta_url",
+        "force_reload": true
+      },
+      {
+        "type": "heading",
+        "content": "Theme Slider - Slide 2, Card 3"
+      },
+      {
+        "type": "text",
+        "label": "Card 3 Image",
+        "id": "hero_slider_slide2_card3_image",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 3 Heading",
+        "id": "hero_slider_slide2_card3_heading",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 3 CTA Text",
+        "id": "hero_slider_slide2_card3_cta_text",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Card 3 CTA URL",
+        "id": "hero_slider_slide2_card3_cta_url",
+        "force_reload": true
+      },
+      {
+        "type": "heading",
         "content": "i18n.Products"
       },
       {
@@ -1575,6 +1753,34 @@
           {
             "value": 20,
             "label": "20"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "label": "i18n.CategoryBestsellersCount",
+        "id": "category_bestsellers_count",
+        "force_reload": true,
+        "options": [
+          {
+            "value": 0,
+            "label": "0 (Hidden)"
+          },
+          {
+            "value": 2,
+            "label": "2"
+          },
+          {
+            "value": 4,
+            "label": "4"
+          },
+          {
+            "value": 6,
+            "label": "6"
+          },
+          {
+            "value": 8,
+            "label": "8"
           }
         ]
       },

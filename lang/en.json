@@ -236,6 +236,9 @@
         "reset": "Reset",
         "filter_reset_announcement": "The filter has been reset",
         "filter_select_announcement": "The filter has been applied",
+        "shop_by_category": "Shop by Category",
+        "shop_now": "Shop Now",
+        "top_sellers": "Top Sellers",
         "view_all": {
             "name": "All {category}"
         }
@@ -845,7 +848,11 @@
         "subscribe": "Subscribe to our newsletter",
         "subscribe_intro": "Get the latest updates on new products and upcoming sales",
         "subscribe_submit": "Subscribe",
+        "subscribe_success": "Thank you for subscribing!",
+        "subscribe_error": "There was an error subscribing. Please try again.",
         "email_placeholder": "Your email address",
+        "email_required": "Please enter your email address.",
+        "email_invalid": "Please enter a valid email address.",
         "subscribed_heading": "Thanks for Subscribing!",
         "subscribed_heading_error": "Oops...",
         "subscribed_message": "Thank you for joining our mailing list. You'll be sent the next issue of our newsletter shortly",

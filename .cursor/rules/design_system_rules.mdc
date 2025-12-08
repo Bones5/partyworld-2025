@@ -363,30 +363,14 @@ This section documents all foundation tokens aligned with the Partyworld Figma d
 ### Component Implementations
 | Component | Location | Status | Notes |
 |-----------|----------|--------|-------|
-| Testimonial | `components/stencil/testimonial/` | ✅ Implemented | Stars, body, author, role structure with drop shadows, responsive grid, accessible aria-labels |
-| Testimonial Section | `templates/components/testimonial-section.html` | ✅ Implemented | Container component with responsive 3-column grid, integrated into home.html |
+| Testimonial | `components/stencil/testimonial/` | ✅ Implemented | Stars, body, author structure |
 | Category Card | `components/stencil/categoryCard/` | ✅ Implemented | Image, heading, CTA with aspect-ratio support; `.c-categoryCard--occasion` modifier for square aspect ratio |
 | Category Grid | `components/stencil/categoryGrid/` | ✅ Implemented | Responsive grid layout (1-col mobile, 2-col tablet, 3/4-col desktop) with `--col3` and `--col4` variants |
 | Hero | `components/stencil/hero/` | ✅ Implemented | Full-width banner with background media, heading (`$fontSize-displayXL`), subheading, and CTA button |
-| Share Bar | `components/stencil/shareBar/` | ✅ Implemented | Social sharing with hover states and wishlist integration |
-| Product Share Bar | `templates/components/products/share-bar.html` | ✅ Implemented | PDP-specific share/wishlist CTA with dropdown |
-
-### Product Settings (`settings/stencil/product/_settings.scss`)
-| Token Name | Value | Purpose |
-|------------|-------|---------|
-| `$shareBar-icon-size` | `18px` | Icon size for share/wishlist buttons |
-| `$shareBar-item-padding` | `spacing("sixth") spacing("third")` | Button padding |
-| `$shareBar-item-gap` | `spacing("sixth")` | Gap between icon and text |
-| `$shareBar-gap` | `spacing("third")` | Gap between buttons |
-| `$shareBar-border-radius` | `4px` | Button border radius |
-| `$shareBar-border-color` | `stencilColor("input-border-color")` | Button border color |
-| `$shareBar-bg` | `$color-white` | Button background |
-| `$shareBar-color` | `$color-textBase` | Button text color |
-| `$shareBar-bg-hover` | `$color-primary` | Hover background |
-| `$shareBar-color-hover` | `$color-white` | Hover text color |
-| `$shareBar-bg-focus` | `$color-primaryLight` | Focus background |
-| `$shareBar-color-focus` | `$color-white` | Focus text color |
-| `$shareBar-wishlist-active-color` | `$color-primary` | Active wishlist icon color |
+| Share Bar | `components/stencil/shareBar/` | ✅ Implemented | Social sharing with hover states |
+| Newsletter | `components/stencil/newsletter/` | ✅ Implemented | Accessible form with validation, icon button CTA |
+| Footer | `layouts/footer/` | ✅ Implemented | Responsive grid with newsletter, nav links, social, payment icons |
+| Social Links | `components/stencil/socialLinks/` | ✅ Updated | Button-style icons (40px circular), accessible focus states |
 
 ### Hero Component Settings (Theme Editor)
 | Setting ID | Type | Description |
@@ -431,8 +415,9 @@ Recent implementations (Completed):
 - ✅ Category Card enhanced: Added `.c-categoryCard--occasion` modifier for square aspect ratio, lazy loading with lazysizes, CDN helper integration, and hover/focus states.
 - ✅ Home page integration: Hero and category grid sections wired into `templates/pages/home.html` with Theme Editor settings.
 - ✅ Theme Editor settings: Hero banner settings added to `schema.json` and `config.json` for heading, subheading, CTA, and background image.
-- ✅ Product share-bar component: Created `templates/components/products/share-bar.html` with social sharing dropdown and wishlist button.
-- ✅ Share bar settings: Added `settings/stencil/product/_settings.scss` with configurable tokens for icon size, colors, spacing.
-- ✅ New icons: Added `share.svg` and `heart.svg` icons to `assets/icons/` for share bar buttons.
+- ✅ Newsletter component: Full SCSS styling with accessible form, validation states, icon button CTA, and success messaging.
+- ✅ Footer layout: Updated to Partyworld design with newsletter section, responsive column grid, social icons in bottom bar.
+- ✅ Social links updated: 24px icons with 40px circular button styling and accessible focus states.
+- ✅ Newsletter JS validation: Client-side email validation with `aria-describedby` and inline error handling.
 - ✅ Stylelint validation passed.
 - ✅ Build verification passed.
