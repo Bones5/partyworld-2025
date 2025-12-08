@@ -47,6 +47,17 @@
         }
     }
     p {
+        display: inline;
         margin-bottom: 0
     }
+}
+
+.c-announcementBar__icon {
+    display: inline-block;
+    vertical-align: text-bottom;
+    width: 1.25em;
+    height: 1.25em;
+    margin-right: spacing("quarter");
+    color: color("whites", "bright");
+    fill: currentColor;
 }
