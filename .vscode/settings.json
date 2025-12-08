@@ -6,12 +6,14 @@
         "source.fixAll.stylelint": "never"
     },
     "[scss]": {
+        "editor.formatOnSave": false,
         "editor.defaultFormatter": "stylelint.vscode-stylelint",
         "editor.codeActionsOnSave": {
             "source.fixAll.stylelint": "never"
         }
     },
     "[css]": {
+        "editor.formatOnSave": false,
         "editor.defaultFormatter": "stylelint.vscode-stylelint",
         "editor.codeActionsOnSave": {
             "source.fixAll.stylelint": "never"
