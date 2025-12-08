@@ -60,6 +60,50 @@
     font-size: 0; // 1
 }
 
+// Footer Links Row
+// -----------------------------------------------------------------------------
+
+.footer-links-row {
+    @include grid-row($behavior: nest);
+    border-bottom: 1px solid stencilColor("color-greyLight");
+    font-size: 0; // 1
+    margin-bottom: spacing("double");
+    padding-bottom: spacing("double");
+}
+
+.footer-links-col {
+    @include grid-column(12);
+    color: stencilColor("color-textSecondary");
+    display: inline-block;
+    float: none;
+    font-size: fontSize("base"); // 2
+    margin-bottom: spacing("single");
+    overflow-wrap: break-word;
+    text-align: center;
+    vertical-align: top;
+    // TODO: specifically use vendor only for IE11 since overflow-wrap is not supported here
+    -ms-word-break: break-all;
+
+    @include breakpoint("small") {
+        margin-bottom: spacing("half");
+        text-align: left;
+        width: width("6/12");
+    }
+
+    @include breakpoint("medium") {
+        margin-bottom: 0;
+        width: width("3/12");
+    }
+
+    > :first-child {
+        margin-top: 0;
+    }
+
+    > :last-child {
+        margin-bottom: 0;
+    }
+}
+
 .footer-info-col {
     @include grid-column(12);
     color: stencilColor("color-textSecondary");
@@ -202,14 +246,13 @@
 // Footer bottom bar
 // -----------------------------------------------------------------------------
 
-.footer-bottom {
-    align-items: center;
-    border-top: 1px solid stencilColor("color-greyLight");
+.footer-trust-social {
+    border-bottom: 1px solid stencilColor("color-greyLight");
     display: flex;
     flex-direction: column;
     gap: spacing("single");
-    margin-top: spacing("double");
-    padding-top: spacing("double");
+    margin-bottom: spacing("double");
+    padding-bottom: spacing("double");
     text-align: center;
 
     @include breakpoint("medium") {
@@ -219,29 +262,24 @@
     }
 }
 
-.footer-social {
-    order: 1;
+.footer-trust-col {
+    flex: 1;
+    min-width: 0;
 
     @include breakpoint("medium") {
-        order: 0;
+        flex-basis: width("3/12");
     }
 }
 
-.footer-payment {
-    order: 2;
-
-    @include breakpoint("medium") {
-        order: 1;
-    }
-}
+// Copyright & Legal
+// -----------------------------------------------------------------------------
 
 .footer-legal {
     color: stencilColor("color-textSecondary");
     font-size: fontSize("tiny");
-    order: 3;
+    text-align: center;
 
     @include breakpoint("medium") {
-        order: 2;
         text-align: right;
     }
 }

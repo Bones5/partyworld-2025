@@ -10,7 +10,15 @@
         "info": "Info",
         "categories": "Categories",
         "call_us": "Call us at {phone_number}",
-        "powered_by": "Powered by"
+        "powered_by": "Powered by",
+        "about_partyworld": "About Partyworld",
+        "costumes": "Costumes",
+        "party_items": "Party Items",
+        "hen_party": "Hen Party",
+        "our_reviews": "Our Reviews",
+        "secure_logo": "Secure Logo",
+        "safe_shopping": "Safe Shopping",
+        "follow_us": "Follow Us"
     },
     "home": {
         "heading": "Home"
