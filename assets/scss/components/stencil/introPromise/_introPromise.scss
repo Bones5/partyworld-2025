@@ -1,0 +1,104 @@
+// =============================================================================
+// INTRO PROMISE (CSS)
+// =============================================================================
+// Two-column layout: brand intro + key promises with icon list.
+// Uses tokenized spacing/typography for consistent design language.
+// -----------------------------------------------------------------------------
+
+.c-introPromise {
+    margin-bottom: spacing("double");
+    padding: spacing("double") 0;
+    background: stencilColor("container-fill-dark");
+}
+
+.c-introPromise__container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: spacing("double");
+
+    @include breakpoint("medium") {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+    }
+}
+
+.c-introPromise__intro {
+    text-align: center;
+
+    @include breakpoint("medium") {
+        text-align: left;
+    }
+}
+
+.c-introPromise__heading {
+    font-family: $fontFamily-headings;
+    font-size: $fontSize-larger;
+    line-height: $lineHeight-larger;
+    font-weight: $fontWeight-bold;
+    margin: 0 0 spacing("single");
+    color: $color-textBase;
+
+    @include breakpoint("medium") {
+        font-size: $fontSize-largest;
+        line-height: $lineHeight-largest;
+    }
+}
+
+.c-introPromise__text {
+    font-size: $fontSize-base;
+    line-height: $lineHeight-base;
+    color: $color-textSecondary;
+
+    p {
+        margin: 0 0 spacing("half");
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.c-introPromise__promises {
+    background: $color-white;
+    border: 1px solid stencilColor("input-border-color");
+    padding: spacing("single");
+}
+
+.c-introPromise__promisesHeading {
+    font-family: $fontFamily-headings;
+    font-size: $fontSize-large;
+    line-height: $lineHeight-large;
+    font-weight: $fontWeight-bold;
+    margin: 0 0 spacing("half");
+    color: $color-textBase;
+}
+
+.c-introPromise__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.c-introPromise__item {
+    display: flex;
+    align-items: flex-start;
+    gap: spacing("half");
+    padding: spacing("quarter") 0;
+    border-bottom: 1px solid stencilColor("container-border-global-color-base");
+
+    &:last-child {
+        border-bottom: 0;
+    }
+}
+
+.c-introPromise__icon {
+    flex-shrink: 0;
+    color: $color-primary;
+    margin-top: 2px;
+}
+
+.c-introPromise__itemText {
+    font-size: $fontSize-base;
+    line-height: $lineHeight-base;
+    color: $color-textBase;
+}
