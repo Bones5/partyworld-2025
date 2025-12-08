@@ -1,0 +1,38 @@
+{{!-- Customer Review Grid component partial --}}
+{{!-- 
+  Usage:
+    {{> components/page/customer-review-grid 
+        heading="What Our Customers Say"
+    }}
+  
+  Supports Theme Editor or widget-driven content.
+  Reuses testimonial card styles from .c-testimonial component.
+--}}
+<section class="c-customerReviewGrid">
+    {{#if heading}}
+        <h2 class="c-customerReviewGrid__heading">{{heading}}</h2>
+    {{/if}}
+    {{{region name="home_customer_reviews"}}}
+    <div class="c-customerReviewGrid__items">
+        {{#each reviews}}
+            <article class="c-customerReviewGrid__item c-testimonial">
+                <div class="c-testimonial__stars" aria-label="{{rating}} out of 5 stars">
+                    {{#times rating}}
+                        <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true">
+                            <use href="#icon-star"></use>
+                        </svg>
+                    {{/times}}
+                    {{#times (subtract 5 rating)}}
+                        <svg class="c-testimonial__star c-testimonial__star--empty" width="16" height="16" aria-hidden="true">
+                            <use href="#icon-star-empty"></use>
+                        </svg>
+                    {{/times}}
+                </div>
+                <blockquote class="c-testimonial__body">
+                    {{text}}
+                </blockquote>
+                <cite class="c-testimonial__author">— {{author}}</cite>
+            </article>
+        {{/each}}
+    </div>
+</section>

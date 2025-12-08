@@ -71,9 +71,10 @@ module.exports = defineConfig({
   ],
 
   // Run your local dev server before starting the tests
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  webServer: {
+    command: 'node tests/e2e/test-server.js',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+  },
 });
