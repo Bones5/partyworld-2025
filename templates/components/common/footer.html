@@ -50,21 +50,22 @@
                 </article>
 
                 {{!-- Party Items --}}
+                {{#if theme_settings.shop_by_brand_show_footer}}
                 <article class="footer-links-col footer-links-col--party-items" data-section-type="footer-brands">
                     <h3 class="footer-info-heading">{{lang 'footer.party_items'}}</h3>
                     <ul class="footer-info-list">
-                        {{#if theme_settings.shop_by_brand_show_footer}}
-                            {{#each shop_by_brand}}
-                                <li>
-                                    <a href="{{url}}">{{name}}</a>
-                                </li>
-                            {{/each}}
-                            <li><a href="{{urls.brands}}">{{lang 'common.view_all'}}</a></li>
-                        {{/if}}
+                        {{#each shop_by_brand}}
+                            <li>
+                                <a href="{{url}}">{{name}}</a>
+                            </li>
+                        {{/each}}
+                        <li><a href="{{urls.brands}}">{{lang 'common.view_all'}}</a></li>
                     </ul>
                 </article>
+                {{/if}}
 
                 {{!-- Hen Party --}}
+                {{#if (or settings.address settings.phone_number)}}
                 <article class="footer-links-col footer-links-col--hen-party" data-section-type="storeInfo">
                     <h3 class="footer-info-heading">{{lang 'footer.hen_party'}}</h3>
                     {{#if settings.address}}
@@ -78,6 +79,7 @@
                         </p>
                     {{/if}}
                 </article>
+                {{/if}}
             </section>
 
             {{!-- Footer Trust & Social Row --}}
