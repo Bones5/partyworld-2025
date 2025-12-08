@@ -65,7 +65,7 @@
                 {{/if}}
 
                 {{!-- Hen Party --}}
-                {{#if (or settings.address settings.phone_number)}}
+                {{#or settings.address settings.phone_number}}
                 <article class="footer-links-col footer-links-col--hen-party" data-section-type="storeInfo">
                     <h3 class="footer-info-heading">{{lang 'footer.hen_party'}}</h3>
                     {{#if settings.address}}
@@ -79,7 +79,7 @@
                         </p>
                     {{/if}}
                 </article>
-                {{/if}}
+                {{/or}}
             </section>
 
             {{!-- Footer Trust & Social Row --}}
