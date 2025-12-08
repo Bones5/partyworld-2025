@@ -78,7 +78,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    fill: stencilColor("color-primary"); // use fill for filled icons
+    color: stencilColor("color-primary"); // SVGs use currentColor for fill
+    fill: currentColor; // ensure fill inherits from color
     stroke: none; // remove stroke to prevent artifacts
     vertical-align: middle;
     border-radius: 50%;
@@ -105,14 +106,16 @@
         color: stencilColor("navUser-color-hover");
 
         .navUser-icon {
-            fill: color("whites", "bright"); // white fill on hover
+            color: color("whites", "bright"); // white color on hover (for currentColor SVGs)
+            fill: currentColor;
             stroke: none; // remove stroke to prevent artifacts
             background-color: transparent; // no background on hover
             border-radius: 50%;
         }
 
         svg {
-            fill: color("whites", "bright"); // white fill on hover
+            color: color("whites", "bright"); // white color on hover (for currentColor SVGs)
+            fill: currentColor;
             stroke: none; // remove stroke to prevent artifacts
             background-color: transparent; // no background on hover
         }
