@@ -1,0 +1,22 @@
+{{!--
+    Shop by Category Component
+    Renders child categories as a grid when subcategories are present.
+    Uses existing category card partial and categoryGrid styles.
+--}}
+{{#if category.subcategories}}
+<section class="c-categoryGrid" aria-labelledby="shop-by-category-heading">
+    <h2 id="shop-by-category-heading" class="c-categoryGrid__heading">{{lang 'category.shop_by_category'}}</h2>
+    <div class="c-categoryGrid__items c-categoryGrid__items--col4">
+        {{#each category.subcategories}}
+        <div class="c-categoryGrid__item">
+            {{> components/category-card
+                url=url
+                image=image
+                title=name
+                ctaText=(lang 'category.shop_now')
+            }}
+        </div>
+        {{/each}}
+    </div>
+</section>
+{{/if}}

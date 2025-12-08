@@ -2,6 +2,9 @@
 category:
     products:
         limit: {{theme_settings.categorypage_products_per_page}}
+products:
+    top_sellers:
+        limit: {{theme_settings.category_bestsellers_count}}
 ---
 {{inject "categoryProductsPerPage" theme_settings.categorypage_products_per_page}}
 {{#partial "head"}}
@@ -29,6 +32,18 @@ category:
     {{{region name="category_below_header"}}}
 {{/unless}}
 {{{category.description}}}
+
+{{!-- Shop by Category section: shows subcategories if present --}}
+{{> components/category/shop-by-category}}
+
+{{!-- 
+    Top Sellers section: shows top selling products from the store.
+    Configure count via Theme Editor (set to 0 to hide this section).
+--}}
+{{#if products.top_sellers}}
+    {{> components/products/category-bestsellers products=products.top_sellers}}
+{{/if}}
+
 <div class="page">
     {{#if category.faceted_search_enabled}}
         <aside class="page-sidebar" id="faceted-search-container">

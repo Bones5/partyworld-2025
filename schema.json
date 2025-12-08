@@ -1758,6 +1758,34 @@
       },
       {
         "type": "select",
+        "label": "i18n.CategoryBestsellersCount",
+        "id": "category_bestsellers_count",
+        "force_reload": true,
+        "options": [
+          {
+            "value": 0,
+            "label": "0 (Hidden)"
+          },
+          {
+            "value": 2,
+            "label": "2"
+          },
+          {
+            "value": 4,
+            "label": "4"
+          },
+          {
+            "value": 6,
+            "label": "6"
+          },
+          {
+            "value": 8,
+            "label": "8"
+          }
+        ]
+      },
+      {
+        "type": "select",
         "label": "i18n.BrandPage",
         "id": "brandpage_products_per_page",
         "force_reload": true,
