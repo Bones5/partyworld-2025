@@ -14,8 +14,8 @@
 // -----------------------------------------------------------------------------
 
 .footer {
-    background-color: $footer-background;
-    border-top: container("border");
+    background-color: stencilColor("color-greyDarkest");
+    border-top: none;
     padding: spacing("double") 0;
     position: relative;
     transform: translateZ(0); // 3
@@ -43,12 +43,21 @@
 // -----------------------------------------------------------------------------
 
 .footer-newsletter {
-    border-bottom: 1px solid stencilColor("color-greyLight");
+    background-color: stencilColor("color-primary");
+    border-bottom: none;
+    color: stencilColor("color-white");
+    margin: 0 calc(-1 * #{container("padding")});
     margin-bottom: spacing("single");
-    padding-bottom: spacing("double");
+    padding: spacing("double") container("padding");
+    text-align: center;
 
     @include breakpoint("medium") {
         margin-bottom: 0;
+    }
+
+    // Ensure summary text inherits white color
+    .footer-newsletter-summary {
+        color: stencilColor("color-white");
     }
 }
 
@@ -73,7 +82,7 @@
 
 .footer-links-col {
     @include grid-column(12);
-    color: stencilColor("color-textSecondary");
+    color: stencilColor("color-greyLighter");
     display: inline-block;
     float: none;
     font-size: fontSize("base"); // 2
@@ -137,7 +146,26 @@
     }
 }
 
-// Column variants for responsive stacking
+// Column variants for footer links row
+.footer-links-col--about,
+.footer-links-col--costumes,
+.footer-links-col--party-items {
+    @include breakpoint("medium") {
+        width: width("3/12");
+    }
+}
+
+// Column variants for trust/social row
+.footer-trust-col--reviews,
+.footer-trust-col--secure,
+.footer-trust-col--payment,
+.footer-trust-col--social {
+    @include breakpoint("medium") {
+        flex-basis: auto;
+    }
+}
+
+// Legacy column support (keep for backwards compatibility)
 .footer-info-col--nav,
 .footer-info-col--categories,
 .footer-info-col--brands,
@@ -184,7 +212,7 @@
 // -----------------------------------------------------------------------------
 
 .footer-info-heading {
-    color: $footer-heading-fontColor;
+    color: stencilColor("color-greyLighter");
     font-size: fontSize("base");
     font-weight: fontWeight("bold");
     margin-bottom: spacing("half");
@@ -200,12 +228,12 @@
     }
 
     a {
-        color: stencilColor("color-textSecondary");
+        color: stencilColor("color-greyLighter");
         text-decoration: none;
         transition: color 0.15s ease;
 
         &:hover {
-            color: stencilColor("color-textSecondary--hover");
+            color: stencilColor("color-white");
         }
 
         &:focus {
@@ -247,22 +275,27 @@
 // -----------------------------------------------------------------------------
 
 .footer-trust-social {
-    border-bottom: 1px solid stencilColor("color-greyLight");
+    background-color: stencilColor("color-greyDarker");
+    border-bottom: none;
+    color: stencilColor("color-greyLighter");
     display: flex;
     flex-direction: column;
     gap: spacing("single");
+    justify-content: center;
+    margin: 0 calc(-1 * #{container("padding")});
     margin-bottom: spacing("double");
-    padding-bottom: spacing("double");
+    padding: spacing("double") container("padding");
     text-align: center;
 
     @include breakpoint("medium") {
         flex-direction: row;
-        justify-content: space-between;
-        text-align: left;
+        justify-content: center;
+        text-align: center;
     }
 }
 
 .footer-trust-col {
+    color: stencilColor("color-greyLighter");
     flex: 1;
     min-width: 0;
 
@@ -357,8 +390,7 @@
 }
 
 .footer-newsletter-summary {
-    color: stencilColor("color-textSecondary");
     font-size: fontSize("smallest");
     margin-top: spacing("half");
-    text-align: left;
+    text-align: center;
 }

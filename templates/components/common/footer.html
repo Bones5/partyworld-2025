@@ -50,7 +50,6 @@
                 </article>
 
                 {{!-- Party Items --}}
-                {{#if theme_settings.shop_by_brand_show_footer}}
                 <article class="footer-links-col footer-links-col--party-items" data-section-type="footer-brands">
                     <h3 class="footer-info-heading">{{lang 'footer.party_items'}}</h3>
                     <ul class="footer-info-list">
@@ -62,24 +61,19 @@
                         <li><a href="{{urls.brands}}">{{lang 'common.view_all'}}</a></li>
                     </ul>
                 </article>
-                {{/if}}
 
                 {{!-- Hen Party --}}
-                {{#or settings.address settings.phone_number}}
-                <article class="footer-links-col footer-links-col--hen-party" data-section-type="storeInfo">
+                <article class="footer-links-col footer-links-col--party-items" data-section-type="footer-brands">
                     <h3 class="footer-info-heading">{{lang 'footer.hen_party'}}</h3>
-                    {{#if settings.address}}
-                        <address class="footer-address">{{nl2br settings.address}}</address>
-                    {{/if}}
-                    {{#if settings.phone_number}}
-                        <p class="footer-phone">
-                            <a href="tel:{{settings.phone_number}}" class="footer-phone-link">
-                                {{lang 'footer.call_us' phone_number=settings.phone_number}}
-                            </a>
-                        </p>
-                    {{/if}}
+                    <ul class="footer-info-list">
+                        {{#each shop_by_brand}}
+                            <li>
+                                <a href="{{url}}">{{name}}</a>
+                            </li>
+                        {{/each}}
+                        <li><a href="{{urls.brands}}">{{lang 'common.view_all'}}</a></li>
+                    </ul>
                 </article>
-                {{/or}}
             </section>
 
             {{!-- Footer Trust & Social Row --}}
@@ -87,7 +81,7 @@
                 {{!-- Our Reviews --}}
                 <div class="footer-trust-col footer-trust-col--reviews">
                     <h3 class="footer-info-heading">{{lang 'footer.our_reviews'}}</h3>
-                    {{> components/common/trustpilot-badge}}
+                    {{> components/common/trustpilot-badge theme="dark"}}
                 </div>
 
                 {{!-- Secure Logo --}}
@@ -103,12 +97,12 @@
                 </div>
 
                 {{!-- Follow Us (Social Links) --}}
-                {{#if theme_settings.social_icon_placement_bottom '!==' 'bottom_none'}}
+                <!-- {{#if theme_settings.social_icon_placement_bottom '!==' 'bottom_none'}} -->
                 <div class="footer-trust-col footer-trust-col--social" data-section-type="footer-social">
                     <h3 class="footer-info-heading">{{lang 'footer.follow_us'}}</h3>
                     {{> components/common/social-links}}
                 </div>
-                {{/if}}
+                <!-- {{/if}} -->
             </div>
 
             {{!-- Copyright & Legal --}}
