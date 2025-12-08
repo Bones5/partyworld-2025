@@ -1,0 +1,49 @@
+// =============================================================================
+// CUSTOMER REVIEW GRID (CSS)
+// =============================================================================
+// Responsive grid for customer testimonials on homepage.
+// Reuses .c-testimonial card styles, adds grid layout.
+// -----------------------------------------------------------------------------
+
+.c-customerReviewGrid {
+    margin-bottom: spacing("double");
+}
+
+.c-customerReviewGrid__heading {
+    font-family: $fontFamily-headings;
+    font-size: $fontSize-larger;
+    line-height: $lineHeight-larger;
+    font-weight: $fontWeight-bold;
+    margin: 0 0 spacing("single");
+    text-align: center;
+    color: $color-textBase;
+
+    @include breakpoint("medium") {
+        font-size: $fontSize-largest;
+        line-height: $lineHeight-largest;
+    }
+}
+
+.c-customerReviewGrid__items {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: spacing("single");
+
+    @include breakpoint("small") {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include breakpoint("medium") {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.c-customerReviewGrid__item {
+    display: flex;
+    flex-direction: column;
+
+    // Inherit testimonial card styling
+    &.c-testimonial {
+        height: 100%;
+    }
+}
