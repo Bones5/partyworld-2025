@@ -237,14 +237,14 @@
 
 .heroThemeSlider-section__heading {
     font-family: $fontFamily-headings;
-    font-size: $fontSize-h2;
+    font-size: $fontSize-larger;
     font-weight: $fontWeight-bold;
     text-align: center;
     margin: 0 0 spacing("single");
     color: $color-textBase;
 
     @include breakpoint("medium") {
-        font-size: $fontSize-h1;
+        font-size: $fontSize-largest;
         margin-bottom: spacing("single") + spacing("half");
     }
 }
