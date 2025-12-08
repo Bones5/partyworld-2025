@@ -14,7 +14,7 @@ $header-height-primary:                     remCalc(201px); // Composite area of
 
 // Header meta row settings
 $header-meta-fontSize:                      fontSize("tiny");
-$header-meta-color:                         stencilColor("color-textSecondary");
+$header-meta-color:                         color("whites", "bright");
 
 // Primary navigation gap (Figma: ~80px gaps between main nav items)
 $header-nav-gap:                            spacing("double");
