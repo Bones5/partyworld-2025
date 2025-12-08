@@ -1,0 +1,74 @@
+{{!-- Sale Banner component partial --}}
+{{!-- 
+  Usage:
+    {{> components/page/sale-banner 
+        image=theme_settings.sale_banner_image
+        heading=theme_settings.sale_banner_heading
+        subcopy=theme_settings.sale_banner_subcopy
+        ctaText=theme_settings.sale_banner_cta_text
+        ctaUrl=theme_settings.sale_banner_cta_url
+        badge=theme_settings.sale_banner_badge
+    }}
+--}}
+{{#or heading subcopy ctaText image badge}}
+<section class="c-saleBanner">
+    <div class="c-saleBanner__media">
+        {{#if image}}
+            {{!-- Support Page Builder image objects --}}
+            {{#if image.url}}
+                <img 
+                    src="{{image.url}}" 
+                    alt="" 
+                    class="c-saleBanner__image lazyload"
+                    loading="lazy"
+                    data-sizes="auto"
+                />
+            {{else if image.data}}
+                <img 
+                    src="{{image.data}}" 
+                    alt="" 
+                    class="c-saleBanner__image lazyload"
+                    loading="lazy"
+                    data-sizes="auto"
+                />
+            {{else if image.source}}
+                <img 
+                    src="{{image.source}}" 
+                    alt="" 
+                    class="c-saleBanner__image lazyload"
+                    loading="lazy"
+                    data-sizes="auto"
+                />
+            {{else}}
+                {{!-- Support direct string URL (from theme_settings) --}}
+                <img 
+                    src="{{cdn image}}" 
+                    alt="" 
+                    class="c-saleBanner__image lazyload"
+                    loading="lazy"
+                    data-sizes="auto"
+                />
+            {{/if}}
+        {{/if}}
+    </div>
+    <div class="c-saleBanner__content">
+        {{#if badge}}
+            <span class="c-saleBanner__badge">{{badge}}</span>
+        {{/if}}
+        {{#if heading}}
+            <h2 class="c-saleBanner__heading">{{heading}}</h2>
+        {{/if}}
+        {{#if subcopy}}
+            <p class="c-saleBanner__subcopy">{{subcopy}}</p>
+        {{/if}}
+        {{#if ctaText}}
+            {{#if ctaUrl}}
+                {{!-- ctaUrl comes from trusted theme_settings configured by store admin --}}
+                <a href="{{ctaUrl}}" class="c-saleBanner__cta">
+                    {{ctaText}}
+                </a>
+            {{/if}}
+        {{/if}}
+    </div>
+</section>
+{{/or}}

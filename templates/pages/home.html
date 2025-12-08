@@ -80,6 +80,15 @@ categories:
         {{/if}}
     {{/each}}
 
+    {{!-- Marketing Banner Section - Editable via Theme Editor --}}
+    {{> components/page/marketing-banner 
+        image=theme_settings.marketing_banner_image
+        heading=theme_settings.marketing_banner_heading
+        subcopy=theme_settings.marketing_banner_subcopy
+        ctaText=theme_settings.marketing_banner_cta_text
+        ctaUrl=theme_settings.marketing_banner_cta_url
+    }}
+
 <div class="main full">
     {{!-- Category Grid Section --}}
     {{!-- 
@@ -121,6 +130,16 @@ categories:
         {{> components/products/top products=products.top_sellers columns=theme_settings.homepage_top_products_column_count}}
     {{/if}}
     {{{region name="home_below_top_products"}}}
+
+    {{!-- Sale Banner Section - Editable via Theme Editor --}}
+    {{> components/page/sale-banner 
+        image=theme_settings.sale_banner_image
+        heading=theme_settings.sale_banner_heading
+        subcopy=theme_settings.sale_banner_subcopy
+        ctaText=theme_settings.sale_banner_cta_text
+        ctaUrl=theme_settings.sale_banner_cta_url
+        badge=theme_settings.sale_banner_badge
+    }}
 
     {{#if products.new}}
         {{> components/products/new products=products.new columns=theme_settings.homepage_new_products_column_count}}
