@@ -77,8 +77,9 @@ The Jest configuration explicitly excludes e2e tests using:
 3. Install Stencil CLI
 4. Install dependencies (`npm ci`)
 5. Run linting and code quality checks (`npx grunt check`)
-6. Bundle theme (`npx stencil bundle`)
-7. Upload bundled theme and bundle analysis
+6. Run unit tests (`npm test`)
+7. Bundle theme (`npx stencil bundle`)
+8. Upload bundled theme and bundle analysis
 
 **Status Check Name**: `build (ubuntu-latest, 20.x)`
 
@@ -157,6 +158,7 @@ Use the same settings as `main`/`master`, or optionally:
 # https://cli.github.com/
 
 # Set up branch protection for main branch
+# Replace :owner/:repo with your actual repository (e.g., Bones5/partyworld-2025)
 gh api repos/:owner/:repo/branches/main/protection \
   --method PUT \
   --field required_status_checks='{"strict":true,"contexts":["Run Jest Unit Tests","Run Playwright E2E Tests","build (ubuntu-latest, 20.x)"]}' \

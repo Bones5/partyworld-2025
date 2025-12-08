@@ -18,6 +18,8 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
+        # Using Node.js 20 to match .nvmrc and pull_request_review.yml
+        # Note: playwright.yml uses Node.js 18 for compatibility with Playwright
         node-version: '20'
         cache: 'npm'
     
