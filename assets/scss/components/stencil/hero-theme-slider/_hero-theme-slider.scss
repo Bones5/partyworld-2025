@@ -1,0 +1,250 @@
+// =============================================================================
+// HERO THEME SLIDER (CSS)
+// =============================================================================
+// Combined hero/theme slider component with three-card frames.
+// Uses Citadel tokens and existing Slick carousel infrastructure.
+// -----------------------------------------------------------------------------
+
+.heroThemeSlider {
+    position: relative;
+    margin-bottom: spacing("double");
+    overflow: hidden;
+
+    &.slick-initialized {
+        .heroThemeSlider-slide:not(.slick-active) {
+            visibility: hidden;
+        }
+    }
+
+    // Hide non-first slides before initialization
+    &:not(.slick-initialized) .heroThemeSlider-slide:not(:first-child) {
+        display: none;
+    }
+}
+
+// Individual slide/frame containing three cards
+.heroThemeSlider-slide {
+    padding: 0 spacing("half");
+}
+
+// Three-card grid within each frame
+.heroThemeSlider-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: spacing("single");
+
+    @include breakpoint("small") {
+        gap: spacing("single") + spacing("half");
+    }
+
+    @include breakpoint("medium") {
+        gap: spacing("double");
+    }
+}
+
+// Individual card styling
+.heroThemeSlider-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: $card-figure-borderRadius;
+    background: $color-greyLightest;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover,
+    &:focus-within {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba($color-black, 0.15);
+    }
+}
+
+.heroThemeSlider-card__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+
+    &:focus {
+        outline: 2px solid $color-primary;
+        outline-offset: 2px;
+    }
+}
+
+.heroThemeSlider-card__media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background: $color-greyLightest;
+}
+
+.heroThemeSlider-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.3s ease;
+
+    .heroThemeSlider-card:hover & {
+        transform: scale(1.05);
+    }
+}
+
+.heroThemeSlider-card__content {
+    padding: spacing("single");
+    background: $color-white;
+
+    @include breakpoint("medium") {
+        padding: spacing("single") + spacing("half");
+    }
+}
+
+.heroThemeSlider-card__heading {
+    font-family: $fontFamily-headings;
+    font-size: $fontSize-base;
+    font-weight: $fontWeight-semibold;
+    line-height: $lineHeight-base;
+    margin: 0 0 spacing("half");
+    color: $color-textBase;
+
+    @include breakpoint("medium") {
+        font-size: $fontSize-large;
+    }
+}
+
+.heroThemeSlider-card__cta {
+    display: inline-block;
+    font-size: $fontSize-small;
+    font-weight: $fontWeight-semibold;
+    color: $color-primary;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover,
+    &:focus {
+        color: $color-primaryDark;
+        text-decoration: underline;
+    }
+}
+
+// Navigation arrows
+.heroThemeSlider .slick-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: remCalc(44px);
+    height: remCalc(44px);
+    background: rgba($color-white, 0.9);
+    border: 1px solid $color-greyLight;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+
+    &:hover {
+        background: $color-white;
+        border-color: $color-primary;
+    }
+
+    &:focus {
+        outline: 2px solid $color-primary;
+        outline-offset: 2px;
+        background: $color-white;
+    }
+
+    &::before {
+        font-family: inherit;
+        font-size: $fontSize-base;
+        line-height: 1;
+        color: $color-textBase;
+    }
+
+    &.slick-disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+
+        &:hover {
+            background: rgba($color-white, 0.9);
+            border-color: $color-greyLight;
+        }
+    }
+}
+
+.heroThemeSlider .slick-prev {
+    left: spacing("half");
+
+    @include breakpoint("medium") {
+        left: spacing("single");
+    }
+}
+
+.heroThemeSlider .slick-next {
+    right: spacing("half");
+
+    @include breakpoint("medium") {
+        right: spacing("single");
+    }
+}
+
+// Dot navigation
+.heroThemeSlider .slick-dots {
+    position: relative;
+    bottom: auto;
+    margin-top: spacing("single");
+    padding: 0;
+    list-style: none;
+    text-align: center;
+
+    li {
+        display: inline-block;
+        margin: 0 spacing("quarter");
+
+        button {
+            width: remCalc(12px);
+            height: remCalc(12px);
+            padding: 0;
+            background: $color-greyLight;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+
+            &::before {
+                content: none;
+            }
+
+            &:hover,
+            &:focus {
+                background: $color-primary;
+                outline: 2px solid $color-primary;
+                outline-offset: 2px;
+            }
+        }
+
+        &.slick-active button {
+            background: $color-primary;
+        }
+    }
+}
+
+// Accessibility: Screen reader live region
+.heroThemeSlider-announce {
+    @include u-hidden("visually");
+}
+
+// Section wrapper with optional heading
+.heroThemeSlider-section {
+    margin-bottom: spacing("double");
+}
+
+.heroThemeSlider-section__heading {
+    font-family: $fontFamily-headings;
+    font-size: $fontSize-larger;
+    font-weight: $fontWeight-bold;
+    text-align: center;
+    margin: 0 0 spacing("single");
+    color: $color-textBase;
+
+    @include breakpoint("medium") {
+        font-size: $fontSize-largest;
+        margin-bottom: spacing("single") + spacing("half");
+    }
+}
