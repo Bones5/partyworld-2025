@@ -1,33 +1,45 @@
-<h3 class="footer-info-heading">{{lang 'newsletter.subscribe'}}</h3>
-<p>{{lang 'newsletter.subscribe_intro'}}</p>
+<div class="newsletter" data-newsletter-form>
+    <h3 class="newsletter-heading">{{lang 'newsletter.subscribe'}}</h3>
+    <p class="newsletter-description">{{lang 'newsletter.subscribe_intro'}}</p>
 
-<form class="form" action="{{urls.subscribe.action}}" method="post">
-    <fieldset class="form-fieldset">
-        <input type="hidden" name="action" value="subscribe">
-        <input type="hidden" name="nl_first_name" value="bc">
-        <input type="hidden" name="check" value="1">
-        <div class="form-field">
-            <label class="form-label is-srOnly" for="nl_email">{{lang 'common.email_address'}}</label>
-            <div class="form-prefixPostfix wrap">
-                <input class="form-input"
-                       id="nl_email"
-                       name="nl_email"
-                       type="email"
-                       value="{{customer.email}}"
-                       placeholder="{{lang 'newsletter.email_placeholder'}}"
-                       aria-describedby="alertBox-message-text"
-                       aria-required="true"
-                       autocomplete="email"
-                       required
-                >
-                <input class="button button--primary form-prefixPostfix-button--postfix"
-                       type="submit"
-                       value="{{lang 'newsletter.subscribe_submit'}}"
-                >
+    <form class="newsletter-form" action="{{urls.subscribe.action}}" method="post" data-newsletter-form-element novalidate>
+        <fieldset class="newsletter-form-fieldset">
+            <input type="hidden" name="action" value="subscribe">
+            <input type="hidden" name="nl_first_name" value="bc">
+            <input type="hidden" name="check" value="1">
+            <div class="newsletter-form-field" data-newsletter-field>
+                <label class="u-hiddenVisually" for="nl_email">{{lang 'common.email_address'}}</label>
+                <div class="newsletter-input-group">
+                    <input class="newsletter-input"
+                           id="nl_email"
+                           name="nl_email"
+                           type="email"
+                           value="{{customer.email}}"
+                           placeholder="{{lang 'newsletter.email_placeholder'}}"
+                           aria-describedby="newsletter-message"
+                           aria-required="true"
+                           aria-invalid="false"
+                           autocomplete="email"
+                           required
+                    >
+                    <button class="newsletter-button"
+                            type="submit"
+                            aria-label="{{lang 'newsletter.subscribe_submit'}}">
+                        <svg aria-hidden="true" focusable="false">
+                            <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-chevron-right"/>
+                        </svg>
+                    </button>
+                </div>
+                <span class="newsletter-message" id="newsletter-message" role="alert" aria-live="polite" data-newsletter-message></span>
             </div>
-            {{#if settings.show_newsletter_summary }}
-                <div class="footer-newsletter-summary">{{settings.newsletter_summary}}</div>
-            {{/if}}
-        </div>
-    </fieldset>
-</form>
+        </fieldset>
+    </form>
+
+    <div class="newsletter-success" data-newsletter-success aria-live="polite">
+        <p>{{lang 'newsletter.subscribe_success'}}</p>
+    </div>
+
+    {{#if settings.show_newsletter_summary }}
+        <div class="footer-newsletter-summary">{{settings.newsletter_summary}}</div>
+    {{/if}}
+</div>
