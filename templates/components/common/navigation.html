@@ -38,6 +38,12 @@
             </li>
             <li class="navUser-item navUser-item--divider">|</li>
         {{/if}}
+        <li class="navUser-item navUser-item--wishlist">
+                <a class="navUser-action navUser-action--wishlist" href="{{urls.account.wishlists.all}}">                    <svg class="navUser-icon" aria-hidden="true" focusable="false">
+                        <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-HeartStraight"></use>
+                    </svg>
+                    <span class="u-hiddenVisually">{{lang 'common.wishlist'}}</span></a>
+            </li>
         <li class="navUser-item navUser-item--account">
             {{#if customer}}
                 <a class="navUser-action navUser-action--account"
