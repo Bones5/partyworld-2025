@@ -37,9 +37,11 @@ This directory contains the GitHub Actions workflows for the Partyworld 2025 the
 ### playwright.yml
 **Purpose**: Runs Playwright end-to-end tests to validate design system implementation.
 
-**Trigger**: Runs on push to main/develop branches and on pull requests targeting those branches.
+**Trigger**: Runs on push to `main`/`develop` branches and on pull requests targeting those branches.
+
+**Note**: This workflow uses `main`/`develop` branches, while other workflows use `master`. This reflects different configuration patterns in the repository.
 
 ### pull_request_review.yml
 **Purpose**: Validates that the theme can be successfully bundled using Stencil CLI.
 
-**Trigger**: Runs on pull requests and pushes to master/main branches.
+**Trigger**: Runs on pull requests and pushes to `master`/`main` branches.
