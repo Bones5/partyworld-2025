@@ -18,7 +18,8 @@ jobs:
         with:
           # Fetch all branches and history
           fetch-depth: 0
-          # Use a PAT to ensure we can push to protected branches if needed
+          # Note: GITHUB_TOKEN has limited permissions. To update protected branches,
+          # replace with a PAT: token: ${{ secrets.PAT_TOKEN }}
           token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Configure Git
@@ -35,8 +36,8 @@ jobs:
         run: |
           echo "Updating all branches with latest master..."
           
-          # Get all remote branches except master and the PR source branch
-          branches=$(git branch -r | grep -v '\->' | grep -v 'origin/master' | grep -v 'origin/HEAD' | sed 's/origin\///' | sed 's/^[[:space:]]*//')
+          # Get all remote branches except master using git for-each-ref
+          branches=$(git for-each-ref --format='%(refname:short)' refs/remotes/origin/ | grep -v '^origin/HEAD$' | grep -v '^origin/master$' | sed 's|^origin/||')
           
           if [ -z "$branches" ]; then
             echo "No branches to update"
@@ -66,8 +67,8 @@ jobs:
               continue
             fi
             
-            # Try to merge master into the branch
-            if git merge origin/master --no-edit --no-ff; then
+            # Try to merge master into the branch (allow fast-forward)
+            if git merge origin/master --no-edit; then
               echo "  ✓ Successfully merged master into $branch"
               
               # Push the updated branch

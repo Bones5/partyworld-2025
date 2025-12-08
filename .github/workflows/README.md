@@ -17,10 +17,17 @@ This directory contains the GitHub Actions workflows for the Partyworld 2025 the
   - If merge conflicts exist, skips the branch and logs a warning
 - Provides a summary of updated, skipped, and failed branches
 
+**Configuration**:
+- By default, uses `GITHUB_TOKEN` for authentication
+- To update protected branches, replace with a Personal Access Token (PAT):
+  - Create a PAT with `repo` permissions
+  - Add it as a repository secret (e.g., `PAT_TOKEN`)
+  - Update the workflow: `token: ${{ secrets.PAT_TOKEN }}`
+
 **Notes**:
 - Branches with merge conflicts will need to be updated manually
 - The workflow uses `github-actions[bot]` as the commit author
-- Uses GITHUB_TOKEN for authentication
+- Fast-forward merges are performed when possible to avoid unnecessary merge commits
 
 **Benefits**:
 - Keeps feature branches up-to-date with master
