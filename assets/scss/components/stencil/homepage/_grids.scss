@@ -22,6 +22,36 @@
     display: block;
 }
 
+// Placeholder colored discs for celebrate cards without images
+// Bright party colors that rotate based on item position
+.c-celebrateCard__placeholder {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+}
+
+// Bright party color palette for placeholders
+.c-celebrateGrid__item:nth-child(5n + 1) .c-celebrateCard__placeholder {
+    background: linear-gradient(135deg, #ff6b9d 0%, #ff8a80 100%); // Pink
+}
+
+.c-celebrateGrid__item:nth-child(5n + 2) .c-celebrateCard__placeholder {
+    background: linear-gradient(135deg, #7c4dff 0%, #b388ff 100%); // Purple
+}
+
+.c-celebrateGrid__item:nth-child(5n + 3) .c-celebrateCard__placeholder {
+    background: linear-gradient(135deg, #00bcd4 0%, #4dd0e1 100%); // Cyan
+}
+
+.c-celebrateGrid__item:nth-child(5n + 4) .c-celebrateCard__placeholder {
+    background: linear-gradient(135deg, #ffca28 0%, #ffd54f 100%); // Yellow
+}
+
+.c-celebrateGrid__item:nth-child(5n + 5) .c-celebrateCard__placeholder {
+    background: linear-gradient(135deg, #69f0ae 0%, #b9f6ca 100%); // Green
+}
+
 // Section headings color
 // Increase specificity so type.scss heading rules don't override
 .c-themeGrid .c-themeGrid__heading,

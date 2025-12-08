@@ -10,15 +10,26 @@
     margin-bottom: spacing("double");
     overflow: hidden;
 
+    // Hide slides outside viewport when initialized (Slick handles visibility)
     &.slick-initialized {
-        .heroThemeSlider-slide:not(.slick-active) {
-            visibility: hidden;
+        .slick-track {
+            display: flex;
+        }
+
+        .heroThemeSlider-slide {
+            visibility: visible;
         }
     }
 
-    // Hide non-first slides before initialization
-    &:not(.slick-initialized) .heroThemeSlider-slide:not(:first-child) {
-        display: none;
+    // Show only first 3 slides before initialization to prevent flash
+    &:not(.slick-initialized) .heroThemeSlider-slide {
+        display: inline-block;
+        width: calc(33.333% - #{spacing("single")});
+        vertical-align: top;
+
+        &:nth-child(n+4) {
+            display: none;
+        }
     }
 }
 
@@ -72,7 +83,7 @@
 .heroThemeSlider-card__media {
     position: relative;
     overflow: hidden;
-    aspect-ratio: 4 / 3;
+    height: 15.625rem; // ~250px
     background: $color-greyLightest;
 }
 
@@ -126,9 +137,10 @@
 }
 
 // Navigation arrows
+// Position arrows centered on the image area (15.625rem / 2 = ~7.8rem from top)
 .heroThemeSlider .slick-arrow {
     position: absolute;
-    top: 50%;
+    top: 7.8125rem; // Half of image height (15.625rem / 2)
     transform: translateY(-50%);
     z-index: 10;
     width: remCalc(44px);

@@ -1,14 +1,19 @@
 {{!-- Celebrate Card: round image and title --}}
 <article class="c-celebrateCard">
   <a href="{{url}}" class="c-celebrateCard__media" aria-label="{{name}}">
-    {{#if image.url}}
+    {{#if image.data}}
+      {{!-- Stencil image object - use getImage to resolve {:size} placeholder --}}
+      <img src="{{getImage image '300x300'}}" alt="{{name}}" class="c-celebrateCard__image" />
+    {{else if image.url}}
       <img src="{{image.url}}" alt="{{name}}" class="c-celebrateCard__image" />
-    {{else if image.data}}
-      <img src="{{image.data}}" alt="{{name}}" class="c-celebrateCard__image" />
     {{else if image.source}}
       <img src="{{image.source}}" alt="{{name}}" class="c-celebrateCard__image" />
     {{else if image}}
-      <img src="{{cdn image}}" alt="{{name}}" class="c-celebrateCard__image" />
+      {{!-- Could be a string URL or stencil image - try getImage first --}}
+      <img src="{{getImage image '300x300'}}" alt="{{name}}" class="c-celebrateCard__image" />
+    {{else}}
+      {{!-- Placeholder colored disc when no image --}}
+      <span class="c-celebrateCard__placeholder" aria-hidden="true"></span>
     {{/if}}
   </a>
   <div class="c-celebrateCard__body">

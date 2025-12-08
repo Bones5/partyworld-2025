@@ -1,97 +1,68 @@
-{{!-- Hero Theme Slider Component --}}
+{{!-- Hero Theme Slider Widget --}}
 {{!--
   Combined hero/theme slider with three-card frames.
+  Populated from the Homepage Carousel images configured in:
+  Marketing > Storefront > Home Page Carousel
   
-  Usage:
-    {{> components/page/hero-theme-slider 
-        sectionHeading="Shop Party Themes"
-        slides=theme_settings_slides
-    }}
-
-  Or with inline slides:
-    {{> components/page/hero-theme-slider 
-        sectionHeading="Shop Party Themes"
-        slide1_card1_image=theme_settings.hero_slider_slide1_card1_image
-        slide1_card1_heading=theme_settings.hero_slider_slide1_card1_heading
-        slide1_card1_cta_text=theme_settings.hero_slider_slide1_card1_cta_text
-        slide1_card1_cta_url=theme_settings.hero_slider_slide1_card1_cta_url
-        ...
-    }}
+  Usage (simple - pulls directly from carousel data):
+    {{> components/page/hero-theme-slider}}
+  
+  Each carousel slide provides:
+    - stencil_image: The slide image
+    - heading: Slide title
+    - text: Slide description  
+    - url: Link URL
+    - button_text: CTA button text
 --}}
 
-{{#or slide1_card1_image slide1_card2_image slide1_card3_image}}
+{{#if carousel.slides.length}}
 <section class="heroThemeSlider-section" aria-labelledby="heroThemeSlider-heading">
-    {{#if sectionHeading}}
+    {{#if theme_settings.hero_slider_section_heading}}
         <h2 id="heroThemeSlider-heading" class="heroThemeSlider-section__heading">
-            {{sectionHeading}}
+            {{theme_settings.hero_slider_section_heading}}
         </h2>
     {{/if}}
 
     <div class="heroThemeSlider" 
          data-slick='{
-            "slidesToShow": 1,
+            "slidesToShow": 3,
             "slidesToScroll": 1,
             "infinite": false,
-            "adaptiveHeight": false
+            "adaptiveHeight": true,
+            "dots": false,
+            "responsive": [
+                {
+                    "breakpoint": 300,
+                    "settings": {
+                        "slidesToShow": 3
+                    }
+                },
+                {
+                    "breakpoint": 250,
+                    "settings": {
+                        "slidesToShow": 1
+                    }
+                }
+            ]
          }'
          aria-roledescription="carousel"
-         aria-label="{{default sectionHeading 'Theme slider'}}">
+         aria-label="{{default theme_settings.hero_slider_section_heading 'Theme slider'}}">
 
         {{!-- Live region for screen reader announcements --}}
         <div class="heroThemeSlider-announce" aria-live="polite" aria-atomic="true" data-carousel-content-change-message>
         </div>
 
-        {{!-- Slide 1 --}}
-        {{#or slide1_card1_image slide1_card2_image slide1_card3_image}}
-        <div class="heroThemeSlider-slide" role="group" aria-roledescription="slide" aria-label="{{lang 'carousel.slide_number' slide_number=1}}">
-            <div class="heroThemeSlider-cards">
-                {{> components/page/hero-theme-slider-card
-                    image=slide1_card1_image
-                    heading=slide1_card1_heading
-                    ctaText=slide1_card1_cta_text
-                    ctaUrl=slide1_card1_cta_url
-                }}
-                {{> components/page/hero-theme-slider-card
-                    image=slide1_card2_image
-                    heading=slide1_card2_heading
-                    ctaText=slide1_card2_cta_text
-                    ctaUrl=slide1_card2_cta_url
-                }}
-                {{> components/page/hero-theme-slider-card
-                    image=slide1_card3_image
-                    heading=slide1_card3_heading
-                    ctaText=slide1_card3_cta_text
-                    ctaUrl=slide1_card3_cta_url
-                }}
-            </div>
+        {{!-- Render each carousel slide as a card --}}
+        {{#each carousel.slides}}
+        <div class="heroThemeSlider-slide" role="group" aria-roledescription="slide" aria-label="{{lang 'carousel.slide_number' slide_number=(add @index 1)}}">
+            {{> components/page/hero-theme-slider-card
+                image=stencil_image
+                heading=heading
+                ctaText=button_text
+                ctaUrl=url
+            }}
         </div>
-        {{/or}}
-
-        {{!-- Slide 2 (if configured) --}}
-        {{#or slide2_card1_image slide2_card2_image slide2_card3_image}}
-        <div class="heroThemeSlider-slide" role="group" aria-roledescription="slide" aria-label="{{lang 'carousel.slide_number' slide_number=2}}">
-            <div class="heroThemeSlider-cards">
-                {{> components/page/hero-theme-slider-card
-                    image=slide2_card1_image
-                    heading=slide2_card1_heading
-                    ctaText=slide2_card1_cta_text
-                    ctaUrl=slide2_card1_cta_url
-                }}
-                {{> components/page/hero-theme-slider-card
-                    image=slide2_card2_image
-                    heading=slide2_card2_heading
-                    ctaText=slide2_card2_cta_text
-                    ctaUrl=slide2_card2_cta_url
-                }}
-                {{> components/page/hero-theme-slider-card
-                    image=slide2_card3_image
-                    heading=slide2_card3_heading
-                    ctaText=slide2_card3_cta_text
-                    ctaUrl=slide2_card3_cta_url
-                }}
-            </div>
-        </div>
-        {{/or}}
+        {{/each}}
     </div>
 </section>
-{{/or}}
+{{/if}}

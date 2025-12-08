@@ -3,7 +3,7 @@
   Individual card within the hero theme slider frame.
   
   Parameters:
-    - image: Card background image URL
+    - image: Card background image (stencil_image object or URL string)
     - heading: Card title/heading text
     - ctaText: Call-to-action button text
     - ctaUrl: Call-to-action link URL
@@ -12,17 +12,18 @@
 <article class="heroThemeSlider-card">
     <a href="{{ctaUrl}}" class="heroThemeSlider-card__link" {{#unless ctaUrl}}tabindex="-1" aria-hidden="true"{{/unless}}>
         <div class="heroThemeSlider-card__media">
-            {{#if image.url}}
+            {{#if image.data}}
+                {{!-- Stencil image object (from carousel slides) --}}
+                {{> components/common/responsive-img
+                    image=image
+                    class="heroThemeSlider-card__image"
+                    fallback_size="640w"
+                    lazyload="lazyload"
+                    default_image=theme_settings.default_image
+                }}
+            {{else if image.url}}
                 <img 
                     src="{{image.url}}" 
-                    alt="{{#if heading}}{{heading}}{{else}}Theme card{{/if}}" 
-                    class="heroThemeSlider-card__image lazyload"
-                    loading="lazy"
-                    data-sizes="auto"
-                />
-            {{else if image.data}}
-                <img 
-                    src="{{image.data}}" 
                     alt="{{#if heading}}{{heading}}{{else}}Theme card{{/if}}" 
                     class="heroThemeSlider-card__image lazyload"
                     loading="lazy"

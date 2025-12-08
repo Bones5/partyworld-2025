@@ -14,18 +14,18 @@
 --}}
 <article class="c-categoryCard{{#if modifier}} c-categoryCard--{{modifier}}{{/if}}">
   <a href="{{url}}" class="c-categoryCard__media" aria-label="{{title}}">
-    {{!-- Support Page Builder image objects --}}
-    {{#if image.url}}
+    {{!-- Support Stencil image objects with {:size} placeholder --}}
+    {{#if image.data}}
       <img 
-        src="{{image.url}}" 
+        src="{{getImage image '400x300'}}" 
         alt="{{title}}" 
         class="lazyload"
         loading="lazy"
         data-sizes="auto"
       />
-    {{else if image.data}}
+    {{else if image.url}}
       <img 
-        src="{{image.data}}" 
+        src="{{image.url}}" 
         alt="{{title}}" 
         class="lazyload"
         loading="lazy"
@@ -34,6 +34,14 @@
     {{else if image.source}}
       <img 
         src="{{image.source}}" 
+        alt="{{title}}" 
+        class="lazyload"
+        loading="lazy"
+        data-sizes="auto"
+      />
+    {{else if image}}
+      <img 
+        src="{{getImage image '400x300'}}" 
         alt="{{title}}" 
         class="lazyload"
         loading="lazy"
