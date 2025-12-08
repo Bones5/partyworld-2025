@@ -1,0 +1,60 @@
+{{!-- Hero Theme Slider Card Partial --}}
+{{!--
+  Individual card within the hero theme slider frame.
+  
+  Parameters:
+    - image: Card background image URL
+    - heading: Card title/heading text
+    - ctaText: Call-to-action button text
+    - ctaUrl: Call-to-action link URL
+--}}
+{{#if image}}
+<article class="heroThemeSlider-card">
+    <a href="{{ctaUrl}}" class="heroThemeSlider-card__link" {{#unless ctaUrl}}tabindex="-1" aria-hidden="true"{{/unless}}>
+        <div class="heroThemeSlider-card__media">
+            {{#if image.url}}
+                <img 
+                    src="{{image.url}}" 
+                    alt="{{#if heading}}{{heading}}{{else}}Theme card{{/if}}" 
+                    class="heroThemeSlider-card__image lazyload"
+                    loading="lazy"
+                    data-sizes="auto"
+                />
+            {{else if image.data}}
+                <img 
+                    src="{{image.data}}" 
+                    alt="{{#if heading}}{{heading}}{{else}}Theme card{{/if}}" 
+                    class="heroThemeSlider-card__image lazyload"
+                    loading="lazy"
+                    data-sizes="auto"
+                />
+            {{else if image.source}}
+                <img 
+                    src="{{image.source}}" 
+                    alt="{{#if heading}}{{heading}}{{else}}Theme card{{/if}}" 
+                    class="heroThemeSlider-card__image lazyload"
+                    loading="lazy"
+                    data-sizes="auto"
+                />
+            {{else}}
+                {{!-- Support direct string URL (from theme_settings) --}}
+                <img 
+                    src="{{cdn image}}" 
+                    alt="{{#if heading}}{{heading}}{{else}}Theme card{{/if}}" 
+                    class="heroThemeSlider-card__image lazyload"
+                    loading="lazy"
+                    data-sizes="auto"
+                />
+            {{/if}}
+        </div>
+        <div class="heroThemeSlider-card__content">
+            {{#if heading}}
+                <h3 class="heroThemeSlider-card__heading">{{heading}}</h3>
+            {{/if}}
+            {{#if ctaText}}
+                <span class="heroThemeSlider-card__cta">{{ctaText}}</span>
+            {{/if}}
+        </div>
+    </a>
+</article>
+{{/if}}
