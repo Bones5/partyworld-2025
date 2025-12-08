@@ -4,6 +4,33 @@
 
 Partyworld 2025 is a customized BigCommerce theme based on Cornerstone.
 
+## Documentation
+
+- [Trustpilot Integration Guide](docs/TRUSTPILOT_INTEGRATION.md) - Complete guide for integrating Trustpilot badges and customer reviews
+- [Playwright Testing Guide](docs/PLAYWRIGHT_TESTING.md) - E2E testing documentation
+- [Theme Map](docs/THEME_MAP.md) - Visual guide to template structure and component organization
+- [Design System Rules](docs/design-system/design_system_rules.md) - Design tokens, components, and patterns
+- [Environments](docs/ENVIRONMENTS.md) - Environment configuration and deployment
+- [SVG Styling](docs/SVG_STYLING.md) - SVG icon system and styling guidelines
+
+## Content Setup
+
+Setting up your store with this theme? See our comprehensive content guides:
+
+- **[Content Requirements Guide](docs/CONTENT_REQUIREMENTS.md)** - Complete guide to populating your theme with content, including:
+  - Theme settings configuration
+  - Homepage content requirements
+  - Product catalog setup
+  - Category structure
+  - Branding assets
+  - Customization instructions
+
+- **[Content Requirements Summary](docs/CONTENT_REQUIREMENTS_SUMMARY.md)** - Quick reference checklist with:
+  - Essential content checklist
+  - Image size reference
+  - 5-week setup timeline
+  - Common questions
+
 ## Testing
 
 ### Unit Tests (Jest)

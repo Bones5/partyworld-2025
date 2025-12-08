@@ -1,0 +1,35 @@
+{{!-- Product Confidence Grid: Four delivery/assurance badges --}}
+<section class="c-confidenceGrid">
+    <div class="c-confidenceGrid__item">
+        <div class="c-confidenceGrid__icon">
+            <svg aria-hidden="true">
+                <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-delivery"/>
+            </svg>
+        </div>
+        <span class="c-confidenceGrid__text">{{default deliveryText 'Fast Delivery'}}</span>
+    </div>
+    <div class="c-confidenceGrid__item">
+        <div class="c-confidenceGrid__icon">
+            <svg aria-hidden="true">
+                <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-secure"/>
+            </svg>
+        </div>
+        <span class="c-confidenceGrid__text">{{default secureText 'Secure Checkout'}}</span>
+    </div>
+    <div class="c-confidenceGrid__item">
+        <div class="c-confidenceGrid__icon">
+            <svg aria-hidden="true">
+                <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-quality"/>
+            </svg>
+        </div>
+        <span class="c-confidenceGrid__text">{{default qualityText 'Quality Guarantee'}}</span>
+    </div>
+    <div class="c-confidenceGrid__item">
+        <div class="c-confidenceGrid__icon">
+            <svg aria-hidden="true">
+                <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-support"/>
+            </svg>
+        </div>
+        <span class="c-confidenceGrid__text">{{default supportText 'Customer Support'}}</span>
+    </div>
+</section>

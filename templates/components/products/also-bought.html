@@ -1,0 +1,9 @@
+{{!-- Also Bought: "Other customers also bought these" cross-sell section --}}
+{{#if product.similar_by_views.length}}
+<section class="c-alsoBought">
+    <h3 class="c-alsoBought__heading">{{default heading 'Other customers also bought these'}}</h3>
+    <div class="c-alsoBought__products">
+        {{> components/products/carousel products=product.similar_by_views columns=4 list="Also Bought"}}
+    </div>
+</section>
+{{/if}}
