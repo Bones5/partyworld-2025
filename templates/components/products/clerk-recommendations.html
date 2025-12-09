@@ -2,33 +2,36 @@
   Clerk.io Product Recommendations Component
   
   Displays personalized product recommendations powered by Clerk.io on product detail pages.
+  Uses BigCommerce Storefront GraphQL API for product data to render native theme cards.
   
   Parameters:
   - heading: Optional heading for the section (default: "Recommended For You")
-  - template: Clerk.io template name (default: from theme_settings.clerk_product_template)
+  - type: Clerk recommendation type: similar, complementary (default: similar)
   - product_id: Product ID to use for recommendations (default: current product.id)
+  - limit: Number of products to show (default: 8)
   
   Usage:
     {{> components/products/clerk-recommendations 
         heading="You May Also Like"
-        template="@custom-template"
+        type="similar"
+        limit=8
     }}
   
   Configuration:
   - theme_settings.clerk_enabled: Master toggle for Clerk.io
   - theme_settings.clerk_product_recommendations_enabled: Enable product page recommendations
-  - theme_settings.clerk_product_template: Default Clerk.io template name
 --}}
 
 {{#all theme_settings.clerk_enabled theme_settings.clerk_product_recommendations_enabled}}
   <section class="c-clerkRecommendations" data-clerk-section="product">
     <h3 class="c-clerkRecommendations__heading">{{default heading 'Recommended For You'}}</h3>
     
-    <div class="c-clerkRecommendations__container">
-      <span class="clerk" 
-            data-template="{{default template theme_settings.clerk_product_template}}"
-            data-products="[{{default product_id product.id}}]">
-      </span>
+    <div class="c-clerkRecommendations__container"
+         data-clerk-container
+         data-clerk-type="{{default type 'similar'}}"
+         data-clerk-products="{{default product_id product.id}}"
+         data-clerk-limit="{{default limit 8}}">
+      {{!-- Products rendered via JavaScript using GraphQL data --}}
     </div>
   </section>
 {{/all}}

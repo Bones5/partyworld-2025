@@ -3113,7 +3113,7 @@
       },
       {
         "type": "heading",
-        "content": "Product Page Recommendations"
+        "content": "Recommendations by Page"
       },
       {
         "type": "checkbox",
@@ -3122,30 +3122,10 @@
         "force_reload": true
       },
       {
-        "type": "text",
-        "label": "Product Page Template",
-        "id": "clerk_product_template",
-        "force_reload": true
-      },
-      {
-        "type": "heading",
-        "content": "Category Page Recommendations"
-      },
-      {
         "type": "checkbox",
         "label": "Enable Category Recommendations",
         "id": "clerk_category_recommendations_enabled",
         "force_reload": true
-      },
-      {
-        "type": "text",
-        "label": "Category Page Template",
-        "id": "clerk_category_template",
-        "force_reload": true
-      },
-      {
-        "type": "heading",
-        "content": "Homepage Recommendations"
       },
       {
         "type": "checkbox",
@@ -3154,25 +3134,9 @@
         "force_reload": true
       },
       {
-        "type": "text",
-        "label": "Homepage Template",
-        "id": "clerk_homepage_template",
-        "force_reload": true
-      },
-      {
-        "type": "heading",
-        "content": "Cart Page Recommendations"
-      },
-      {
         "type": "checkbox",
         "label": "Enable Cart Page Recommendations",
         "id": "clerk_cart_recommendations_enabled",
-        "force_reload": true
-      },
-      {
-        "type": "text",
-        "label": "Cart Page Template",
-        "id": "clerk_cart_template",
         "force_reload": true
       }
     ]

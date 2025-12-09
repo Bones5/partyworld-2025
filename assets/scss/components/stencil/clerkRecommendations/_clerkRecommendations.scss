@@ -10,8 +10,8 @@
     border-top: container("border");
 
     @include breakpoint("medium") {
-        margin-top: spacing("triple");
-        padding: spacing("triple") 0;
+        margin-top: spacing("double") + spacing("single");
+        padding: spacing("double") + spacing("single") 0;
     }
 }
 
@@ -71,7 +71,7 @@
 
     // Product cards within Clerk recommendations
     .clerk-product {
-        font-family: $fontFamily-base;
+        font-family: $fontFamily-sans;
     }
 
     // Ensure proper spacing in Clerk product grid

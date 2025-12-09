@@ -434,13 +434,9 @@
     "clerk_enabled": false,
     "clerk_public_key": "",
     "clerk_product_recommendations_enabled": false,
-    "clerk_product_template": "@product-page-recommendations",
     "clerk_category_recommendations_enabled": false,
-    "clerk_category_template": "@category-page-recommendations",
     "clerk_homepage_recommendations_enabled": false,
-    "clerk_homepage_template": "@homepage-recommendations",
-    "clerk_cart_recommendations_enabled": false,
-    "clerk_cart_template": "@cart-page-recommendations"
+    "clerk_cart_recommendations_enabled": false
   },
   "read_only_files": [
     "/assets/scss/components/citadel",

@@ -60,30 +60,6 @@ categories:
     {{/if}}
     {{{region name="home_below_category_grid"}}}
 
-    {{#if products.featured}}
-        {{> components/products/featured products=products.featured columns=theme_settings.homepage_featured_products_column_count}}
-    {{/if}}
-    {{{region name="home_below_featured_products"}}}
-
-    {{!-- 
-        Occasion Grid Section
-        Note: The 'occasions' data should be provided by the BigCommerce backend
-        or configured via Content Blocks / Widget Regions.
-        This uses the 'occasion' modifier for square aspect ratio cards.
-    --}}
-    {{#if occasions}}
-        {{> components/page/category-grid 
-            heading="Shop by Occasion"
-            columns=3
-            categories=occasions
-        }}
-    {{/if}}
-    {{{region name="home_below_occasion_grid"}}}
-
-    {{#if products.top_sellers}}
-        {{> components/products/top products=products.top_sellers columns=theme_settings.homepage_top_products_column_count}}
-    {{/if}}
-    {{{region name="home_below_top_products"}}}
 
     {{!-- Sale Banner Section - Editable via Theme Editor --}}
     {{> components/page/sale-banner 
@@ -94,11 +70,20 @@ categories:
         ctaUrl=theme_settings.sale_banner_cta_url
         badge=theme_settings.sale_banner_badge
     }}
+    {{> components/page/clerk-recommendations
+        heading="Our Top Picks for You"
+        template="@custom-template"
+    }}
 
-    {{#if products.new}}
-        {{> components/products/new products=products.new columns=theme_settings.homepage_new_products_column_count}}
-    {{/if}}
-    {{{region name="home_below_new_products"}}}
+    {{!-- Sale Banner Section - Editable via Theme Editor --}}
+    {{> components/page/sale-banner 
+        image=theme_settings.sale_banner_image
+        heading=theme_settings.sale_banner_heading
+        subcopy=theme_settings.sale_banner_subcopy
+        ctaText=theme_settings.sale_banner_cta_text
+        ctaUrl=theme_settings.sale_banner_cta_url
+        badge=theme_settings.sale_banner_badge
+    }}
 
     {{!-- Customer Reviews Section --}}
     {{> components/page/customer-review-grid 

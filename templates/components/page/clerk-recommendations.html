@@ -2,23 +2,25 @@
   Clerk.io Homepage Recommendations Component
   
   Displays personalized product recommendations powered by Clerk.io on the homepage.
+  Uses BigCommerce Storefront GraphQL API for product data to render native theme cards.
   
   Parameters:
   - heading: Optional heading for the section (default: "Recommended For You")
   - subheading: Optional subheading text
-  - template: Clerk.io template name (default: from theme_settings.clerk_homepage_template)
+  - type: Clerk recommendation type: popular, trending, new, visitor (default: popular)
+  - limit: Number of products to show (default: 8)
   
   Usage:
     {{> components/page/clerk-recommendations 
         heading="Featured Products"
         subheading="Handpicked just for you"
-        template="@custom-homepage-template"
+        type="popular"
+        limit=8
     }}
   
   Configuration:
   - theme_settings.clerk_enabled: Master toggle for Clerk.io
   - theme_settings.clerk_homepage_recommendations_enabled: Enable homepage recommendations
-  - theme_settings.clerk_homepage_template: Default Clerk.io template name
 --}}
 
 {{#all theme_settings.clerk_enabled theme_settings.clerk_homepage_recommendations_enabled}}
@@ -29,10 +31,11 @@
       <p class="c-clerkRecommendations__subheading">{{subheading}}</p>
     {{/if}}
     
-    <div class="c-clerkRecommendations__container">
-      <span class="clerk" 
-            data-template="{{default template theme_settings.clerk_homepage_template}}">
-      </span>
+    <div class="c-clerkRecommendations__container"
+         data-clerk-container
+         data-clerk-type="{{default type 'popular'}}"
+         data-clerk-limit="{{default limit 8}}">
+      {{!-- Products rendered via JavaScript using GraphQL data --}}
     </div>
   </section>
 {{/all}}
