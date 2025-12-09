@@ -21,11 +21,7 @@
 
 {{#all theme_settings.clerk_enabled theme_settings.clerk_cart_recommendations_enabled}}
   <section class="c-clerkRecommendations c-clerkRecommendations--cart" data-clerk-section="cart">
-    {{#if heading}}
-      <h3 class="c-clerkRecommendations__heading">{{heading}}</h3>
-    {{else}}
-      <h3 class="c-clerkRecommendations__heading">{{default heading 'Complete Your Order'}}</h3>
-    {{/if}}
+    <h3 class="c-clerkRecommendations__heading">{{default heading 'Complete Your Order'}}</h3>
     
     <div class="c-clerkRecommendations__container">
       <span class="clerk" 

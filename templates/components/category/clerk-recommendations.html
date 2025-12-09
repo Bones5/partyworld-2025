@@ -22,11 +22,7 @@
 
 {{#all theme_settings.clerk_enabled theme_settings.clerk_category_recommendations_enabled}}
   <section class="c-clerkRecommendations c-clerkRecommendations--category" data-clerk-section="category">
-    {{#if heading}}
-      <h3 class="c-clerkRecommendations__heading">{{heading}}</h3>
-    {{else}}
-      <h3 class="c-clerkRecommendations__heading">{{default heading 'Popular in This Category'}}</h3>
-    {{/if}}
+    <h3 class="c-clerkRecommendations__heading">{{default heading 'Popular in This Category'}}</h3>
     
     <div class="c-clerkRecommendations__container">
       <span class="clerk" 

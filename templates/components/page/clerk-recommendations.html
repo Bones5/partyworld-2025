@@ -23,11 +23,7 @@
 
 {{#all theme_settings.clerk_enabled theme_settings.clerk_homepage_recommendations_enabled}}
   <section class="c-clerkRecommendations c-clerkRecommendations--homepage" data-clerk-section="homepage">
-    {{#if heading}}
-      <h2 class="c-clerkRecommendations__heading">{{heading}}</h2>
-    {{else}}
-      <h2 class="c-clerkRecommendations__heading">{{default heading 'Recommended For You'}}</h2>
-    {{/if}}
+    <h2 class="c-clerkRecommendations__heading">{{default heading 'Recommended For You'}}</h2>
     
     {{#if subheading}}
       <p class="c-clerkRecommendations__subheading">{{subheading}}</p>
