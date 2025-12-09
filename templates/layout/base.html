@@ -43,6 +43,7 @@
         {{~inject 'template' template}}
         {{~inject 'storefrontApiToken' settings.storefront_api.token}}
         {{~inject 'clerkEnabled' theme_settings.clerk_enabled}}
+        {{~inject 'clerkPublicKey' theme_settings.clerk_public_key}}
         {{~inject 'validationDictionaryJSON' (langJson 'validation_messages')}}
         {{~inject 'validationFallbackDictionaryJSON' (langJson 'validation_fallback_messages')}}
         {{~inject 'validationDefaultDictionaryJSON' (langJson 'validation_default_messages')}}

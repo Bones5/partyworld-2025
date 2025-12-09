@@ -431,11 +431,11 @@
     "amazon-button-color": "Gold",
     "masterpass-button-color": "black",
     "paymentbuttons-provider-sorting": [],
-    "clerk_enabled": false,
-    "clerk_public_key": "",
+    "clerk_enabled": true,
+    "clerk_public_key": "2Pus2KzgWUf7wjGBN2NrklOYtqdVsGbO",
     "clerk_product_recommendations_enabled": false,
     "clerk_category_recommendations_enabled": false,
-    "clerk_homepage_recommendations_enabled": false,
+    "clerk_homepage_recommendations_enabled": true,
     "clerk_cart_recommendations_enabled": false
   },
   "read_only_files": [

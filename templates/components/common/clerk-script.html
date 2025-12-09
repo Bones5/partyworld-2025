@@ -13,15 +13,20 @@
 
 {{#if theme_settings.clerk_enabled}}
   {{#if theme_settings.clerk_public_key}}
-    <script nonce="{{nonce}}" type="text/javascript">
-      window.clerkAsyncInit = function() {
-        Clerk('config', {
-          key: '{{theme_settings.clerk_public_key}}',
-          collect_email: false,
-          collect_baskets: true
-        });
-      };
+    <!-- Clerk.io Tracking and Recommendations -->
+    <script type="text/javascript">
+      (function(w,d){
+        var e=d.createElement('script');e.type='text/javascript';e.async=true;
+        e.src='https://cdn.clerk.io/clerk.js';
+        var s=d.getElementsByTagName('script')[0];s.parentNode.insertBefore(e,s);
+        w.__clerk_q=w.__clerk_q||[];w.Clerk=w.Clerk||function(){w.__clerk_q.push(arguments)};
+      })(window,document);
+
+      Clerk('config', {
+        key: '{{theme_settings.clerk_public_key}}',
+        collect_email: false,
+        collect_baskets: true
+      });
     </script>
-    <script nonce="{{nonce}}" type="text/javascript" src="https://cdn.clerk.io/clerk.js" async></script>
   {{/if}}
 {{/if}}

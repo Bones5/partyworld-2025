@@ -6,6 +6,10 @@
  * Uses DOM-based templates for maintainability and consistency with theme markup.
  */
 
+// TEMPORARY: Import production to staging ID mapping for local development
+// TODO: Remove this import once Clerk.io is configured for staging
+import { PRODUCTION_TO_STAGING_ID_MAP } from './product-id-mapping';
+
 const GRAPHQL_ENDPOINT = '/graphql';
 
 /**
@@ -83,6 +87,98 @@ const PRODUCTS_BY_IDS_QUERY = `
         }
     }
 `;
+
+/**
+ * Clerk.io REST API endpoint
+ */
+const CLERK_API_URL = 'https://api.clerk.io/v2';
+
+/**
+ * Translate production product IDs to staging IDs
+ * @param {number[]} productIds - Array of production product IDs from Clerk
+ * @returns {number[]} Array of staging product IDs
+ */
+function translateProductIds(productIds) {
+    if (Object.keys(PRODUCTION_TO_STAGING_ID_MAP).length === 0) {
+        // No mapping defined, return original IDs
+        return productIds;
+    }
+
+    const translatedIds = productIds.map(id => {
+        const stagingId = PRODUCTION_TO_STAGING_ID_MAP[id];
+        if (stagingId) {
+            console.log(`[Clerk] Translated product ID: ${id} → ${stagingId}`);
+            return stagingId;
+        }
+        console.warn(`[Clerk] No staging mapping for production ID: ${id}`);
+        return id; // Keep original if no mapping
+    });
+
+    return translatedIds;
+}
+
+/**
+ * Call Clerk.io REST API directly (bypasses JS SDK domain restrictions)
+ * @param {string} endpoint - API endpoint (e.g., 'recommendations/popular')
+ * @param {Object} params - Request parameters
+ * @param {string} apiKey - Clerk.io public API key
+ * @returns {Promise<Object>} API response
+ */
+async function callClerkApi(endpoint, params, apiKey) {
+    const url = new URL(`${CLERK_API_URL}/${endpoint}`);
+
+    // Add API key and visitor
+    const requestParams = {
+        key: apiKey,
+        visitor: getOrCreateVisitorId(),
+        ...params,
+    };
+
+    // Convert params to query string for GET request
+    Object.entries(requestParams).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+            value.forEach(v => url.searchParams.append(`${key}[]`, v));
+        } else if (value !== undefined && value !== null) {
+            url.searchParams.append(key, value);
+        }
+    });
+
+    console.log('[Clerk API] Calling:', url.toString());
+
+    const response = await fetch(url.toString(), {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error('[Clerk API] Error response:', errorText);
+        throw new Error(`Clerk API error: ${response.status} - ${errorText}`);
+    }
+
+    const data = await response.json();
+    console.log('[Clerk API] Response:', data);
+    return data;
+}
+
+/**
+ * Get or create a visitor ID for Clerk.io tracking
+ * @returns {string} Visitor ID
+ */
+function getOrCreateVisitorId() {
+    const storageKey = 'clerk_visitor_id';
+    let visitorId = localStorage.getItem(storageKey);
+
+    if (!visitorId) {
+        // Generate a random visitor ID
+        visitorId = `v_${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
+        localStorage.setItem(storageKey, visitorId);
+    }
+
+    return visitorId;
+}
 
 /**
  * Fetch products from BigCommerce Storefront GraphQL API
@@ -519,13 +615,13 @@ async function initClerkRecommendations(container, context) {
         clerkLimit = 8,
     } = container.dataset;
 
-    if (!window.Clerk) {
-        console.warn('Clerk.io not loaded');
+    if (!context.clerkPublicKey) {
+        console.warn('[Clerk] No API key configured');
         return;
     }
 
     if (!context.storefrontApiToken) {
-        console.error('Storefront API token not available');
+        console.error('[Clerk] Storefront API token not available');
         return;
     }
 
@@ -578,27 +674,25 @@ async function initClerkRecommendations(container, context) {
     container.classList.add('is-loading');
 
     try {
-        // Call Clerk API
-        const clerkResponse = await new Promise((resolve, reject) => {
-            window.Clerk('call', endpoint, params, (response) => {
-                if (response.status === 'error') {
-                    reject(new Error(response.message || 'Clerk API error'));
-                } else {
-                    resolve(response);
-                }
-            });
-        });
+        // Call Clerk REST API directly (no domain restrictions)
+        const clerkResponse = await callClerkApi(endpoint, params, context.clerkPublicKey);
 
-        const productIds = clerkResponse.result || [];
+        let productIds = clerkResponse?.result || [];
 
         if (productIds.length === 0) {
-            // Remove skeleton and hide section
+            console.log('[Clerk] No products returned');
             container.innerHTML = '';
             container.classList.remove('is-loading');
             container.classList.add('is-empty');
             container.closest('.c-clerkRecommendations')?.classList.add('is-empty');
             return;
         }
+
+        console.log('[Clerk] Product IDs from Clerk:', productIds);
+
+        // TEMPORARY: Translate production IDs to staging IDs
+        productIds = translateProductIds(productIds);
+        console.log('[Clerk] Product IDs after translation:', productIds);
 
         // Fetch full product data from BigCommerce
         const { products, currency } = await fetchProductsByIds(
@@ -645,7 +739,7 @@ async function initClerkRecommendations(container, context) {
             window.lazySizes.init();
         }
     } catch (error) {
-        console.error('Error loading Clerk recommendations:', error);
+        console.error('[Clerk] Error loading recommendations:', error);
         container.innerHTML = '';
         container.classList.remove('is-loading');
         container.classList.add('is-error');
