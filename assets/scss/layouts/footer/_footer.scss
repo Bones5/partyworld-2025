@@ -394,3 +394,68 @@
     margin-top: spacing("half");
     text-align: center;
 }
+
+// Trustpilot fallback
+// -----------------------------------------------------------------------------
+// Fallback shows by default. When Trustpilot widget loads successfully,
+// it contains an iframe - we use :has() to hide fallback when iframe exists.
+
+.trustpilot-badge-wrapper {
+    position: relative;
+}
+
+// Hide the widget container if it has no iframe (failed to load)
+.trustpilot-widget:not(:has(iframe)) {
+    display: none;
+}
+
+// Hide fallback when widget successfully loaded an iframe
+.trustpilot-badge-wrapper:has(.trustpilot-widget iframe) .trustpilot-fallback {
+    display: none;
+}
+
+.trustpilot-fallback {
+    align-items: center;
+    color: stencilColor("color-textBase");
+    display: flex;
+    font-size: fontSize("smallest");
+    gap: spacing("quarter");
+    text-decoration: none;
+
+    .footer-trust-social & {
+        color: stencilColor("color-greyLighter");
+        justify-content: center;
+    }
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.trustpilot-fallback__stars {
+    display: flex;
+    gap: 2px;
+}
+
+.trustpilot-fallback__star {
+    background-color: #00b67a; // Trustpilot green
+    color: stencilColor("color-white"); // Star inherits via currentColor
+    flex-shrink: 0;
+    height: remCalc(20);
+    padding: 2px;
+    width: remCalc(20);
+}
+
+.trustpilot-fallback__text {
+    font-weight: fontWeight("semibold");
+    margin-left: spacing("quarter");
+}
+
+.trustpilot-fallback__brand {
+    color: stencilColor("color-textSecondary");
+    margin-left: spacing("quarter");
+
+    .footer-trust-social & {
+        color: stencilColor("color-greyLight");
+    }
+}

@@ -1,20 +1,18 @@
 {
-    "stylelint.enable": true,
+    "stylelint.enable": false,
     "stylelint.validate": ["css", "scss", "less"],
-    "stylelint.packageManager": "npm",
+    "stylelint.stylelintPath": "./node_modules/stylelint",
     "editor.codeActionsOnSave": {
         "source.fixAll.stylelint": "never"
     },
     "[scss]": {
-        "editor.formatOnSave": false,
-        "editor.defaultFormatter": "stylelint.vscode-stylelint",
+        "editor.defaultFormatter": null,
         "editor.codeActionsOnSave": {
             "source.fixAll.stylelint": "never"
         }
     },
     "[css]": {
-        "editor.formatOnSave": false,
-        "editor.defaultFormatter": "stylelint.vscode-stylelint",
+        "editor.defaultFormatter": null,
         "editor.codeActionsOnSave": {
             "source.fixAll.stylelint": "never"
         }
