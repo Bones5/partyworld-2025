@@ -51,8 +51,16 @@
         background: transparent;
         display: block;
         height: auto;
-        padding: 0 5rem;
+        padding: 0 spacing("single");
         position: relative;
+    }
+
+    @include breakpoint("large") {
+        padding: 0 spacing("double");
+    }
+
+    @include breakpoint("xlarge") {
+        padding: 0 5rem;
     }
 
     &.is-open {
@@ -76,9 +84,27 @@
         @include nav($style: "navBar", $wrapper: "nav");
         background: none;
         font-size: 0; // 1
+        overflow-x: auto;
         overflow-y: visible;
         padding: spacing("half");
         text-align: center;
+        // Smooth scrolling and hide scrollbar for cleaner look
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+
+        &::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
     }
 
     ul {
@@ -109,8 +135,16 @@
         display: inline-flex; // Use flexbox for gap control // 5
         flex-wrap: nowrap;
         float: none;
-        gap: $header-nav-gap; // ~80px gaps per Figma // 5
+        gap: spacing("single"); // Tighter gap at medium breakpoint
         white-space: nowrap;
+    }
+
+    @include breakpoint("large") {
+        gap: spacing("single") + spacing("half"); // ~24px at large
+    }
+
+    @include breakpoint("xlarge") {
+        gap: $header-nav-gap; // ~80px gaps per Figma at xlarge // 5
     }
 
     + .navPages-list {

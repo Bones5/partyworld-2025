@@ -227,7 +227,15 @@
     @include breakpoint("medium") {
         display: grid;
         row-gap: spacing("single");
-        padding: spacing("single") 5rem ;
+        padding: spacing("single") spacing("single");
+    }
+
+    @include breakpoint("large") {
+        padding: spacing("single") spacing("double");
+    }
+
+    @include breakpoint("xlarge") {
+        padding: spacing("single") 5rem;
     }
 }
 
