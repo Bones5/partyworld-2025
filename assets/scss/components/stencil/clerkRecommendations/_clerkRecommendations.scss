@@ -68,10 +68,7 @@
     @include breakpoint("medium") {
         margin-top: spacing("double");
     }
-}
 
-// Override Clerk.io default styles to match theme
-.c-clerkRecommendations {
     // Product cards within Clerk recommendations
     .clerk-product {
         font-family: $fontFamily-base;
