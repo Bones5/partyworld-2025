@@ -13,6 +13,7 @@ import cartPreview from './global/cart-preview';
 import carousel from './common/carousel';
 import svgInjector from './global/svg-injector';
 import { initNewsletter } from './global/newsletter';
+import { initAllClerkRecommendations } from './common/clerk-recommendations';
 
 export default class Global extends PageManager {
     onReady() {
@@ -27,5 +28,10 @@ export default class Global extends PageManager {
         mobileMenuToggle();
         svgInjector();
         initNewsletter();
+        
+        // Initialize Clerk.io recommendations if enabled
+        if (this.context.clerkEnabled) {
+            initAllClerkRecommendations(this.context);
+        }
     }
 }

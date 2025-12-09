@@ -41,6 +41,9 @@
         {{~inject 'secureBaseUrl' settings.secure_base_url}}
         {{~inject 'cartId' cart_id}}
         {{~inject 'template' template}}
+        {{~inject 'storefrontApiToken' settings.storefront_api.token}}
+        {{~inject 'clerkEnabled' theme_settings.clerk_enabled}}
+        {{~inject 'clerkPublicKey' theme_settings.clerk_public_key}}
         {{~inject 'validationDictionaryJSON' (langJson 'validation_messages')}}
         {{~inject 'validationFallbackDictionaryJSON' (langJson 'validation_fallback_messages')}}
         {{~inject 'validationDefaultDictionaryJSON' (langJson 'validation_default_messages')}}
@@ -96,5 +99,8 @@
         {{#if theme_settings.show_trustpilot_widget}}
         <script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
         {{/if}}
+
+        {{!-- Clerk.io Script Loader --}}
+        {{> components/common/clerk-script}}
     </body>
 </html>

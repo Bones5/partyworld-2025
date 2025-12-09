@@ -23,6 +23,9 @@ product:
         {{> components/products/product-view}}
 
         {{{region name="product_below_content"}}}
+        
+        {{!-- Clerk.io Product Recommendations --}}
+        {{> components/products/clerk-recommendations}}
 
         {{#all settings.show_product_reviews theme_settings.show_product_reviews (if theme_settings.show_product_details_tabs '!==' true)}}
             {{> components/products/reviews reviews=product.reviews product=product urls=urls}}

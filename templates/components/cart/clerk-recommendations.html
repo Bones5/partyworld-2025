@@ -1,0 +1,51 @@
+{{!--
+  Clerk.io Cart Recommendations Component
+  
+  Displays personalized product recommendations powered by Clerk.io on the cart page.
+  Uses BigCommerce Storefront GraphQL API for product data to render native theme cards.
+  
+  Parameters:
+  - heading: Optional heading for the section (default: "Complete Your Order")
+  - type: Clerk recommendation type: complementary, visitor (default: visitor)
+  - limit: Number of products to show (default: 8)
+  
+  Usage:
+    {{> components/cart/clerk-recommendations 
+        heading="Customers Also Bought"
+        type="visitor"
+        limit=8
+    }}
+  
+  Configuration:
+  - theme_settings.clerk_enabled: Master toggle for Clerk.io
+  - theme_settings.clerk_cart_recommendations_enabled: Enable cart page recommendations
+--}}
+
+{{#all theme_settings.clerk_enabled theme_settings.clerk_cart_recommendations_enabled}}
+  <section class="c-clerkRecommendations c-clerkRecommendations--cart" data-clerk-section="cart">
+    <h3 class="c-clerkRecommendations__heading">{{default heading 'Complete Your Order'}}</h3>
+    
+    <div class="c-clerkRecommendations__container"
+         data-clerk-container
+         data-clerk-type="{{default type 'visitor'}}"
+         data-clerk-limit="{{default limit 8}}">
+      {{!-- Skeleton loader to reserve space and minimize layout shift --}}
+      <div class="productGrid clerk-product-grid clerk-skeleton-grid" aria-hidden="true">
+        {{#for 1 4}}
+        <article class="card card--skeleton">
+          <figure class="card-figure">
+            <div class="card-img-container">
+              <div class="skeleton skeleton--image"></div>
+            </div>
+          </figure>
+          <div class="card-body">
+            <div class="skeleton skeleton--text skeleton--brand"></div>
+            <div class="skeleton skeleton--text skeleton--title"></div>
+            <div class="skeleton skeleton--text skeleton--price"></div>
+          </div>
+        </article>
+        {{/for}}
+      </div>
+    </div>
+  </section>
+{{/all}}
