@@ -1,0 +1,38 @@
+{{!--
+  Clerk.io Product Recommendations Component
+  
+  Displays personalized product recommendations powered by Clerk.io on product detail pages.
+  
+  Parameters:
+  - heading: Optional heading for the section (default: "Recommended For You")
+  - template: Clerk.io template name (default: from theme_settings.clerk_product_template)
+  - product_id: Product ID to use for recommendations (default: current product.id)
+  
+  Usage:
+    {{> components/products/clerk-recommendations 
+        heading="You May Also Like"
+        template="@custom-template"
+    }}
+  
+  Configuration:
+  - theme_settings.clerk_enabled: Master toggle for Clerk.io
+  - theme_settings.clerk_product_recommendations_enabled: Enable product page recommendations
+  - theme_settings.clerk_product_template: Default Clerk.io template name
+--}}
+
+{{#all theme_settings.clerk_enabled theme_settings.clerk_product_recommendations_enabled}}
+  <section class="c-clerkRecommendations" data-clerk-section="product">
+    {{#if heading}}
+      <h3 class="c-clerkRecommendations__heading">{{heading}}</h3>
+    {{else}}
+      <h3 class="c-clerkRecommendations__heading">{{default heading 'Recommended For You'}}</h3>
+    {{/if}}
+    
+    <div class="c-clerkRecommendations__container">
+      <span class="clerk" 
+            data-template="{{default template theme_settings.clerk_product_template}}"
+            data-products="[{{default product_id product.id}}]">
+      </span>
+    </div>
+  </section>
+{{/all}}

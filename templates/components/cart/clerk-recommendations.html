@@ -1,0 +1,36 @@
+{{!--
+  Clerk.io Cart Recommendations Component
+  
+  Displays personalized product recommendations powered by Clerk.io on the cart page.
+  
+  Parameters:
+  - heading: Optional heading for the section (default: "Complete Your Order")
+  - template: Clerk.io template name (default: from theme_settings.clerk_cart_template)
+  
+  Usage:
+    {{> components/cart/clerk-recommendations 
+        heading="Customers Also Bought"
+        template="@custom-cart-template"
+    }}
+  
+  Configuration:
+  - theme_settings.clerk_enabled: Master toggle for Clerk.io
+  - theme_settings.clerk_cart_recommendations_enabled: Enable cart page recommendations
+  - theme_settings.clerk_cart_template: Default Clerk.io template name
+--}}
+
+{{#all theme_settings.clerk_enabled theme_settings.clerk_cart_recommendations_enabled}}
+  <section class="c-clerkRecommendations c-clerkRecommendations--cart" data-clerk-section="cart">
+    {{#if heading}}
+      <h3 class="c-clerkRecommendations__heading">{{heading}}</h3>
+    {{else}}
+      <h3 class="c-clerkRecommendations__heading">{{default heading 'Complete Your Order'}}</h3>
+    {{/if}}
+    
+    <div class="c-clerkRecommendations__container">
+      <span class="clerk" 
+            data-template="{{default template theme_settings.clerk_cart_template}}">
+      </span>
+    </div>
+  </section>
+{{/all}}

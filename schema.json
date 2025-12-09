@@ -3087,6 +3087,91 @@
     ]
   },
   {
+    "name": "Clerk.io Integration",
+    "settings": [
+      {
+        "type": "heading",
+        "content": "Clerk.io Configuration"
+      },
+      {
+        "type": "checkbox",
+        "label": "Enable Clerk.io",
+        "id": "clerk_enabled",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Clerk.io Public Key",
+        "id": "clerk_public_key",
+        "force_reload": true
+      },
+      {
+        "type": "heading",
+        "content": "Product Page Recommendations"
+      },
+      {
+        "type": "checkbox",
+        "label": "Enable Product Page Recommendations",
+        "id": "clerk_product_recommendations_enabled",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Product Page Template",
+        "id": "clerk_product_template",
+        "force_reload": true
+      },
+      {
+        "type": "heading",
+        "content": "Category Page Recommendations"
+      },
+      {
+        "type": "checkbox",
+        "label": "Enable Category Recommendations",
+        "id": "clerk_category_recommendations_enabled",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Category Page Template",
+        "id": "clerk_category_template",
+        "force_reload": true
+      },
+      {
+        "type": "heading",
+        "content": "Homepage Recommendations"
+      },
+      {
+        "type": "checkbox",
+        "label": "Enable Homepage Recommendations",
+        "id": "clerk_homepage_recommendations_enabled",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Homepage Template",
+        "id": "clerk_homepage_template",
+        "force_reload": true
+      },
+      {
+        "type": "heading",
+        "content": "Cart Page Recommendations"
+      },
+      {
+        "type": "checkbox",
+        "label": "Enable Cart Page Recommendations",
+        "id": "clerk_cart_recommendations_enabled",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Cart Page Template",
+        "id": "clerk_cart_template",
+        "force_reload": true
+      }
+    ]
+  },
+  {
     "name": "i18n.PaymentButtons",
     "enable": "smartButtons",
     "settings": [

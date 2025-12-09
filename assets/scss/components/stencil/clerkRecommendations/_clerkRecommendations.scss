@@ -1,0 +1,99 @@
+// Clerk.io Recommendations Component
+// -----------------------------------------------------------------------------
+// Clerk.io powered product recommendation sections
+// Used on product, category, cart, and home pages
+// -----------------------------------------------------------------------------
+
+.c-clerkRecommendations {
+    margin-top: spacing("double");
+    padding: spacing("double") 0;
+    border-top: container("border");
+
+    @include breakpoint("medium") {
+        margin-top: spacing("triple");
+        padding: spacing("triple") 0;
+    }
+}
+
+// Remove top border for homepage variant
+.c-clerkRecommendations--homepage {
+    border-top: 0;
+}
+
+// Heading styles
+.c-clerkRecommendations__heading {
+    font-size: fontSize("larger");
+    margin-bottom: spacing("half");
+    text-align: center;
+    color: stencilColor("color-textBase");
+
+    @include breakpoint("medium") {
+        font-size: fontSize("large");
+        margin-bottom: spacing("single");
+    }
+}
+
+// Homepage heading is larger
+.c-clerkRecommendations--homepage .c-clerkRecommendations__heading {
+    font-size: fontSize("large");
+    
+    @include breakpoint("medium") {
+        font-size: fontSize("hero");
+    }
+}
+
+// Subheading styles (homepage only)
+.c-clerkRecommendations__subheading {
+    font-size: fontSize("smaller");
+    color: stencilColor("color-textSecondary");
+    text-align: center;
+    margin-bottom: spacing("single");
+
+    @include breakpoint("medium") {
+        font-size: fontSize("base");
+        margin-bottom: spacing("double");
+    }
+}
+
+// Container for Clerk.io widget
+.c-clerkRecommendations__container {
+    margin-top: spacing("single");
+    
+    // Ensure Clerk content is responsive
+    .clerk {
+        display: block;
+        width: 100%;
+    }
+
+    @include breakpoint("medium") {
+        margin-top: spacing("double");
+    }
+}
+
+// Override Clerk.io default styles to match theme
+.c-clerkRecommendations {
+    // Product cards within Clerk recommendations
+    .clerk-product {
+        font-family: $fontFamily-base;
+    }
+
+    // Ensure proper spacing in Clerk product grid
+    .clerk-slider,
+    .clerk-grid {
+        margin: 0 auto;
+    }
+
+    // Style Clerk buttons to match theme
+    .clerk-button {
+        background-color: stencilColor("button--primary-backgroundColor");
+        color: stencilColor("button--primary-color");
+        border-radius: $global-radius;
+        transition: all 0.2s ease;
+
+        &:hover,
+        &:focus {
+            background-color: stencilColor("button--primary-backgroundColorHover");
+            color: stencilColor("button--primary-colorHover");
+        }
+    }
+}

@@ -1,0 +1,42 @@
+{{!--
+  Clerk.io Homepage Recommendations Component
+  
+  Displays personalized product recommendations powered by Clerk.io on the homepage.
+  
+  Parameters:
+  - heading: Optional heading for the section (default: "Recommended For You")
+  - subheading: Optional subheading text
+  - template: Clerk.io template name (default: from theme_settings.clerk_homepage_template)
+  
+  Usage:
+    {{> components/page/clerk-recommendations 
+        heading="Featured Products"
+        subheading="Handpicked just for you"
+        template="@custom-homepage-template"
+    }}
+  
+  Configuration:
+  - theme_settings.clerk_enabled: Master toggle for Clerk.io
+  - theme_settings.clerk_homepage_recommendations_enabled: Enable homepage recommendations
+  - theme_settings.clerk_homepage_template: Default Clerk.io template name
+--}}
+
+{{#all theme_settings.clerk_enabled theme_settings.clerk_homepage_recommendations_enabled}}
+  <section class="c-clerkRecommendations c-clerkRecommendations--homepage" data-clerk-section="homepage">
+    {{#if heading}}
+      <h2 class="c-clerkRecommendations__heading">{{heading}}</h2>
+    {{else}}
+      <h2 class="c-clerkRecommendations__heading">{{default heading 'Recommended For You'}}</h2>
+    {{/if}}
+    
+    {{#if subheading}}
+      <p class="c-clerkRecommendations__subheading">{{subheading}}</p>
+    {{/if}}
+    
+    <div class="c-clerkRecommendations__container">
+      <span class="clerk" 
+            data-template="{{default template theme_settings.clerk_homepage_template}}">
+      </span>
+    </div>
+  </section>
+{{/all}}

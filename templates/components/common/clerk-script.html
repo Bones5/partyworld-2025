@@ -1,0 +1,27 @@
+{{!--
+  Clerk.io Script Loader
+  
+  Loads the Clerk.io tracking and recommendation engine scripts.
+  
+  Configuration:
+  - theme_settings.clerk_enabled: Master toggle for Clerk.io integration
+  - theme_settings.clerk_public_key: Your Clerk.io public API key
+  
+  Usage:
+    {{> components/common/clerk-script}}
+--}}
+
+{{#if theme_settings.clerk_enabled}}
+  {{#if theme_settings.clerk_public_key}}
+    <script nonce="{{nonce}}" type="text/javascript">
+      window.clerkAsyncInit = function() {
+        Clerk('config', {
+          key: '{{theme_settings.clerk_public_key}}',
+          collect_email: false,
+          collect_baskets: true
+        });
+      };
+    </script>
+    <script nonce="{{nonce}}" type="text/javascript" src="https://cdn.clerk.io/clerk.js" async></script>
+  {{/if}}
+{{/if}}

@@ -1,0 +1,38 @@
+{{!--
+  Clerk.io Category Recommendations Component
+  
+  Displays personalized product recommendations powered by Clerk.io on category pages.
+  
+  Parameters:
+  - heading: Optional heading for the section (default: "Popular in This Category")
+  - template: Clerk.io template name (default: from theme_settings.clerk_category_template)
+  - category_id: Category ID to use for recommendations (default: current category.id)
+  
+  Usage:
+    {{> components/category/clerk-recommendations 
+        heading="Best Sellers"
+        template="@custom-category-template"
+    }}
+  
+  Configuration:
+  - theme_settings.clerk_enabled: Master toggle for Clerk.io
+  - theme_settings.clerk_category_recommendations_enabled: Enable category page recommendations
+  - theme_settings.clerk_category_template: Default Clerk.io template name
+--}}
+
+{{#all theme_settings.clerk_enabled theme_settings.clerk_category_recommendations_enabled}}
+  <section class="c-clerkRecommendations c-clerkRecommendations--category" data-clerk-section="category">
+    {{#if heading}}
+      <h3 class="c-clerkRecommendations__heading">{{heading}}</h3>
+    {{else}}
+      <h3 class="c-clerkRecommendations__heading">{{default heading 'Popular in This Category'}}</h3>
+    {{/if}}
+    
+    <div class="c-clerkRecommendations__container">
+      <span class="clerk" 
+            data-template="{{default template theme_settings.clerk_category_template}}"
+            data-category="{{default category_id category.id}}">
+      </span>
+    </div>
+  </section>
+{{/all}}
