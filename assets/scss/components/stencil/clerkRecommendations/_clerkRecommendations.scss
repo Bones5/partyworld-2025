@@ -2,16 +2,40 @@
 // -----------------------------------------------------------------------------
 // Clerk.io powered product recommendation sections
 // Used on product, category, cart, and home pages
+// Includes skeleton loading states to minimize layout shift (CLS)
 // -----------------------------------------------------------------------------
+
+// =============================================================================
+// LAYOUT SHIFT PREVENTION
+// Reserve space for the recommendations section before content loads
+// =============================================================================
 
 .c-clerkRecommendations {
     margin-top: spacing("double");
     padding: spacing("double") 0;
     border-top: container("border");
+    // Reserve minimum height to prevent layout shift
+    min-height: 400px;
 
     @include breakpoint("medium") {
         margin-top: spacing("double") + spacing("single");
         padding: spacing("double") + spacing("single") 0;
+        min-height: 500px;
+    }
+
+    // When loaded, allow natural height
+    &.is-loaded {
+        min-height: auto;
+    }
+
+    // Hide section entirely if no products loaded (error state)
+    &.is-error,
+    &.is-empty {
+        min-height: 0;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        display: none;
     }
 }
 
@@ -20,7 +44,10 @@
     border-top: 0;
 }
 
-// Heading styles
+// =============================================================================
+// HEADING STYLES
+// =============================================================================
+
 .c-clerkRecommendations__heading {
     font-size: fontSize("larger");
     margin-bottom: spacing("half");
@@ -55,23 +82,162 @@
     }
 }
 
-// Container for Clerk.io widget
+// =============================================================================
+// CONTAINER & GRID
+// =============================================================================
+
 .c-clerkRecommendations__container {
     margin-top: spacing("single");
-    
-    // Ensure Clerk content is responsive
-    .clerk {
-        display: block;
-        width: 100%;
-    }
 
     @include breakpoint("medium") {
         margin-top: spacing("double");
     }
+}
 
-    // Product cards within Clerk recommendations
-    .clerk-product {
-        font-family: $fontFamily-sans;
+// Product grid for clerk recommendations
+.clerk-product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: spacing("single");
+
+    @include breakpoint("small") {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    @include breakpoint("medium") {
+        grid-template-columns: repeat(4, 1fr);
+        gap: spacing("single") + spacing("half");
+    }
+
+    @include breakpoint("large") {
+        gap: spacing("double");
+    }
+}
+
+// =============================================================================
+// SKELETON LOADING STATES
+// Animated placeholders that reserve space before content loads
+// =============================================================================
+
+// Skeleton animation
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: -200px 0;
+    }
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}
+
+// Base skeleton styles
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        stencilColor("color-greyLightest") 0px,
+        stencilColor("container-fill-dark") 40px,
+        stencilColor("color-greyLightest") 80px
+    );
+    background-size: 200px 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+    border-radius: $global-radius;
+}
+
+// Skeleton image placeholder
+.skeleton--image {
+    width: 100%;
+    padding-bottom: 100%; // 1:1 aspect ratio
+    background-color: stencilColor("color-greyLightest");
+}
+
+// Skeleton text placeholders
+.skeleton--text {
+    height: 1em;
+    margin-bottom: spacing("quarter");
+
+    &.skeleton--brand {
+        width: 40%;
+        height: 0.75em;
+        margin-bottom: spacing("half");
+    }
+
+    &.skeleton--title {
+        width: 80%;
+        height: 1.1em;
+        margin-bottom: spacing("half");
+    }
+
+    &.skeleton--price {
+        width: 30%;
+        height: 1em;
+    }
+}
+
+// Skeleton card styles
+.card--skeleton {
+    .card-figure {
+        margin-bottom: spacing("half");
+    }
+
+    .card-body {
+        padding: spacing("half") 0;
+    }
+}
+
+// Hide skeleton when loaded
+.c-clerkRecommendations__container.is-loaded .clerk-skeleton-grid,
+.c-clerkRecommendations__container .clerk-skeleton-grid:has(+ .clerk-product-grid:not(.clerk-skeleton-grid)) {
+    display: none;
+}
+
+// Fade in animation for loaded content
+.c-clerkRecommendations__container.is-loaded .clerk-product-grid:not(.clerk-skeleton-grid) {
+    animation: clerk-fade-in 0.3s ease-out;
+}
+
+@keyframes clerk-fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+// =============================================================================
+// PRODUCT CARD OVERRIDES
+// Ensure consistent styling for dynamically rendered cards
+// =============================================================================
+
+.clerk-product-grid .card {
+    font-family: $fontFamily-sans;
+    
+    .card-img-container {
+        // Fixed aspect ratio for images to prevent layout shift
+        position: relative;
+        padding-bottom: 100%; // 1:1 aspect ratio
+        overflow: hidden;
+        background-color: stencilColor("color-greyLightest");
+    }
+
+    .card-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+
+// =============================================================================
+// LEGACY CLERK.IO WIDGET STYLES (if using native Clerk templates)
+// =============================================================================
+
+.c-clerkRecommendations__container {
+    // Ensure Clerk content is responsive
+    .clerk {
+        display: block;
+        width: 100%;
     }
 
     // Ensure proper spacing in Clerk product grid

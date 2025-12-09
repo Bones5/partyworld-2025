@@ -3,8 +3,7 @@
  *
  * Fetches product recommendations from Clerk.io and renders them
  * using BigCommerce's Storefront GraphQL API for full product data.
- * This allows using native theme product card markup while leveraging
- * Clerk's AI-powered recommendations.
+ * Uses DOM-based templates for maintainability and consistency with theme markup.
  */
 
 const GRAPHQL_ENDPOINT = '/graphql';
@@ -169,18 +168,175 @@ function calculateRatingPercentage(reviewSummary) {
 }
 
 /**
- * Generate product card HTML matching the theme's card.html template
+ * Get the product card template from the DOM
+ * @returns {HTMLTemplateElement|null}
+ */
+function getCardTemplate() {
+    return document.getElementById('clerk-product-card-template');
+}
+
+/**
+ * Render a product card using the DOM template
  * @param {Object} product - Product data from GraphQL
  * @param {Object} currency - Currency display settings
  * @param {Object} options - Rendering options
- * @returns {string} HTML string for the product card
+ * @returns {HTMLElement} Cloned and populated card element
  */
 function renderProductCard(product, currency, options = {}) {
     const {
         showRating = true,
         showBrand = true,
         showQuickView = true,
-        lazyload = true,
+    } = options;
+
+    const template = getCardTemplate();
+
+    // Fallback to string-based rendering if template not found
+    if (!template) {
+        return renderProductCardFallback(product, currency, options);
+    }
+
+    const clone = template.content.cloneNode(true);
+    const card = clone.querySelector('article.card');
+
+    const hasOptions = product.productOptions?.edges?.length > 0;
+    const isInStock = product.inventory?.isInStock !== false;
+    const stockLevel = product.inventory?.aggregated?.availableToSell ?? 999;
+    const prices = product.prices || {};
+    const hasSalePrice = prices.salePrice?.value && prices.salePrice.value < prices.price?.value;
+    const ratingPercentage = calculateRatingPercentage(product.reviewSummary);
+    const numberOfReviews = product.reviewSummary?.numberOfReviews || 0;
+
+    // Set card data attributes
+    card.setAttribute('data-test', `card-${product.entityId}`);
+    card.setAttribute('data-entity-id', product.entityId);
+    card.setAttribute('data-name', product.name);
+    card.setAttribute('data-product-brand', product.brand?.name || '');
+
+    // Image
+    const imageUrl = product.defaultImage?.url320wide || '/assets/img/ProductDefault.gif';
+    const imageAlt = product.defaultImage?.altText || product.name;
+    const img = card.querySelector('.card-image');
+    img.setAttribute('data-src', imageUrl);
+    img.setAttribute('alt', imageAlt);
+    img.setAttribute('title', product.name);
+    if (product.defaultImage?.url640wide) {
+        img.setAttribute('data-srcset', `${product.defaultImage.url320wide} 320w, ${product.defaultImage.url640wide} 640w`);
+    }
+
+    // Links
+    const figureLink = card.querySelector('.card-figure__link');
+    figureLink.setAttribute('href', product.path);
+    figureLink.setAttribute('aria-label', product.name);
+
+    const titleLink = card.querySelector('.card-title a');
+    titleLink.setAttribute('href', product.path);
+    titleLink.textContent = product.name;
+
+    // Badge
+    const badgeContainer = card.querySelector('.card-badge-container');
+    if (stockLevel === 0 || !isInStock) {
+        badgeContainer.innerHTML = `
+            <div class="product-badge product-badge--sold-out">
+                <span class="product-badge-text">Sold Out</span>
+            </div>
+        `;
+    } else if (hasSalePrice) {
+        badgeContainer.innerHTML = `
+            <div class="product-badge product-badge--sale">
+                <span class="product-badge-text">On Sale!</span>
+            </div>
+        `;
+    }
+
+    // Rating
+    const ratingEl = card.querySelector('.card-rating');
+    if (showRating && numberOfReviews > 0) {
+        ratingEl.hidden = false;
+        const ratingFill = ratingEl.querySelector('.rating-fill');
+        const ratingSpan = ratingEl.querySelector('.rating');
+        ratingFill.style.width = `${ratingPercentage}%`;
+        ratingSpan.setAttribute('aria-label', `Rated ${(ratingPercentage / 20).toFixed(1)} out of 5 stars`);
+    }
+
+    // Brand
+    const brandEl = card.querySelector('.card-brand');
+    if (showBrand && product.brand?.name) {
+        brandEl.hidden = false;
+        brandEl.textContent = product.brand.name;
+    }
+
+    // Price
+    const priceContainer = card.querySelector('.card-price');
+    if (hasSalePrice) {
+        priceContainer.innerHTML = `
+            <span class="price-section price-section--withoutTax non-sale-price--withoutTax">
+                <span data-product-non-sale-price-without-tax class="price price--non-sale">${formatPrice(prices.price, currency)}</span>
+            </span>
+            <span class="price-section price-section--withoutTax">
+                <span data-product-price-without-tax class="price price--withoutTax">${formatPrice(prices.salePrice, currency)}</span>
+            </span>
+        `;
+    } else if (prices.price?.value) {
+        priceContainer.innerHTML = `
+            <span class="price-section price-section--withoutTax">
+                <span data-product-price-without-tax class="price price--withoutTax">${formatPrice(prices.price, currency)}</span>
+            </span>
+        `;
+    }
+
+    // Actions (Quick view, Add to cart, Choose options)
+    const actionsContainer = card.querySelector('.card-figcaption-body');
+    let actionsHtml = '';
+
+    if (showQuickView) {
+        actionsHtml += `
+            <button type="button" class="button button--small card-figcaption-button quickview" 
+                    data-event-type="product-click" 
+                    data-product-id="${product.entityId}" 
+                    aria-label="Quick view - ${product.name}">
+                Quick view
+            </button>
+        `;
+    }
+
+    if (!hasOptions && isInStock && product.addToCartUrl) {
+        actionsHtml += `
+            <a href="${product.addToCartUrl}" 
+               data-event-type="product-click" 
+               data-button-type="add-cart" 
+               class="button button--small card-figcaption-button">
+                Add to Cart
+            </a>
+        `;
+    } else if (hasOptions) {
+        actionsHtml += `
+            <a href="${product.path}" 
+               data-event-type="product-click" 
+               class="button button--small card-figcaption-button" 
+               data-product-id="${product.entityId}">
+                Choose Options
+            </a>
+        `;
+    }
+
+    actionsContainer.innerHTML = actionsHtml;
+
+    return card;
+}
+
+/**
+ * Fallback string-based rendering if template is not in DOM
+ * @param {Object} product - Product data from GraphQL
+ * @param {Object} currency - Currency display settings
+ * @param {Object} options - Rendering options
+ * @returns {HTMLElement} Card element created from string
+ */
+function renderProductCardFallback(product, currency, options = {}) {
+    const {
+        showRating = true,
+        showBrand = true,
+        showQuickView = true,
     } = options;
 
     const hasOptions = product.productOptions?.edges?.length > 0;
@@ -234,7 +390,6 @@ function renderProductCard(product, currency, options = {}) {
     let priceHtml = '';
     if (hasSalePrice) {
         priceHtml = `
-            <span class="price-section price-section--withoutTax rrp-price--withoutTax" style="display: none;"></span>
             <span class="price-section price-section--withoutTax non-sale-price--withoutTax">
                 <span data-product-non-sale-price-without-tax class="price price--non-sale">${formatPrice(prices.price, currency)}</span>
             </span>
@@ -289,11 +444,7 @@ function renderProductCard(product, currency, options = {}) {
         ? `${product.defaultImage.url320wide} 320w, ${product.defaultImage.url640wide} 640w`
         : '';
 
-    const imgAttrs = lazyload
-        ? `class="card-image lazyload" data-src="${imageUrl}" ${imageSrcset ? `data-srcset="${imageSrcset}"` : ''} data-sizes="auto"`
-        : `class="card-image" src="${imageUrl}" ${imageSrcset ? `srcset="${imageSrcset}"` : ''}`;
-
-    return `
+    const htmlString = `
         <article class="card" 
                  data-test="card-${product.entityId}" 
                  data-event-type="list" 
@@ -307,7 +458,10 @@ function renderProductCard(product, currency, options = {}) {
                    aria-label="${escapeHtml(product.name)}"
                    data-event-type="product-click">
                     <div class="card-img-container">
-                        <img ${imgAttrs}
+                        <img class="card-image lazyload" 
+                             data-src="${imageUrl}" 
+                             ${imageSrcset ? `data-srcset="${imageSrcset}"` : ''} 
+                             data-sizes="auto"
                              alt="${escapeHtml(imageAlt)}"
                              title="${escapeHtml(product.name)}">
                     </div>
@@ -332,6 +486,11 @@ function renderProductCard(product, currency, options = {}) {
             </div>
         </article>
     `;
+
+    // Convert string to DOM element
+    const temp = document.createElement('div');
+    temp.innerHTML = htmlString.trim();
+    return temp.firstChild;
 }
 
 /**
@@ -417,7 +576,6 @@ async function initClerkRecommendations(container, context) {
 
     // Show loading state
     container.classList.add('is-loading');
-    container.innerHTML = '<div class="clerk-loading">Loading recommendations...</div>';
 
     try {
         // Call Clerk API
@@ -434,8 +592,11 @@ async function initClerkRecommendations(container, context) {
         const productIds = clerkResponse.result || [];
 
         if (productIds.length === 0) {
+            // Remove skeleton and hide section
             container.innerHTML = '';
             container.classList.remove('is-loading');
+            container.classList.add('is-empty');
+            container.closest('.c-clerkRecommendations')?.classList.add('is-empty');
             return;
         }
 
@@ -449,41 +610,46 @@ async function initClerkRecommendations(container, context) {
         if (products.length === 0) {
             container.innerHTML = '';
             container.classList.remove('is-loading');
+            container.classList.add('is-empty');
+            container.closest('.c-clerkRecommendations')?.classList.add('is-empty');
             return;
         }
 
-        // Render product cards
-        const cardsHtml = products.map(product => renderProductCard(product, currency, {
-            showRating: true,
-            showBrand: true,
-            showQuickView: context.showQuickView !== false,
-            lazyload: true,
-        })).join('');
+        // Create product grid
+        const productGrid = document.createElement('div');
+        productGrid.className = 'productGrid clerk-product-grid';
 
-        // Wrap in product grid
-        container.innerHTML = `
-            <div class="productGrid clerk-product-grid">
-                ${cardsHtml}
-            </div>
-        `;
+        // Render product cards using template
+        products.forEach(product => {
+            const cardEl = renderProductCard(product, currency, {
+                showRating: true,
+                showBrand: true,
+                showQuickView: context.showQuickView !== false,
+            });
+            productGrid.appendChild(cardEl);
+        });
+
+        // Remove skeleton, add product grid
+        const skeletonGrid = container.querySelector('.clerk-skeleton-grid');
+        if (skeletonGrid) {
+            skeletonGrid.remove();
+        }
+        container.appendChild(productGrid);
 
         container.classList.remove('is-loading');
         container.classList.add('is-loaded');
+        container.closest('.c-clerkRecommendations')?.classList.add('is-loaded');
 
         // Trigger lazysizes if available
         if (window.lazySizes) {
             window.lazySizes.init();
-        }
-
-        // Re-bind quick view handlers if available
-        if (window.stencilUtils) {
-            // Quick view functionality will be handled by global event delegation
         }
     } catch (error) {
         console.error('Error loading Clerk recommendations:', error);
         container.innerHTML = '';
         container.classList.remove('is-loading');
         container.classList.add('is-error');
+        container.closest('.c-clerkRecommendations')?.classList.add('is-error');
     }
 }
 

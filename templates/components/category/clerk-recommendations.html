@@ -29,7 +29,23 @@
          data-clerk-type="category"
          data-clerk-category="{{default category_id category.id}}"
          data-clerk-limit="{{default limit 8}}">
-      {{!-- Products rendered via JavaScript using GraphQL data --}}
+      {{!-- Skeleton loader to reserve space and minimize layout shift --}}
+      <div class="productGrid clerk-product-grid clerk-skeleton-grid" aria-hidden="true">
+        {{#for 1 4}}
+        <article class="card card--skeleton">
+          <figure class="card-figure">
+            <div class="card-img-container">
+              <div class="skeleton skeleton--image"></div>
+            </div>
+          </figure>
+          <div class="card-body">
+            <div class="skeleton skeleton--text skeleton--brand"></div>
+            <div class="skeleton skeleton--text skeleton--title"></div>
+            <div class="skeleton skeleton--text skeleton--price"></div>
+          </div>
+        </article>
+        {{/for}}
+      </div>
     </div>
   </section>
 {{/all}}

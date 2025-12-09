@@ -35,7 +35,55 @@
          data-clerk-container
          data-clerk-type="{{default type 'popular'}}"
          data-clerk-limit="{{default limit 8}}">
-      {{!-- Products rendered via JavaScript using GraphQL data --}}
+      {{!-- Skeleton loader to reserve space and minimize layout shift --}}
+      <div class="productGrid clerk-product-grid clerk-skeleton-grid" aria-hidden="true">
+        {{#for 1 (default limit 8)}}
+        <article class="card card--skeleton">
+          <figure class="card-figure">
+            <div class="card-img-container">
+              <div class="skeleton skeleton--image"></div>
+            </div>
+          </figure>
+          <div class="card-body">
+            <div class="skeleton skeleton--text skeleton--brand"></div>
+            <div class="skeleton skeleton--text skeleton--title"></div>
+            <div class="skeleton skeleton--text skeleton--price"></div>
+          </div>
+        </article>
+        {{/for}}
+      </div>
     </div>
   </section>
+
+  {{!-- Client-side template for product cards --}}
+  <template id="clerk-product-card-template">
+    <article class="card" data-test="" data-event-type="list" data-entity-id="" data-name="" data-product-brand="">
+      <figure class="card-figure">
+        <div class="card-badge-container"></div>
+        <a href="" class="card-figure__link" aria-label="" data-event-type="product-click">
+          <div class="card-img-container">
+            <img class="card-image lazyload" data-src="" data-srcset="" data-sizes="auto" alt="" title="">
+          </div>
+        </a>
+        <figcaption class="card-figcaption">
+          <div class="card-figcaption-body"></div>
+        </figcaption>
+      </figure>
+      <div class="card-body">
+        <p class="card-text card-rating" data-test-info-type="productRating" hidden>
+          <span class="rating--small">
+            <span class="rating" role="img" aria-label="">
+              <span class="rating-background"></span>
+              <span class="rating-fill" style="width: 0%;"></span>
+            </span>
+          </span>
+        </p>
+        <p class="card-text card-brand" data-test-info-type="brandName" hidden></p>
+        <h3 class="card-title">
+          <a href="" data-event-type="product-click"></a>
+        </h3>
+        <div class="card-text card-price" data-test-info-type="price"></div>
+      </div>
+    </article>
+  </template>
 {{/all}}
