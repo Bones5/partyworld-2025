@@ -3,13 +3,33 @@
   Usage:
     {{> components/common/trustpilot-badge}} - defaults to light theme
     {{> components/common/trustpilot-badge theme="dark"}} - for dark backgrounds
+  
+  Widget only loads when show_trustpilot_widget is enabled in Theme Editor.
+  Enable on production only. Fallback shows when disabled or if widget fails.
 --}}
-<div class="trustpilot-widget" 
-     data-locale="en-GB" 
-     data-template-id="5419b637fa0340045cd0c936" 
-     data-businessunit-id="ZNnJQCWBRTuiBQgn" 
-     data-style-height="24px" 
-     data-style-width="100%" 
-     data-theme="{{default theme 'light'}}">
-    <a href="https://uk.trustpilot.com/review/partyworld.ie" target="_blank" rel="noopener">Trustpilot</a>
+<div class="trustpilot-badge-wrapper">
+    {{#if theme_settings.show_trustpilot_widget}}
+    {{!-- Trustpilot widget (enable in Theme Editor for production) --}}
+    <div class="trustpilot-widget" 
+         data-locale="en-IE" 
+         data-template-id="5419b637fa0340045cd0c936" 
+         data-businessunit-id="ZNnJQCWBRTuiBQgn" 
+         data-style-height="24px" 
+         data-style-width="100%" 
+         data-theme="{{default theme 'light'}}">
+        <a href="https://uk.trustpilot.com/review/partyworld.ie" target="_blank" rel="noopener">Trustpilot</a>
+    </div>
+    {{/if}}
+    {{!-- Fallback: Always present, hidden via CSS when widget loads successfully --}}
+    <a class="trustpilot-fallback" href="https://uk.trustpilot.com/review/partyworld.ie" target="_blank" rel="noopener">
+        <span class="trustpilot-fallback__text">Excellent</span>
+        <span class="trustpilot-fallback__stars">
+            <svg class="trustpilot-fallback__star icon" aria-hidden="true"><use href="{{cdn 'img/icon-sprite.svg'}}#icon-StarIcon"></use></svg>
+            <svg class="trustpilot-fallback__star icon" aria-hidden="true"><use href="{{cdn 'img/icon-sprite.svg'}}#icon-StarIcon"></use></svg>
+            <svg class="trustpilot-fallback__star icon" aria-hidden="true"><use href="{{cdn 'img/icon-sprite.svg'}}#icon-StarIcon"></use></svg>
+            <svg class="trustpilot-fallback__star icon" aria-hidden="true"><use href="{{cdn 'img/icon-sprite.svg'}}#icon-StarIcon"></use></svg>
+            <svg class="trustpilot-fallback__star icon" aria-hidden="true"><use href="{{cdn 'img/icon-sprite.svg'}}#icon-StarIcon"></use></svg>
+        </span>
+        <span class="trustpilot-fallback__text">17k reviews</span>
+    </a>
 </div>
