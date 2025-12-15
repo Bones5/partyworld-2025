@@ -14,6 +14,7 @@ vendor/bundle
 
 # Environment secrets (configs are safe to commit)
 environments/*.secrets.json
+environments/*.secrets
 
 # Image transfer working directories
 scripts/image-transfer/downloaded-images/

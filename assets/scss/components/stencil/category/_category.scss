@@ -10,6 +10,67 @@
     width: 100%;
 }
 
+// Category Intro (from metafield)
+// -----------------------------------------------------------------------------
+// Short intro text displayed below the category heading
+// Set via BigCommerce API: metafield namespace="custom", key="intro"
+
+.category-intro {
+    font-size: fontSize("base");
+    line-height: lineHeight("base");
+    color: stencilColor("color-textBase");
+    margin-bottom: spacing("double");
+    max-width: remCalc(800px);
+
+    p {
+        margin-bottom: spacing("single");
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+// Category Description (SEO content at bottom)
+// -----------------------------------------------------------------------------
+// Full description moved to bottom of page for SEO purposes
+
+.category-description {
+    background-color: stencilColor("color-greyLightest");
+    padding: spacing("double") + spacing("single") 0;
+    margin-top: spacing("double") + spacing("double");
+
+    .container {
+        max-width: remCalc(900px);
+        margin: 0 auto;
+        padding: 0 spacing("single");
+    }
+
+    h2, h3, h4 {
+        margin-bottom: spacing("single");
+    }
+
+    p {
+        font-size: fontSize("base");
+        line-height: lineHeight("larger");
+        margin-bottom: spacing("single");
+        color: stencilColor("color-textSecondary");
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    ul, ol {
+        margin-bottom: spacing("single");
+        padding-left: spacing("single") + spacing("half");
+    }
+
+    li {
+        margin-bottom: spacing("half");
+    }
+}
+
 // Category Bestsellers section
 // -----------------------------------------------------------------------------
 
