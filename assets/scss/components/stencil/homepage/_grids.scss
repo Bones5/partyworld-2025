@@ -1,4 +1,11 @@
 // Homepage Theme & Celebrate grids
+
+// Section wrappers with increased vertical spacing
+.c-themeGrid,
+.c-celebrateGrid {
+    margin-bottom: spacing("double") + spacing("double");
+}
+
 .c-themeGrid__items {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -20,6 +27,17 @@
     border-radius: 50%;
     object-fit: cover;
     display: block;
+}
+
+// Celebrate card body and title
+.c-celebrateCard__body {
+    text-align: center;
+    padding: spacing("half") 0;
+}
+
+.c-celebrateCard__title {
+    margin: 0;
+    text-align: center;
 }
 
 // Placeholder colored discs for celebrate cards without images
@@ -66,6 +84,7 @@
     align-items: center;
     justify-content: space-between;
     gap: spacing("half");
+    padding-bottom: spacing("single");
 }
 
 .c-celebrateGrid__heading {
@@ -74,4 +93,11 @@
 
 .c-celebrateGrid__viewAll {
     text-decoration: none;
-}
+    font-family: "Inter";
+    letter-spacing: 0%;
+    font-weight: $fontWeight-semibold;
+    font-size: 20px;
+    text-transform: uppercase;
+    padding: spacing("half") spacing("single");
+    border-radius: 8px;
+}   

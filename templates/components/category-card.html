@@ -47,6 +47,9 @@
         loading="lazy"
         data-sizes="auto"
       />
+    {{else}}
+      {{!-- Colorful placeholder when no image --}}
+      <span class="c-categoryCard__placeholder" aria-hidden="true"></span>
     {{/if}}
   </a>
   <div class="c-categoryCard__body">

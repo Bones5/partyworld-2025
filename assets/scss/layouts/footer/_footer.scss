@@ -16,9 +16,11 @@
 .footer {
     background-color: stencilColor("color-greyDarkest");
     border-top: none;
-    padding: spacing("double") 0;
+    padding: 0;
+    margin:0;
     position: relative;
     transform: translateZ(0); // 3
+
 }
 
 .footer-title-sr-only {
@@ -30,13 +32,12 @@
     width: 1px;
 }
 
-// Footer content wrapper
+// Footer content wrapper (legacy - kept for backwards compatibility)
 // -----------------------------------------------------------------------------
 
 .footer-content {
     display: flex;
     flex-direction: column;
-    gap: spacing("double");
 }
 
 // Newsletter section
@@ -46,14 +47,8 @@
     background-color: stencilColor("color-primary");
     border-bottom: none;
     color: stencilColor("color-white");
-    margin: 0 calc(-1 * #{container("padding")});
-    margin-bottom: spacing("single");
-    padding: spacing("double") container("padding");
+    padding: spacing("double") 0;
     text-align: center;
-
-    @include breakpoint("medium") {
-        margin-bottom: 0;
-    }
 
     // Ensure summary text inherits white color
     .footer-newsletter-summary {
@@ -73,11 +68,14 @@
 // -----------------------------------------------------------------------------
 
 .footer-links-row {
-    @include grid-row($behavior: nest);
+    background-color: stencilColor("color-greyDarkest");
     border-bottom: 1px solid stencilColor("color-greyLight");
+    padding: spacing("double") 0;
+}
+
+.footer-links-row__inner {
+    @include grid-row($behavior: nest);
     font-size: 0; // 1
-    margin-bottom: spacing("double");
-    padding-bottom: spacing("double");
 }
 
 .footer-links-col {
@@ -213,7 +211,7 @@
 
 .footer-info-heading {
     color: stencilColor("color-greyLighter");
-    font-size: fontSize("base");
+    font-size: fontSize("large");
     font-weight: fontWeight("bold");
     margin-bottom: spacing("half");
     text-transform: inherit;
@@ -278,14 +276,15 @@
     background-color: stencilColor("color-greyDarker");
     border-bottom: none;
     color: stencilColor("color-greyLighter");
+    padding: spacing("double") 0;
+    text-align: center;
+}
+
+.footer-trust-social__inner {
     display: flex;
     flex-direction: column;
     gap: spacing("single");
     justify-content: center;
-    margin: 0 calc(-1 * #{container("padding")});
-    margin-bottom: spacing("double");
-    padding: spacing("double") container("padding");
-    text-align: center;
 
     @include breakpoint("medium") {
         flex-direction: row;
@@ -308,8 +307,10 @@
 // -----------------------------------------------------------------------------
 
 .footer-legal {
+    background-color: stencilColor("color-greyDarkest");
     color: stencilColor("color-textSecondary");
     font-size: fontSize("tiny");
+    padding: spacing("single") 0;
     text-align: center;
 
     @include breakpoint("medium") {
@@ -418,7 +419,7 @@
     align-items: center;
     color: stencilColor("color-textBase");
     display: flex;
-    font-size: fontSize("smallest");
+    font-size: remCalc(16);
     gap: spacing("quarter");
     text-decoration: none;
 

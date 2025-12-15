@@ -14,25 +14,89 @@
     {{/if}}
     {{{region name="home_customer_reviews"}}}
     <div class="c-customerReviewGrid__items">
-        {{#each reviews}}
-            <article class="c-customerReviewGrid__item c-testimonial">
-                <div class="c-testimonial__stars" aria-label="{{rating}} out of 5 stars">
-                    {{#times rating}}
-                        <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true">
-                            <use href="#icon-star"></use>
-                        </svg>
-                    {{/times}}
-                    {{#times (subtract 5 rating)}}
-                        <svg class="c-testimonial__star c-testimonial__star--empty" width="16" height="16" aria-hidden="true">
-                            <use href="#icon-star-empty"></use>
-                        </svg>
-                    {{/times}}
-                </div>
-                <blockquote class="c-testimonial__body">
-                    {{text}}
-                </blockquote>
-                <cite class="c-testimonial__author">— {{author}}</cite>
-            </article>
-        {{/each}}
+        {{!-- Mock reviews - all 5 stars --}}
+        <article class="c-customerReviewGrid__item c-testimonial">
+            <div class="c-testimonial__stars" aria-label="5 out of 5 stars">
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+            </div>
+            <blockquote class="c-testimonial__body">
+                Absolutely fantastic service! The balloons arrived on time and looked even better than expected. Will definitely order again for our next party!
+            </blockquote>
+            <cite class="c-testimonial__author">— Sarah M., Dublin</cite>
+        </article>
+
+        <article class="c-customerReviewGrid__item c-testimonial">
+            <div class="c-testimonial__stars" aria-label="5 out of 5 stars">
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+            </div>
+            <blockquote class="c-testimonial__body">
+                Best party supplies shop in Ireland! Great selection, competitive prices, and the staff are so helpful. Made my daughter's birthday unforgettable.
+            </blockquote>
+            <cite class="c-testimonial__author">— Michael O., Cork</cite>
+        </article>
+
+        <article class="c-customerReviewGrid__item c-testimonial">
+            <div class="c-testimonial__stars" aria-label="5 out of 5 stars">
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+            </div>
+            <blockquote class="c-testimonial__body">
+                Quick delivery and everything was packaged perfectly. The themed decorations were a huge hit at the wedding. Highly recommend Partyworld!
+            </blockquote>
+            <cite class="c-testimonial__author">— Emma K., Galway</cite>
+        </article>
+
+        <article class="c-customerReviewGrid__item c-testimonial">
+            <div class="c-testimonial__stars" aria-label="5 out of 5 stars">
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+            </div>
+            <blockquote class="c-testimonial__body">
+                I've been shopping here for years and they never disappoint. Amazing variety of costumes and decorations for every occasion. Top quality!
+            </blockquote>
+            <cite class="c-testimonial__author">— David L., Limerick</cite>
+        </article>
+
+        <article class="c-customerReviewGrid__item c-testimonial">
+            <div class="c-testimonial__stars" aria-label="5 out of 5 stars">
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+            </div>
+            <blockquote class="c-testimonial__body">
+                The Halloween decorations were incredible! So many options to choose from. Our house was the talk of the neighbourhood. Thank you Partyworld!
+            </blockquote>
+            <cite class="c-testimonial__author">— Aoife B., Waterford</cite>
+        </article>
+
+        <article class="c-customerReviewGrid__item c-testimonial">
+            <div class="c-testimonial__stars" aria-label="5 out of 5 stars">
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+                <svg class="c-testimonial__star c-testimonial__star--filled" width="16" height="16" aria-hidden="true"><use href="#icon-star"></use></svg>
+            </div>
+            <blockquote class="c-testimonial__body">
+                Ordered last minute for a surprise party and they delivered next day! The tableware and banners were perfect. Excellent customer service too.
+            </blockquote>
+            <cite class="c-testimonial__author">— Conor R., Belfast</cite>
+        </article>
     </div>
 </section>

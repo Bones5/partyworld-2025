@@ -1,0 +1,80 @@
+// =============================================================================
+// HEADER LOGO SVG STYLES
+// =============================================================================
+//
+// Styles for the animated SVG logo component.
+// The SVG has embedded CSS for letter hover animations.
+// These styles handle the container, sizing, border and shadow.
+//
+// -----------------------------------------------------------------------------
+
+// Brand red color for logo border
+$logo-border-color: stencilColor("button--primary-backgroundColor") !default;
+$logo-shadow-opacity: 0.15;
+
+.header-logo-svg {
+    display: block;
+    max-height: remCalc($header-height) - $header-logo-marginVertical * 2;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    
+    // Maintain aspect ratio (1:1 square logo)
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    
+    // Brand red border
+    border: 3px solid $logo-border-color;
+    border-radius: 50%;
+    
+    // 15% drop shadow
+    box-shadow: 0 4px 12px rgba(0, 0, 0, $logo-shadow-opacity);
+    
+    // Smooth transitions for hover effects
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    
+    @include breakpoint("medium") {
+        max-height: none;
+        max-width: 100%;
+        height: get-height(stencilString("logo_size"));
+        width: auto;
+        border-width: 4px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, $logo-shadow-opacity);
+    }
+    
+    // Enhanced hover state
+    .header-logo__link--svg:hover & {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, $logo-shadow-opacity + 0.05);
+        transform: translateY(-2px);
+    }
+}
+
+// Fallback image styling
+.header-logo-svg-fallback {
+    display: block;
+    max-height: remCalc($header-height) - $header-logo-marginVertical * 2;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    border: 3px solid $logo-border-color;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, $logo-shadow-opacity);
+    
+    @include breakpoint("medium") {
+        max-height: none;
+        max-width: 100%;
+        border-width: 4px;
+    }
+}
+
+// Container for SVG logo link
+.header-logo__link--svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: inherit;
+    
+    // Ensure link is clickable
+    position: relative;
+    z-index: 1;
+}

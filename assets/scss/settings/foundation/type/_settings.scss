@@ -88,8 +88,8 @@ $header-letter-spacing:         letterSpacing("small");
 
 // We use these to control header font sizes
 $h1-font-size:                  fontSize("largest");
-$h2-font-size:                  fontSize("larger");
-$h3-font-size:                  fontSize("large");
+$h2-font-size:                  remCalc(36);
+$h3-font-size:                  remCalc(28);
 $h4-font-size:                  fontSize("small");
 $h5-font-size:                  fontSize("smaller");
 $h6-font-size:                  fontSize("smallest");

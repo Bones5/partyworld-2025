@@ -12,7 +12,7 @@
 .c-blogTeaser__header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     flex-wrap: wrap;
     gap: spacing("half");
     margin-bottom: spacing("single");
@@ -20,16 +20,13 @@
 
 .c-blogTeaser__heading {
     font-family: $fontFamily-headings;
-    font-size: $fontSize-larger;
+    font-size: $h2-font-size;
     line-height: $lineHeight-larger;
-    font-weight: $fontWeight-bold;
+    font-weight: fontWeight("normal");
+    text-transform: uppercase;
     margin: 0;
     color: $color-textBase;
-
-    @include breakpoint("medium") {
-        font-size: $fontSize-largest;
-        line-height: $lineHeight-largest;
-    }
+    text-align: center;
 }
 
 .c-blogTeaser__viewAll {
@@ -112,16 +109,23 @@
 }
 
 .c-blogTeaser__cta {
-    font-size: $fontSize-smaller;
+    display: block;
+    width: 100%;
+    font-size: $fontSize-base;
     font-weight: $fontWeight-semibold;
-    color: $color-primary;
+    color: $color-white;
+    background: $color-primary;
     text-decoration: none;
-    display: inline-block;
+    text-align: center;
+    padding: spacing("half") spacing("single");
+    border-radius: 4px;
     margin-top: auto;
+    transition: background-color 0.2s ease;
 
     &:hover,
     &:focus {
-        color: $color-primaryDark;
-        text-decoration: underline;
+        background: $color-primaryDark;
+        color: $color-white;
+        text-decoration: none;
     }
 }

@@ -11,17 +11,20 @@
 {{/if}}
 <footer class="footer" role="contentinfo">
     <h2 class="footer-title-sr-only">{{lang 'footer.title'}}</h2>
-    <div class="container">
-        <div class="footer-content">
-            {{!-- Newsletter Section --}}
-            {{#if settings.show_newsletter_box}}
-            <section class="footer-newsletter" data-section-type="newsletterSubscription">
-                {{> components/common/subscription-form}}
-            </section>
-            {{/if}}
+    
+    {{!-- Newsletter Section (full-width background) --}}
+    {{#if settings.show_newsletter_box}}
+    <section class="footer-newsletter" data-section-type="newsletterSubscription">
+        <div class="container">
+            {{> components/common/subscription-form}}
+        </div>
+    </section>
+    {{/if}}
 
-            {{!-- Footer Links Row --}}
-            <section class="footer-links-row">
+    {{!-- Footer Links Row --}}
+    <section class="footer-links-row">
+        <div class="container">
+            <div class="footer-links-row__inner">
                 {{!-- About Partyworld --}}
                 <article class="footer-links-col footer-links-col--about" data-section-type="footer-webPages">
                     <h3 class="footer-info-heading">{{lang 'footer.about_partyworld'}}</h3>
@@ -74,10 +77,14 @@
                         <li><a href="{{urls.brands}}">{{lang 'common.view_all'}}</a></li>
                     </ul>
                 </article>
-            </section>
+            </div>
+        </div>
+    </section>
 
-            {{!-- Footer Trust & Social Row --}}
-            <div class="footer-trust-social">
+    {{!-- Footer Trust & Social Row (full-width background) --}}
+    <div class="footer-trust-social">
+        <div class="container">
+            <div class="footer-trust-social__inner">
                 {{!-- Our Reviews --}}
                 <div class="footer-trust-col footer-trust-col--reviews">
                     <h3 class="footer-info-heading">{{lang 'footer.our_reviews'}}</h3>
@@ -104,16 +111,18 @@
                 </div>
                 <!-- {{/if}} -->
             </div>
+        </div>
+    </div>
 
-            {{!-- Copyright & Legal --}}
-            <div class="footer-legal">
-                {{#if theme_settings.show_copyright_footer}}
-                    <p class="footer-copyright-text">&copy; {{moment format="YYYY"}} {{settings.store_name}}</p>
-                {{/if}}
-                {{#if theme_settings.show_powered_by}}
-                    <p class="footer-powered-by">{{lang 'footer.powered_by'}} <a href="https://www.bigcommerce.com?utm_source=merchant&amp;utm_medium=poweredbyBC" rel="nofollow">BigCommerce</a></p>
-                {{/if}}
-            </div>
+    {{!-- Copyright & Legal --}}
+    <div class="footer-legal">
+        <div class="container">
+            {{#if theme_settings.show_copyright_footer}}
+                <p class="footer-copyright-text">&copy; {{moment format="YYYY"}} {{settings.store_name}}</p>
+            {{/if}}
+            {{#if theme_settings.show_powered_by}}
+                <p class="footer-powered-by">{{lang 'footer.powered_by'}} <a href="https://www.bigcommerce.com?utm_source=merchant&amp;utm_medium=poweredbyBC" rel="nofollow">BigCommerce</a></p>
+            {{/if}}
         </div>
     </div>
 </footer>

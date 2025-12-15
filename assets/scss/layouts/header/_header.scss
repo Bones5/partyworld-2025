@@ -279,8 +279,11 @@
     }
 
     .contact-bar-link {
+        display: inline-flex;
+        align-items: center;
+        gap: spacing("quarter");
         color: inherit;
-        text-decoration: none;
+        text-decoration: underline;
         font-family: stencilFontFamily("body-font"); // Inter
         font-weight: 700;
         text-transform: none;

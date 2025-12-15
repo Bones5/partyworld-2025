@@ -36,7 +36,7 @@ $input-border-color:                stencilColor("input-border-color");
 $input-focus-border-color:          stencilColor("input-border-color-active");
 $input-border-style:                solid;
 $input-border-width:                1px;
-$input-border-radius:               $global-radius;
+$input-border-radius:               5px;
 $input-disabled-bg:                 stencilColor("input-disabled-bg");
 $input-disabled-cursor:             not-allowed;
 $input-box-shadow:                  null;

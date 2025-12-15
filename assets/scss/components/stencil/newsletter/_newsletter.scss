@@ -13,17 +13,39 @@
 
 .newsletter {
     padding: $newsletter-section-padding 0;
+    text-align: center;
+}
+
+// Letter icon in white circle
+// -----------------------------------------------------------------------------
+.newsletter-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: remCalc(70px);
+    height: remCalc(70px);
+    margin: 0 auto spacing("single");
+    background-color: $color-white;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    svg {
+        width: remCalc(36px);
+        height: remCalc(36px);
+        fill: stencilColor("color-primary");
+    }
 }
 
 .newsletter-heading {
-    color: $newsletter-heading-fontColor;
-    font-size: fontSize("larger");
+    color: $color-white;
+    text-transform: uppercase;
+    font-size: fontSize("largest");
     line-height: $lineHeight-larger;
     margin-bottom: spacing("half");
 }
 
 .newsletter-description {
-    color: $newsletter-text-color;
+    color: $color-white;
     font-size: fontSize("base");
     line-height: $lineHeight-base;
     margin-bottom: spacing("single");
@@ -59,10 +81,9 @@
     display: flex; // 1
     flex-wrap: nowrap;
     gap: $newsletter-form-gap; // 2
-
-    @include breakpoint("medium") {
-        max-width: remCalc(400px);
-    }
+    justify-content: center;
+    margin: 0 auto;
+    max-width: remCalc(400px);
 }
 
 .newsletter-input {
@@ -116,26 +137,29 @@
 
 .newsletter-button {
     align-items: center;
-    background-color: stencilColor("button--primary-backgroundColor");
+    background-color: stencilColor("color-textBase");
     border: 0;
-    border-radius: $newsletter-button-border-radius;
-    color: stencilColor("button--primary-color");
+    border-radius: 5px;
+    color: $color-white;
     cursor: pointer;
     display: flex;
     flex-shrink: 0;
-    height: $newsletter-button-height;
+    font-size: fontSize("small");
+    font-weight: fontWeight("semibold");
+    height: auto;
     justify-content: center;
-    padding: 0;
+    padding: spacing("half") spacing("single");
+    text-transform: uppercase;
     transition: background-color 0.15s ease;
-    width: $newsletter-button-width;
+    width: auto;
 
     &:hover {
-        background-color: stencilColor("button--primary-backgroundColorHover");
+        background-color: lighten(stencilColor("color-textBase"), 15%);
     }
 
     &:focus {
-        background-color: stencilColor("button--primary-backgroundColorActive");
-        outline: 2px solid stencilColor("button--primary-backgroundColorHover");
+        background-color: lighten(stencilColor("color-textBase"), 10%);
+        outline: 2px solid stencilColor("color-textBase");
         outline-offset: 2px;
     }
 

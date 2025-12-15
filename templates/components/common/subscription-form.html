@@ -1,4 +1,9 @@
 <div class="newsletter" data-newsletter-form>
+    <div class="newsletter-icon">
+        <svg aria-hidden="true" focusable="false">
+            <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-envelope"/>
+        </svg>
+    </div>
     <h3 class="newsletter-heading">{{lang 'newsletter.subscribe'}}</h3>
     <p class="newsletter-description">{{lang 'newsletter.subscribe_intro'}}</p>
 
@@ -25,9 +30,7 @@
                     <button class="newsletter-button"
                             type="submit"
                             aria-label="{{lang 'newsletter.subscribe_submit'}}">
-                        <svg aria-hidden="true" focusable="false">
-                            <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-chevron-right"/>
-                        </svg>
+                        Subscribe
                     </button>
                 </div>
                 <span class="newsletter-message" id="newsletter-message" role="alert" aria-live="polite" data-newsletter-message></span>
