@@ -418,6 +418,12 @@ function renderProductCard(product, currency, options = {}) {
 
     actionsContainer.innerHTML = actionsHtml;
 
+    // CTA button link
+    const ctaLink = card.querySelector('.card-cta');
+    if (ctaLink) {
+        ctaLink.setAttribute('href', product.path);
+    }
+
     return card;
 }
 

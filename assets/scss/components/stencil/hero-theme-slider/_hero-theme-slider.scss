@@ -57,8 +57,9 @@
 .heroThemeSlider-card {
     position: relative;
     overflow: hidden;
-    border-radius: $card-figure-borderRadius;
+    border-radius: 20px;
     background: $color-greyLightest;
+    box-shadow: 0 4px 12px rgba($color-black, 0.1);
     text-align: center;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
@@ -125,13 +126,17 @@
     display: inline-block;
     font-size: $fontSize-small;
     font-weight: $fontWeight-semibold;
-    color: $color-primary;
+    background-color: $color-primary;
+    color: $color-white;
+    padding: spacing("half") spacing("half");
+    border-radius: 5px;
+    width: 100%;
     text-decoration: none;
     transition: color 0.2s ease;
+    text-transform: uppercase;
 
     &:hover,
     &:focus {
-        color: $color-primaryDark;
         text-decoration: underline;
     }
 }
@@ -145,7 +150,7 @@
     z-index: 10;
     width: remCalc(44px);
     height: remCalc(44px);
-    background: rgba($color-white, 0.9);
+        background-color: $color-grey;
     border: 1px solid $color-greyLight;
     border-radius: 50%;
     cursor: pointer;
@@ -159,14 +164,15 @@
     &:focus {
         outline: 2px solid $color-primary;
         outline-offset: 2px;
-        background: $color-white;
+        color: $color-white;
     }
 
     &::before {
         font-family: inherit;
         font-size: $fontSize-base;
         line-height: 1;
-        color: $color-textBase;
+        color: $color-white;
+        height: 100%;
     }
 
     &.slick-disabled {
@@ -244,19 +250,16 @@
 
 // Section wrapper with optional heading
 .heroThemeSlider-section {
-    margin-bottom: spacing("double");
+    margin-bottom: spacing("double") + spacing("double");
 }
 
 .heroThemeSlider-section__heading {
     font-family: $fontFamily-headings;
-    font-size: $fontSize-larger;
-    font-weight: $fontWeight-bold;
     text-align: center;
     margin: 0 0 spacing("single");
     color: $color-textBase;
 
     @include breakpoint("medium") {
-        font-size: $fontSize-largest;
         margin-bottom: spacing("single") + spacing("half");
     }
 }

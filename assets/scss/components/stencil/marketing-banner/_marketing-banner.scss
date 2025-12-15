@@ -14,7 +14,7 @@
     background: stencilColor("color-greyLightest");
     overflow: hidden;
     text-align: center;
-    margin-bottom: spacing("double");
+    margin-bottom: spacing("double") + spacing("double");
 
     @include breakpoint("small") {
         min-height: remCalc(350px);

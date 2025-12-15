@@ -7,28 +7,36 @@
 // -----------------------------------------------------------------------------
 
 .c-categoryGrid {
-    margin-bottom: spacing("double");
+    margin-bottom: spacing("double") + spacing("double");
 }
 
 .c-categoryGrid__heading {
     font-family: $fontFamily-headings;
-    font-size: $fontSize-larger;
+    font-size: $h2-font-size;
     line-height: $lineHeight-larger;
-    font-weight: $fontWeight-bold;
+    font-weight: fontWeight("normal");
+    text-transform: uppercase;
     margin: 0 0 spacing("single");
     text-align: center;
-
-    @include breakpoint("medium") {
-        font-size: $fontSize-largest;
-        line-height: $lineHeight-largest;
-        text-align: left;
-    }
 }
 
 .c-categoryGrid__items {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: spacing("single");
+
+    // 5-column variant (default for shop by category)
+    @include breakpoint("small") {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    @include breakpoint("medium") {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    @include breakpoint("large") {
+        grid-template-columns: repeat(5, 1fr);
+    }
 
     // 3-column variant
     &.c-categoryGrid__items--col3 {
@@ -41,7 +49,7 @@
         }
     }
 
-    // 4-column variant (default)
+    // 4-column variant
     &.c-categoryGrid__items--col4 {
         @include breakpoint("small") {
             grid-template-columns: repeat(2, 1fr);
@@ -53,6 +61,21 @@
 
         @include breakpoint("large") {
             grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    // 5-column variant
+    &.c-categoryGrid__items--col5 {
+        @include breakpoint("small") {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        @include breakpoint("medium") {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        @include breakpoint("large") {
+            grid-template-columns: repeat(5, 1fr);
         }
     }
 }

@@ -1,25 +1,21 @@
 <div class="contact-bar">
     {{#if settings.phone_number}}
         <a class="contact-bar-link contact-bar-link--phone" href="tel:{{settings.phone_number}}">
-            <svg class="icon" aria-hidden="true" focusable="false"><use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-Phone"></use></svg>
-            {{settings.phone_number}}
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-Phone"></use></svg>{{settings.phone_number}}
         </a>
     {{else}}
         <a class="contact-bar-link contact-bar-link--phone" href="tel:051334602">
-            <svg class="icon" aria-hidden="true" focusable="false"><use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-Phone"></use></svg>
-            051 334 602
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-Phone"></use></svg>051 334 602
         </a>
     {{/if}}
 
     {{#if settings.store_email}}
         <a class="contact-bar-link contact-bar-link--email" href="mailto:{{settings.store_email}}">
-            <svg class="icon" aria-hidden="true" focusable="false"><use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-EnvelopeSimple"></use></svg>
-            {{settings.store_email}}
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-EnvelopeSimple"></use></svg>{{settings.store_email}}
         </a>
     {{else}}
         <a class="contact-bar-link contact-bar-link--email" href="mailto:hello@partyworld.ie">
-            <svg class="icon" aria-hidden="true" focusable="false"><use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-EnvelopeSimple"></use></svg>
-            hello@partyworld.ie
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-EnvelopeSimple"></use></svg>hello@partyworld.ie
         </a>
     {{/if}}
 </div>

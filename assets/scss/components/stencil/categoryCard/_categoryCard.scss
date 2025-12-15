@@ -10,9 +10,11 @@
     flex-direction: column;
     background: $color-white;
     border: 1px solid stencilColor("input-border-color");
-    text-align: left;
+    text-align: center;
     position: relative;
     transition: box-shadow 0.2s ease;
+    padding: spacing("half");
+    border-radius: 20px;
 
     &:hover {
         box-shadow: 0 4px 12px rgba($color-black, 0.12);
@@ -21,14 +23,16 @@
 
 .c-categoryCard__media {
     width: 100%;
-    aspect-ratio: 4 / 2.5; // approximate Figma ratio
     overflow: hidden;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        width: 200px;
+        height: 200px;   
+        padding: 1em;    
+        display: block;
         transition: transform 0.3s ease;
     }
 
@@ -45,24 +49,28 @@
 
 .c-categoryCard__body {
     padding: $spacing-single;
+    text-align: center;
 }
 
 .c-categoryCard__title {
-    font-size: $fontSize-small;
     line-height: $lineHeight-small;
-    font-weight: $fontWeight-semibold;
-    margin: 0 0 $spacing-third;
+    margin: $spacing-half;
+    padding: spacing("half") 0;
+    text-align: center;
 }
 
 .c-categoryCard__cta {
-    display: inline-block;
+    display: block;
+    width: 100%;
     background: $color-primary;
     color: $color-white;
-    padding: $spacing-sixth $spacing-third;
+    padding: $spacing-half $spacing-single;
     text-decoration: none;
-    font-size: $fontSize-tiny;
-    border-radius: 4px;
+    font-weight: $fontWeight-semibold;
+    text-align: center;
+    border-radius: 8px;
     transition: background-color 0.2s ease;
+    text-transform: uppercase;
 
     &:hover,
     &:focus {
@@ -75,6 +83,55 @@
         outline: 2px solid $color-primary;
         outline-offset: 2px;
     }
+}
+
+// Colorful placeholder for missing images
+// Bright party colors that rotate based on card position
+.c-categoryCard__placeholder {
+    display: block;
+        width: 200px;
+        height: 200px;   
+}
+
+// Color palette for placeholders - uses nth-child on parent grid item
+.c-categoryGrid__item:nth-child(10n + 1) .c-categoryCard__placeholder {
+    background: linear-gradient(135deg, #ff6b9d 0%, #ff8a80 100%); // Pink
+}
+
+.c-categoryGrid__item:nth-child(10n + 2) .c-categoryCard__placeholder {
+    background: linear-gradient(135deg, #7c4dff 0%, #b388ff 100%); // Purple
+}
+
+.c-categoryGrid__item:nth-child(10n + 3) .c-categoryCard__placeholder {
+    background: linear-gradient(135deg, #00bcd4 0%, #4dd0e1 100%); // Cyan
+}
+
+.c-categoryGrid__item:nth-child(10n + 4) .c-categoryCard__placeholder {
+    background: linear-gradient(135deg, #ffca28 0%, #ffd54f 100%); // Yellow
+}
+
+.c-categoryGrid__item:nth-child(10n + 5) .c-categoryCard__placeholder {
+    background: linear-gradient(135deg, #69f0ae 0%, #b9f6ca 100%); // Green
+}
+
+.c-categoryGrid__item:nth-child(10n + 6) .c-categoryCard__placeholder {
+    background: linear-gradient(135deg, #ff7043 0%, #ffab91 100%); // Orange
+}
+
+.c-categoryGrid__item:nth-child(10n + 7) .c-categoryCard__placeholder {
+    background: linear-gradient(135deg, #42a5f5 0%, #90caf9 100%); // Blue
+}
+
+.c-categoryGrid__item:nth-child(10n + 8) .c-categoryCard__placeholder {
+    background: linear-gradient(135deg, #ec407a 0%, #f48fb1 100%); // Rose
+}
+
+.c-categoryGrid__item:nth-child(10n + 9) .c-categoryCard__placeholder {
+    background: linear-gradient(135deg, #26c6da 0%, #80deea 100%); // Teal
+}
+
+.c-categoryGrid__item:nth-child(10n + 10) .c-categoryCard__placeholder {
+    background: linear-gradient(135deg, #ab47bc 0%, #ce93d8 100%); // Violet
 }
 
 // Occasion modifier: square aspect ratio for occasion cards (per Figma design)

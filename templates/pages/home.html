@@ -34,6 +34,10 @@ categories:
         {{/if}}
     {{/each}}
 
+    <section >
+        <img src="{{cdn 'assets/img/banners/image8.png'}}" alt="Irish Owned Family Business" class="c-saleBanner__image" loading="lazy" />
+    </section>
+
     {{!-- Marketing Banner Section - Editable via Theme Editor --}}
     {{> components/page/marketing-banner 
         image=theme_settings.marketing_banner_image
@@ -54,11 +58,15 @@ categories:
     {{#if categories}}
         {{> components/page/category-grid 
             heading="Shop by Category"
-            columns=4
-            categories=categories
+            columns=5
+            categories=(limit categories 10)
         }}
     {{/if}}
     {{{region name="home_below_category_grid"}}}
+
+    <section >
+        <img src="{{cdn 'assets/img/banners/Frame14.png'}}" alt="Clearance Sale" class="c-saleBanner__image" loading="lazy" />
+    </section>
 
 
     {{!-- Sale Banner Section - Editable via Theme Editor --}}
@@ -74,6 +82,9 @@ categories:
         heading="Our Top Picks for You"
         template="@custom-template"
     }}
+    <section >
+        <img src="{{cdn 'assets/img/banners/Frame16.png'}}" alt="Personalise Your Party Supplies" class="c-saleBanner__image" loading="lazy" />
+    </section>
 
     {{!-- Sale Banner Section - Editable via Theme Editor --}}
     {{> components/page/sale-banner 
@@ -87,7 +98,7 @@ categories:
 
     {{!-- Customer Reviews Section --}}
     {{> components/page/customer-review-grid 
-        heading="What Our Customers Say"
+        heading="Our Happy Customers"
         reviews=theme_settings.homepage_reviews
     }}
 
@@ -102,7 +113,7 @@ categories:
     {{!-- Blog Teaser Section --}}
     {{#if blog.recent_posts}}
         {{> components/page/blog-teaser 
-            heading="From the Blog"
+            heading="Browse our blog for inspiration for your next party!"
             posts=blog.recent_posts
             ctaText="View All Posts"
             ctaUrl="/blog/"

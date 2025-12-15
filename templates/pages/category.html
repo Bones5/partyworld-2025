@@ -2,6 +2,10 @@
 category:
     products:
         limit: {{theme_settings.categorypage_products_per_page}}
+    metafields:
+        namespace: custom
+        key: intro
+        resource_type: category
 products:
     top_sellers:
         limit: {{theme_settings.category_bestsellers_count}}
@@ -31,7 +35,15 @@ products:
     <h1 class="page-heading">{{category.name}}</h1>
     {{{region name="category_below_header"}}}
 {{/unless}}
-{{{category.description}}}
+
+{{!-- Category Intro from metafield (set via API: namespace=custom, key=intro) --}}
+{{#each category.metafields}}
+    {{#if (equals key "intro")}}
+        <div class="category-intro">
+            {{{value}}}
+        </div>
+    {{/if}}
+{{/each}}
 
 {{!-- Shop by Category section: shows subcategories if present --}}
 {{> components/category/shop-by-category}}
@@ -67,6 +79,15 @@ products:
         {{{region name="category_below_content"}}}
     </div>
 </div>
+
+{{!-- Category Description (SEO content) at bottom of page --}}
+{{#if category.description}}
+    <section class="category-description">
+        <div class="container">
+            {{{category.description}}}
+        </div>
+    </section>
+{{/if}}
 
 {{/partial}}
 {{> layout/base}}
