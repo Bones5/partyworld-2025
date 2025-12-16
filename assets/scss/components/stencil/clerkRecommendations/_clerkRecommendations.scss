@@ -89,14 +89,15 @@
 
 .c-clerkRecommendations__container {
     margin-top: spacing("single");
+    position: relative;
 
     @include breakpoint("medium") {
         margin-top: spacing("double");
     }
 }
 
-// Product grid for clerk recommendations
-.clerk-product-grid {
+// Product grid for clerk recommendations (static grid fallback)
+.clerk-product-grid:not(.slick-initialized) {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: spacing("single");
@@ -112,6 +113,112 @@
 
     @include breakpoint("large") {
         gap: spacing("double");
+    }
+}
+
+// =============================================================================
+// SLICK CAROUSEL STYLES
+// Same styling as shop-by-category carousel
+// =============================================================================
+
+.clerk-product-grid.slick-initialized {
+    .slick-list {
+        overflow: hidden;
+        margin: 0 spacing("half") * -1;
+    }
+
+    .slick-track {
+        display: flex;
+    }
+
+    .slick-slide {
+        height: auto;
+        padding: 0 spacing("half");
+
+        > div {
+            height: 100%;
+        }
+
+        .card {
+            height: 100%;
+            margin-bottom: 0;
+        }
+    }
+
+    // Slick arrow positioning - outside the carousel
+    .slick-prev,
+    .slick-next {
+        position: absolute;
+        top: 40%;
+        transform: translateY(-50%);
+        z-index: 10;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background-color: stencilColor("color-white");
+        border: 1px solid stencilColor("color-greyLight");
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover,
+        &:focus {
+            background-color: stencilColor("color-primary");
+            border-color: stencilColor("color-primary");
+
+            &::before {
+                color: stencilColor("color-white");
+            }
+        }
+
+        &:focus {
+            outline: 2px solid stencilColor("color-primary");
+            outline-offset: 2px;
+        }
+
+        &::before {
+            color: stencilColor("color-textBase");
+            font-size: fontSize("large");
+            transition: color 0.2s ease;
+        }
+
+        &.slick-disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+
+            &:hover {
+                background-color: stencilColor("color-white");
+                border-color: stencilColor("color-greyLight");
+
+                &::before {
+                    color: stencilColor("color-textBase");
+                }
+            }
+        }
+    }
+
+    .slick-prev {
+        left: -22px;
+
+        @include breakpoint("large") {
+            left: -50px;
+        }
+    }
+
+    .slick-next {
+        right: -22px;
+
+        @include breakpoint("large") {
+            right: -50px;
+        }
+    }
+
+    // Hide arrows on mobile when not enough items
+    @media (max-width: 549px) {
+        .slick-prev,
+        .slick-next {
+            display: none !important;
+        }
     }
 }
 

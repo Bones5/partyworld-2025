@@ -1,0 +1,124 @@
+// Shop by Category Carousel
+// =============================================================================
+// Category page subcategory carousel with 4 items visible and arrow navigation
+// =============================================================================
+
+.c-shopByCategory {
+    margin-bottom: spacing("double");
+    position: relative;
+}
+
+.c-shopByCategory__heading {
+    @include homepage-section-heading;
+    
+    text-align: left;
+    margin-bottom: spacing("single");
+}
+
+.c-shopByCategory__carousel {
+    position: relative;
+    
+    // Slick arrow positioning - outside the carousel
+    .slick-prev,
+    .slick-next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background-color: stencilColor("color-white");
+        border: 1px solid stencilColor("color-greyLight");
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover,
+        &:focus {
+            background-color: stencilColor("color-primary");
+            border-color: stencilColor("color-primary");
+            
+            &::before {
+                color: stencilColor("color-white");
+            }
+        }
+        
+        &:focus {
+            outline: 2px solid stencilColor("color-primary");
+            outline-offset: 2px;
+        }
+        
+        &::before {
+            color: stencilColor("color-textBase");
+            font-size: fontSize("large");
+            transition: color 0.2s ease;
+        }
+        
+        &.slick-disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            
+            &:hover {
+                background-color: stencilColor("color-white");
+                border-color: stencilColor("color-greyLight");
+                
+                &::before {
+                    color: stencilColor("color-textBase");
+                }
+            }
+        }
+    }
+    
+    .slick-prev {
+        left: -22px;
+        
+        @include breakpoint("large") {
+            left: -50px;
+        }
+    }
+    
+    .slick-next {
+        right: -22px;
+        
+        @include breakpoint("large") {
+            right: -50px;
+        }
+    }
+    
+    // Hide arrows on mobile when not enough items
+    @media (max-width: 549px) {
+        .slick-prev,
+        .slick-next {
+            display: none !important;
+        }
+    }
+}
+
+.c-shopByCategory__slide {
+    padding: 0 spacing("half");
+    
+    .c-categoryCard {
+        margin-bottom: 0;
+    }
+}
+
+// Ensure the carousel has proper overflow handling
+.c-shopByCategory__carousel.slick-initialized {
+    .slick-list {
+        overflow: hidden;
+        margin: 0 spacing("half") * -1;
+    }
+    
+    .slick-track {
+        display: flex;
+    }
+    
+    .slick-slide {
+        height: auto;
+        
+        > div {
+            height: 100%;
+        }
+    }
+}

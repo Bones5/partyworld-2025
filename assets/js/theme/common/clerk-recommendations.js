@@ -585,6 +585,7 @@ function renderProductCardFallback(product, currency, options = {}) {
                 <div class="card-text card-price" data-test-info-type="price">
                     ${priceHtml}
                 </div>
+                <a href="${product.path}" class="card-cta" data-event-type="product-click">Shop Now</a>
             </div>
         </article>
     `;
@@ -739,6 +740,41 @@ async function initClerkRecommendations(container, context) {
         container.classList.remove('is-loading');
         container.classList.add('is-loaded');
         container.closest('.c-clerkRecommendations')?.classList.add('is-loaded');
+
+        // Initialize slick carousel if jQuery is available
+        if (window.jQuery && window.jQuery.fn.slick) {
+            window.jQuery(productGrid).slick({
+                infinite: false,
+                mobileFirst: true,
+                slidesToShow: 2,
+                slidesToScroll: 2,
+                arrows: true,
+                dots: false,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 4,
+                            slidesToScroll: 4,
+                        },
+                    },
+                    {
+                        breakpoint: 800,
+                        settings: {
+                            slidesToShow: 3,
+                            slidesToScroll: 3,
+                        },
+                    },
+                    {
+                        breakpoint: 550,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 2,
+                        },
+                    },
+                ],
+            });
+        }
 
         // Trigger lazysizes if available
         if (window.lazySizes) {
