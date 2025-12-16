@@ -1,0 +1,82 @@
+// BigCommerce Marketing Banner Component
+// =============================================================================
+// Styles for custom homepage banner widgets.
+// Two variants: Full Width (1400x400) and Compact (1400x250)
+// =============================================================================
+
+.c-bcBanner {
+    @include homepage-section;
+    
+    width: 100%;
+}
+
+.c-bcBanner__link {
+    display: block;
+    text-decoration: none;
+    
+    &:hover .c-bcBanner__image,
+    &:focus .c-bcBanner__image {
+        opacity: 0.95;
+        transform: scale(1.005);
+    }
+    
+    &:focus {
+        outline: 2px solid stencilColor("color-primary");
+        outline-offset: 4px;
+        border-radius: 20px;
+    }
+}
+
+.c-bcBanner__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+// Full Width variant (1400x400px recommended)
+.c-bcBanner--fullWidth {
+    .c-bcBanner__image {
+        aspect-ratio: 1400 / 400;
+        object-fit: cover;
+    }
+}
+
+// Compact variant (1400x250px recommended)
+.c-bcBanner--compact {
+    .c-bcBanner__image {
+        aspect-ratio: 1400 / 250;
+        object-fit: cover;
+    }
+}
+
+// Legacy support for raw content banners
+.c-bcBanner__content {
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    a {
+        display: block;
+        text-decoration: none;
+        
+        &:hover img,
+        &:focus img {
+            opacity: 0.95;
+        }
+    }
+}
+
+// Hide empty banner regions (when no widget is placed)
+.c-bcBanner:empty {
+    display: none;
+    margin: 0;
+    padding: 0;
+}
+

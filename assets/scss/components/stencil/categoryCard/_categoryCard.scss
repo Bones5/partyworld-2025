@@ -60,29 +60,7 @@
 }
 
 .c-categoryCard__cta {
-    display: block;
-    width: 100%;
-    background: $color-primary;
-    color: $color-white;
-    padding: $spacing-half $spacing-single;
-    text-decoration: none;
-    font-weight: $fontWeight-semibold;
-    text-align: center;
-    border-radius: 8px;
-    transition: background-color 0.2s ease;
-    text-transform: uppercase;
-
-    &:hover,
-    &:focus {
-        background: $color-primaryDark;
-        color: $color-white;
-        text-decoration: none;
-    }
-
-    &:focus {
-        outline: 2px solid $color-primary;
-        outline-offset: 2px;
-    }
+    @include cta-button;
 }
 
 // Colorful placeholder for missing images

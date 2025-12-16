@@ -1,0 +1,122 @@
+// =============================================================================
+// CTA BUTTON UTILITIES
+// =============================================================================
+//
+// Standardized CTA button styles for consistency across the theme.
+// Based on hero slider CTA as the design standard.
+//
+// Usage:
+//   .my-component__cta {
+//       @include cta-button;
+//   }
+//
+//   .my-component__cta--black {
+//       @include cta-button($bg: stencilColor("color-textBase"));
+//   }
+//
+// -----------------------------------------------------------------------------
+
+// Primary CTA mixin
+// @param $bg - Background color (default: brand primary red)
+// @param $color - Text color (default: white)
+// @param $padding-y - Vertical padding (default: spacing("half"))
+// @param $padding-x - Horizontal padding (default: spacing("half"))
+// @param $radius - Border radius (default: 5px)
+// @param $full-width - Whether button is full width (default: true)
+@mixin cta-button(
+    $bg: stencilColor("button--primary-backgroundColor"),
+    $color: $color-white,
+    $padding-y: spacing("half"),
+    $padding-x: spacing("half"),
+    $radius: 5px,
+    $full-width: true
+) {
+    display: inline-block;
+    background-color: $bg;
+    color: $color;
+    padding: $padding-y $padding-x;
+    border: 0;
+    border-radius: $radius;
+    font-size: fontSize("small");
+    font-weight: fontWeight("semibold");
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    @if $full-width {
+        display: block;
+        width: 100%;
+    }
+
+    &:hover,
+    &:focus {
+        text-decoration: underline;
+        color: $color;
+    }
+
+    &:focus {
+        outline: 2px solid $bg;
+        outline-offset: 2px;
+    }
+}
+
+// Black CTA variant
+@mixin cta-button-black($full-width: true) {
+    @include cta-button(
+        $bg: stencilColor("color-textBase"),
+        $color: $color-white,
+        $full-width: $full-width
+    );
+
+    &:hover,
+    &:focus {
+        background-color: lighten(stencilColor("color-textBase"), 15%);
+    }
+}
+
+// Outline CTA variant
+@mixin cta-button-outline($full-width: true) {
+    @include cta-button(
+        $bg: transparent,
+        $color: stencilColor("button--primary-backgroundColor"),
+        $full-width: $full-width
+    );
+    border: 2px solid stencilColor("button--primary-backgroundColor");
+
+    &:hover,
+    &:focus {
+        background-color: stencilColor("button--primary-backgroundColor");
+        color: $color-white;
+    }
+}
+
+// =============================================================================
+// UTILITY CLASSES
+// =============================================================================
+// For use directly in templates without SCSS
+
+.u-cta {
+    @include cta-button($full-width: false);
+}
+
+.u-cta--block {
+    @include cta-button($full-width: true);
+}
+
+.u-cta--black {
+    @include cta-button-black($full-width: false);
+}
+
+.u-cta--black-block {
+    @include cta-button-black($full-width: true);
+}
+
+.u-cta--outline {
+    @include cta-button-outline($full-width: false);
+}
+
+.u-cta--outline-block {
+    @include cta-button-outline($full-width: true);
+}

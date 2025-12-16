@@ -123,22 +123,7 @@
 }
 
 .heroThemeSlider-card__cta {
-    display: inline-block;
-    font-size: $fontSize-small;
-    font-weight: $fontWeight-semibold;
-    background-color: $color-primary;
-    color: $color-white;
-    padding: spacing("half") spacing("half");
-    border-radius: 5px;
-    width: 100%;
-    text-decoration: none;
-    transition: color 0.2s ease;
-    text-transform: uppercase;
-
-    &:hover,
-    &:focus {
-        text-decoration: underline;
-    }
+    @include cta-button;
 }
 
 // Navigation arrows

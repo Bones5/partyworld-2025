@@ -7,17 +7,11 @@
 // -----------------------------------------------------------------------------
 
 .c-categoryGrid {
-    margin-bottom: spacing("double") + spacing("double");
+    @include homepage-section;
 }
 
 .c-categoryGrid__heading {
-    font-family: $fontFamily-headings;
-    font-size: $h2-font-size;
-    line-height: $lineHeight-larger;
-    font-weight: fontWeight("normal");
-    text-transform: uppercase;
-    margin: 0 0 spacing("single");
-    text-align: center;
+    @include homepage-section-heading;
 }
 
 .c-categoryGrid__items {

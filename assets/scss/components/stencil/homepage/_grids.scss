@@ -1,9 +1,9 @@
 // Homepage Theme & Celebrate grids
 
-// Section wrappers with increased vertical spacing
+// Section wrappers with standardized vertical spacing
 .c-themeGrid,
 .c-celebrateGrid {
-    margin-bottom: spacing("double") + spacing("double");
+    @include homepage-section;
 }
 
 .c-themeGrid__items {

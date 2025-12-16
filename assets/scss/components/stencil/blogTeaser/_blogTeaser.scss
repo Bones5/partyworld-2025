@@ -6,7 +6,7 @@
 // -----------------------------------------------------------------------------
 
 .c-blogTeaser {
-    margin-bottom: spacing("double");
+    @include homepage-section;
 }
 
 .c-blogTeaser__header {
@@ -19,14 +19,7 @@
 }
 
 .c-blogTeaser__heading {
-    font-family: $fontFamily-headings;
-    font-size: $h2-font-size;
-    line-height: $lineHeight-larger;
-    font-weight: fontWeight("normal");
-    text-transform: uppercase;
-    margin: 0;
-    color: $color-textBase;
-    text-align: center;
+    @include homepage-section-heading;
 }
 
 .c-blogTeaser__viewAll {

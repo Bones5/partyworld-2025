@@ -39,14 +39,14 @@
     }
 }
 
-// Remove top border for homepage variant
+// Remove top border for homepage variant and use standard section spacing
 .c-clerkRecommendations--homepage {
+    @include homepage-section;
+
     border-top: 0;
-    margin-top: spacing("single");
-    
-    @include breakpoint("medium") {
-        margin-top: spacing("double");
-    }
+    margin-top: 0;
+    padding: 0;
+    min-height: auto;
 }
 
 // =============================================================================
@@ -65,13 +65,9 @@
     }
 }
 
-// Homepage heading is larger
+// Homepage heading uses standard homepage section heading style
 .c-clerkRecommendations--homepage .c-clerkRecommendations__heading {
-    font-size: fontSize("large");
-    
-    @include breakpoint("medium") {
-        font-size: fontSize("hero");
-    }
+    @include homepage-section-heading;
 }
 
 // Subheading styles (homepage only)
@@ -235,26 +231,8 @@
 
     // CTA button for Clerk cards
     .card-cta {
-        display: inline-block;
-        width: 100%;
-        background-color: stencilColor("button--primary-backgroundColor");
-        color: stencilColor("button--primary-color");
-        padding: spacing("quarter") spacing("half");
-        text-decoration: none;
-        font-size: fontSize("small");
-        font-weight: fontWeight("semibold");
-        text-align: center;
-        border-radius: 5px;
-        transition: color 0.2s ease, background-color 0.2s ease;
-        text-transform: uppercase;
+        @include cta-button;
         margin-top: spacing("half");
-
-        &:hover,
-        &:focus {
-            background-color: stencilColor("button--primary-backgroundColorHover");
-            color: stencilColor("button--primary-colorHover");
-            text-decoration: underline;
-        }
     }
 }
 

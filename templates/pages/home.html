@@ -34,18 +34,10 @@ categories:
         {{/if}}
     {{/each}}
 
-    <section >
-        <img src="{{cdn 'assets/img/banners/image8.png'}}" alt="Irish Owned Family Business" class="c-saleBanner__image" loading="lazy" />
-    </section>
-
-    {{!-- Marketing Banner Section - Editable via Theme Editor --}}
-    {{> components/page/marketing-banner 
-        image=theme_settings.marketing_banner_image
-        heading=theme_settings.marketing_banner_heading
-        subcopy=theme_settings.marketing_banner_subcopy
-        ctaText=theme_settings.marketing_banner_cta_text
-        ctaUrl=theme_settings.marketing_banner_cta_url
-    }}
+    {{!-- Banner Position: After Occasions --}}
+    <div class="c-bcBanner">
+        {{{region name="home_banner_after_occasions"}}}
+    </div>
 
 <div class="main full">
     {{!-- Category Grid Section --}}
@@ -62,39 +54,21 @@ categories:
             categories=(limit categories 10)
         }}
     {{/if}}
-    {{{region name="home_below_category_grid"}}}
+    
+    {{!-- Banner Position: After Categories --}}
+    <div class="c-bcBanner">
+        {{{region name="home_banner_after_categories"}}}
+    </div>
 
-    <section >
-        <img src="{{cdn 'assets/img/banners/Frame14.png'}}" alt="Clearance Sale" class="c-saleBanner__image" loading="lazy" />
-    </section>
-
-
-    {{!-- Sale Banner Section - Editable via Theme Editor --}}
-    {{> components/page/sale-banner 
-        image=theme_settings.sale_banner_image
-        heading=theme_settings.sale_banner_heading
-        subcopy=theme_settings.sale_banner_subcopy
-        ctaText=theme_settings.sale_banner_cta_text
-        ctaUrl=theme_settings.sale_banner_cta_url
-        badge=theme_settings.sale_banner_badge
-    }}
     {{> components/page/clerk-recommendations
         heading="Our Top Picks for You"
         template="@custom-template"
     }}
-    <section >
-        <img src="{{cdn 'assets/img/banners/Frame16.png'}}" alt="Personalise Your Party Supplies" class="c-saleBanner__image" loading="lazy" />
-    </section>
 
-    {{!-- Sale Banner Section - Editable via Theme Editor --}}
-    {{> components/page/sale-banner 
-        image=theme_settings.sale_banner_image
-        heading=theme_settings.sale_banner_heading
-        subcopy=theme_settings.sale_banner_subcopy
-        ctaText=theme_settings.sale_banner_cta_text
-        ctaUrl=theme_settings.sale_banner_cta_url
-        badge=theme_settings.sale_banner_badge
-    }}
+    {{!-- Banner Position: After Recommendations --}}
+    <div class="c-bcBanner">
+        {{{region name="home_banner_after_recommendations"}}}
+    </div>
 
     {{!-- Customer Reviews Section --}}
     {{> components/page/customer-review-grid 
@@ -102,13 +76,8 @@ categories:
         reviews=theme_settings.homepage_reviews
     }}
 
-    {{!-- Brand Intro & Promises Section --}}
-    {{> components/page/intro-promise 
-        heading=theme_settings.homepage_intro_heading
-        intro=theme_settings.homepage_intro_text
-        promisesHeading=theme_settings.homepage_promises_heading
-        promises=theme_settings.homepage_promises
-    }}
+    {{!-- Brand Intro & Promises Section - Editable via Page Builder --}}
+    {{{region name="home_intro_promise"}}}
 
     {{!-- Blog Teaser Section --}}
     {{#if blog.recent_posts}}

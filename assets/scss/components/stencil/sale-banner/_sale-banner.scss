@@ -6,6 +6,7 @@
 // -----------------------------------------------------------------------------
 
 .c-saleBanner {
+    @include homepage-section;
     position: relative;
     display: flex;
     align-items: center;
@@ -14,7 +15,6 @@
     background: stencilColor("color-primary");
     overflow: hidden;
     text-align: center;
-    margin-bottom: spacing("double") + spacing("double");
 
     @include breakpoint("small") {
         min-height: remCalc(400px);
