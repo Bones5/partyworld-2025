@@ -13,6 +13,9 @@ on:
 jobs:
   build:
 
+    permissions:
+      contents: read
+
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -53,6 +56,11 @@ jobs:
 
     - name: Grunt Check
       run: npx grunt check
+
+    - name: Run unit tests
+      run: npm test
+      env:
+        CI: true
 
     - name: Validate theme successfully bundles
       run: npx stencil bundle --name ${{ matrix.os }}-node-${{ matrix.node }}-v${{ steps.package-version.outputs.version }}-${{ steps.vars.outputs.sha_short }}-bundle
