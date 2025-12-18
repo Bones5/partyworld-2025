@@ -95,7 +95,13 @@
 
     <section class="productView-details product-data">
         <div class="productView-product">
-            <h1 class="productView-title">{{product.title}}</h1>
+            <div class="productView-titleRow">
+                <h1 class="productView-title">{{product.title}}</h1>
+                {{!-- Share button inline with title --}}
+                {{#if settings.add_this.buttons}}
+                    {{> components/products/share-inline url=product.url}}
+                {{/if}}
+            </div>
             {{#if product.brand}}
                 <h2 class="productView-brand">
                     <a href="{{product.brand.url}}"><span>{{product.brand.name}}</span></a>
@@ -114,36 +120,8 @@
                 {{/or}}
             </div>
             {{{region name="product_below_price"}}}
-            <div class="productView-rating">
-                {{#if settings.show_product_rating}}
-                    {{> components/products/ratings rating=product.rating}}
-                    {{#if product.num_reviews '>' 0}}
-                        <a href="{{product.url}}{{#if is_ajax}}#product-reviews{{/if}}" id="productReview_link">
-                            {{lang 'products.reviews.link_to_review' total=product.num_reviews}}
-                        </a>
-                    {{else}}
-                        <span>{{lang 'products.reviews.link_to_review' total=product.num_reviews}}</span>
-                    {{/if}}
-                {{/if}}
-                {{#if settings.show_product_reviews}}
-                    <a href="{{product.url}}{{#if is_ajax}}#write_review{{/if}}"
-                       class="productView-reviewLink productView-reviewLink--new"
-                       {{#unless is_ajax}}data-reveal-id="modal-review-form"{{/unless}}
-                       role="button"
-                    >
-                       {{lang 'products.reviews.new'}}
-                    </a>
-                    {{#unless is_ajax}}
-                        {{> components/products/modals/writeReview}}
-                    {{/unless}}
-                {{/if}}
-            </div>
             {{product.detail_messages}}
             <dl class="productView-info">
-                <dt class="productView-info-name sku-label"{{#unless product.sku}} style="display: none;"{{/unless}}>{{lang 'products.sku'}}</dt>
-                <dd class="productView-info-value" data-product-sku>{{product.sku}}</dd>
-                <dt class="productView-info-name upc-label"{{#unless product.upc}} style="display: none;"{{/unless}}>{{lang 'products.upc'}}</dt>
-                <dd class="productView-info-value" data-product-upc>{{product.upc}}</dd>
                 {{#if product.condition}}
                     <dt class="productView-info-name">{{lang 'products.condition'}}</dt>
                     <dd class="productView-info-value">{{product.condition}}</dd>
@@ -258,27 +236,20 @@
                     {{/if}}
                 {{/if}}
             </form>
-            {{!-- Wishlist dropdown for logged-in users with multiple wishlists --}}
-            {{#if settings.show_wishlist}}
-                {{#if customer.wishlists}}
-                    {{> components/common/wishlist-dropdown}}
-                {{/if}}
-            {{/if}}
         </div>
-        {{!-- Share and wishlist CTA bar --}}
-        {{> components/products/share-bar url=product.url}}
         {{> components/page/product-confidence-grid}}
+
+        {{!-- Product description in right column --}}
+        <article class="productView-description productView-description--inline">
+            {{#if theme_settings.show_product_details_tabs}}
+                {{> components/products/description-tabs}}
+            {{else}}
+                {{> components/products/description}}
+            {{/if}}
+        </article>
     </section>
 
     {{> components/products/product-video}}
-
-    <article class="productView-description">
-        {{#if theme_settings.show_product_details_tabs}}
-            {{> components/products/description-tabs}}
-        {{else}}
-            {{> components/products/description}}
-        {{/if}}
-    </article>
 </div>
 
 {{> components/products/alternate-suggestions}}

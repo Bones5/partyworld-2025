@@ -31,7 +31,7 @@
     width: remCalc(40px);
     height: remCalc(40px);
     margin-bottom: spacing("quarter");
-    color: stencilColor("color-primary");
+    color: stencilColor("color-textBase");
 
     svg {
         width: remCalc(24px);
@@ -52,10 +52,14 @@
 
 .c-confidenceGrid__text {
     font-size: fontSize("smallest");
-    color: stencilColor("color-textSecondary");
+    color: stencilColor("color-textBase");
     line-height: lineHeight("small");
 
     @include breakpoint("medium") {
         font-size: fontSize("smaller");
     }
+}
+
+.c-confidenceGrid__highlight {
+    color: #169b62; // Irish green
 }

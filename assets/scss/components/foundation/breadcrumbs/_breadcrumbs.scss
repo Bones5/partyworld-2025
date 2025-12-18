@@ -16,7 +16,7 @@ ol.breadcrumbs {
     display: none; // 1
     font-size: 0; // 2
     overflow: visible;
-    text-align: center;
+    text-align: left;
     @include breakpoint("small") {
         display: block; // 1
     }
@@ -27,10 +27,22 @@ ol.breadcrumbs {
     float: none;
     margin-right: 0.25rem;
 
+    // Linked breadcrumbs - red with no underline
+    a.breadcrumb-label {
+        color: stencilColor("color-primary");
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+        }
+    }
+
     &.is-active {
         > .breadcrumb-label {
-            cursor: pointer;
+            cursor: default;
             font-weight: 700;
+            color: stencilColor("color-textSecondary");
         }
     }
 

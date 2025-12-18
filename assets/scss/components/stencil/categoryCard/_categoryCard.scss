@@ -13,7 +13,7 @@
     text-align: center;
     position: relative;
     transition: box-shadow 0.2s ease;
-    padding: spacing("half");
+    padding: spacing("single");
     border-radius: 20px;
 
     &:hover {
@@ -48,7 +48,6 @@
 }
 
 .c-categoryCard__body {
-    padding: $spacing-single;
     text-align: center;
 }
 
