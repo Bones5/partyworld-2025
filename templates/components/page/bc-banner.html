@@ -1,0 +1,37 @@
+{{!--
+    BigCommerce Marketing Banner Component
+    
+    Renders banners created in Marketing → Banners in BigCommerce admin.
+    Supports HTML content including images, text, and links.
+    
+    Usage:
+        {{> components/page/bc-banner content=banners.home position="home"}}
+        
+    Or for a specific banner by index:
+        {{#each banners.home_metadata}}
+            {{> components/page/bc-banner banner=this}}
+        {{/each}}
+    
+    Banner locations available:
+        - banners.top / banners.top_metadata (Top of Page)
+        - banners.bottom / banners.bottom_metadata (Bottom of Page)  
+        - banners.home / banners.home_metadata (Home Page only)
+--}}
+{{#if banner}}
+<section class="c-bcBanner" 
+         data-event-type="promotion" 
+         data-entity-id="{{banner.id}}" 
+         data-name="{{banner.banner-name}}" 
+         data-position="{{banner.location}}"
+         data-banner-id="{{banner.banner-name}}">
+    <div class="c-bcBanner__content" data-event-type="promotion-click">
+        {{{banner.content}}}
+    </div>
+</section>
+{{else if content}}
+<section class="c-bcBanner" data-position="{{position}}">
+    <div class="c-bcBanner__content">
+        {{{content}}}
+    </div>
+</section>
+{{/if}}

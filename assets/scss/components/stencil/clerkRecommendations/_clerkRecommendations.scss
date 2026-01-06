@@ -39,14 +39,14 @@
     }
 }
 
-// Remove top border for homepage variant
+// Remove top border for homepage variant and use standard section spacing
 .c-clerkRecommendations--homepage {
+    @include homepage-section;
+
     border-top: 0;
-    margin-top: spacing("single");
-    
-    @include breakpoint("medium") {
-        margin-top: spacing("double");
-    }
+    margin-top: 0;
+    padding: 0;
+    min-height: auto;
 }
 
 // =============================================================================
@@ -65,13 +65,9 @@
     }
 }
 
-// Homepage heading is larger
+// Homepage heading uses standard homepage section heading style
 .c-clerkRecommendations--homepage .c-clerkRecommendations__heading {
-    font-size: fontSize("large");
-    
-    @include breakpoint("medium") {
-        font-size: fontSize("hero");
-    }
+    @include homepage-section-heading;
 }
 
 // Subheading styles (homepage only)
@@ -93,14 +89,15 @@
 
 .c-clerkRecommendations__container {
     margin-top: spacing("single");
+    position: relative;
 
     @include breakpoint("medium") {
         margin-top: spacing("double");
     }
 }
 
-// Product grid for clerk recommendations
-.clerk-product-grid {
+// Product grid for clerk recommendations (static grid fallback)
+.clerk-product-grid:not(.slick-initialized) {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: spacing("single");
@@ -116,6 +113,112 @@
 
     @include breakpoint("large") {
         gap: spacing("double");
+    }
+}
+
+// =============================================================================
+// SLICK CAROUSEL STYLES
+// Same styling as shop-by-category carousel
+// =============================================================================
+
+.clerk-product-grid.slick-initialized {
+    .slick-list {
+        overflow: hidden;
+        margin: 0 spacing("half") * -1;
+    }
+
+    .slick-track {
+        display: flex;
+    }
+
+    .slick-slide {
+        height: auto;
+        padding: 0 spacing("half");
+
+        > div {
+            height: 100%;
+        }
+
+        .card {
+            height: 100%;
+            margin-bottom: 0;
+        }
+    }
+
+    // Slick arrow positioning - outside the carousel
+    .slick-prev,
+    .slick-next {
+        position: absolute;
+        top: 40%;
+        transform: translateY(-50%);
+        z-index: 10;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background-color: stencilColor("color-white");
+        border: 1px solid stencilColor("color-greyLight");
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover,
+        &:focus {
+            background-color: stencilColor("color-primary");
+            border-color: stencilColor("color-primary");
+
+            &::before {
+                color: stencilColor("color-white");
+            }
+        }
+
+        &:focus {
+            outline: 2px solid stencilColor("color-primary");
+            outline-offset: 2px;
+        }
+
+        &::before {
+            color: stencilColor("color-textBase");
+            font-size: fontSize("large");
+            transition: color 0.2s ease;
+        }
+
+        &.slick-disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+
+            &:hover {
+                background-color: stencilColor("color-white");
+                border-color: stencilColor("color-greyLight");
+
+                &::before {
+                    color: stencilColor("color-textBase");
+                }
+            }
+        }
+    }
+
+    .slick-prev {
+        left: -22px;
+
+        @include breakpoint("large") {
+            left: -50px;
+        }
+    }
+
+    .slick-next {
+        right: -22px;
+
+        @include breakpoint("large") {
+            right: -50px;
+        }
+    }
+
+    // Hide arrows on mobile when not enough items
+    @media (max-width: 549px) {
+        .slick-prev,
+        .slick-next {
+            display: none !important;
+        }
     }
 }
 
@@ -235,26 +338,13 @@
 
     // CTA button for Clerk cards
     .card-cta {
-        display: inline-block;
-        width: 100%;
-        background-color: stencilColor("button--primary-backgroundColor");
-        color: stencilColor("button--primary-color");
-        padding: spacing("quarter") spacing("half");
-        text-decoration: none;
-        font-size: fontSize("small");
-        font-weight: fontWeight("semibold");
-        text-align: center;
-        border-radius: 5px;
-        transition: color 0.2s ease, background-color 0.2s ease;
-        text-transform: uppercase;
+        @include cta-button;
         margin-top: spacing("half");
+            font-size: remCalc(16px);
 
-        &:hover,
-        &:focus {
-            background-color: stencilColor("button--primary-backgroundColorHover");
-            color: stencilColor("button--primary-colorHover");
-            text-decoration: underline;
-        }
+    @include breakpoint("medium") {
+        font-size: fontSize("small");
+    }
     }
 }
 

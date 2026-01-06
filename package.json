@@ -7,6 +7,8 @@
   "license": "MIT",
   "dependencies": {
     "@bigcommerce/stencil-utils": "6.19.0",
+    "@rive-app/canvas": "^2.33.1",
+    "@rive-app/webgl2": "^2.33.1",
     "core-js": "^3.9.0",
     "creditcards": "^4.2.0",
     "easyzoom": "^2.5.3",
@@ -98,6 +100,6 @@
     "settings:show": "node scripts/image-transfer/transfer-settings.js --show",
     "settings:transfer": "node scripts/image-transfer/transfer-settings.js",
     "settings:export": "node scripts/image-transfer/transfer-settings.js --export",
-    "deploy": "stencil push --activate partyworld"
+    "deploy": "stencil push --activate Partyworld"
   }
 }

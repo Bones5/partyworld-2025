@@ -107,10 +107,8 @@ function translateProductIds(productIds) {
     const translatedIds = productIds.map(id => {
         const stagingId = PRODUCTION_TO_STAGING_ID_MAP[id];
         if (stagingId) {
-            console.log(`[Clerk] Translated product ID: ${id} → ${stagingId}`);
             return stagingId;
         }
-        console.warn(`[Clerk] No staging mapping for production ID: ${id}`);
         return id; // Keep original if no mapping
     });
 
@@ -143,8 +141,6 @@ async function callClerkApi(endpoint, params, apiKey) {
         }
     });
 
-    console.log('[Clerk API] Calling:', url.toString());
-
     const response = await fetch(url.toString(), {
         method: 'GET',
         headers: {
@@ -159,7 +155,6 @@ async function callClerkApi(endpoint, params, apiKey) {
     }
 
     const data = await response.json();
-    console.log('[Clerk API] Response:', data);
     return data;
 }
 
@@ -585,6 +580,7 @@ function renderProductCardFallback(product, currency, options = {}) {
                 <div class="card-text card-price" data-test-info-type="price">
                     ${priceHtml}
                 </div>
+                <a href="${product.path}" class="card-cta" data-event-type="product-click">Shop Now</a>
             </div>
         </article>
     `;
@@ -686,7 +682,6 @@ async function initClerkRecommendations(container, context) {
         let productIds = clerkResponse?.result || [];
 
         if (productIds.length === 0) {
-            console.log('[Clerk] No products returned');
             container.innerHTML = '';
             container.classList.remove('is-loading');
             container.classList.add('is-empty');
@@ -694,11 +689,8 @@ async function initClerkRecommendations(container, context) {
             return;
         }
 
-        console.log('[Clerk] Product IDs from Clerk:', productIds);
-
         // TEMPORARY: Translate production IDs to staging IDs
         productIds = translateProductIds(productIds);
-        console.log('[Clerk] Product IDs after translation:', productIds);
 
         // Fetch full product data from BigCommerce
         const { products, currency } = await fetchProductsByIds(
@@ -739,6 +731,41 @@ async function initClerkRecommendations(container, context) {
         container.classList.remove('is-loading');
         container.classList.add('is-loaded');
         container.closest('.c-clerkRecommendations')?.classList.add('is-loaded');
+
+        // Initialize slick carousel if jQuery is available
+        if (window.jQuery && window.jQuery.fn.slick) {
+            window.jQuery(productGrid).slick({
+                infinite: false,
+                mobileFirst: true,
+                slidesToShow: 2,
+                slidesToScroll: 2,
+                arrows: true,
+                dots: false,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 4,
+                            slidesToScroll: 4,
+                        },
+                    },
+                    {
+                        breakpoint: 800,
+                        settings: {
+                            slidesToShow: 3,
+                            slidesToScroll: 3,
+                        },
+                    },
+                    {
+                        breakpoint: 550,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 2,
+                        },
+                    },
+                ],
+            });
+        }
 
         // Trigger lazysizes if available
         if (window.lazySizes) {

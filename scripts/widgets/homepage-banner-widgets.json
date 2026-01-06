@@ -1,0 +1,199 @@
+{
+  "widgets": [
+    {
+      "name": "Banner - Full Width (1400x400)",
+      "kind": "custom",
+      "description": "Full-width promotional banner for homepage. Recommended image size: 1400x400px",
+      "schema": [
+        {
+          "type": "tab",
+          "label": "Banner Settings",
+          "sections": [
+            {
+              "label": "Banner Image",
+              "settings": [
+                {
+                  "type": "imageManager",
+                  "label": "Banner Image",
+                  "id": "bannerImage",
+                  "default": {
+                    "src": ""
+                  }
+                },
+                {
+                  "type": "input",
+                  "label": "Alt Text (for accessibility)",
+                  "id": "altText",
+                  "default": "Promotional banner"
+                },
+                {
+                  "type": "input",
+                  "label": "Link URL (optional)",
+                  "id": "linkUrl",
+                  "default": ""
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "template": "{{#if bannerImage}}<section class=\"c-bcBanner c-bcBanner--fullWidth\">{{#if linkUrl}}<a href=\"{{linkUrl}}\" class=\"c-bcBanner__link\"><img src=\"{{#if bannerImage.src}}{{bannerImage.src}}{{else}}{{bannerImage}}{{/if}}\" alt=\"{{altText}}\" class=\"c-bcBanner__image\" loading=\"lazy\" width=\"1400\" height=\"400\" /></a>{{else}}<img src=\"{{#if bannerImage.src}}{{bannerImage.src}}{{else}}{{bannerImage}}{{/if}}\" alt=\"{{altText}}\" class=\"c-bcBanner__image\" loading=\"lazy\" width=\"1400\" height=\"400\" />{{/if}}</section>{{/if}}"
+    },
+    {
+      "name": "Banner - Compact (1400x250)",
+      "kind": "custom",
+      "description": "Compact promotional banner for homepage. Recommended image size: 1400x250px",
+      "schema": [
+        {
+          "type": "tab",
+          "label": "Banner Settings",
+          "sections": [
+            {
+              "label": "Banner Image",
+              "settings": [
+                {
+                  "type": "imageManager",
+                  "label": "Banner Image",
+                  "id": "bannerImage",
+                  "default": {
+                    "src": ""
+                  }
+                },
+                {
+                  "type": "input",
+                  "label": "Alt Text (for accessibility)",
+                  "id": "altText",
+                  "default": "Promotional banner"
+                },
+                {
+                  "type": "input",
+                  "label": "Link URL (optional)",
+                  "id": "linkUrl",
+                  "default": ""
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "template": "{{#if bannerImage}}<section class=\"c-bcBanner c-bcBanner--compact\">{{#if linkUrl}}<a href=\"{{linkUrl}}\" class=\"c-bcBanner__link\"><img src=\"{{#if bannerImage.src}}{{bannerImage.src}}{{else}}{{bannerImage}}{{/if}}\" alt=\"{{altText}}\" class=\"c-bcBanner__image\" loading=\"lazy\" width=\"1400\" height=\"250\" /></a>{{else}}<img src=\"{{#if bannerImage.src}}{{bannerImage.src}}{{else}}{{bannerImage}}{{/if}}\" alt=\"{{altText}}\" class=\"c-bcBanner__image\" loading=\"lazy\" width=\"1400\" height=\"250\" />{{/if}}</section>{{/if}}"
+    },
+    {
+      "name": "Banner - Strip (1280x72)",
+      "kind": "custom",
+      "description": "Slim promotional strip banner for homepage. Recommended image size: 1280x72px",
+      "schema": [
+        {
+          "type": "tab",
+          "label": "Banner Settings",
+          "sections": [
+            {
+              "label": "Banner Image",
+              "settings": [
+                {
+                  "type": "imageManager",
+                  "label": "Banner Image",
+                  "id": "bannerImage",
+                  "default": {
+                    "src": ""
+                  }
+                },
+                {
+                  "type": "input",
+                  "label": "Alt Text (for accessibility)",
+                  "id": "altText",
+                  "default": "Promotional banner"
+                },
+                {
+                  "type": "input",
+                  "label": "Link URL (optional)",
+                  "id": "linkUrl",
+                  "default": ""
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "template": "{{#if bannerImage}}<section class=\"c-bcBanner c-bcBanner--slim\">{{#if linkUrl}}<a href=\"{{linkUrl}}\" class=\"c-bcBanner__link\"><img src=\"{{#if bannerImage.src}}{{bannerImage.src}}{{else}}{{bannerImage}}{{/if}}\" alt=\"{{altText}}\" class=\"c-bcBanner__image\" loading=\"lazy\" width=\"1280\" height=\"72\" /></a>{{else}}<img src=\"{{#if bannerImage.src}}{{bannerImage.src}}{{else}}{{bannerImage}}{{/if}}\" alt=\"{{altText}}\" class=\"c-bcBanner__image\" loading=\"lazy\" width=\"1280\" height=\"72\" />{{/if}}</section>{{/if}}"
+    },
+    {
+      "name": "Intro & Promise",
+      "kind": "custom",
+      "description": "Two-column section with brand intro text and promise list with icons",
+      "schema": [
+        {
+          "type": "tab",
+          "label": "Content",
+          "sections": [
+            {
+              "label": "Brand Introduction",
+              "settings": [
+                {
+                  "type": "input",
+                  "label": "Heading",
+                  "id": "heading",
+                  "default": "Welcome to Partyworld"
+                },
+                {
+                  "type": "text",
+                  "label": "Introduction Text",
+                  "id": "introText",
+                  "default": "Your one-stop shop for all party supplies. We've been helping Ireland celebrate since 1985."
+                }
+              ]
+            },
+            {
+              "label": "Our Promise",
+              "settings": [
+                {
+                  "type": "input",
+                  "label": "Promise Section Heading",
+                  "id": "promisesHeading",
+                  "default": "Our Promise to You"
+                },
+                {
+                  "type": "input",
+                  "label": "Promise 1",
+                  "id": "promise1",
+                  "default": "Family-owned Irish business since 1985"
+                },
+                {
+                  "type": "input",
+                  "label": "Promise 2",
+                  "id": "promise2",
+                  "default": "Fast delivery across Ireland"
+                },
+                {
+                  "type": "input",
+                  "label": "Promise 3",
+                  "id": "promise3",
+                  "default": "Thousands of products in stock"
+                },
+                {
+                  "type": "input",
+                  "label": "Promise 4",
+                  "id": "promise4",
+                  "default": "Expert party planning advice"
+                },
+                {
+                  "type": "input",
+                  "label": "Promise 5 (optional)",
+                  "id": "promise5",
+                  "default": ""
+                },
+                {
+                  "type": "input",
+                  "label": "Promise 6 (optional)",
+                  "id": "promise6",
+                  "default": ""
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "template": "<section class=\"c-introPromise\"><div class=\"c-introPromise__container\"><div class=\"c-introPromise__intro\">{{#if heading}}<h2 class=\"c-introPromise__heading\">{{heading}}</h2>{{/if}}{{#if introText}}<div class=\"c-introPromise__text\">{{{introText}}}</div>{{/if}}</div><div class=\"c-introPromise__promises\">{{#if promisesHeading}}<h3 class=\"c-introPromise__promisesHeading\">{{promisesHeading}}</h3>{{/if}}<ul class=\"c-introPromise__list\">{{#if promise1}}<li class=\"c-introPromise__item\"><svg class=\"c-introPromise__icon\" width=\"24\" height=\"24\" aria-hidden=\"true\"><use href=\"#icon-Check\"></use></svg><span class=\"c-introPromise__itemText\">{{promise1}}</span></li>{{/if}}{{#if promise2}}<li class=\"c-introPromise__item\"><svg class=\"c-introPromise__icon\" width=\"24\" height=\"24\" aria-hidden=\"true\"><use href=\"#icon-Check\"></use></svg><span class=\"c-introPromise__itemText\">{{promise2}}</span></li>{{/if}}{{#if promise3}}<li class=\"c-introPromise__item\"><svg class=\"c-introPromise__icon\" width=\"24\" height=\"24\" aria-hidden=\"true\"><use href=\"#icon-Check\"></use></svg><span class=\"c-introPromise__itemText\">{{promise3}}</span></li>{{/if}}{{#if promise4}}<li class=\"c-introPromise__item\"><svg class=\"c-introPromise__icon\" width=\"24\" height=\"24\" aria-hidden=\"true\"><use href=\"#icon-Check\"></use></svg><span class=\"c-introPromise__itemText\">{{promise4}}</span></li>{{/if}}{{#if promise5}}<li class=\"c-introPromise__item\"><svg class=\"c-introPromise__icon\" width=\"24\" height=\"24\" aria-hidden=\"true\"><use href=\"#icon-Check\"></use></svg><span class=\"c-introPromise__itemText\">{{promise5}}</span></li>{{/if}}{{#if promise6}}<li class=\"c-introPromise__item\"><svg class=\"c-introPromise__icon\" width=\"24\" height=\"24\" aria-hidden=\"true\"><use href=\"#icon-Check\"></use></svg><span class=\"c-introPromise__itemText\">{{promise6}}</span></li>{{/if}}</ul></div></div></section>"
+    }
+  ]
+}

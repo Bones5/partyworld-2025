@@ -158,6 +158,9 @@
 
     .heroCarousel-image-wrapper {
         align-items: flex-start;
+        aspect-ratio: 16 / 9;
+        contain: layout style paint;
+        content-visibility: auto;
         display: flex;
         height: 56.25vw;
         justify-content: center;

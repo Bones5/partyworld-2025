@@ -41,8 +41,8 @@
 .header {
     background-color: $header-bg;
     border-bottom: container("border");
-    height: $header-height;
-    position: fixed;
+    height: auto; // Auto height for mobile multi-row layout
+
     top: 0;
     width: 100%;
     z-index: zIndex("higher");
@@ -67,7 +67,6 @@
 
 .header-logo {
     font-size: 0;   // 1
-    height: $header-height;
     margin: 0 remCalc($header-toggle-width); // 2
     text-align: center;
 
@@ -210,14 +209,195 @@
 }
 
 //
+// Mobile Header Layout
+// - Meta row at top
+// - Logo in middle with hamburger left, nav icons right
+// - Search/tools row at bottom
+// -----------------------------------------------------------------------------
+
+.header-mobile {
+    display: flex;
+    flex-direction: column;
+
+    @include breakpoint("medium") {
+        display: none;
+    }
+}
+
+.header-mobile__meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: spacing("quarter") spacing("half");
+    background-color: $header-bg;
+    color: $header-meta-color;
+    font-size: $header-meta-fontSize;
+
+    .contact-bar {
+        gap: spacing("quarter");
+    }
+
+    &--left {
+        // Contact bar row
+    }
+
+    &--right {
+        // Trustpilot badge row
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+}
+
+.header-mobile__main {
+    display: flex;
+    justify-content: space-between;
+    gap: spacing("half");
+    height: $header-height;
+    padding: 0 spacing("half");
+    position: relative;
+
+    .mobileMenu-toggle {
+        position: relative;
+        left: auto;
+        flex-shrink: 0;
+    }
+
+    .header-logo--mobileOnly {
+        flex: 0 0 auto;
+        margin: 0;
+        text-align: center;
+    }
+
+    // Nav icons (cart, account) on the right
+    .navUser {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-shrink: 0;
+        position: relative;
+        top: auto;
+        right: auto;
+        transform: none;
+        width: auto;
+        z-index: zIndex("high");
+
+        .navUser-section,
+        .navUser-section--alt {
+            float: none;
+            display: flex;
+            align-items: center;
+            gap: spacing("quarter");
+        }
+
+        .navUser-item {
+            float: none;
+        }
+    }
+}
+
+.header-mobile__tools {
+    display: flex;
+    align-items: center;
+    gap: spacing("half");
+    padding: spacing("quarter") spacing("half");
+    background-color: $header-bg;
+    width: 100%;
+
+    .form,
+    .form-field {
+        margin: 0;
+        width: 100%;
+    }
+
+    // Search box takes available space
+    .form--quickSearch {
+        flex: 1;
+        min-width: 0; // Allow shrinking below content size
+
+        // Match icon size and color with currency selector
+        .search-box-submit {
+            width: remCalc(24px);
+            height: remCalc(24px);
+
+            svg {
+                width: remCalc(24px);
+                height: remCalc(24px);
+                stroke: stencilColor("color-textBase");
+            }
+        }
+    }
+
+    // Currency selector on mobile
+    [data-currency-selector] {
+        flex-shrink: 0;
+
+        .form-field {
+            margin: 0;
+            width: auto;
+        }
+
+        .form-select {
+            padding: spacing("quarter") spacing("single");
+            padding-right: remCalc(36px); // Space for 24px icon + padding
+            min-width: remCalc(90px);
+            width: auto;
+            // Match dropdown icon size and color with search icon (24px, color-textBase)
+            background-size: remCalc(24px) remCalc(24px);
+            background-position: right spacing("quarter") center;
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z' fill='%23333333' /%3E%3C/svg%3E");
+        }
+    }
+}
+
+//
 // Header Grid Layout (desktop+)
 // - Hide grid on mobile to preserve original compact header
 // - Show a mobile-only logo instead
 // -----------------------------------------------------------------------------
 
 .header-logo--mobileOnly {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: spacing("half") spacing("single");
+    width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    text-align: center;
+    box-sizing: border-box;
+
     @include breakpoint("medium") {
         display: none;
+    }
+
+    // The base `.header-logo` styles include side margins (for the old mobile header)
+    // and `.header-logo__link` defaults to `width: 70%`. Both can shift the logo and
+    // cause horizontal overflow in the new mobile header rows.
+    .header-logo__link {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        height: auto;
+        min-height: remCalc(96px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    // The Partyworld logo is rendered via `.header-logo-svg` (not `.header-logo-image`).
+    // Override the default max-height constraint (which is tied to `$header-height`).
+    .header-logo__link--svg {
+        height: auto;
+    }
+
+    .header-logo-svg,
+    .header-logo-svg-fallback {
+        height: remCalc(96px);
+        max-height: none;
+        max-width: 100%;
+        width: auto;
+        aspect-ratio: auto;
+        object-fit: contain;
     }
 }
 

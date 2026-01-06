@@ -19,6 +19,16 @@
 }
 
 
+
+.form-input, .form-select{
+    height: 2.5rem;
+    
+        @include breakpoint("medium") {
+            height: 3rem
+        }
+}
+
+
 // Form labels
 // -----------------------------------------------------------------------------
 

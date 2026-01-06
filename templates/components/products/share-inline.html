@@ -1,0 +1,60 @@
+{{!-- Inline share button for product title row --}}
+{{#if settings.add_this.buttons}}
+    {{assignVar 'encodedUrl' (encodeURI url)}}
+    {{assignVar 'encodedTitle' (encodeURI product.title)}}
+    {{assignVar 'pinterestImage' (getImageSrcset product.main_image (cdn theme_settings.default_image_product) 1x=theme_settings.zoom_size)}}
+    <div class="productView-shareInline" data-dropdown="share-inline-dropdown">
+        <button class="productView-shareBtn" type="button" aria-controls="share-inline-dropdown" aria-expanded="false" aria-label="{{lang 'products.share' fallback='Share'}}">
+            <svg class="icon" aria-hidden="true" focusable="false">
+                <use href="#icon-ShareNetwork"></use>
+            </svg>
+            <span>Share</span>
+        </button>
+        <ul class="productView-shareDropdown dropdown-menu" id="share-inline-dropdown" aria-hidden="true">
+            {{#each settings.add_this.buttons}}
+                <li>
+                    {{#if service '===' 'facebook'}}
+                    <a href="https://facebook.com/sharer/sharer.php?u={{getVar 'encodedUrl'}}"
+                       target="_blank"
+                       rel="noopener"
+                       aria-label="{{lang 'products.share_on' fallback='Share on'}} Facebook">
+                        <svg class="icon" aria-hidden="true" focusable="false">
+                            <use href="#icon-facebook"></use>
+                        </svg>
+                        <span>Facebook</span>
+                    </a>
+                    {{else if service '===' 'email'}}
+                    <a href="mailto:?subject={{getVar 'encodedTitle'}}&amp;body={{getVar 'encodedUrl'}}"
+                       target="_self"
+                       aria-label="{{lang 'products.share_via' fallback='Share via'}} Email">
+                        <svg class="icon" aria-hidden="true" focusable="false">
+                            <use href="#icon-envelope"></use>
+                        </svg>
+                        <span>Email</span>
+                    </a>
+                    {{else if service '===' 'twitter'}}
+                    <a href="https://x.com/intent/tweet/?text={{getVar 'encodedTitle'}}&amp;url={{getVar 'encodedUrl'}}"
+                       target="_blank"
+                       rel="noopener"
+                       aria-label="{{lang 'products.share_on' fallback='Share on'}} X">
+                        <svg class="icon" aria-hidden="true" focusable="false">
+                            <use href="#icon-x"></use>
+                        </svg>
+                        <span>X</span>
+                    </a>
+                    {{else if service '===' 'pinterest'}}
+                    <a href="https://pinterest.com/pin/create/button/?url={{getVar 'encodedUrl'}}&amp;media={{getVar 'pinterestImage'}}&amp;description={{getVar 'encodedTitle'}}"
+                       target="_blank"
+                       rel="noopener"
+                       aria-label="{{lang 'products.share_on' fallback='Share on'}} Pinterest">
+                        <svg class="icon" aria-hidden="true" focusable="false">
+                            <use href="#icon-pinterest"></use>
+                        </svg>
+                        <span>Pinterest</span>
+                    </a>
+                    {{/if}}
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+{{/if}}

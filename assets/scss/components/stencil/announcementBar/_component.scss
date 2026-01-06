@@ -13,7 +13,6 @@
 
 .c-announcementBar {
     background-color: $color-greyDarkest;
-    min-height: $header-height-bar;
     width: 100%;
     display: flex;
     align-items: center;
@@ -34,8 +33,14 @@
 .c-announcementBar__content {
     color: $color-greyLightest;
     font-family: $fontFamily-headings;
-    font-size: fontSize("smaller");
-    line-height: $lineHeight-smaller;
+    font-size: remCalc(11px);
+    line-height: 1.3;
+    font-weight: 400;
+
+    @include breakpoint("medium") {
+        font-size: fontSize("smaller");
+        line-height: $lineHeight-smaller;
+    }
 
     a {
         color: inherit;
@@ -60,4 +65,23 @@
     margin-right: spacing("quarter");
     color: color("whites", "bright");
     fill: currentColor;
+}
+
+// Responsive visibility for announcement bar
+// Mobile: show inside fixed header
+// Desktop: show outside header in document flow
+.announcementBar--mobile {
+    display: block;
+
+    @include breakpoint("medium") {
+        display: none;
+    }
+}
+
+.announcementBar--desktop {
+    display: none;
+
+    @include breakpoint("medium") {
+        display: block;
+    }
 }

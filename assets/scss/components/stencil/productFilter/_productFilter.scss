@@ -1,0 +1,244 @@
+// =============================================================================
+// PRODUCT FILTER (CSS)
+// =============================================================================
+
+.actionBar--filter {
+    display: flex;
+    flex-direction: column;
+    gap: spacing("half");
+    padding: spacing("single") 0;
+    border-bottom: 1px solid stencilColor("container-border-global");
+    margin-bottom: spacing("single");
+}
+
+.actionBar-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: spacing("half");
+    width: 100%;
+
+    @include breakpoint("medium") {
+        gap: spacing("single");
+    }
+}
+
+// Row 1: Search input takes full width
+.actionBar-row--search {
+    .actionBar-section--search {
+        flex: 1 1 100%;
+    }
+}
+
+// Row 2: Controls row with limit, sort, and pagination
+.actionBar-row--controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: spacing("half");
+
+    @include breakpoint("medium") {
+        flex-wrap: nowrap;
+        gap: spacing("single");
+    }
+}
+
+// Search/Filter Section
+.actionBar-section--search {
+    flex: 1 1 100%;
+    min-width: 0;
+
+    .form-field {
+        margin-bottom: 0;
+    }
+}
+
+.actionBar-searchInput {
+    display: flex;
+    align-items: stretch;
+    position: relative;
+
+    .form-input {
+        flex: 1;
+        border-radius: $global-radius;
+        padding-right: spacing("double") + spacing("quarter");
+
+        &:focus {
+            z-index: 1;
+        }
+    }
+}
+
+.actionBar-searchButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 spacing("half") + spacing("quarter");
+    background-color: stencilColor("button--primary-backgroundColor");
+    color: stencilColor("button--primary-color");
+    border: $input-border-width $input-border-style stencilColor("button--primary-backgroundColor");
+    border-radius: 0 $global-radius $global-radius 0;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover,
+    &:focus {
+        background-color: stencilColor("button--primary-backgroundColorHover");
+        border-color: stencilColor("button--primary-backgroundColorHover");
+    }
+
+    &:focus {
+        outline: 2px solid stencilColor("color-primary");
+        outline-offset: 2px;
+    }
+
+    .icon {
+        width: remCalc(18);
+        height: remCalc(18);
+
+        svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+    }
+}
+
+// Clear button for search input
+.actionBar-searchClear {
+    position: absolute;
+    right: spacing("half");
+    top: 50%;
+    transform: translateY(-50%);
+    padding: spacing("quarter");
+    background: transparent;
+    border: 0;
+    color: stencilColor("color-textSecondary");
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease, color 0.15s ease;
+
+    .form-input:not(:placeholder-shown) ~ &,
+    &.is-visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    &:hover,
+    &:focus {
+        color: stencilColor("color-textBase");
+    }
+
+    &:focus {
+        outline: 2px solid stencilColor("color-primary");
+        outline-offset: 2px;
+    }
+
+    .icon {
+        width: remCalc(14);
+        height: remCalc(14);
+        display: block;
+
+        svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+    }
+}
+
+// Limit/Products Per Page Section
+.actionBar-section--limit {
+    flex: 0 0 auto;
+
+    .form-field {
+        margin-bottom: 0;
+    }
+
+    .form-label {
+        white-space: nowrap;
+    }
+}
+
+// Page Number Section
+.actionBar-section--page {
+    flex: 0 0 auto;
+
+    .form-field {
+        margin-bottom: 0;
+    }
+
+    .form-label {
+        white-space: nowrap;
+    }
+
+    .form-select {
+        min-width: remCalc(60);
+    }
+}
+
+// Sort Section (extends existing actionBar-section)
+.actionBar-section {
+    flex: 0 0 auto;
+
+    .form-field {
+        margin-bottom: 0;
+    }
+}
+
+// No results message
+.filter-no-results {
+    text-align: center;
+    padding: spacing("double");
+    color: stencilColor("color-textSecondary");
+    font-size: fontSize("base");
+
+    strong {
+        color: stencilColor("color-textBase");
+    }
+}
+
+// Loading state for product container
+#product-listing-container.is-loading {
+    position: relative;
+    min-height: remCalc(200);
+    
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba($color-white, 0.7);
+        z-index: 10;
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: remCalc(40);
+        height: remCalc(40);
+        margin: remCalc(-20) 0 0 remCalc(-20);
+        border: 3px solid stencilColor("color-primary");
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: filter-spinner 0.8s linear infinite;
+        z-index: 11;
+    }
+}
+
+@keyframes filter-spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// Hidden product items (for client-side filtering fallback)
+.productGrid .product.u-hidden,
+.productList .product.u-hidden {
+    display: none;
+}

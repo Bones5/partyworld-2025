@@ -13,7 +13,7 @@
     text-align: center;
     position: relative;
     transition: box-shadow 0.2s ease;
-    padding: spacing("half");
+    padding: spacing("single");
     border-radius: 20px;
 
     &:hover {
@@ -27,12 +27,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 
     img {
-        width: 200px;
-        height: 200px;   
+        width: 100%;
+        max-width: 200px;
+        height: auto;
+        max-height: none;
         padding: 1em;    
         display: block;
+        object-fit: contain;
         transition: transform 0.3s ease;
     }
 
@@ -48,7 +52,6 @@
 }
 
 .c-categoryCard__body {
-    padding: $spacing-single;
     text-align: center;
 }
 
@@ -60,28 +63,11 @@
 }
 
 .c-categoryCard__cta {
-    display: block;
-    width: 100%;
-    background: $color-primary;
-    color: $color-white;
-    padding: $spacing-half $spacing-single;
-    text-decoration: none;
-    font-weight: $fontWeight-semibold;
-    text-align: center;
-    border-radius: 8px;
-    transition: background-color 0.2s ease;
-    text-transform: uppercase;
+    @include cta-button;
+    font-size: remCalc(16px);
 
-    &:hover,
-    &:focus {
-        background: $color-primaryDark;
-        color: $color-white;
-        text-decoration: none;
-    }
-
-    &:focus {
-        outline: 2px solid $color-primary;
-        outline-offset: 2px;
+    @include breakpoint("medium") {
+        font-size: fontSize("small");
     }
 }
 
@@ -89,8 +75,9 @@
 // Bright party colors that rotate based on card position
 .c-categoryCard__placeholder {
     display: block;
-        width: 200px;
-        height: 200px;   
+    width: 100%;
+    max-width: 200px;
+    aspect-ratio: 1 / 1;
 }
 
 // Color palette for placeholders - uses nth-child on parent grid item

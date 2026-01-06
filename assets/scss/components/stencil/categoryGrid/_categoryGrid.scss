@@ -7,84 +7,88 @@
 // -----------------------------------------------------------------------------
 
 .c-categoryGrid {
-    margin-bottom: spacing("double") + spacing("double");
+    @include homepage-section;
 }
 
 .c-categoryGrid__heading {
-    font-family: $fontFamily-headings;
-    font-size: $h2-font-size;
-    line-height: $lineHeight-larger;
-    font-weight: fontWeight("normal");
-    text-transform: uppercase;
-    margin: 0 0 spacing("single");
-    text-align: center;
+    @include homepage-section-heading;
 }
 
 .c-categoryGrid__items {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: spacing("single");
 
-    // 5-column variant (default for shop by category)
+    // Default progression: 2 → 3 → 4 → 5 columns
     @include breakpoint("small") {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     @include breakpoint("medium") {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
     @include breakpoint("large") {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
-    // 3-column variant
+    @include breakpoint("xlarge") {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    // 3-column variant: 2 → 2 → 3
     &.c-categoryGrid__items--col3 {
-        @include breakpoint("small") {
-            grid-template-columns: repeat(2, 1fr);
+        @include breakpoint("medium") {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
-        @include breakpoint("medium") {
-            grid-template-columns: repeat(3, 1fr);
+        @include breakpoint("large") {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
         }
     }
 
-    // 4-column variant
+    // 4-column variant: 2 → 2 → 3 → 4
     &.c-categoryGrid__items--col4 {
-        @include breakpoint("small") {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
         @include breakpoint("medium") {
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
         @include breakpoint("large") {
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        @include breakpoint("xlarge") {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
         }
     }
 
-    // 5-column variant
+    // 5-column variant: 2 → 2 → 3 → 4 → 5
     &.c-categoryGrid__items--col5 {
-        @include breakpoint("small") {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
         @include breakpoint("medium") {
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
         @include breakpoint("large") {
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        @include breakpoint("xlarge") {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        @include breakpoint("xxlarge") {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
         }
     }
 }
 
 .c-categoryGrid__item {
     display: flex;
+    min-width: 0;
 
     // Ensure cards fill the grid cell
     .c-categoryCard {
         width: 100%;
+        min-width: 0;
     }
 }

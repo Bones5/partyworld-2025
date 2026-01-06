@@ -3,14 +3,14 @@
         <div class="form-field">
             <label class="form-label is-srOnly" for="search_query_adv">{{lang 'search.results.form_label'}}</label>
             <div class="form-prefixPostfix wrap">
-                <input class="form-input" id="search_query_adv" name="search_query_adv" value="{{forms.search.query}}">
+                <input class="form-input" id="search_query_adv" name="search_query_adv" value="{{forms.search.query}}" placeholder="Search the store">
                 <button
                     class="search-box-submit form-prefixPostfix-button--postfix"
                     type="submit"
                     aria-label="{{lang 'search.results.form_button_text'}}"
                 >
                     <svg aria-hidden="true" focusable="false">
-                        <use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-MagnifyingGlass"></use>
+                        <use href="#icon-MagnifyingGlass"></use>
                     </svg>
                     <span class="is-srOnly">{{lang 'search.results.form_button_text'}}</span>
                 </button>

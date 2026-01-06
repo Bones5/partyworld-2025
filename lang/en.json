@@ -207,6 +207,16 @@
             "price_asc": "Price: Ascending",
             "price_desc": "Price: Descending"
         },
+        "filter": {
+            "search_products": "Filter products",
+            "search_placeholder": "Filter by name...",
+            "search_submit": "Apply filter",
+            "clear": "Clear filter",
+            "show": "Show:",
+            "products_per_page": "Products per page",
+            "page": "Page:",
+            "page_number": "Page number"
+        },
         "loading": "Loading",
         "month": "Month",
         "day": "Day",
@@ -915,7 +925,8 @@
             "show-less": "Show Less",
             "show-filters": "Show Filters",
             "hide-filters": "Hide Filters",
-            "browse-by": "Browse by"
+            "browse-by": "Browse by",
+            "filters": "Filters"
         },
         "error": {
             "empty_field": "Search field cannot be empty."

@@ -7,6 +7,11 @@
         {{{ head.config }}}
         {{#block "head"}} {{/block}}
 
+        {{!-- Preload first carousel image for faster LCP --}}
+        {{#if carousel.slides.[0].stencil_image}}
+            <link rel="preload" as="image" fetchpriority="high" href="{{getImageSrcset carousel.slides.[0].stencil_image 1x='800w'}}">
+        {{/if}}
+
         <link href="{{{ head.favicon }}}" rel="shortcut icon">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -53,7 +58,8 @@
         {{~inject 'giftWrappingRemoveMessage' (lang 'cart.gift_wrapping.remove_confirm')}}
     </head>
     <body>
-        <svg data-src="{{cdn 'img/icon-sprite.svg'}}" class="icons-svg-sprite"></svg>
+        {{!-- Inline SVG sprite for icon symbols - avoids CORS issues with external references --}}
+        {{> components/common/icons/icon-defs }}
 
         {{> components/common/header }}
         {{> components/common/body }}

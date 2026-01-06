@@ -1,43 +1,34 @@
-{{!-- Intro Promise component partial --}}
-{{!-- 
-  Usage:
-    {{> components/page/intro-promise 
-        heading="Welcome to Partyworld"
-        intro="Your one-stop shop for all party supplies..."
-        promises=promises
-    }}
-  
-  Two-column layout: brand intro on left + key promises with icon list on right.
---}}
-<section class="c-introPromise">
+<section class="c-introPromise c-introPromise--breakout">
     <div class="c-introPromise__container">
-        <div class="c-introPromise__intro">
-            {{#if heading}}
-                <h2 class="c-introPromise__heading">{{heading}}</h2>
-            {{/if}}
-            {{#if intro}}
-                <div class="c-introPromise__text">
-                    {{{intro}}}
-                </div>
-            {{/if}}
-        </div>
-        <div class="c-introPromise__promises">
-            {{#if promisesHeading}}
-                <h3 class="c-introPromise__promisesHeading">{{promisesHeading}}</h3>
-            {{/if}}
-            <ul class="c-introPromise__list">
-                {{#each promises}}
-                    <li class="c-introPromise__item">
-                        {{#if icon}}
-                            <svg class="c-introPromise__icon" width="24" height="24" aria-hidden="true">
-                                <use href="#icon-{{icon}}"></use>
-                            </svg>
-                        {{/if}}
-                        <span class="c-introPromise__itemText">{{text}}</span>
-                    </li>
-                {{/each}}
-            </ul>
-        </div>
+        <article class="c-introPromise__box">
+            <header class="c-introPromise__boxHeader">
+                <h2 class="c-introPromise__title">Party Decorations and Fancy Dress Costumes</h2>
+            </header>
+            <div class="c-introPromise__boxBody">
+                <p class="c-introPromise__text">
+                    Welcome to PartyWorld - Ireland's favourite party store. We have a wide variety of costumes, accessories and party supplies which are suitable for every party occasion! Browse our large selection of Halloween Costumes, Accessories, Kids Costumes and more. Here at PartyWorld, we believe adults and children should never need an excuse to dress up and we have lots of different outfits here for you to tryout. Are you planning a Hen Party? Then why not tryout our Hen Party Accessories and fancy dress outfits that are guaranteed to ensure you have a great time. PartyWorld offers next working day delivery in Ireland for all orders placed before 3:30 pm. Shop online.
+                </p>
+            </div>
+        </article>
+
+        <article class="c-introPromise__box">
+            <header class="c-introPromise__boxHeader">
+                <h2 class="c-introPromise__title">Our Promise to You</h2>
+            </header>
+            <div class="c-introPromise__boxBody">
+                <ul class="c-introPromise__list">
+                    <li class="c-introPromise__listItem">Huge Selection of Party Costumes and Accessories</li>
+                    <li class="c-introPromise__listItem">Next Working Day Delivery Straight to your Door</li>
+                    <li class="c-introPromise__listItem">The One-Stop Party Shop that has Everything for a Great Party</li>
+                    <li class="c-introPromise__listItem">Great Value for Money</li>
+                    <li class="c-introPromise__listItem">Convenient Online Ordering</li>
+                    <li class="c-introPromise__listItem">Click and Collect</li>
+                    <li class="c-introPromise__listItem">Fantastic Customer Service</li>
+                    <li class="c-introPromise__listItem">Amazing Special Offers</li>
+                    <li class="c-introPromise__listItem">Shop with Confidence</li>
+                    <li class="c-introPromise__listItem">100% Money Back Guarantee</li>
+                </ul>
+            </div>
+        </article>
     </div>
-    {{{region name="home_intro_promise"}}}
 </section>

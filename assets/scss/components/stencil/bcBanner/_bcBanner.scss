@@ -1,0 +1,103 @@
+// BigCommerce Marketing Banner Component
+// =============================================================================
+// Styles for custom homepage banner widgets.
+// Two variants: Full Width (1400x400) and Compact (1400x250)
+// =============================================================================
+
+.c-bcBanner {
+    @include homepage-section;
+
+    // Half the standard homepage section spacing for banners
+    margin-bottom: (spacing("double") + spacing("single")) / 2;
+
+    @include breakpoint("medium") {
+        margin-bottom: (spacing("double") + spacing("double")) / 2;
+    }
+
+    width: 100%;
+}
+
+// Break out of the Stencil `.container` and bleed to full viewport width
+.c-bcBanner--breakout {
+    position: relative;
+    left: 50%;
+    width: 100vw;
+    margin-left: -50vw;
+    margin-right: -50vw;
+}
+
+.c-bcBanner__link {
+    display: block;
+    text-decoration: none;
+    
+    &:hover .c-bcBanner__image,
+    &:focus .c-bcBanner__image {
+        opacity: 0.95;
+        transform: scale(1.005);
+    }
+    
+    &:focus {
+        outline: 2px solid stencilColor("color-primary");
+        outline-offset: 4px;
+    }
+}
+
+.c-bcBanner__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+// Full Width variant (1400x400px recommended)
+.c-bcBanner--fullWidth {
+    .c-bcBanner__image {
+        aspect-ratio: 1400 / 400;
+        object-fit: cover;
+    }
+}
+
+// Compact variant (1400x250px recommended)
+.c-bcBanner--compact {
+    .c-bcBanner__image {
+        aspect-ratio: 1400 / 250;
+        object-fit: cover;
+    }
+}
+
+// Slim variant (1280x72px recommended)
+.c-bcBanner--slim {
+    .c-bcBanner__image {
+        aspect-ratio: 1280 / 72;
+        object-fit: cover;
+    }
+}
+
+// Legacy support for raw content banners
+.c-bcBanner__content {
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    a {
+        display: block;
+        text-decoration: none;
+        
+        &:hover img,
+        &:focus img {
+            opacity: 0.95;
+        }
+    }
+}
+
+// Hide empty banner regions (when no widget is placed)
+.c-bcBanner:empty {
+    display: none;
+    margin: 0;
+    padding: 0;
+}
+

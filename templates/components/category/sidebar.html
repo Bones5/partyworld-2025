@@ -1,20 +1,75 @@
-<nav>
-    {{#if category.subcategories}}
-        <div class="sidebarBlock">
-            <h2 class="sidebarBlock-heading">{{category.name}}</h2>
-            <ul class="navList">
-                {{#each category.subcategories}}
-                <li class="navList-item">
-                    <a class="navList-action" href="{{url}}" title="{{name}}">{{name}}</a>
-                </li>
-                {{/each}}
-            </ul>
-        </div>
-    {{/if}}
-
+<nav class="category-sidebar" aria-label="{{lang 'search.faceted.label'}}">
     {{#if category.faceted_search_enabled}}
-        {{> components/faceted-search/index category}}
+        <div id="facetedSearch" class="facetedSearch sidebarBlock" role="region">
+            {{!-- Mobile toggle --}}
+            <a href="#facetedSearch-navList" role="button" class="facetedSearch-toggle toggleLink" data-collapsible aria-expanded="false" aria-controls="facetedSearch-navList">
+                <span class="facetedSearch-toggle-text">
+                    {{lang 'search.faceted.filters'}}
+                </span>
+                <span class="facetedSearch-toggle-indicator">
+                    <span class="toggleLink-text toggleLink-text--on">
+                        {{lang 'search.faceted.hide-filters'}}
+                        <i class="icon c-icon--sm" aria-hidden="true">
+                            <svg><use href="#icon-keyboard-arrow-up"/></svg>
+                        </i>
+                    </span>
+                    <span class="toggleLink-text toggleLink-text--off">
+                        {{lang 'search.faceted.show-filters'}}
+                        <i class="icon c-icon--sm" aria-hidden="true">
+                            <svg><use href="#icon-keyboard-arrow-down"/></svg>
+                        </i>
+                    </span>
+                </span>
+            </a>
+
+            <div id="facetedSearch-navList" class="facetedSearch-navList">
+                {{!-- Selected Filters --}}
+                {{> components/faceted-search/selected-facets selected}}
+
+                <div class="accordion accordion--navList accordion--sidebar">
+                    {{!-- 1. Price Filter (always first if available) --}}
+                    {{#each facets}}
+                        {{#if visible}}
+                            {{#if (or (compare facet '===' 'price') (compare title '===' 'Price'))}}
+                                {{> components/category/sidebar-accordion-item this collapsed=true}}
+                            {{/if}}
+                        {{/if}}
+                    {{/each}}
+
+                    {{!-- 2. Category Filter (second if available) --}}
+                    {{#each facets}}
+                        {{#if visible}}
+                            {{#if (or (compare facet '===' 'category') (compare title '===' 'Category'))}}
+                                {{> components/category/sidebar-accordion-item this collapsed=true}}
+                            {{/if}}
+                        {{/if}}
+                    {{/each}}
+
+                    {{!-- 3. All Other Filters --}}
+                    {{#each facets}}
+                        {{#if visible}}
+                            {{#unless (or (compare facet '===' 'price') (compare facet '===' 'category') (compare title '===' 'Price') (compare title '===' 'Category'))}}
+                                {{> components/category/sidebar-accordion-item this collapsed=true}}
+                            {{/unless}}
+                        {{/if}}
+                    {{/each}}
+                </div>
+
+                <div class="blocker" hidden></div>
+            </div>
+        </div>
     {{else}}
-        {{> components/category/shop-by-price}}
+        {{!-- Non-faceted: Show subcategories and price filter --}}
+        {{#if category.subcategories}}
+            <div class="accordion accordion--navList accordion--sidebar">
+                {{> components/category/sidebar-subcategories collapsed=true}}
+            </div>
+        {{/if}}
+
+        {{#if theme_settings.shop_by_price_visibility}}
+            <div class="accordion accordion--navList accordion--sidebar">
+                {{> components/category/sidebar-price-filter collapsed=true}}
+            </div>
+        {{/if}}
     {{/if}}
 </nav>

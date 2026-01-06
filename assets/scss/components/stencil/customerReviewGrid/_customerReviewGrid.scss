@@ -6,22 +6,11 @@
 // -----------------------------------------------------------------------------
 
 .c-customerReviewGrid {
-    margin-bottom: spacing("double");
+    @include homepage-section;
 }
 
 .c-customerReviewGrid__heading {
-    font-family: $fontFamily-headings;
-    font-size: $fontSize-larger;
-    line-height: $lineHeight-larger;
-    font-weight: $fontWeight-bold;
-    margin: 0 0 spacing("single");
-    text-align: center;
-    color: $color-textBase;
-
-    @include breakpoint("medium") {
-        font-size: $fontSize-largest;
-        line-height: $lineHeight-largest;
-    }
+    @include homepage-section-heading;
 }
 
 .c-customerReviewGrid__items {

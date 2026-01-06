@@ -195,6 +195,12 @@ export class Collapsible {
             return;
         }
 
+        // If already open, allow navigation to href (for nav menus)
+        if (this.isOpen && this.$toggle.attr('href') && this.$toggle.attr('href') !== '#') {
+            // Don't prevent default - let the link navigate
+            return;
+        }
+
         event.preventDefault();
 
         this.toggle();

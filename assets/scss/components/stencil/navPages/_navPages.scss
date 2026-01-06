@@ -40,19 +40,23 @@
 .navPages-container {
     bottom: 0;
     display: none;
-    height: 100%;
     left: 0;
-    -webkit-overflow-scrolling: touch;
-    position: absolute;
+    position: fixed;
     right: 0;
-    z-index: zIndex("lower");
+    top: remCalc($header-height-mobile);
+    height: calc(100vh - #{remCalc($header-height-mobile)});
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    z-index: zIndex("high");
 
     @include breakpoint("medium") {
         background: transparent;
         display: block;
         height: auto;
+        overflow-y: visible;
         padding: 0 spacing("single");
         position: relative;
+        top: auto;
     }
 
     @include breakpoint("large") {
@@ -65,7 +69,6 @@
 
     &.is-open {
         display: block;
-        padding-top: $header-height;
     }
 }
 
@@ -80,13 +83,12 @@
     padding: spacing("single");
 
     @include breakpoint("medium") {
-        @include grid-row("nest"); // 1
         @include nav($style: "navBar", $wrapper: "nav");
         background: none;
         font-size: 0; // 1
-        overflow-x: auto;
         overflow-y: visible;
-        padding: spacing("half");
+        overflow-x: scroll;
+        padding: spacing("half") spacing("half") 0; // Remove bottom padding, moved to navPages-item
         text-align: center;
         // Smooth scrolling and hide scrollbar for cleaner look
         -webkit-overflow-scrolling: touch;
@@ -135,16 +137,16 @@
         display: inline-flex; // Use flexbox for gap control // 5
         flex-wrap: nowrap;
         float: none;
-        gap: spacing("single"); // Tighter gap at medium breakpoint
+        gap: spacing("quarter"); // Reduced 50%
         white-space: nowrap;
     }
 
     @include breakpoint("large") {
-        gap: spacing("single") + spacing("half"); // ~24px at large
+        gap: spacing("half"); // ~8px at large (reduced 50%)
     }
 
     @include breakpoint("xlarge") {
-        gap: $header-nav-gap; // ~80px gaps per Figma at xlarge // 5
+        gap: spacing("single"); // Reduced 50%
     }
 
     + .navPages-list {
@@ -157,6 +159,7 @@
 .navPages-item {
     @include breakpoint("medium") {
         display: inline-block;
+        padding-bottom: spacing("half"); // Bottom padding for submenu alignment
     }
 }
 
@@ -228,23 +231,83 @@
 }
 
 .navPages-action {
-    color: stencilColor("navPages-color");
+    // Mobile: dark text on white background, matching desktop font style
+    color: stencilColor("color-textBase");
     display: block;
-    font-size: fontSize("smaller");
+    font-size: fontSize("small"); // Match desktop size
     font-weight: stencilFontWeight("headings-font");
     font-family: $fontFamily-headings;
     padding: spacing("half") 0;
     text-decoration: none;
     text-transform: uppercase;
 
+    // Mobile SVG icons
+    svg {
+        fill: stencilColor("color-textBase");
+        stroke: stencilColor("color-textBase");
+        transition: all 0.15s ease;
+    }
+
+    // Mobile hover/focus states
+    &:hover,
+    &:focus,
+    &.activePage {
+        color: stencilColor("color-primary");
+
+        svg {
+            fill: stencilColor("color-primary");
+            stroke: stencilColor("color-primary");
+        }
+    }
+
+    &.is-open,
+    .collapsible-icon-wrapper.is-open {
+        svg {
+            fill: stencilColor("color-primary");
+            stroke: stencilColor("color-primary");
+        }
+    }
+
+    // Desktop: white text on red header background
     @include breakpoint("medium") {
+        color: stencilColor("navPages-color");
         display: inline-block;
-        font-size: $fontSize-nav; 
         line-height: $lineHeight-nav;
-        padding: spacing("half") 0; // Simplified padding since gap handles spacing
+        padding: spacing("half") spacing("half"); // Added horizontal padding for is-open state
+        transition: transform 0.2s ease, background-color 0.2s ease;
+
+        svg {
+            fill: stencilColor("navPages-color");
+            stroke: stencilColor("navPages-color");
+        }
+
+        &:hover,
+        &:focus,
+        &.activePage {
+            color: $navPage-subMenu-item--is-highlighted-color;
+
+            svg {
+                fill: $navPage-subMenu-item--is-highlighted-color;
+                stroke: $navPage-subMenu-item--is-highlighted-color;
+            }
+
+            // Add white underline for contrast on red header
+            text-decoration: underline;
+            text-underline-offset: 0.15em;
+        }
 
         &.is-open {
-            background-color: $navPage-subMenu-item--is-highlighted-background;
+            border: 2px solid stencilColor("navPages-color");
+            border-bottom: 6px solid stencilColor("color-primary"); // Red bottom to connect with submenu
+            border-radius: $global-radius $global-radius 0 0;
+            margin: -2px;
+            margin-bottom: -6px;
+            transform: translateY(-4px);
+
+            svg {
+                fill: $navPage-subMenu-item--is-highlighted-color;
+                stroke: $navPage-subMenu-item--is-highlighted-color;
+            }
         }
     }
 
@@ -256,52 +319,23 @@
         }
     }
 
-    &.is-open,
-    .collapsible-icon-wrapper.is-open {
-        svg {
-            fill: $navPage-subMenu-item--is-highlighted-color;
-            stroke: $navPage-subMenu-item--is-highlighted-color;
-        }
-    }
-
-    &:hover,
+    // Override default blue focus/active outline
     &:focus,
-    &.activePage {
-        color: $navPage-subMenu-item--is-highlighted-color;
-
-        svg {
-            fill: transparent; // transparent background on hover
-            stroke: $navPage-subMenu-item--is-highlighted-color; // white stroke (via hover color)
-            background-color: transparent;
-        }
-
-        // Add white underline for contrast on red header
-        text-decoration: underline;
-        text-underline-offset: 0.15em;
+    &:active,
+    &:focus-visible {
+        outline: 2px solid lighten(stencilColor("color-primary"), 10%) !important;
+        outline-offset: 2px;
     }
 
     // Focus-visible state for keyboard navigation
     &:focus-visible {
-        outline: 2px solid stencilColor("navPages-color");
-        outline-offset: 2px;
         text-decoration: underline;
         text-underline-offset: 0.15em;
-    }
-
-    svg {
-        fill: stencilColor("navPages-color");
-        stroke: stencilColor("navPages-color");
-        transition: all 0.15s ease;
-        display: inline-block;
-        box-sizing: content-box;
-        padding: 0.25em;
-        stroke-width: 2px;
     }
 }
 
 .navPages-action--storeCredit {
     svg {
-        fill: transparent;
         stroke: stencilColor("color-primary");
         background-color: color("whites", "bright");
         border-radius: 50%;
@@ -381,15 +415,26 @@
         padding: spacing("single") spacing("single") (spacing("single") + spacing("half")) !important;
         position: absolute;
         text-align: left;
+        border-radius: 0 0 20px 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        margin-left: $container-padding;
+        margin-right: $container-padding;
 
         &.is-open {
             display: block;
             left: 0;
-            width: 100%;
+            width: calc(100% - #{$container-padding * 2});
         }
 
         .navPages-action-moreIcon {
             display: none;
+        }
+    }
+
+    @include breakpoint("large") {
+
+        &.is-open {
+            width: calc(100% - #{$container-padding * 4});
         }
     }
 
@@ -448,15 +493,28 @@
         padding: 0 0.75rem !important; // 1
 
         .navPages-action {
-            // Submenu items use smaller font to distinguish from main nav (24px)
-            font-size: fontSize("smaller");
+            font-size: fontSize("small");
             text-transform: none;
             width: 100%;
+            white-space: normal;
+            color: stencilColor("color-textBase");
+
+            &:hover,
+            &:focus {
+                color: stencilColor("color-primary");
+                text-decoration: none;
+            }
+
+            &:focus,
+            &:focus-visible {
+                outline: 2px solid lighten(stencilColor("color-primary"), 10%);
+                outline-offset: 2px;
+            }
         }
 
         > .navPage-subMenu-action {
             border-bottom: 1px solid stencilColor("navPages-subMenu-separatorColor");
-            margin-bottom: spacing("half") + spacing("quarter");
+            margin-bottom: spacing("half");
         }
     }
 }
@@ -475,17 +533,32 @@
 }
 
 .navPage-subMenu-action {
-    padding: spacing("half") 0;
+    padding: spacing("quarter") 0;
+    color: stencilColor("color-textBase");
+    font-size: fontSize("small");
+    white-space: normal;
+
+    &:hover,
+    &:focus {
+        color: stencilColor("color-primary");
+        text-decoration: none;
+    }
+
+    &:focus,
+    &:focus-visible {
+        outline: 2px solid lighten(stencilColor("color-primary"), 10%);
+        outline-offset: 2px;
+    }
 
     @include breakpoint("medium") {
-        padding: spacing("half") 0 (spacing("half") + spacing("quarter"));
+        padding: spacing("quarter") 0;
     }
 
     .navPages-list:not(.navPages-list-depth-max) & {
         padding: 0 0 0 spacing("single");
 
         @include breakpoint("medium") {
-            padding: spacing("half") 0 (spacing("half") + spacing("quarter"));
+            padding: spacing("quarter") 0;
         }
     }
 
@@ -494,7 +567,6 @@
         display: inline-block;
         height: 100%;
         text-align: right;
-        width: 100%;
 
         @include breakpoint("medium") {
             display: none;
@@ -507,8 +579,30 @@
 // Child pages of sub pages navigation lists
 // -----------------------------------------------------------------------------
 .navPage-childList-action {
+    font-family: $fontFamily-sans;
     font-weight: fontWeight("normal");
-    padding: 0 0 spacing("quarter");
+    font-size: fontSize("smallest");
+    padding: 0 0 spacing("eighth");
+    white-space: normal;
+    color: stencilColor("color-textBase");
+
+    &:hover,
+    &:focus {
+        color: stencilColor("color-primary");
+        text-decoration: none;
+    }
+
+    &:focus,
+    &:focus-visible {
+        outline: 2px solid lighten(stencilColor("color-primary"), 10%);
+        outline-offset: 2px;
+    }
+}
+
+// Override for child list items inside subMenu-item (higher specificity)
+.navPage-subMenu-item .navPage-childList .navPages-action {
+    font-family: $fontFamily-sans;
+    font-size: fontSize("smallest");
 }
 
 
@@ -564,3 +658,5 @@
         }
     }
 }
+
+

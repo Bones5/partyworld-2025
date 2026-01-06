@@ -1,0 +1,57 @@
+// =============================================================================
+// HOMEPAGE SECTION UTILITIES
+// =============================================================================
+//
+// Standardized spacing and heading styles for homepage sections.
+// Ensures consistent vertical rhythm across all homepage components.
+//
+// Usage:
+//   .my-section {
+//       @include homepage-section;
+//   }
+//
+//   .my-section__heading {
+//       @include homepage-section-heading;
+//   }
+//
+// -----------------------------------------------------------------------------
+
+// Standard section spacing
+$homepage-section-spacing: spacing("double") + spacing("double"); // 4rem equivalent
+$homepage-section-spacing-mobile: spacing("double") + spacing("single"); // 3rem equivalent
+
+// Section wrapper mixin
+// Provides consistent bottom margin for all homepage sections
+@mixin homepage-section {
+    margin-bottom: $homepage-section-spacing-mobile;
+
+    @include breakpoint("medium") {
+        margin-bottom: $homepage-section-spacing;
+    }
+}
+
+// Section heading mixin
+// Standardizes H2 headings across all homepage sections
+@mixin homepage-section-heading {
+    font-family: $fontFamily-headings;
+    font-size: $h2-font-size;
+    font-weight: fontWeight("normal");
+    line-height: $lineHeight-larger;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 0 0 spacing("single");
+    color: stencilColor("color-textBase");
+}
+
+// =============================================================================
+// UTILITY CLASSES
+// =============================================================================
+// For use directly in templates
+
+.u-homepage-section {
+    @include homepage-section;
+}
+
+.u-homepage-section-heading {
+    @include homepage-section-heading;
+}

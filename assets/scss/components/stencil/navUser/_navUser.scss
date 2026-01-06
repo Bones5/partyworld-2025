@@ -74,7 +74,7 @@
 
 // Icon styling for search, account, cart (24px per Figma spec) // 9
 .navUser-icon {
-    @include square($navUser-icon-size-lg);
+    @include square($navUser-icon-size);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -84,7 +84,12 @@
     vertical-align: middle;
     border-radius: 50%;
     background-color: color("whites", "bright"); // white circle background
-    padding: 0.75em; // make the icon appear larger
+    padding: 0.4em; // smaller padding on mobile
+
+    @include breakpoint("medium") {
+        @include square($navUser-icon-size-lg);
+        padding: 0.75em; // larger padding on desktop
+    }
 }
 
 // Default smaller icon size (18px)
@@ -96,7 +101,10 @@
     color: stencilColor("navUser-color");
     font-weight: stencilFontWeight("headings-font");
     font-family: $fontFamily-headings;
-    padding: spacing("base") spacing("quarter");
+    padding: 0;
+    @include breakpoint("medium") {
+        padding: spacing("base") spacing("quarter");
+    }
     text-decoration: none;
     text-transform: uppercase;
 
@@ -146,12 +154,18 @@
         border-radius: 50%;
         display: inline-block;
         box-sizing: content-box;
-        width: 2em;
-        height: 2em;
         padding: 0.5em;
+        width: 1.5em;
+        height: 1.5em;
         transition: all 0.15s ease;
+        @include breakpoint("medium") {
+            padding: 0.5em;
+            width: 2em;
+            height: 2em;
+        }
     }
 }
+
 
 .navUser-action--currencySelector + .dropdown-menu,
 .navUser-action--channelSelector + .dropdown-menu {
@@ -217,12 +231,7 @@
 .navUser-item--cart {
     display: block;
 
-    // removing cart link for small screens when quantity is 0
-    &__hidden-s {
-        @media (max-width: $screen-small) {
-            display: none;
-        }
-    }
+    // Cart icon always visible on mobile (removed __hidden-s behavior)
 
     .navUser-action {
 
@@ -300,6 +309,11 @@
     .navUser-action {
         display: inline-block;
     }
+}
+
+.navUser-item--wishlist {
+    // Show wishlist icon on mobile
+    display: block;
 }
 
 .navUser-or {

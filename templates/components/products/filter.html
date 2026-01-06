@@ -1,3 +1,45 @@
-<form class="actionBar" method="get" data-sort-by="product">
-    {{> components/category/sort-box sort=sort}}
+<form class="actionBar actionBar--filter" method="get" data-sort-by="product" data-product-filter>
+    <div class="actionBar-row">
+        {{!-- Text Filter --}}
+        <fieldset class="form-fieldset actionBar-section actionBar-section--search">
+            <div class="form-field">
+                <label class="form-label u-hiddenVisually" for="search_query">{{lang 'common.filter.search_products'}}</label>
+                <div class="actionBar-searchInput">
+                    <input 
+                        class="form-input form-input--small" 
+                        type="text" 
+                        id="search_query" 
+                        name="search_query" 
+                        placeholder="{{lang 'common.filter.search_placeholder'}}"
+                        value=""
+                        aria-label="{{lang 'common.filter.search_products'}}"
+                        data-filter-search
+                    >
+                    <button type="button" class="actionBar-searchClear" aria-label="{{lang 'common.filter.clear'}}" data-filter-clear>
+                        <i class="icon" aria-hidden="true">
+                            <svg>
+                                <use href="#icon-close"></use>
+                            </svg>
+                        </i>
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+
+        {{!-- Products Per Page --}}
+        <fieldset class="form-fieldset actionBar-section actionBar-section--limit">
+            <div class="form-field">
+                <label class="form-label" for="limit">{{lang 'common.filter.show'}}</label>
+                <select class="form-select form-select--small" name="limit" id="limit" aria-label="{{lang 'common.filter.products_per_page'}}" data-filter-limit>
+                    <option value="12">12</option>
+                    <option value="24">24</option>
+                    <option value="36">36</option>
+                    <option value="48">48</option>
+                </select>
+            </div>
+        </fieldset>
+
+        {{!-- Sort By --}}
+        {{> components/category/sort-box sort=sort}}
+    </div>
 </form>

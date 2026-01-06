@@ -1,0 +1,45 @@
+{{!--
+    Sidebar Price Filter Accordion
+    Renders price range filter as a collapsible accordion
+    
+    @param collapsed - Whether to start collapsed (default: true)
+--}}
+{{#if theme_settings.shop_by_price_visibility}}
+<div class="accordion-block">
+    <h2 class="accordion-heading">
+        <button type="button"
+            class="accordion-navigation toggleLink{{#unless collapsed}} is-open{{/unless}}"
+            data-collapsible="#sidebar-content--price"
+            aria-label="{{lang 'search.faceted.toggleSection' title=(lang 'category.shop_by_price')}}"
+            aria-expanded="{{#if collapsed}}false{{else}}true{{/if}}"
+            aria-controls="sidebar-content--price"
+            data-shop-by-price
+        >
+            <span class="accordion-title">
+                {{lang 'category.shop_by_price'}}
+            </span>
+            <span class="accordion-indicator-wrap">
+                <svg class="icon c-icon--sm accordion-indicator toggleLink-text toggleLink-text--off" aria-hidden="true" focusable="false">
+                    <use href="#icon-add" />
+                </svg>
+                <svg class="icon c-icon--sm accordion-indicator toggleLink-text toggleLink-text--on" aria-hidden="true" focusable="false">
+                    <use href="#icon-remove" />
+                </svg>
+            </span>
+        </button>
+    </h2>
+
+    <div id="sidebar-content--price" class="accordion-content{{#unless collapsed}} is-open{{/unless}}">
+        {{> components/faceted-search/range-form shop_by_price=theme_settings.shop_by_price_visibility}}
+
+        <div class="reset-filters">
+            <a href="{{category.url}}" class="navList-action reset-btn">
+                {{lang 'category.reset'}}
+            </a>
+            <span class="reset-message aria-description--hidden">
+                {{lang 'category.filter_reset_announcement'}}
+            </span>
+        </div>
+    </div>
+</div>
+{{/if}}

@@ -1,14 +1,39 @@
-<a href="#main-content" class="skip-to-main-link">{{lang 'header.skip_to_main'}}</a>
-{{!-- Announcement Bar (Figma: 56px height, $color-highlight background) --}}
-{{> components/common/announcement-bar}}
+{{!-- Announcement Bar - Desktop (outside fixed header) --}}
+<div class="announcementBar--desktop">
+    {{> components/common/announcement-bar}}
+</div>
 
 <header class="header" role="banner">
-    <a href="#" class="mobileMenu-toggle" data-mobile-menu-toggle="menu" aria-label="Toggle menu">
-        <span class="mobileMenu-toggleIcon" aria-hidden="true">Toggle menu</span>
-    </a>
-    <div class="header-logo header-logo--{{theme_settings.logo-position}} header-logo--mobileOnly">
-        {{> components/common/store-logo}}
+    {{!-- Mobile Header Layout --}}
+    <div class="header-mobile">
+        {{!-- Announcement Bar - Mobile (inside fixed header) --}}
+        <div class="announcementBar--mobile">
+            {{> components/common/announcement-bar}}
+        </div>
+        <div class="header-mobile__meta header-mobile__meta--left">
+            {{> components/common/contact-bar}}
+        </div>
+        <div class="header-mobile__meta header-mobile__meta--right">
+            {{> components/common/trustpilot-badge}}
+        </div>
+                    <div class="header-logo header-logo--{{theme_settings.logo-position}} header-logo--mobileOnly">
+                {{> components/common/store-logo}}
+            </div>
+                    <div class="header-mobile__tools">
+            {{> components/common/search-box}}
+            {{> components/common/currency-selector}}
+        </div>
+        <div class="header-mobile__main">
+            <a href="#" class="mobileMenu-toggle" data-mobile-menu-toggle="menu" aria-label="Toggle menu">
+                <span class="mobileMenu-toggleIcon" aria-hidden="true">Toggle menu</span>
+            </a>
+
+            {{> components/common/navigation}}
+        </div>
+
     </div>
+
+    {{!-- Desktop Header Grid --}}
     <div class="header-grid">
         <div class="header-row header-row--meta">
             <div class="header-meta header-meta--left">

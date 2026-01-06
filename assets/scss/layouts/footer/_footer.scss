@@ -417,11 +417,15 @@
 
 .trustpilot-fallback {
     align-items: center;
-    color: stencilColor("color-textBase");
+    color: stencilColor("color-white"); // White on mobile (header has red bg)
     display: flex;
     font-size: remCalc(16);
     gap: spacing("quarter");
     text-decoration: none;
+
+    @include breakpoint("medium") {
+        color: stencilColor("color-textBase"); // Dark text on desktop
+    }
 
     .footer-trust-social & {
         color: stencilColor("color-greyLighter");
@@ -453,8 +457,12 @@
 }
 
 .trustpilot-fallback__brand {
-    color: stencilColor("color-textSecondary");
+    color: stencilColor("color-white"); // White on mobile
     margin-left: spacing("quarter");
+
+    @include breakpoint("medium") {
+        color: stencilColor("color-textSecondary"); // Dark on desktop
+    }
 
     .footer-trust-social & {
         color: stencilColor("color-greyLight");

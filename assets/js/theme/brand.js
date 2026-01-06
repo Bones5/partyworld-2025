@@ -8,10 +8,27 @@ export default class Brand extends CatalogPage {
     constructor(context) {
         super(context);
         this.validationDictionary = createTranslationDictionary(context);
+
+        // Set up request options for AJAX filtering
+        const productsPerPage = context.brandProductsPerPage;
+        this.requestOptions = {
+            config: {
+                shop_by_brand: true,
+                brand: {
+                    products: {
+                        limit: productsPerPage,
+                    },
+                },
+            },
+            template: {
+                productListing: 'brand/product-listing',
+            },
+        };
     }
 
     onReady() {
         compareProducts(this.context);
+        this.initFilterControls();
 
         if ($('#facetedSearch').length > 0) {
             this.initFacetedSearch();

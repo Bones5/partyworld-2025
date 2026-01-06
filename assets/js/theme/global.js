@@ -14,6 +14,7 @@ import carousel from './common/carousel';
 import svgInjector from './global/svg-injector';
 import { initNewsletter } from './global/newsletter';
 import { initAllClerkRecommendations } from './common/clerk-recommendations';
+import riveLogo from './global/rive-logo';
 
 export default class Global extends PageManager {
     onReady() {
@@ -28,7 +29,12 @@ export default class Global extends PageManager {
         mobileMenuToggle();
         svgInjector();
         initNewsletter();
-        
+
+        // Initialize Rive logo animation
+        if (window.riveLogoSrc) {
+            riveLogo(window.riveLogoSrc);
+        }
+
         // Initialize Clerk.io recommendations if enabled
         if (this.context.clerkEnabled) {
             initAllClerkRecommendations(this.context);

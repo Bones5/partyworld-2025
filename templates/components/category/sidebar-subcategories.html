@@ -1,0 +1,43 @@
+{{!--
+    Sidebar Subcategories Accordion
+    Renders subcategory navigation as a collapsible accordion
+    
+    @param collapsed - Whether to start collapsed (default: true)
+--}}
+{{#if category.subcategories}}
+<div class="accordion-block">
+    <h2 class="accordion-heading">
+        <button type="button"
+            class="accordion-navigation toggleLink{{#unless collapsed}} is-open{{/unless}}"
+            data-collapsible="#sidebar-content--subcategories"
+            aria-label="{{lang 'search.faceted.toggleSection' title=category.name}}"
+            aria-expanded="{{#if collapsed}}false{{else}}true{{/if}}"
+            aria-controls="sidebar-content--subcategories"
+        >
+            <span class="accordion-title">
+                {{lang 'category.shop_by_category'}}
+            </span>
+            <span class="accordion-indicator-wrap">
+                <svg class="icon c-icon--sm accordion-indicator toggleLink-text toggleLink-text--off" aria-hidden="true" focusable="false">
+                    <use href="#icon-add" />
+                </svg>
+                <svg class="icon c-icon--sm accordion-indicator toggleLink-text toggleLink-text--on" aria-hidden="true" focusable="false">
+                    <use href="#icon-remove" />
+                </svg>
+            </span>
+        </button>
+    </h2>
+
+    <div id="sidebar-content--subcategories" class="accordion-content{{#unless collapsed}} is-open{{/unless}}">
+        <ul class="navList">
+            {{#each category.subcategories}}
+                <li class="navList-item">
+                    <a class="navList-action" href="{{url}}" title="{{name}}">
+                        {{name}}
+                    </a>
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+</div>
+{{/if}}

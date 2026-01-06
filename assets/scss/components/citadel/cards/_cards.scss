@@ -142,6 +142,11 @@
     border: $card-figcaption-button-border;
     display: $card-figcaption-button-display;
     margin: $card-figcaption-button-margin;
+    font-size: remCalc(16px);
+
+    @include breakpoint("medium") {
+        font-size: inherit;
+    }
 
     &:active {
         background-color: $card-figcaption-button-backgroundHover;

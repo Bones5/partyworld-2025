@@ -1,26 +1,56 @@
 // Homepage Theme & Celebrate grids
 
-// Section wrappers with increased vertical spacing
+// Section wrappers with standardized vertical spacing
 .c-themeGrid,
 .c-celebrateGrid {
-    margin-bottom: spacing("double") + spacing("double");
+    @include homepage-section;
 }
 
 .c-themeGrid__items {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr; // Mobile: single column
     gap: spacing("single");
+
+    @include breakpoint("small") {
+        grid-template-columns: repeat(2, 1fr); // Tablet: 2 columns
+    }
+
+    @include breakpoint("medium") {
+        grid-template-columns: repeat(3, 1fr); // Desktop: 3 columns
+    }
 }
-.c-celebrateGrid__items {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: spacing("single");
-}
+
 .c-themeCard__image {
     width: 100%;
-    height: auto;
+    aspect-ratio: 16 / 9; // Maintain consistent aspect ratio
+    object-fit: cover;
     display: block;
 }
+
+.c-celebrateGrid__items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); // Mobile: 2x2 grid
+    gap: spacing("half");
+
+    @include breakpoint("small") {
+        grid-template-columns: repeat(4, 1fr); // Tablet: 4 columns
+        gap: spacing("single");
+    }
+
+    @include breakpoint("medium") {
+        grid-template-columns: repeat(5, 1fr); // Desktop: 5 columns
+    }
+}
+
+// Hide 5th item on mobile/tablet, show on desktop
+.c-celebrateGrid__item:nth-child(5) {
+    display: none;
+
+    @include breakpoint("medium") {
+        display: block;
+    }
+}
+
 .c-celebrateCard__image {
     width: 100%;
     aspect-ratio: 1 / 1;
@@ -78,26 +108,45 @@
     text-align: center;
 }
 
-// Celebrate grid header layout: title left, View All right
+// Celebrate grid header layout: title left, View All right (desktop)
+// On mobile: hide View All in header, show at bottom of component
 .c-celebrateGrid__header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: spacing("half");
     padding-bottom: spacing("single");
+
+    @include breakpoint("medium") {
+        justify-content: space-between;
+    }
 }
 
 .c-celebrateGrid__heading {
     margin: 0; // remove default margins when inside header
 }
 
+// Desktop: show in header
 .c-celebrateGrid__viewAll {
-    text-decoration: none;
-    font-family: "Inter";
-    letter-spacing: 0%;
-    font-weight: $fontWeight-semibold;
-    font-size: 20px;
-    text-transform: uppercase;
-    padding: spacing("half") spacing("single");
-    border-radius: 8px;
+    @include cta-button($full-width: false);
+    width: fit-content;
+    display: none;
+
+    @include breakpoint("medium") {
+        display: inline-flex;
+    }
+}
+
+// Mobile: View All button at bottom of component
+.c-celebrateGrid__viewAll--mobile {
+    @include cta-button($full-width: false);
+    width: fit-content;
+    display: flex;
+    margin: spacing("single") auto 0;
+    width: 100%;
+        justify-content: center;
+
+    @include breakpoint("medium") {
+        display: none;
+    }
 }   

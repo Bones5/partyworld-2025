@@ -8,14 +8,6 @@
 </a>
 <div class="navPage-subMenu" id="navPages-{{id}}" aria-hidden="true" tabindex="-1">
     <ul class="navPage-subMenu-list">
-        <li class="navPage-subMenu-item">
-            <a class="navPage-subMenu-action navPages-action"
-               href="{{url}}"
-               aria-label="{{lang 'category.view_all.name' category=name}}"
-            >
-                {{lang 'category.view_all.name' category=name}}
-            </a>
-        </li>
         {{#each children}}
             <li class="navPage-subMenu-item">
                 {{#if children}}
@@ -31,7 +23,7 @@
                             data-collapsible-enabled-state="closed"
                         >
                             <i class="icon navPages-action-moreIcon" aria-hidden="true">
-                                <svg><use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-chevron-down" /></svg>
+                                <svg><use href="#icon-chevron-down" /></svg>
                             </i>
                         </span>
                     </a>

@@ -1,14 +1,19 @@
-// =============================================================================
-// INTRO PROMISE (CSS)
-// =============================================================================
-// Two-column layout: brand intro + key promises with icon list.
-// Uses tokenized spacing/typography for consistent design language.
-// -----------------------------------------------------------------------------
-
 .c-introPromise {
     margin-bottom: spacing("double");
     padding: spacing("double") 0;
     background: stencilColor("container-fill-dark");
+
+    // All text uses the headline font per spec
+    font-family: $fontFamily-headings;
+}
+
+// Break out of the Stencil `.container` to remove container side padding
+.c-introPromise--breakout {
+    position: relative;
+    left: 50%;
+    width: 100vw;
+    margin-left: -50vw;
+    margin-right: -50vw;
 }
 
 .c-introPromise__container {
@@ -22,54 +27,39 @@
     }
 }
 
-.c-introPromise__intro {
-    text-align: center;
-
-    @include breakpoint("medium") {
-        text-align: left;
-    }
-}
-
-.c-introPromise__heading {
-    font-family: $fontFamily-headings;
-    font-size: $fontSize-larger;
-    line-height: $lineHeight-larger;
-    font-weight: $fontWeight-bold;
-    margin: 0 0 spacing("single");
-    color: $color-textBase;
-
-    @include breakpoint("medium") {
-        font-size: $fontSize-largest;
-        line-height: $lineHeight-largest;
-    }
-}
-
-.c-introPromise__text {
-    font-size: $fontSize-base;
-    line-height: $lineHeight-base;
-    color: $color-textSecondary;
-
-    p {
-        margin: 0 0 spacing("half");
-
-        &:last-child {
-            margin-bottom: 0;
-        }
-    }
-}
-
-.c-introPromise__promises {
+.c-introPromise__box {
     background: $color-white;
     border: 1px solid stencilColor("input-border-color");
-    padding: spacing("single");
 }
 
-.c-introPromise__promisesHeading {
-    font-family: $fontFamily-headings;
+.c-introPromise__boxHeader {
+    padding: spacing("single");
+    text-align: center;
+    background: stencilColor("color-primary");
+    border-bottom: 1px solid stencilColor("input-border-color");
+}
+
+.c-introPromise__title {
+    margin: 0;
     font-size: $fontSize-large;
     line-height: $lineHeight-large;
     font-weight: $fontWeight-bold;
-    margin: 0 0 spacing("half");
+    color: $color-white;
+
+    @include breakpoint("medium") {
+        font-size: $fontSize-larger;
+        line-height: $lineHeight-larger;
+    }
+}
+
+.c-introPromise__boxBody {
+    padding: spacing("single");
+}
+
+.c-introPromise__text {
+    margin: 0;
+    font-size: $fontSize-base;
+    line-height: $lineHeight-base;
     color: $color-textBase;
 }
 
@@ -79,26 +69,14 @@
     padding: 0;
 }
 
-.c-introPromise__item {
-    display: flex;
-    align-items: flex-start;
-    gap: spacing("half");
+.c-introPromise__listItem {
     padding: spacing("quarter") 0;
     border-bottom: 1px solid stencilColor("container-border-global-color-base");
+    font-size: $fontSize-base;
+    line-height: $lineHeight-base;
+    color: $color-textBase;
 
     &:last-child {
         border-bottom: 0;
     }
-}
-
-.c-introPromise__icon {
-    flex-shrink: 0;
-    color: $color-primary;
-    margin-top: 2px;
-}
-
-.c-introPromise__itemText {
-    font-size: $fontSize-base;
-    line-height: $lineHeight-base;
-    color: $color-textBase;
 }

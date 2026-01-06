@@ -8,6 +8,21 @@ export default class Category extends CatalogPage {
     constructor(context) {
         super(context);
         this.validationDictionary = createTranslationDictionary(context);
+
+        // Set up request options for AJAX filtering
+        const productsPerPage = context.categoryProductsPerPage;
+        this.requestOptions = {
+            config: {
+                category: {
+                    products: {
+                        limit: productsPerPage,
+                    },
+                },
+            },
+            template: {
+                productListing: 'category/product-listing',
+            },
+        };
     }
 
     setLiveRegionAttributes($element, roleType, ariaLiveStatus) {
@@ -29,6 +44,7 @@ export default class Category extends CatalogPage {
 
     onReady() {
         this.arrangeFocusOnSortBy();
+        this.initFilterControls();
 
         $('[data-button-type="add-cart"]').on('click', (e) => this.setLiveRegionAttributes($(e.currentTarget).next(), 'status', 'polite'));
 

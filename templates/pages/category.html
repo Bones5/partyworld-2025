@@ -2,10 +2,6 @@
 category:
     products:
         limit: {{theme_settings.categorypage_products_per_page}}
-    metafields:
-        namespace: custom
-        key: intro
-        resource_type: category
 products:
     top_sellers:
         limit: {{theme_settings.category_bestsellers_count}}
@@ -22,41 +18,7 @@ products:
 
 {{#partial "page"}}
 
-{{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
-{{#if category.image}}
-    {{> components/common/responsive-img
-        image=category.image
-        fallback_size=theme_settings.zoom_size
-        lazyload=theme_settings.lazyload_mode
-        class="category-header-image"
-    }}
-{{/if}}
-{{#unless theme_settings.hide_category_page_heading }}
-    <h1 class="page-heading">{{category.name}}</h1>
-    {{{region name="category_below_header"}}}
-{{/unless}}
-
-{{!-- Category Intro from metafield (set via API: namespace=custom, key=intro) --}}
-{{#each category.metafields}}
-    {{#if (equals key "intro")}}
-        <div class="category-intro">
-            {{{value}}}
-        </div>
-    {{/if}}
-{{/each}}
-
-{{!-- Shop by Category section: shows subcategories if present --}}
-{{> components/category/shop-by-category}}
-
-{{!-- 
-    Top Sellers section: shows top selling products from the store.
-    Configure count via Theme Editor (set to 0 to hide this section).
---}}
-{{#if products.top_sellers}}
-    {{> components/products/category-bestsellers products=products.top_sellers}}
-{{/if}}
-
-<div class="page">
+<div class="page category-page">
     {{#if category.faceted_search_enabled}}
         <aside class="page-sidebar" id="faceted-search-container">
             {{> components/category/sidebar}}
@@ -72,22 +34,41 @@ products:
     {{/if}}
 
     <main class="page-content" id="product-listing-container">
+        {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
+        
+        {{#unless theme_settings.hide_category_page_heading }}
+            <h1 class="page-heading">{{category.name}}</h1>
+        {{/unless}}
+
+        {{!-- Category Intro Widget Zone (populated via Widgets API or Page Builder) --}}
+        {{{region name="category_below_header"}}}
+
+        {{!-- Shop by Category section: shows subcategories if present --}}
+        {{> components/category/shop-by-category}}
+
+        {{!-- Clerk.io Category Best Sellers --}}
+        {{> components/category/clerk-recommendations 
+            heading="Category Best Sellers"
+            limit=8
+        }}
+
         {{> components/category/product-listing}}
-    </main>
 
-    <div class="page-region">
-        {{{region name="category_below_content"}}}
-    </div>
-</div>
+        {{!-- Category Description / SEO Content (editable in Products → Categories → Description) --}}
+        {{#if category.description}}
+            <section class="category-description">
+                <div class="container">
+                    {{{category.description}}}
+                </div>
+            </section>
+        {{/if}}
 
-{{!-- Category Description (SEO content) at bottom of page --}}
-{{#if category.description}}
-    <section class="category-description">
-        <div class="container">
-            {{{category.description}}}
+        <div class="page-region">
+            {{{region name="category_below_content"}}}
         </div>
-    </section>
-{{/if}}
+
+    </main>
+</div>
 
 {{/partial}}
 {{> layout/base}}

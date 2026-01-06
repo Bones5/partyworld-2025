@@ -110,9 +110,9 @@
     border: container("border");
     box-sizing: content-box;
     display: flex;
-    height: 67px;
+    height: 100px;
     justify-content: center;
-    max-width: 75px;
+    max-width: 113px;
     padding: 2px;
     position: relative;
     width: 100%;
@@ -136,8 +136,9 @@
 // -----------------------------------------------------------------------------
 
 .productView-product {
+
     @include breakpoint("medium") {
-        border-bottom: container("border");
+        border-bottom: 0;
         padding-bottom: spacing("single") + spacing("third");
     }
 
@@ -147,7 +148,6 @@
 }
 
 .productView-title {
-    font-size: fontSize("small");
     margin: -(spacing("half")) 0 spacing("quarter");
 
     @include breakpoint("medium") {
@@ -282,6 +282,7 @@
 .productView-options {
     @include clearfix;
     margin-bottom: spacing("single");
+    border-bottom: 0;
     text-align: center;
 
     @include breakpoint("small") {
@@ -474,5 +475,252 @@
     img {
         max-width: none;
         width: auto;
+    }
+}
+
+
+// Hide SKU from product view
+// -----------------------------------------------------------------------------
+
+.productView-info {
+    .sku-label,
+    .sku-label + [data-product-sku] {
+        display: none;
+    }
+}
+
+
+// Inline product description (in right column)
+// -----------------------------------------------------------------------------
+
+.productView-description--inline {
+    margin-top: spacing("double");
+    padding-top: spacing("single");
+    border-top: container("border");
+}
+
+
+// Title row with share button
+// -----------------------------------------------------------------------------
+
+.productView-titleRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: spacing("single");
+
+    .productView-title {
+        flex: 1;
+        margin-bottom: 0;
+    }
+}
+
+.productView-shareInline {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.productView-shareBtn {
+    @include cta-button-outline($full-width: false);
+    font-size: 16px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: spacing("quarter");
+
+    .icon {
+        width: 16px;
+        height: 16px;
+        fill: stencilColor("button--primary-backgroundColor");
+    }
+}
+
+.productView-shareDropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 10;
+    min-width: 150px;
+    margin-top: spacing("quarter");
+    padding: spacing("half") 0;
+    background: stencilColor("color-white");
+    border: 1px solid stencilColor("color-greyLight");
+    border-radius: $global-radius;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    list-style: none;
+
+    &[aria-hidden="true"] {
+        display: none;
+    }
+
+    li {
+        margin: 0;
+    }
+
+    a {
+        display: flex;
+        align-items: center;
+        gap: spacing("half");
+        padding: spacing("quarter") spacing("single");
+        color: stencilColor("color-textBase");
+        text-decoration: none;
+        font-size: fontSize("smaller");
+
+        &:hover {
+            background: stencilColor("color-greyLightest");
+            color: stencilColor("color-primary");
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+        }
+    }
+}
+
+
+// Quantity increment styling
+// -----------------------------------------------------------------------------
+
+.form-field--increments {
+    .form-increment {
+        display: inline-flex;
+        align-items: stretch;
+        width: fit-content;
+        border: 1px solid stencilColor("input-border-color");
+        border-radius: 0;
+        overflow: hidden;
+    }
+
+    .form-increment__btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        padding: spacing("half");
+        background: stencilColor("color-white");
+        border: 0;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color: stencilColor("color-greyLightest");
+        }
+
+        &:focus {
+            outline: 2px solid stencilColor("color-primary");
+            outline-offset: -2px;
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: stencilColor("color-textBase");
+        }
+
+        // Left button - right border divider
+        &[data-action="dec"] {
+            border-right: 1px solid stencilColor("input-border-color");
+        }
+
+        // Right button - left border divider
+        &[data-action="inc"] {
+            border-left: 1px solid stencilColor("input-border-color");
+        }
+    }
+
+    .form-input--incrementTotal {
+        width: 50px;
+        border: 0;
+        border-radius: 0;
+        text-align: center;
+        font-size: fontSize("base");
+        font-weight: fontWeight("bold");
+
+        &:focus {
+            outline: none;
+            box-shadow: inset 0 0 0 2px stencilColor("color-primary");
+        }
+    }
+}
+
+
+// Add to cart row with wishlist button
+// -----------------------------------------------------------------------------
+
+.add-to-cart-buttons__row {
+    display: flex;
+    align-items: stretch;
+    gap: spacing("quarter");
+
+    .form-action {
+        flex: 1;
+        margin: 0;
+    }
+}
+
+.add-to-cart-wishlist {
+    flex-shrink: 0;
+    display: flex;
+
+    .form-wishlist {
+        margin: 0;
+        display: flex;
+    }
+}
+
+// Product View CTA Buttons
+// -----------------------------------------------------------------------------
+// Using BEM classes to apply CTA mixins cleanly without fighting Foundation
+
+.c-productView__addToCartBtn {
+    @include cta-button;
+    font-size: 16px;
+
+    width: 100%;
+    padding: spacing("half") spacing("single");
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: spacing("quarter");
+    white-space: nowrap;
+}
+
+.c-productView__addToCartIcon {
+
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+    flex-shrink: 0;
+}
+
+.c-productView__wishlistBtn {
+    @include cta-button-outline($full-width: false);
+
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: spacing("half") spacing("single");
+
+    .icon {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+// Wishlist dropdown button (when customer has wishlists)
+.add-to-cart-wishlist .dropdown-menu-button {
+    @include cta-button-outline($full-width: false);
+
+    padding: spacing("single");
+    font-size: fontSize("base");
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .icon {
+        width: 20px;
+        height: 20px;
     }
 }

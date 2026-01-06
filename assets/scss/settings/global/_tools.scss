@@ -5,3 +5,16 @@
 
 // Color Tools
 @import "color/tools";
+
+
+// Typography overrides (after Citadel)
+// -----------------------------------------------------------------------------
+// Override fontFamilyMap to set headingSans to Inter independently
+// This must come after Citadel's global import
+
+$fontFamilyMap: (
+    sans:                       $fontFamily-sans,
+    serif:                      $fontFamily-serif,
+    mono:                       $fontFamily-mono,
+    headingSans:                ("Inter", Arial, Helvetica, sans-serif)
+);

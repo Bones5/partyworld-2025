@@ -8,12 +8,25 @@
 .heroThemeSlider {
     position: relative;
     margin-bottom: spacing("double");
-    overflow: hidden;
 
     // Hide slides outside viewport when initialized (Slick handles visibility)
     &.slick-initialized {
+        // Prevent slick-list from collapsing to 1px height
+        .slick-list {
+            overflow: hidden;
+            height: auto !important;
+        }
+
         .slick-track {
             display: flex;
+        }
+
+        .slick-slide {
+            height: auto;
+
+            > div {
+                height: 100%;
+            }
         }
 
         .heroThemeSlider-slide {
@@ -33,10 +46,13 @@
     }
 }
 
-// Individual slide/frame containing three cards
+// Individual slide - no padding, let card handle gaps
 .heroThemeSlider-slide {
-    padding: 0 spacing("half");
+    // No padding - slick calculates width exactly
+    padding-bottom: spacing("half"); // Space for card drop shadow
 }
+
+
 
 // Three-card grid within each frame
 .heroThemeSlider-cards {
@@ -62,6 +78,7 @@
     box-shadow: 0 4px 12px rgba($color-black, 0.1);
     text-align: center;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin: 0 spacing("quarter");
 
     &:hover,
     &:focus-within {
@@ -123,22 +140,7 @@
 }
 
 .heroThemeSlider-card__cta {
-    display: inline-block;
-    font-size: $fontSize-small;
-    font-weight: $fontWeight-semibold;
-    background-color: $color-primary;
-    color: $color-white;
-    padding: spacing("half") spacing("half");
-    border-radius: 5px;
-    width: 100%;
-    text-decoration: none;
-    transition: color 0.2s ease;
-    text-transform: uppercase;
-
-    &:hover,
-    &:focus {
-        text-decoration: underline;
-    }
+    @include cta-button;
 }
 
 // Navigation arrows

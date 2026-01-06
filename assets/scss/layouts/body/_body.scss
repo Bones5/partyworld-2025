@@ -65,3 +65,30 @@
         }
     }
 }
+
+// Category page with full-height sidebar
+.page.category-page {
+    display: flex;
+    flex-wrap: wrap;
+
+    @include breakpoint("medium") {
+        flex-wrap: nowrap;
+        align-items: stretch;
+    }
+
+    > .page-sidebar {
+        @include breakpoint("medium") {
+            flex-shrink: 0;
+            width: 25%; // Match grid-column(3)
+            float: none;
+        }
+    }
+
+    > .page-content {
+        @include breakpoint("medium") {
+            flex-grow: 1;
+            width: 75%; // Match grid-column(9)
+            float: none;
+        }
+    }
+}

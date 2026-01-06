@@ -33,12 +33,9 @@
         width: 2em;
         height: 2em;
         fill: none;
-        stroke: currentColor;
-        stroke-width: 1px;
         transition: color 0.2s ease, stroke 0.2s ease;
     }
 
-    &:hover svg,
     &:focus svg {
         stroke: currentColor;
     }

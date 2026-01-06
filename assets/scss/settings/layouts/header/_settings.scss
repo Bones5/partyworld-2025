@@ -4,12 +4,15 @@
 
 $header-bg:                                 stencilColor("color-primary");
 $header-height:                             55px;
+$header-height-mobile-meta:                 28px; // Mobile meta row height (each)
+$header-height-mobile-tools:                44px; // Mobile search/tools row height
+$header-height-bar:                         56px; // Announcement bar height
+$header-height-mobile:                      $header-height-bar + $header-height + ($header-height-mobile-meta * 2) + $header-height-mobile-tools; // Total mobile header (announcement + main + 2 meta + tools)
 $header-toggle-width:                       $header-height;
 $header-logo-marginVertical:                spacing("half");
 $header-logo-paddingVertical:               $header-logo-marginVertical;
 
 // Figma-specific header tokens (Node 114-3848)
-$header-height-bar:                         remCalc(56px); // Announcement bar height from Figma
 $header-height-primary:                     remCalc(201px); // Composite area of logo/search/user zone
 
 // Header meta row settings

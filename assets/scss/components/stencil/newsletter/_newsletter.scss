@@ -136,39 +136,20 @@
 // -----------------------------------------------------------------------------
 
 .newsletter-button {
-    align-items: center;
-    background-color: stencilColor("color-textBase");
-    border: 0;
-    border-radius: 5px;
-    color: $color-white;
-    cursor: pointer;
+    @include cta-button-black($full-width: false);
     display: flex;
-    flex-shrink: 0;
-    font-size: fontSize("small");
-    font-weight: fontWeight("semibold");
-    height: auto;
+    align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     padding: spacing("half") spacing("single");
-    text-transform: uppercase;
-    transition: background-color 0.15s ease;
-    width: auto;
+    font-size: remCalc(16px);
 
-    &:hover {
-        background-color: lighten(stencilColor("color-textBase"), 15%);
-    }
-
-    &:focus {
-        background-color: lighten(stencilColor("color-textBase"), 10%);
-        outline: 2px solid stencilColor("color-textBase");
-        outline-offset: 2px;
-    }
-
-    &:active {
-        background-color: stencilColor("button--primary-backgroundColorActive");
+    @include breakpoint("medium") {
+        font-size: fontSize("small");
     }
 
     svg {
-        fill: stencilColor("button--primary-color");
+        fill: $color-white;
         height: 20px;
         width: 20px;
     }
@@ -178,6 +159,11 @@
 .newsletter-button--text {
     padding: spacing("third") spacing("single");
     width: auto;
+    font-size: remCalc(16px);
+
+    @include breakpoint("medium") {
+        font-size: fontSize("small");
+    }
 }
 
 // Validation messages

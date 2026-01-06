@@ -25,7 +25,6 @@ $fontFamily-sans:               stencilFontFamily("body-font"), Arial, Helvetica
 $fontFamily-serif:              null;
 $fontFamily-mono:               null;
 $fontFamily-headings:           stencilFontFamily("headings-font"), Arial, Helvetica, sans-serif;
-
 $fontFamily-hero:               stencilFontFamily("headings-font"), Arial, Helvetica, sans-serif;
 
 
@@ -56,12 +55,12 @@ $lineHeight-base:               1.5; // 3
 $lineHeight-hero:               50px;
 $lineHeight-heroLarge:          60px; // New line-height for larger hero
 $lineHeight-displayXL:          120px; // New line-height supporting displayXL
-$lineHeight-largest:            37px;
-$lineHeight-larger:             32px;
-$lineHeight-large:              29px;
-$lineHeight-small:              24px;
-$lineHeight-smaller:            19px;
-$lineHeight-smallest:           15px;
+$lineHeight-largest:            44px;
+$lineHeight-larger:             40px;
+$lineHeight-large:              32px;
+$lineHeight-small:              30px;
+$lineHeight-smaller:            24px;
+$lineHeight-smallest:           22px;
 $lineHeight-tiny:               18px;
 
 

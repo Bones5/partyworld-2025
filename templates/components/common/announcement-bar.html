@@ -9,28 +9,13 @@
 --}}
 <div class="c-announcementBar" data-banner-location="top">
     <div class="c-announcementBar__container">
-        {{#if banners.top}}
-            {{#each (limit banners.top_metadata 1)}}
-            <div class="c-announcementBar__content" 
-                 data-event-type="promotion" 
-                 data-entity-id="{{this.id}}" 
-                 data-name="{{this.banner-name}}" 
-                 data-position="{{this.location}}" 
-                 data-banner-id="{{this.banner-name}}">
-                <div data-event-type="promotion-click">
-                    <svg class="c-announcementBar__icon" aria-hidden="true"><use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-Truck"></use></svg>
-                    {{{this.content}}}
-                </div>
-            </div>
-            {{/each}}
-        {{else}}
+
             {{!-- Default announcement when no banner is configured --}}
             <div class="c-announcementBar__content">
                 <div>
-                    <svg class="c-announcementBar__icon" aria-hidden="true"><use href="{{cdn 'assets/img/icon-sprite.svg'}}#icon-Truck"></use></svg>
-                    <span>Free delivery on orders over €50 | Same day dispatch on orders before 2pm</span>
+                    <svg class="c-announcementBar__icon" aria-hidden="true"><use href="#icon-Truck"></use></svg>
+                    <span>FREE SHIPPING ON ORDERS OVER €49 - ORDER BEFORE 3:30PM FOR NEXT WORKING DAY DELIVERY | ORDERS DISPATCHED FROM IRELAND</span>
                 </div>
             </div>
-        {{/if}}
     </div>
 </div>

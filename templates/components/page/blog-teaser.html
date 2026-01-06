@@ -15,11 +15,7 @@
         {{#if heading}}
             <h2 class="c-blogTeaser__heading">{{heading}}</h2>
         {{/if}}
-        {{#if ctaUrl}}
-            <a href="{{ctaUrl}}" class="c-blogTeaser__viewAll btn btn--primary">
-                {{default ctaText "View All Posts"}}
-            </a>
-        {{/if}}
+
     </div>
     <div class="c-blogTeaser__items">
         {{#each posts}}
@@ -42,11 +38,12 @@
                         <p class="c-blogTeaser__excerpt">{{truncate summary 120}}</p>
                     {{/if}}
                     <a href="{{url}}" class="c-blogTeaser__cta">
-                        {{lang 'blog.read_more'}} →
+                        {{lang 'blog.read_more'}}
                     </a>
                 </div>
             </article>
         {{/each}}
     </div>
+    {{{region name="home_blog_teaser--global"}}}
     {{{region name="home_blog_teaser"}}}
 </section>
