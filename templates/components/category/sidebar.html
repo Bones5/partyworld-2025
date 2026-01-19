@@ -26,8 +26,8 @@
                 {{!-- Selected Filters --}}
                 {{> components/faceted-search/selected-facets category.selected}}
 
+                <div class="accordion accordion--navList accordion--sidebar">
                         {{#if category.subcategories}}
-            <div class="accordion accordion--navList accordion--sidebar">
                 {{> components/category/sidebar-subcategories collapsed=true}}
         {{/if}}
 

@@ -9,6 +9,7 @@
   - subheading: Optional subheading text
   - type: Clerk recommendation type: popular, trending, new, visitor (default: popular)
   - limit: Number of products to show (default: 8)
+  - showBrand: Whether to show product brand (default: true)
   
   Usage:
     {{> components/page/clerk-recommendations 
@@ -34,7 +35,8 @@
     <div class="c-clerkRecommendations__container"
          data-clerk-container
          data-clerk-type="{{default type 'popular'}}"
-         data-clerk-limit="{{default limit 8}}">
+          data-clerk-limit="{{default limit 8}}"
+          data-clerk-show-brand="{{default showBrand 'true'}}">
       {{!-- Skeleton loader to reserve space and minimize layout shift --}}
       <div class="productGrid clerk-product-grid clerk-skeleton-grid" aria-hidden="true">
         {{#for 1 (default limit 8)}}

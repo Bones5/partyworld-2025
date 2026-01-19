@@ -6,6 +6,44 @@
 .c-shopByCategory {
     margin-bottom: spacing("double");
     position: relative;
+
+    .c-categoryCard {
+        padding: spacing("quarter");
+        border-radius: remCalc(1px);
+    }
+
+    .c-categoryCard__media {
+        border-radius: inherit;
+    }
+
+    // Ensure consistent image heights in the carousel.
+    // Category cards are reused in multiple contexts, so scope this to Shop by Category.
+    .c-categoryCard__media {
+        height: spacing("double") * 4;
+
+        @include breakpoint("medium") {
+            height: spacing("double") * 5;
+        }
+
+        @include breakpoint("large") {
+            height: spacing("double") * 6;
+        }
+    }
+
+    .c-categoryCard__media img {
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        padding: spacing("quarter");
+        object-fit: contain;
+    }
+
+    .c-categoryCard__placeholder {
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        aspect-ratio: auto;
+    }
 }
 
 .c-shopByCategory__heading {

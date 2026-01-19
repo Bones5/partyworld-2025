@@ -146,12 +146,16 @@
             font-size: fontSize("smallest");
             font-weight: stencilFontWeight("headings-font");
             text-transform: none;
+            flex: 1 1 auto;
+            min-width: 0;
         }
 
-        .accordion-indicator-wrap {
+        // Icon wrapper inside accordion-navigation (the span without a class wrapping the SVGs)
+        .accordion-navigation > span:not(.accordion-title) {
             display: flex;
             align-items: center;
             flex-shrink: 0;
+            margin-left: auto;
         }
 
         .accordion-indicator {
@@ -162,10 +166,11 @@
         }
 
         .accordion-content {
-            background-color: stencilColor("color-greyLightest");
-            border: 0;
+            background-color: stencilColor("color-white");
+            border: 1px solid stencilColor("input-border-color");
+            font-size: remCalc(12px);
             display: none;
-            padding: 0 spacing("half") spacing("half");
+            padding: 0;
 
             &.is-open {
                 display: block;
@@ -173,21 +178,22 @@
         }
 
         .accordion-nav-clear-holder {
-            display: flex;
-            align-items: center;
-            gap: spacing("half");
-
-            .accordion-navigation {
-                flex: 1;
-            }
+            position: relative;
 
             .facetedSearch-clearLink {
+                position: absolute;
+                right: remCalc(40px);
+                top: 50%;
+                transform: translateY(-50%);
                 padding: spacing("quarter") spacing("half");
-                margin-right: spacing("half");
                 font-size: fontSize("smallest");
                 color: stencilColor("color-textLink");
                 text-decoration: none;
                 white-space: nowrap;
+
+                @include breakpoint("medium") {
+                    right: remCalc(20px);
+                }
 
                 &:hover {
                     text-decoration: underline;
@@ -198,22 +204,25 @@
         // NavList within accordion
         .navList {
             margin: 0;
-            padding: 0;
             list-style: none;
         }
 
         .navList-item {
             margin-bottom: 0;
+            padding: 0 spacing("half");
+            border-bottom: 1px solid stencilColor("color-greyLightest");
         }
 
         .navList-action {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: spacing("quarter") 0;
+            margin-left: spacing("half") * -1;
+            margin-right: spacing("half") * -1;
+            padding: spacing("quarter")+spacing("eighth") spacing("half");
             color: stencilColor("color-textBase");
             text-decoration: none;
-            font-size: fontSize("smaller");
+            font-size: inherit;
             transition: color 0.15s ease;
 
             &:hover {
@@ -222,7 +231,9 @@
 
             &.is-selected {
                 font-weight: fontWeight("semibold");
-                color: stencilColor("color-primary");
+                color: stencilColor("color-greyDarkest");
+                background-color: stencilColor("color-greyLightest");
+                border-radius: 0;
 
                 .navList-action-close {
                     display: flex;
@@ -232,37 +243,19 @@
 
         .navList-action--checkbox {
             position: relative;
-            padding-left: spacing("single") + spacing("quarter");
 
             &::before {
-                content: "";
-                position: absolute;
-                left: 0;
-                top: 50%;
-                transform: translateY(-50%);
-                width: remCalc(16);
-                height: remCalc(16);
-                border: 1px solid stencilColor("input-border-color");
-                border-radius: remCalc(3);
-                background-color: stencilColor("color-white");
-                transition: all 0.15s ease;
+                display: none;
+                content: none;
             }
 
             &.is-selected::before {
-                background-color: stencilColor("color-primary");
-                border-color: stencilColor("color-primary");
+                display: none;
             }
 
             &.is-selected::after {
-                content: "";
-                position: absolute;
-                left: remCalc(5);
-                top: 50%;
-                transform: translateY(-60%) rotate(45deg);
-                width: remCalc(5);
-                height: remCalc(9);
-                border: solid stencilColor("color-white");
-                border-width: 0 2px 2px 0;
+                display: none;
+                content: none;
             }
         }
 
@@ -293,16 +286,29 @@
             padding-top: spacing("quarter");
         }
 
-        // Show more link
-        .sidebar-showMore {
+        // Show more link (inside accordion-content, not the accordion-navigation button)
+        .accordion-content .toggleLink {
             display: block;
-            margin-top: spacing("half");
-            font-size: fontSize("smallest");
-            color: stencilColor("color-textLink");
+            margin: 0;
+            padding: spacing("quarter") + spacing("eighth") spacing("half");
+            font-size: inherit;
+            color: stencilColor("color-textBase");
             text-decoration: none;
+            border-top: 1px solid stencilColor("color-greyLightest");
 
             &:hover {
-                text-decoration: underline;
+                color: stencilColor("color-textLink");
+                background-color: stencilColor("color-greyLightest");
+                text-decoration: none;
+            }
+
+            &:focus-visible {
+                outline: 2px solid stencilColor("color-primary");
+                outline-offset: -2px;
+            }
+
+            .toggleLink-text {
+                font-size: inherit;
             }
         }
 
@@ -314,7 +320,7 @@
         }
 
         .reset-btn {
-            font-size: fontSize("smaller");
+            font-size: inherit;
             color: stencilColor("color-textLink");
             text-decoration: none;
 
