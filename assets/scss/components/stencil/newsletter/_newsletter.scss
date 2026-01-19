@@ -141,7 +141,7 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    padding: spacing("half") spacing("single");
+    padding: spacing("quarter") spacing("single");
     font-size: remCalc(16px);
 
     @include breakpoint("medium") {

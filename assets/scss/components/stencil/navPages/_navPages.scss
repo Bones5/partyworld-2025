@@ -559,7 +559,7 @@
         padding: 0 0 0 spacing("single");
 
         @include breakpoint("medium") {
-            padding: spacing("quarter") 0;
+            padding: spacing("quarter") ;
         }
     }
 
@@ -583,7 +583,7 @@
     font-family: $fontFamily-sans;
     font-weight: fontWeight("normal");
     font-size: fontSize("smallest");
-    padding: 0 0 spacing("eighth");
+    padding: 0 0 spacing("eighth") spacing("eighth");
     white-space: normal;
     color: stencilColor("color-textBase");
 
