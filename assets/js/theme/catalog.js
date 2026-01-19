@@ -1,8 +1,7 @@
-import { api } from '@bigcommerce/stencil-utils';
-import PageManager from './page-manager';
-import urlUtils from './common/utils/url-utils';
 import Url from 'url';
 import _ from 'lodash';
+import PageManager from './page-manager';
+import urlUtils from './common/utils/url-utils';
 
 export default class CatalogPage extends PageManager {
     constructor(context) {
@@ -28,14 +27,14 @@ export default class CatalogPage extends PageManager {
 
     initFilterControls() {
         const urlParams = new URLSearchParams(window.location.search);
-        
+
         // Populate search query from URL
         const searchQuery = urlParams.get('search_query') || '';
         const $searchInput = $('[data-filter-search]');
         const $clearButton = $('[data-filter-clear]');
-        
+
         $searchInput.val(searchQuery);
-        
+
         // Populate limit from URL (default to theme setting or 12)
         const limit = urlParams.get('limit') || this.context?.categoryProductsPerPage || 12;
         $('[data-filter-limit]').val(limit);
@@ -46,18 +45,22 @@ export default class CatalogPage extends PageManager {
         // Handle products per page (limit) change
         const $limitSelect = $('[data-filter-limit]');
         $limitSelect.on('change', (event) => {
+            event.preventDefault(); // Prevent stencil-utils sortBy hook from firing
+            event.stopPropagation();
             this.onLimitChange(event);
         });
 
         // Handle page change
         const $pageSelect = $('[data-filter-page]');
         $pageSelect.on('change', (event) => {
+            event.preventDefault(); // Prevent stencil-utils sortBy hook from firing
+            event.stopPropagation();
             this.onPageChange(event);
         });
 
         // Handle real-time text filtering (debounced)
         const debouncedFilter = _.debounce((query) => this.filterProducts(query), 300);
-        
+
         $searchInput.on('input', (event) => {
             const query = $(event.currentTarget).val();
             this.toggleClearButton(query);
@@ -129,85 +132,91 @@ export default class CatalogPage extends PageManager {
     }
 
     filterProducts(query) {
-        const $productListingContainer = $('#product-listing-container');
-        const $blocker = $productListingContainer.find('.blocker');
-        
-        // Show loading state
-        if ($blocker.length) {
-            $blocker.show();
-        } else {
-            $productListingContainer.addClass('is-loading');
-        }
-
         // Build URL with search query
         const url = Url.parse(window.location.href, true);
-        
+
         if (query && query.trim()) {
             url.query.search_query = query.trim();
         } else {
             delete url.query.search_query;
         }
-        
+
         // Reset to page 1 when searching
         delete url.query.page;
-        
+
         const newUrl = Url.format({ pathname: url.pathname, search: urlUtils.buildQueryString(url.query) });
 
-        // Update URL without reload (for bookmarking/sharing)
-        window.history.replaceState({}, '', newUrl);
-
-        // If no request options set, fall back to page reload
-        if (!this.requestOptions) {
-            window.location = newUrl;
-            return;
-        }
-
-        // Use stencil API to fetch filtered results
-        api.getPage(newUrl, this.requestOptions, (err, content) => {
-            // Hide loading state
-            if ($blocker.length) {
-                $blocker.hide();
-            } else {
-                $productListingContainer.removeClass('is-loading');
-            }
-
-            if (err) {
-                console.error('Filter error:', err);
-                // Fallback to page reload on error
-                window.location = newUrl;
-                return;
-            }
-
-            // Update product listing
-            $productListingContainer.html(content.productListing);
-
-            // Re-initialize filter controls on new content
-            this.reinitFilterControls(query);
-
-            // Trigger compare reset if needed
-            $('body').triggerHandler('compareReset');
-
-            // Announce results for screen readers
-            this.announceFilterResults(query);
-        });
+        // Use urlUtils.goToUrl which triggers statechange - FacetedSearch listens to this
+        // and will handle the AJAX update
+        urlUtils.goToUrl(newUrl);
     }
 
     reinitFilterControls(currentQuery) {
         // Re-populate the search input after AJAX update
         const $searchInput = $('[data-filter-search]');
-        $searchInput.val(currentQuery || '');
+        const $clearButton = $('[data-filter-clear]');
+
+        // Set values without triggering events
+        $searchInput[0].value = currentQuery || '';
         this.toggleClearButton(currentQuery || '');
 
         // Re-bind events for new elements
         const urlParams = new URLSearchParams(window.location.search);
         const limit = urlParams.get('limit') || this.context?.categoryProductsPerPage || 12;
-        $('[data-filter-limit]').val(limit);
+
+        // Set limit value without triggering change event
+        const $limitSelect = $('[data-filter-limit]');
+        if ($limitSelect.length && $limitSelect[0]) {
+            $limitSelect[0].value = limit;
+        }
+
+        // Re-bind limit select handler
+        $limitSelect.off('change').on('change', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            this.onLimitChange(event);
+        });
+
+        // Re-bind page select handler
+        const $pageSelect = $('[data-filter-page]');
+        $pageSelect.off('change').on('change', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            this.onPageChange(event);
+        });
+
+        // Re-bind text filter handlers
+        const debouncedFilter = _.debounce((query) => this.filterProducts(query), 300);
+
+        $searchInput.off('input').on('input', (event) => {
+            const query = $(event.currentTarget).val();
+            this.toggleClearButton(query);
+            debouncedFilter(query);
+        });
+
+        // Re-bind clear button
+        $clearButton.off('click').on('click', () => {
+            $searchInput.val('').trigger('focus');
+            this.toggleClearButton('');
+            this.filterProducts('');
+        });
+
+        // Re-bind form submission
+        const $filterForm = $('[data-product-filter]');
+        $filterForm.off('submit').on('submit', (event) => {
+            event.preventDefault();
+            const query = $searchInput.val();
+            this.filterProducts(query);
+        });
+
+        // Re-init page selector
+        this.initPageSelector();
     }
 
     announceFilterResults(query) {
         const $products = $('.productGrid .product, .productList .product');
         const count = $products.length;
-        
+
         // Create or update live region for screen reader announcement
         let $liveRegion = $('#filter-live-region');
         if (!$liveRegion.length) {
@@ -218,7 +227,7 @@ export default class CatalogPage extends PageManager {
         if (query) {
             $liveRegion.text(`Found ${count} products matching "${query}"`);
         } else {
-            $liveRegion.text(`Showing all products`);
+            $liveRegion.text('Showing all products');
         }
     }
 
@@ -230,7 +239,21 @@ export default class CatalogPage extends PageManager {
         delete url.query.page; // Reset to first page when changing limit
 
         event.preventDefault();
-        window.location = Url.format({ pathname: url.pathname, search: urlUtils.buildQueryString(url.query) });
+
+        const newUrl = Url.format({ pathname: url.pathname, search: urlUtils.buildQueryString(url.query) });
+        urlUtils.goToUrl(newUrl);
+    }
+
+    onPageChange(event) {
+        const url = Url.parse(window.location.href, true);
+        const page = $(event.currentTarget).val();
+
+        url.query.page = page;
+
+        event.preventDefault();
+
+        const newUrl = Url.format({ pathname: url.pathname, search: urlUtils.buildQueryString(url.query) });
+        urlUtils.goToUrl(newUrl);
     }
 
     onSortBySubmit(event, currentTarget) {
@@ -241,6 +264,8 @@ export default class CatalogPage extends PageManager {
         delete url.query.page;
 
         event.preventDefault();
-        window.location = Url.format({ pathname: url.pathname, search: urlUtils.buildQueryString(url.query) });
+
+        const newUrl = Url.format({ pathname: url.pathname, search: urlUtils.buildQueryString(url.query) });
+        urlUtils.goToUrl(newUrl);
     }
 }

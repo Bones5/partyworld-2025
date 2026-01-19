@@ -4,7 +4,6 @@
       "slug": "70s-costumes-accessories",
       "categoryId": 435,
       "updates": [
-        "widget",
         "description"
       ]
     },
@@ -360,5 +359,10 @@
     "pool-party-ideas-for-all-ages"
   ],
   "errors": [],
-  "skipped": []
+  "skipped": [
+    {
+      "slug": "70s-costumes-accessories",
+      "reason": "widget_exists"
+    }
+  ]
 }

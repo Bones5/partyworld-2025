@@ -141,7 +141,8 @@
     flex-shrink: 0;
 
     .price {
-        color: stencilColor("color-error");
+        color: stencilColor("color-primary");
+        font-size: 1.4rem
     }
 
     // Hide currency code (e.g., "GBP") but keep the symbol

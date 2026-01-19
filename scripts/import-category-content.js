@@ -211,13 +211,37 @@ function formatH1ContentToHtml(content) {
     }).join('\n');
 }
 
+// Cache for all category placements (loaded once)
+let allCategoryPlacementsCache = null;
+
 // Check for existing widgets on a category
 async function getExistingPlacements(categoryId) {
     try {
-        const response = await apiRequest(
-            `/v3/content/placements?template_file=pages/category&entity_id=${categoryId}&region=category_below_header`,
-        );
-        return response.data || [];
+        // Load all category placements once and cache them
+        // (BigCommerce API entity_id filter doesn't work properly)
+        if (!allCategoryPlacementsCache) {
+            const allPlacements = [];
+            let page = 1;
+            let hasMore = true;
+
+            while (hasMore) {
+                const response = await apiRequest(
+                    `/v3/content/placements?template_file=pages/category&region=category_below_header&limit=250&page=${page}`,
+                );
+                allPlacements.push(...(response.data || []));
+                hasMore = response.data?.length === 250;
+                page++;
+            }
+
+            allCategoryPlacementsCache = allPlacements;
+            if (VERBOSE) {
+                console.log(`   Cached ${allCategoryPlacementsCache.length} existing category placements`);
+            }
+        }
+
+        // Filter for this specific category
+        const categoryIdStr = String(categoryId);
+        return allCategoryPlacementsCache.filter(p => p.entity_id === categoryIdStr);
     } catch (e) {
         return [];
     }
