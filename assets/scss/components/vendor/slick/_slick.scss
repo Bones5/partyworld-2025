@@ -20,27 +20,33 @@
 .slick-prev {
     @include carouselOpaqueBackgrounds($slick-arrow-bgColor);
     border: 1px solid $slick-arrow-borderColor;
-    height: remCalc(61px);
-    margin-top: -(remCalc(15px));
-    padding: remCalc(10px);
-    width: remCalc(40px);
-    z-index: 1;
+    border-radius: 50%;
+    height: remCalc(44px);
+    width: remCalc(44px);
+    padding: 0;
+    z-index: 10;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
 
     &::before {
         background-position: 50%;
         background-repeat: no-repeat;
-        background-size: 100%;
+        background-size: contain;
+        content: "";
         display: block;
-        height: remCalc(41px);
-        width: remCalc(20px);
+        height: remCalc(20px);
+        width: remCalc(12px);
+        margin: auto;
     }
 
     &:hover,
     &:focus {
         @include carouselOpaqueBackgrounds($slick-arrow-bgColor); // 1
-        background-position: 50%;
-        background-repeat: no-repeat;
-        background-size: 100%;
+    }
+
+    &:focus {
+        outline: 2px solid $slick-arrow-color;
+        outline-offset: 2px;
     }
 }
 
@@ -163,6 +169,98 @@
 .slick-track {
     backface-visibility: hidden; // 2
     perspective: 1000px; // 2
+    display: flex;
+}
+
+//
+// Equal height slides
+// Ensures all slides stretch to match the tallest item
+// -----------------------------------------------------------------------------
+.slick-slide {
+    height: auto;
+    overflow: visible;
+
+    > div {
+        height: 100%;
+    }
+
+    // Product cards (.card)
+    .card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .card-figure {
+        flex-shrink: 0;
+    }
+
+    .card-body {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        overflow: visible;
+    }
+
+    // Keep CTA visible at the bottom of the card
+    .card .card-cta {
+        flex-shrink: 0;
+        margin-top: auto;
+    }
+
+    // Category cards (.c-categoryCard)
+    .c-categoryCard {
+        height: 100%;
+        min-height: 0;
+        overflow: visible;
+    }
+
+    .c-categoryCard__body {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .c-categoryCard__title {
+        flex: 1 1 auto;
+    }
+
+    .c-categoryCard__cta {
+        flex-shrink: 0;
+        margin-top: auto;
+    }
+
+    // Hero theme slider cards (.heroThemeSlider-card)
+    .heroThemeSlider-card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .heroThemeSlider-card__content {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .heroThemeSlider-card__heading {
+        flex: 1 1 auto;
+    }
+
+    .heroThemeSlider-card__cta {
+        flex-shrink: 0;
+        margin-top: auto;
+    }
+
+    // Product carousel slides (.productCarousel-slide)
+    .productCarousel-slide {
+        height: 100%;
+    }
 }
 
 //
@@ -190,7 +288,7 @@ div.slick-slider {
     @include addFocusTooltip($attr: aria-label);
     display: none;
     height: 1px;
-    margin-top: 10px;
+    // margin-top: 10px;
     position: relative;
 
     @include breakpoint("small") {

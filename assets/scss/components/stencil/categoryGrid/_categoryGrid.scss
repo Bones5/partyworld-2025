@@ -86,9 +86,26 @@
     display: flex;
     min-width: 0;
 
-    // Ensure cards fill the grid cell
+    // Ensure cards fill the grid cell with equal heights
     .c-categoryCard {
         width: 100%;
         min-width: 0;
+        height: 100%;
+    }
+
+    .c-categoryCard__body {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .c-categoryCard__title {
+        flex: 1 1 auto;
+    }
+
+    .c-categoryCard__cta {
+        flex-shrink: 0;
+        margin-top: auto;
     }
 }

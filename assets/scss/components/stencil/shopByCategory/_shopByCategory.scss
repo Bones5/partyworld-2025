@@ -18,56 +18,12 @@
 .c-shopByCategory__carousel {
     position: relative;
     
-    // Slick arrow positioning - outside the carousel
+    // Slick arrow positioning - inherit base styles, just adjust position
     .slick-prev,
     .slick-next {
-        position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        z-index: 10;
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background-color: stencilColor("color-white");
-        border: 1px solid stencilColor("color-greyLight");
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        cursor: pointer;
-        transition: all 0.2s ease;
-        
-        &:hover,
-        &:focus {
-            background-color: stencilColor("color-primary");
-            border-color: stencilColor("color-primary");
-            
-            &::before {
-                color: stencilColor("color-white");
-            }
-        }
-        
-        &:focus {
-            outline: 2px solid stencilColor("color-primary");
-            outline-offset: 2px;
-        }
-        
-        &::before {
-            color: stencilColor("color-textBase");
-            font-size: fontSize("large");
-            transition: color 0.2s ease;
-        }
-        
-        &.slick-disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            
-            &:hover {
-                background-color: stencilColor("color-white");
-                border-color: stencilColor("color-greyLight");
-                
-                &::before {
-                    color: stencilColor("color-textBase");
-                }
-            }
-        }
+        margin: 0;
     }
     
     .slick-prev {

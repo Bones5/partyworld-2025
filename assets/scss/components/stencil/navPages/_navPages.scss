@@ -272,6 +272,7 @@
     @include breakpoint("medium") {
         color: stencilColor("navPages-color");
         display: inline-block;
+        font-size: 20px; // Top-level nav font size
         line-height: $lineHeight-nav;
         padding: spacing("half") spacing("half"); // Added horizontal padding for is-open state
         transition: transform 0.2s ease, background-color 0.2s ease;
@@ -493,7 +494,7 @@
         padding: 0 0.75rem !important; // 1
 
         .navPages-action {
-            font-size: fontSize("small");
+            font-size: 20px;
             text-transform: none;
             width: 100%;
             white-space: normal;
