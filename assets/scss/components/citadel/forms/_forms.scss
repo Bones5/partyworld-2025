@@ -163,11 +163,11 @@
 .form-select--date {
     background-position: right spacing("third") top spacing("third");
     background-size: remCalc(18px);
-    font-size: $input-small-fontSize;
+    font-size: 14px;
     height: $input-small-height;
-    line-height: 1rem;
+    line-height: 1.2rem;
     max-width: 20rem;
-    padding: $input-small-padding;
+    padding: 0;
     padding-right: $select-small-paddingRight;
 }
 
@@ -350,9 +350,9 @@
 // Form input (small)
 // -----------------------------------------------------------------------------
 .form-input--small {
-    font-size: $input-small-fontSize;
+    font-size: 14px;
     height: $input-small-height;
-    line-height: 1rem;
+    line-height: 1.2rem;
     padding: $input-small-padding;
 }
 
@@ -360,15 +360,11 @@
 // Form min/max input row
 // -----------------------------------------------------------------------------
 .form-minMaxRow {
-    @include clearfix();
-    margin-left: -$form-minMaxRow-column-gutter;
-    margin-right: -$form-minMaxRow-column-gutter;
+
 
     .form-field {
-        @include grid-column(4);
-        margin-bottom: 0;
-        padding-left: $form-minMaxRow-column-gutter;
-        padding-right: $form-minMaxRow-column-gutter;
+        margin: 0.5rem 0.25rem;
+
     }
 
     .button {

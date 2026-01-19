@@ -84,6 +84,7 @@
 .card-title {
     font-size: $card-title-fontSize;
     margin: $card-title-margin;
+    flex: 1 1 auto;
 
     > a {
         color: $card-title-color;
@@ -136,6 +137,17 @@
 // Price stack styling per Figma
 .card-price {
     margin-top: spacing("quarter");
+    text-align: center;
+    flex-shrink: 0;
+
+    .price {
+        color: stencilColor("color-error");
+    }
+
+    // Hide currency code (e.g., "GBP") but keep the symbol
+    .price-currency-code {
+        display: none;
+    }
 }
 
 .card-figcaption-button {
@@ -215,11 +227,10 @@
 }
 
 .card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
     text-align: center;
-
-    @include breakpoint("small") {
-        text-align: left;
-    }
 }
 
 

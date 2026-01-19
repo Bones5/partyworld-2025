@@ -47,6 +47,7 @@
         {{~inject 'cartId' cart_id}}
         {{~inject 'template' template}}
         {{~inject 'storefrontApiToken' settings.storefront_api.token}}
+        {{~inject 'currencyCode' currency_selector.active_currency_code}}
         {{~inject 'clerkEnabled' theme_settings.clerk_enabled}}
         {{~inject 'clerkPublicKey' theme_settings.clerk_public_key}}
         {{~inject 'validationDictionaryJSON' (langJson 'validation_messages')}}
