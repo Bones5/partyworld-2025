@@ -67,7 +67,7 @@
     font-size: remCalc(16px);
 
     @include breakpoint("medium") {
-        font-size: fontSize("small");
+        font-size: 20px;
     }
 }
 

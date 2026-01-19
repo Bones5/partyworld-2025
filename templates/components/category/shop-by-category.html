@@ -5,7 +5,7 @@
 --}}
 {{#if category.subcategories}}
 <section class="c-shopByCategory" aria-labelledby="shop-by-category-heading">
-    <h2 id="shop-by-category-heading" class="c-shopByCategory__heading">{{lang 'category.shop_by_category'}}</h2>
+    <h2 id="shop-by-category-heading" class="c-shopByCategory__heading">Shop by Category</h2>
     <div class="c-shopByCategory__carousel"
         data-slick='{
             "infinite": false,
@@ -46,7 +46,6 @@
                 url=url
                 image=image
                 title=name
-                ctaText=(lang 'category.shop_now')
             }}
         </div>
         {{/each}}

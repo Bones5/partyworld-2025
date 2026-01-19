@@ -226,6 +226,9 @@
 
     .c-categoryCard__title {
         flex: 1 1 auto;
+        font-family: $fontFamily-sans;
+        font-size: 14px;
+        line-height: 1.2;
     }
 
     .c-categoryCard__cta {

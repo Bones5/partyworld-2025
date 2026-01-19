@@ -49,6 +49,15 @@
     min-height: auto;
 }
 
+// Category page variant: remove bottom margin (not a homepage section)
+.c-clerkRecommendations--category {
+    margin-bottom: 0;
+
+    .c-clerkRecommendations__container {
+        margin-top: 0;
+    }
+}
+
 // =============================================================================
 // HEADING STYLES
 // =============================================================================
@@ -94,6 +103,13 @@
     @include breakpoint("medium") {
         margin-top: spacing("double");
     }
+}
+
+// ProductGrid uses font-size: 0 to remove inline-block whitespace.
+// Clerk recommendations render cards directly inside .productGrid, so we must
+// restore readable text sizing.
+.clerk-product-grid {
+    font-size: fontSize("base");
 }
 
 // Product grid for clerk recommendations (static grid fallback)
@@ -274,6 +290,7 @@
 
 .clerk-product-grid .card {
     font-family: $fontFamily-sans;
+    font-size: fontSize("base");
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -301,6 +318,15 @@
         flex-direction: column;
         flex: 1 1 auto;
         min-height: 0;
+        gap: spacing("eighth");
+    }
+
+    // Price styling for Clerk cards
+    .card-price {
+        display: block;
+        color: stencilColor("color-textBase");
+        margin-top: spacing("quarter");
+        margin-bottom: spacing("half");
     }
 
     // CTA button for Clerk cards
@@ -308,11 +334,11 @@
         @include cta-button;
         margin-top: auto;
         flex-shrink: 0;
-        font-size: remCalc(16px);
+        font-size: remCalc(12px);
 
-    @include breakpoint("medium") {
-        font-size: fontSize("small");
-    }
+        @include breakpoint("medium") {
+            font-size: 20px;
+        }
     }
 }
 

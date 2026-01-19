@@ -2,7 +2,7 @@
   "success": [
     {
       "slug": "70s-costumes-accessories",
-      "categoryId": 284,
+      "categoryId": 435,
       "updates": [
         "widget",
         "description"
@@ -10,7 +10,7 @@
     },
     {
       "slug": "confetti",
-      "categoryId": 127,
+      "categoryId": 61,
       "updates": [
         "widget",
         "description"
@@ -18,7 +18,7 @@
     },
     {
       "slug": "16th-birthday-decorations",
-      "categoryId": 31,
+      "categoryId": 191,
       "updates": [
         "widget",
         "description"
@@ -26,7 +26,7 @@
     },
     {
       "slug": "personalised-christening-banners",
-      "categoryId": 417,
+      "categoryId": 689,
       "updates": [
         "widget",
         "description"
@@ -34,7 +34,7 @@
     },
     {
       "slug": "personalised-bag-labels",
-      "categoryId": 290,
+      "categoryId": 360,
       "updates": [
         "widget",
         "description"
@@ -42,7 +42,7 @@
     },
     {
       "slug": "masks",
-      "categoryId": 319,
+      "categoryId": 39,
       "updates": [
         "widget",
         "description"
@@ -50,7 +50,7 @@
     },
     {
       "slug": "disney-cars-party-supplies",
-      "categoryId": 85,
+      "categoryId": 236,
       "updates": [
         "widget",
         "description"
@@ -58,7 +58,7 @@
     },
     {
       "slug": "beards-moustache",
-      "categoryId": 277,
+      "categoryId": 122,
       "updates": [
         "widget",
         "description"
@@ -66,7 +66,7 @@
     },
     {
       "slug": "gloves",
-      "categoryId": 373,
+      "categoryId": 129,
       "updates": [
         "widget",
         "description"
@@ -74,7 +74,7 @@
     },
     {
       "slug": "glasses",
-      "categoryId": 331,
+      "categoryId": 42,
       "updates": [
         "widget",
         "description"
@@ -82,7 +82,7 @@
     },
     {
       "slug": "pinatas",
-      "categoryId": 352,
+      "categoryId": 186,
       "updates": [
         "widget",
         "description"
@@ -90,7 +90,7 @@
     },
     {
       "slug": "first-birthday-decorations",
-      "categoryId": 216,
+      "categoryId": 202,
       "updates": [
         "widget",
         "description"
@@ -98,7 +98,7 @@
     },
     {
       "slug": "party-inflatables",
-      "categoryId": 317,
+      "categoryId": 132,
       "updates": [
         "widget",
         "description"
@@ -106,7 +106,15 @@
     },
     {
       "slug": "kids-party-supplies",
-      "categoryId": 45,
+      "categoryId": 70,
+      "updates": [
+        "widget",
+        "description"
+      ]
+    },
+    {
+      "slug": "gabbys-dollhouse-party-supplies",
+      "categoryId": 735,
       "updates": [
         "widget",
         "description"
@@ -114,7 +122,7 @@
     },
     {
       "slug": "cocomelon-party-supplies",
-      "categoryId": 115,
+      "categoryId": 656,
       "updates": [
         "widget",
         "description"
@@ -122,7 +130,7 @@
     },
     {
       "slug": "3d-soccer-party-supplies",
-      "categoryId": 168,
+      "categoryId": 268,
       "updates": [
         "widget",
         "description"
@@ -130,7 +138,7 @@
     },
     {
       "slug": "60th-birthday-decorations",
-      "categoryId": 37,
+      "categoryId": 197,
       "updates": [
         "widget",
         "description"
@@ -138,7 +146,7 @@
     },
     {
       "slug": "hen-party",
-      "categoryId": 194,
+      "categoryId": 82,
       "updates": [
         "widget",
         "description"
@@ -146,7 +154,7 @@
     },
     {
       "slug": "face-paint",
-      "categoryId": 241,
+      "categoryId": 126,
       "updates": [
         "widget",
         "description"
@@ -154,7 +162,7 @@
     },
     {
       "slug": "40th-wedding-anniversary",
-      "categoryId": 183,
+      "categoryId": 450,
       "updates": [
         "widget",
         "description"
@@ -162,7 +170,15 @@
     },
     {
       "slug": "confirmation-decorations",
-      "categoryId": 149,
+      "categoryId": 164,
+      "updates": [
+        "widget",
+        "description"
+      ]
+    },
+    {
+      "slug": "personalised-party-invitations",
+      "categoryId": 369,
       "updates": [
         "widget",
         "description"
@@ -170,7 +186,7 @@
     },
     {
       "slug": "50th-birthday-decorations",
-      "categoryId": 36,
+      "categoryId": 196,
       "updates": [
         "widget",
         "description"
@@ -178,7 +194,7 @@
     },
     {
       "slug": "cake-accessories",
-      "categoryId": 325,
+      "categoryId": 62,
       "updates": [
         "widget",
         "description"
@@ -186,7 +202,7 @@
     },
     {
       "slug": "birthday-party-decorations",
-      "categoryId": 135,
+      "categoryId": 56,
       "updates": [
         "widget",
         "description"
@@ -194,7 +210,7 @@
     },
     {
       "slug": "70th-birthday-decorations",
-      "categoryId": 38,
+      "categoryId": 198,
       "updates": [
         "widget",
         "description"
@@ -202,7 +218,7 @@
     },
     {
       "slug": "toddler-halloween-costumes",
-      "categoryId": 341,
+      "categoryId": 405,
       "updates": [
         "widget",
         "description"
@@ -210,7 +226,7 @@
     },
     {
       "slug": "birthday-banners",
-      "categoryId": 220,
+      "categoryId": 171,
       "updates": [
         "widget",
         "description"
@@ -218,7 +234,7 @@
     },
     {
       "slug": "engagement-party-decorations",
-      "categoryId": 190,
+      "categoryId": 165,
       "updates": [
         "widget",
         "description"
@@ -226,7 +242,7 @@
     },
     {
       "slug": "80s-costumes-accessories",
-      "categoryId": 289,
+      "categoryId": 436,
       "updates": [
         "widget",
         "description"
@@ -234,7 +250,7 @@
     },
     {
       "slug": "balloon-arch-kits",
-      "categoryId": 512,
+      "categoryId": 729,
       "updates": [
         "widget",
         "description"
@@ -242,7 +258,7 @@
     },
     {
       "slug": "halloween-decorations",
-      "categoryId": 118,
+      "categoryId": 399,
       "updates": [
         "widget",
         "description"
@@ -250,7 +266,7 @@
     },
     {
       "slug": "21st-birthday-decorations",
-      "categoryId": 32,
+      "categoryId": 192,
       "updates": [
         "widget",
         "description"
@@ -258,7 +274,7 @@
     },
     {
       "slug": "adult-costumes",
-      "categoryId": 497,
+      "categoryId": 115,
       "updates": [
         "widget",
         "description"
@@ -266,7 +282,7 @@
     },
     {
       "slug": "disco-themed-costumes",
-      "categoryId": 214,
+      "categoryId": 440,
       "updates": [
         "widget",
         "description"
@@ -274,7 +290,7 @@
     },
     {
       "slug": "balloons",
-      "categoryId": 65,
+      "categoryId": 60,
       "updates": [
         "widget",
         "description"
@@ -282,7 +298,7 @@
     },
     {
       "slug": "lilo-stitch-party-supplies",
-      "categoryId": 259,
+      "categoryId": 782,
       "updates": [
         "widget",
         "description"
@@ -290,7 +306,7 @@
     },
     {
       "slug": "balloon-boxes",
-      "categoryId": 556,
+      "categoryId": 655,
       "updates": [
         "widget",
         "description"
@@ -298,7 +314,7 @@
     },
     {
       "slug": "personalised-kids-pyjamas",
-      "categoryId": 521,
+      "categoryId": 372,
       "updates": [
         "widget",
         "description"
@@ -306,7 +322,15 @@
     },
     {
       "slug": "personalised-party-banners",
-      "categoryId": 252,
+      "categoryId": 361,
+      "updates": [
+        "widget",
+        "description"
+      ]
+    },
+    {
+      "slug": "birthday-candles-1",
+      "categoryId": 172,
       "updates": [
         "widget",
         "description"
@@ -314,7 +338,7 @@
     },
     {
       "slug": "cake-toppers",
-      "categoryId": 460,
+      "categoryId": 228,
       "updates": [
         "widget",
         "description"
@@ -322,7 +346,7 @@
     },
     {
       "slug": "birthday-sashes",
-      "categoryId": 360,
+      "categoryId": 176,
       "updates": [
         "widget",
         "description"
@@ -332,9 +356,6 @@
   "notFound": [
     "how-to-make-a-balloon-arch",
     "baby-shower-ideas",
-    "gabbys-dollhouse-party-supplies",
-    "personalised-party-invitations",
-    "birthday-candles-1",
     "garden-party-decoration-ideas",
     "pool-party-ideas-for-all-ages"
   ],

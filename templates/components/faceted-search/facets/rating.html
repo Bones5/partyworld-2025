@@ -2,7 +2,7 @@
 <div class="accordion-block">
     {{> components/faceted-search/faceted-search-navigation}}
 
-    <div id="facetedSearch-content--{{dashcase facet}}" class="accordion-content facetedSearch-content--{{dashcase facet}}{{#unless start_collapsed}} is-open{{/unless}}">
+    <div id="facetedSearch-content--{{dashcase facet}}" class="accordion-content facetedSearch-content--{{dashcase facet}}{{#if start_expanded}} is-open{{/if}}">
         <ul class="navList">
             {{#each items}}
                 <li class="navList-item">

@@ -85,11 +85,15 @@
         border: 0;
         
         .accordion-block {
-            border: 1px solid stencilColor("container-border-global");
-            border-radius: $global-radius;
-            margin-bottom: spacing("half");
-            background-color: stencilColor("color-white");
+            background-color: stencilColor("color-greyLightest");
+            border: 0;
+            border-radius: 0;
+            margin-bottom: spacing("quarter");
             overflow: hidden;
+
+            &:first-child {
+                margin-top: 0;
+            }
 
             &:last-child {
                 margin-bottom: 0;
@@ -101,28 +105,32 @@
         }
 
         .accordion-navigation {
+            appearance: none;
+            background-color: stencilColor("color-greyLightest");
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 100%;
-            padding: spacing("single");
-            background-color: transparent;
-            border: 0;
-            border-radius: 0;
-            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            margin: 0 !important;
+            outline: none;
+            padding: spacing("quarter") spacing("half");
             text-align: left;
-            transition: background-color 0.15s ease;
+            text-transform: none;
+            transition: none;
+            width: 100%;
 
-            &:hover {
-                background-color: stencilColor("container-fill-base");
-            }
-
-            &:focus {
-                outline: 2px solid stencilColor("color-primary");
-                outline-offset: -2px;
-            }
-
-            &:focus:not(:focus-visible) {
+            &:hover,
+            &:focus,
+            &:active {
+                background-color: stencilColor("color-greyLightest");
+                border: 0;
+                box-shadow: none;
                 outline: none;
             }
 
@@ -133,9 +141,11 @@
         }
 
         .accordion-title {
-            font-size: fontSize("base");
-            font-weight: fontWeight("semibold");
             color: stencilColor("color-textBase");
+            font-family: stencilFontFamily("headings-font");
+            font-size: fontSize("smallest");
+            font-weight: stencilFontWeight("headings-font");
+            text-transform: none;
         }
 
         .accordion-indicator-wrap {
@@ -145,12 +155,17 @@
         }
 
         .accordion-indicator {
-            color: stencilColor("color-textSecondary");
+            fill: stencilColor("color-textBase");
+            color: stencilColor("color-textBase");
+            height: 16px;
+            width: 16px;
         }
 
         .accordion-content {
-            padding: 0 spacing("single") spacing("single");
+            background-color: stencilColor("color-greyLightest");
+            border: 0;
             display: none;
+            padding: 0 spacing("half") spacing("half");
 
             &.is-open {
                 display: block;

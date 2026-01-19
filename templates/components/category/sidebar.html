@@ -24,33 +24,21 @@
 
             <div id="facetedSearch-navList" class="facetedSearch-navList">
                 {{!-- Selected Filters --}}
-                {{> components/faceted-search/selected-facets selected}}
+                {{> components/faceted-search/selected-facets category.selected}}
 
-                <div class="accordion accordion--navList accordion--sidebar">
-                    {{!-- 1. Price Filter (always first if available) --}}
-                    {{#each facets}}
-                        {{#if visible}}
-                            {{#if (or (compare facet '===' 'price') (compare title '===' 'Price'))}}
-                                {{> components/category/sidebar-accordion-item this collapsed=true}}
-                            {{/if}}
-                        {{/if}}
-                    {{/each}}
+                        {{#if category.subcategories}}
+            <div class="accordion accordion--navList accordion--sidebar">
+                {{> components/category/sidebar-subcategories collapsed=true}}
+        {{/if}}
 
-                    {{!-- 2. Category Filter (second if available) --}}
-                    {{#each facets}}
-                        {{#if visible}}
-                            {{#if (or (compare facet '===' 'category') (compare title '===' 'Category'))}}
-                                {{> components/category/sidebar-accordion-item this collapsed=true}}
-                            {{/if}}
-                        {{/if}}
-                    {{/each}}
+        {{#if theme_settings.shop_by_price_visibility}}
+                {{> components/category/sidebar-price-filter collapsed=true}}
+        {{/if}}
 
-                    {{!-- 3. All Other Filters --}}
-                    {{#each facets}}
+                    {{!-- Render all visible facets using the dynamic component --}}
+                    {{#each category.facets}}
                         {{#if visible}}
-                            {{#unless (or (compare facet '===' 'price') (compare facet '===' 'category') (compare title '===' 'Price') (compare title '===' 'Category'))}}
-                                {{> components/category/sidebar-accordion-item this collapsed=true}}
-                            {{/unless}}
+                            {{{dynamicComponent 'components/faceted-search/facets' collapsed=true}}}
                         {{/if}}
                     {{/each}}
                 </div>

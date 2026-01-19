@@ -603,7 +603,7 @@
 // Override for child list items inside subMenu-item (higher specificity)
 .navPage-subMenu-item .navPage-childList .navPages-action {
     font-family: $fontFamily-sans;
-    font-size: fontSize("smallest");
+    font-size: 15px;
 }
 
 

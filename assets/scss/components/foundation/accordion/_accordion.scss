@@ -50,11 +50,11 @@
         border: 0;
     }
 
-    .sidebarBlock + & {
-        @include breakpoint("medium") {
-            margin-top: $accordion-navList-spacing;
-        }
-    }
+    // .sidebarBlock + & {
+    //     @include breakpoint("medium") {
+    //         margin-top: $accordion-navList-spacing;
+    //     }
+    // }
 
     .accordion-block {
         @include breakpoint("medium") {
@@ -150,5 +150,70 @@
 
     &:hover {
         color: stencilColor("color-textSecondary--hover");
+    }
+}
+
+
+// Accordion sidebar variant
+// -----------------------------------------------------------------------------
+//
+// Purpose: Compact accordion style for category sidebar filters
+//
+// -----------------------------------------------------------------------------
+.accordion--sidebar {
+    border: 0;
+
+    .accordion-block {
+        background-color: stencilColor("color-greyLightest");
+        margin-top: spacing("quarter");
+
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+
+    .accordion-navigation {
+        appearance: none;
+        background-color: stencilColor("color-greyLightest");
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        margin: 0;
+        outline: none;
+        padding: spacing("quarter") spacing("eighth");
+        text-align: left;
+        text-transform: none;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: stencilColor("color-greyLightest");
+            border: 0;
+            box-shadow: none;
+            outline: none;
+        }
+    }
+
+    .accordion-title {
+        font-family: stencilFontFamily("headings-font");
+        font-size: fontSize("base");
+        font-weight: stencilFontWeight("headings-font");
+        text-transform: none;
+    }
+
+    .accordion-indicator {
+        fill: stencilColor("color-textBase");
+        height: 16px;
+        width: 16px;
+    }
+
+    .accordion-content {
+        background-color: stencilColor("color-greyLightest");
+        border: 0;
+        padding: 0 spacing("half") spacing("half");
     }
 }

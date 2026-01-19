@@ -278,6 +278,7 @@ function renderProductCard(product, currency, options = {}) {
         showRating = true,
         showBrand = true,
         showQuickView = true,
+        ctaText = 'Shop Now',
     } = options;
 
     const template = getCardTemplate();
@@ -374,6 +375,17 @@ function renderProductCard(product, currency, options = {}) {
                 <span data-product-price-without-tax class="price price--withoutTax">${formatPrice(prices.price, currency)}</span>
             </span>
         `;
+    } else if (prices.priceRange?.min?.value) {
+        const minPrice = prices.priceRange.min.value;
+        const maxPrice = prices.priceRange.max?.value ?? minPrice;
+        const minFormatted = formatPrice({ value: minPrice }, currency);
+        const maxFormatted = formatPrice({ value: maxPrice }, currency);
+
+        priceContainer.innerHTML = `
+            <span class="price-section price-section--withoutTax">
+                <span data-product-price-without-tax class="price price--withoutTax">${minPrice !== maxPrice ? `${minFormatted} - ${maxFormatted}` : minFormatted}</span>
+            </span>
+        `;
     }
 
     // Actions (Quick view, Add to cart, Choose options)
@@ -417,6 +429,7 @@ function renderProductCard(product, currency, options = {}) {
     const ctaLink = card.querySelector('.card-cta');
     if (ctaLink) {
         ctaLink.setAttribute('href', product.path);
+        ctaLink.textContent = ctaText;
     }
 
     return card;
@@ -434,6 +447,7 @@ function renderProductCardFallback(product, currency, options = {}) {
         showRating = true,
         showBrand = true,
         showQuickView = true,
+        ctaText = 'Shop Now',
     } = options;
 
     const hasOptions = product.productOptions?.edges?.length > 0;
@@ -498,6 +512,17 @@ function renderProductCardFallback(product, currency, options = {}) {
         priceHtml = `
             <span class="price-section price-section--withoutTax">
                 <span data-product-price-without-tax class="price price--withoutTax">${formatPrice(prices.price, currency)}</span>
+            </span>
+        `;
+    } else if (prices.priceRange?.min?.value) {
+        const minPrice = prices.priceRange.min.value;
+        const maxPrice = prices.priceRange.max?.value ?? minPrice;
+        const minFormatted = formatPrice({ value: minPrice }, currency);
+        const maxFormatted = formatPrice({ value: maxPrice }, currency);
+
+        priceHtml = `
+            <span class="price-section price-section--withoutTax">
+                <span data-product-price-without-tax class="price price--withoutTax">${minPrice !== maxPrice ? `${minFormatted} - ${maxFormatted}` : minFormatted}</span>
             </span>
         `;
     }
@@ -580,7 +605,7 @@ function renderProductCardFallback(product, currency, options = {}) {
                 <div class="card-text card-price" data-test-info-type="price">
                     ${priceHtml}
                 </div>
-                <a href="${product.path}" class="card-cta" data-event-type="product-click">Shop Now</a>
+                <a href="${product.path}" class="card-cta" data-event-type="product-click">${ctaText}</a>
             </div>
         </article>
     `;
@@ -615,7 +640,12 @@ async function initClerkRecommendations(container, context) {
         clerkCategory,
         clerkKeywords,
         clerkLimit = 8,
+        clerkCtaText = 'Shop Now',
+        clerkShowBrand,
     } = container.dataset;
+
+    // Parse showBrand - defaults to true unless explicitly set to 'false'
+    const showBrand = clerkShowBrand !== 'false';
 
     if (!context.clerkPublicKey) {
         console.warn('[Clerk] No API key configured');
@@ -715,8 +745,9 @@ async function initClerkRecommendations(container, context) {
         products.forEach(product => {
             const cardEl = renderProductCard(product, currency, {
                 showRating: true,
-                showBrand: true,
+                showBrand,
                 showQuickView: context.showQuickView !== false,
+                ctaText: clerkCtaText,
             });
             productGrid.appendChild(cardEl);
         });

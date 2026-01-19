@@ -8,10 +8,13 @@
   - heading: Optional heading for the section (default: "Popular in This Category")
   - category_id: Category ID to use for recommendations (default: current category.id)
   - limit: Number of products to show (default: 8)
+  - ctaText: Text for the CTA button (default: "Shop Now")
+  - showBrand: Whether to show product brand (default: true)
   
   Usage:
     {{> components/category/clerk-recommendations 
         heading="Best Sellers"
+        ctaText="Buy Now"
         limit=8
     }}
   
@@ -28,7 +31,9 @@
          data-clerk-container
          data-clerk-type="category"
          data-clerk-category="{{default category_id category.id}}"
-         data-clerk-limit="{{default limit 8}}">
+         data-clerk-limit="{{default limit 8}}"
+         data-clerk-cta-text="{{default ctaText 'Shop Now'}}"
+         data-clerk-show-brand="{{default showBrand 'false'}}">
       {{!-- Skeleton loader to reserve space and minimize layout shift --}}
       <div class="productGrid clerk-product-grid clerk-skeleton-grid" aria-hidden="true">
         {{#for 1 4}}
