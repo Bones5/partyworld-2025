@@ -1,0 +1,71 @@
+{{!--
+  Native BigCommerce Search Page
+  
+  This is the standard BigCommerce faceted search page, extracted as a partial
+  so it can be used as a fallback when Clerk.io search is disabled.
+  
+  Usage:
+    {{> components/search/native-search-page}}
+--}}
+
+<div class="page search-page search-page--native">
+    {{#if product_results.faceted_search_enabled}}
+        <aside class="page-sidebar" id="faceted-search-container">
+            {{> components/search/sidebar}}
+        </aside>
+    {{/if}}
+
+    <main class="page-content" id="product-listing-container">
+        {{#if forms.search.query}}
+            <div id="search-results-heading">
+                {{> components/search/heading}}
+            </div>
+        {{/if}}
+
+        <nav class="navBar navBar--sub search-nav">
+            <span id="search-tabs-widget-description" class="aria-description--hidden">
+                {{lang 'search.tabs_accesibility_hint'}}
+            </span>
+            <ul role="tablist" class="navBar-section account-navigation" data-search-page-tabs>
+                <li role="presentation" class="navBar-item">
+                    <a aria-describedby="search-tabs-widget-description" 
+                       role="tab" 
+                       aria-controls="product-listing-container" 
+                       id="search-results-product-count" 
+                       class="navBar-action{{#if forms.search.section '==' 'product'}} is-active{{/if}}" 
+                       href="{{forms.search.product_url}}" 
+                       data-product-results-toggle>
+                        {{> components/search/product-count}}
+                    </a>
+                </li>
+                <li role="presentation" class="navBar-item">
+                    <a aria-describedby="search-tabs-widget-description" 
+                       role="tab" 
+                       aria-controls="search-results-content" 
+                       id="search-results-content-count" 
+                       class="navBar-action{{#if forms.search.section '==' 'content'}} is-active{{/if}}" 
+                       href="{{forms.search.content_url}}" 
+                       data-content-results-toggle>
+                        {{> components/search/content-count}}
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div role="tabpanel" 
+             id="search-results-content" 
+             aria-labelledby="search-results-content-count" 
+             {{#if forms.search.section '!=' 'content'}}class="u-hidden"{{/if}}>
+            {{> components/search/content-listing}}
+        </div>
+
+        <div role="tabpanel" 
+             id="product-listing-container" 
+             aria-labelledby="search-results-product-count" 
+             {{#if forms.search.section '!=' 'product'}}class="u-hidden"{{/if}}>
+            {{> components/search/product-listing}}
+        </div>
+
+        {{{region name="search_below_content"}}}
+    </main>
+</div>

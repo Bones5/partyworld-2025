@@ -3138,6 +3138,54 @@
         "label": "Enable Cart Page Recommendations",
         "id": "clerk_cart_recommendations_enabled",
         "force_reload": true
+      },
+      {
+        "type": "heading",
+        "content": "Clerk.io Search"
+      },
+      {
+        "type": "checkbox",
+        "label": "Enable Clerk.io Instant Search",
+        "id": "clerk_instant_search_enabled",
+        "force_reload": true
+      },
+      {
+        "type": "paragraph",
+        "content": "Shows AI-powered live search suggestions as customers type in the search box."
+      },
+      {
+        "type": "checkbox",
+        "label": "Enable Clerk.io Search Page",
+        "id": "clerk_search_page_enabled",
+        "force_reload": true
+      },
+      {
+        "type": "paragraph",
+        "content": "Replaces the native BigCommerce search results page with Clerk.io AI-powered search."
+      },
+      {
+        "type": "text",
+        "label": "Instant Search Template",
+        "id": "clerk_instant_search_template",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Search Page Template",
+        "id": "clerk_search_page_template",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Search Facets (JSON array)",
+        "id": "clerk_search_facets",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Currency Symbol (for facet price)",
+        "id": "clerk_currency_symbol",
+        "force_reload": true
       }
     ]
   },

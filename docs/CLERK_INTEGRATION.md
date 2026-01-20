@@ -48,7 +48,7 @@ Before implementing this integration, you need:
 3. Scroll down to find the **Clerk.io Integration** section
 4. Configure the following settings:
 
-#### Settings
+#### Recommendation Settings
 
 | Setting | Description | Default |
 |---------|-------------|---------|
@@ -59,6 +59,17 @@ Before implementing this integration, you need:
 | **Enable Homepage Recommendations** | Show recommendations on the homepage | `false` |
 | **Enable Cart Page Recommendations** | Show recommendations on cart page | `false` |
 
+#### Search Settings
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Enable Clerk.io Instant Search** | Show AI-powered live search suggestions as customers type | `true` |
+| **Enable Clerk.io Search Page** | Replace native BigCommerce search with Clerk.io AI search | `true` |
+| **Instant Search Template** | Clerk.io template name for instant search | `@live-search` |
+| **Search Page Template** | Clerk.io template name for search results page | `@search-page` |
+| **Search Facets** | JSON array of facet attributes to show | `["price","categories","brand"]` |
+| **Currency Symbol** | Currency symbol for price facet display | `€` |
+
 ### Step 2: Add Product Data Feed
 
 Clerk.io needs access to your product catalog:
@@ -67,6 +78,71 @@ Clerk.io needs access to your product catalog:
 2. Select **BigCommerce** as the platform
 3. Follow the setup wizard to connect your store
 4. Clerk.io will automatically sync your product catalog
+
+### Step 3: Configure Clerk.io Templates (Dashboard)
+
+For search features to work, you need to create templates in the Clerk.io dashboard:
+
+1. Log in to [my.clerk.io](https://my.clerk.io)
+2. Go to **Search** → **Designs**
+3. Create the following templates:
+
+| Template Name | Purpose |
+|---------------|---------|
+| `@live-search` | Instant search dropdown (appears as user types) |
+| `@search-page` | Full search results page with product grid |
+
+**Note:** The `@` prefix in template names is a Clerk.io convention for built-in templates. You can use custom names without the prefix.
+
+---
+
+## Search Features
+
+### Instant Search
+
+The instant search feature provides AI-powered search suggestions as customers type in the search box. It:
+
+- Shows product suggestions with images and prices
+- Displays category suggestions
+- Provides search query auto-complete
+- Works with all search inputs in the header
+
+**Template file:** `templates/components/common/clerk-instant-search.html`
+
+**How it works:**
+```html
+<span class="clerk"
+    data-template="@live-search"
+    data-instant-search="input[data-search-quick]"
+    data-instant-search-categories="true"
+    data-instant-search-suggestions="8">
+</span>
+```
+
+### Clerk.io Search Results Page
+
+When enabled, the search results page uses Clerk.io's AI-powered search with:
+
+- **AI-ranked results:** Products sorted by relevance, popularity, and user behavior
+- **Faceted filtering:** Price ranges, categories, brands
+- **Spell correction:** Automatic typo fixing
+- **Synonyms:** Understands related terms
+- **Mobile-friendly:** Collapsible facets sidebar
+
+**Template file:** `templates/pages/search.html`
+
+**Fallback behavior:**
+If Clerk.io search is disabled or unavailable, the page automatically falls back to the native BigCommerce faceted search.
+
+### Search Facets Configuration
+
+The facets (filters) shown on the search results page are controlled by the `clerk_search_facets` setting. Default:
+
+```json
+["price", "categories", "brand"]
+```
+
+You can customize this in Theme Editor or modify the JSON to include other product attributes synced to Clerk.io.
 
 ---
 

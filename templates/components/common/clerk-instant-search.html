@@ -1,0 +1,31 @@
+{{!--
+  Clerk.io Instant Search
+  
+  Provides AI-powered live search suggestions as customers type in the search box.
+  This attaches to the existing quick-search input field.
+  
+  Configuration:
+  - theme_settings.clerk_enabled: Master toggle for Clerk.io
+  - theme_settings.clerk_instant_search_enabled: Toggle for instant search
+  - theme_settings.clerk_instant_search_template: Clerk template name (default: @live-search)
+  
+  Usage:
+    {{> components/common/clerk-instant-search}}
+    
+  Note: Requires Clerk.io dashboard to have a template configured.
+  The template name should match what's set in Theme Editor (e.g., @live-search).
+--}}
+
+{{#if theme_settings.clerk_enabled}}
+{{#if theme_settings.clerk_instant_search_enabled}}
+{{#if theme_settings.clerk_public_key}}
+<span class="clerk clerk-instant-search"
+    data-template="{{#if theme_settings.clerk_instant_search_template}}{{theme_settings.clerk_instant_search_template}}{{else}}@live-search{{/if}}"
+    data-instant-search="input[data-search-quick], input[name='search_query']"
+    data-instant-search-categories="true"
+    data-instant-search-suggestions="8"
+    data-instant-search-positioning="bottom-left">
+</span>
+{{/if}}
+{{/if}}
+{{/if}}

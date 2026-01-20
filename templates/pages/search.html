@@ -5,6 +5,7 @@ product_results:
 {{inject 'categoryTree' forms.search.category_options}}
 {{inject 'searchProductsPerPage' theme_settings.searchpage_products_per_page}}
 {{inject 'searchResultsCount' (lang 'search.results.count' count=result_count search_query=(sanitize forms.search.query))}}
+{{inject 'clerkSearchEnabled' theme_settings.clerk_search_page_enabled}}
 {{#partial "head"}}
     {{#if pagination.product_results.previous}}
         <link rel="prev" href="{{pagination.product_results.previous}}">
@@ -17,51 +18,108 @@ product_results:
 {{#partial "page"}}
 {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
 
-<div class="page search-page">
-    {{#if product_results.faceted_search_enabled}}
-        <aside class="page-sidebar" id="faceted-search-container">
-            {{> components/search/sidebar}}
-        </aside>
-    {{/if}}
+{{!-- Clerk.io Search Page --}}
+{{#if theme_settings.clerk_enabled}}
+{{#if theme_settings.clerk_search_page_enabled}}
+{{#if theme_settings.clerk_public_key}}
 
-    <main class="page-content" id="product-listing-container">
+<div class="page search-page search-page--clerk">
+    <aside class="page-sidebar clerk-facets-sidebar" id="clerk-facets-container">
+        <button class="clerk-facets-close" type="button" aria-label="{{lang 'common.close'}}">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div id="clerk-search-filters"></div>
+    </aside>
+
+    <main class="page-content clerk-search-content">
         {{#if forms.search.query}}
-            <div id="search-results-heading">
-                {{>components/search/heading}}
-            </div>
+            <h1 class="page-heading clerk-search-heading">
+                {{lang 'search.results.heading' search_query=(sanitize forms.search.query)}}
+            </h1>
+        {{else}}
+            <h1 class="page-heading clerk-search-heading">
+                {{lang 'search.heading'}}
+            </h1>
         {{/if}}
 
-        <!-- <nav class="navBar navBar--sub search-nav">
-            <span id="search-tabs-widget-description" class="aria-description--hidden">
-                {{lang 'search.tabs_accesibility_hint'}}
-            </span>
-            <ul role="tablist" class="navBar-section account-navigation" data-search-page-tabs>
-                <li role="presentation" class="navBar-item">
-                    <a aria-describedby="search-tabs-widget-description" role="tab" aria-controls="product-listing-container" id="search-results-product-count" class="navBar-action" href="{{forms.search.product_url}}" data-product-results-toggle>
-                        {{>components/search/product-count}}
-                    </a>
-                </li>
-                <li role="presentation" class="navBar-item">
-                    <a aria-describedby="search-tabs-widget-description" role="tab" aria-controls="search-results-content" id="search-results-content-count" class="navBar-action" href="{{forms.search.content_url}}" data-content-results-toggle>
-                        {{>components/search/content-count}}
-                    </a>
-                </li>
-            </ul>
-        </nav> -->
+        {{!-- Mobile filter toggle --}}
+        <button class="clerk-facets-toggle button button--secondary" type="button" id="clerk-show-facets">
+            <svg class="icon" aria-hidden="true"><use href="#icon-sliders"/></svg>
+            {{lang 'search.faceted.filters'}}
+        </button>
 
-       
+        {{!-- Clerk.io Search Results --}}
+        <span class="clerk"
+            id="clerk-search"
+            data-template="{{#if theme_settings.clerk_search_page_template}}{{theme_settings.clerk_search_page_template}}{{else}}@search-page{{/if}}"
+            data-target="#clerk-search-results"
+            data-query="{{sanitize forms.search.query}}"
+            data-facets-target="#clerk-search-filters"
+            data-facets-attributes='{{#if theme_settings.clerk_search_facets}}{{theme_settings.clerk_search_facets}}{{else}}["price","categories","brand"]{{/if}}'
+            data-facets-titles='{"price":"{{lang "search.faceted.sort.price"}}","categories":"{{lang "search.faceted.category"}}","brand":"{{lang "products.brand"}}"}'
+            data-facets-price-prepend="{{#if theme_settings.clerk_currency_symbol}}{{theme_settings.clerk_currency_symbol}}{{else}}€{{/if}}"
+            data-facets-in-url="true"
+            data-facets-view-more-text="{{lang 'common.view_more'}}"
+            data-facets-searchbox-text="{{lang 'search.quick_search.input_placeholder'}}">
+        </span>
 
-        <div role="tabpanel" id="search-results-content" aria-labelledby="search-results-content-count" {{#if forms.search.section '!=' 'content'}}class="u-hidden"{{/if}}>
-            {{> components/search/content-listing}}
-        </div>
+        <div id="clerk-search-results" class="clerk-search-results"></div>
 
-        <div role="tabpanel" id="product-listing-container" aria-labelledby="search-results-product-count" {{#if forms.search.section '!=' 'product'}}class="u-hidden"{{/if}}>
-            {{> components/search/product-listing}}
-        </div>
+        {{!-- Fallback for no results or Clerk failure --}}
+        <noscript>
+            <p>{{lang 'search.results.error'}}</p>
+            <p><a href="{{urls.search}}?search_query={{sanitize forms.search.query}}&section=product">
+                {{lang 'search.results.view_all'}}
+            </a></p>
+        </noscript>
 
         {{{region name="search_below_content"}}}
     </main>
 </div>
+
+<script>
+(function() {
+    // Mobile facets toggle
+    var toggleBtn = document.getElementById('clerk-show-facets');
+    var facetsContainer = document.getElementById('clerk-facets-container');
+    var closeBtn = facetsContainer ? facetsContainer.querySelector('.clerk-facets-close') : null;
+    
+    function toggleFacets() {
+        if (facetsContainer) {
+            facetsContainer.classList.toggle('is-open');
+            document.body.classList.toggle('has-clerk-facets-open');
+        }
+    }
+    
+    function closeFacets() {
+        if (facetsContainer) {
+            facetsContainer.classList.remove('is-open');
+            document.body.classList.remove('has-clerk-facets-open');
+        }
+    }
+    
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', toggleFacets);
+    }
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeFacets);
+    }
+})();
+</script>
+
+{{else}}
+{{!-- Clerk enabled but no public key - show native search --}}
+{{> components/search/native-search-page}}
+{{/if}}
+{{else}}
+{{!-- Clerk search page disabled - show native search --}}
+{{> components/search/native-search-page}}
+{{/if}}
+{{else}}
+{{!-- Clerk disabled entirely - show native search --}}
+{{> components/search/native-search-page}}
+{{/if}}
 
 {{/partial}}
 {{> layout/base}}
