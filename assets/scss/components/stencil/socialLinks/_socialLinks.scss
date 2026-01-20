@@ -80,7 +80,13 @@
 // -----------------------------------------------------------------------------
 
 .socialLinks--alt {
+    flex-wrap: nowrap;
     gap: spacing("third");
+    justify-content: center;
+
+    @include breakpoint("medium") {
+        justify-content: flex-start;
+    }
 
     .socialLinks-item {
         .icon {

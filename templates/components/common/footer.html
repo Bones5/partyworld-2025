@@ -53,29 +53,15 @@
                 </article>
 
                 {{!-- Party Items --}}
-                <article class="footer-links-col footer-links-col--party-items" data-section-type="footer-brands">
+                <article class="footer-links-col footer-links-col--party-items" data-section-type="footer-party-items">
                     <h3 class="footer-info-heading">{{lang 'footer.party_items'}}</h3>
-                    <ul class="footer-info-list">
-                        {{#each shop_by_brand}}
-                            <li>
-                                <a href="{{url}}">{{name}}</a>
-                            </li>
-                        {{/each}}
-                        <li><a href="{{urls.brands}}">{{lang 'common.view_all'}}</a></li>
-                    </ul>
+                    {{{region name="footer_party_items"}}}
                 </article>
 
                 {{!-- Hen Party --}}
-                <article class="footer-links-col footer-links-col--party-items" data-section-type="footer-brands">
+                <article class="footer-links-col footer-links-col--hen-party" data-section-type="footer-hen-party">
                     <h3 class="footer-info-heading">{{lang 'footer.hen_party'}}</h3>
-                    <ul class="footer-info-list">
-                        {{#each shop_by_brand}}
-                            <li>
-                                <a href="{{url}}">{{name}}</a>
-                            </li>
-                        {{/each}}
-                        <li><a href="{{urls.brands}}">{{lang 'common.view_all'}}</a></li>
-                    </ul>
+                    {{{region name="footer_hen_party"}}}
                 </article>
             </div>
         </div>
@@ -88,13 +74,13 @@
                 {{!-- Our Reviews --}}
                 <div class="footer-trust-col footer-trust-col--reviews">
                     <h3 class="footer-info-heading">{{lang 'footer.our_reviews'}}</h3>
-                    {{> components/common/trustpilot-badge theme="dark"}}
+                    {{> components/common/trustpilot-badge style="people-love-us" theme="dark"}}
                 </div>
 
                 {{!-- Secure Logo --}}
                 <div class="footer-trust-col footer-trust-col--secure">
                     <h3 class="footer-info-heading">{{lang 'footer.secure_logo'}}</h3>
-                    {{{region name="ssl_site_seal--global"}}}
+                    {{{region name="footer_socially_safe"}}}
                 </div>
 
                 {{!-- Safe Shopping (Payment Icons) --}}
@@ -104,25 +90,12 @@
                 </div>
 
                 {{!-- Follow Us (Social Links) --}}
-                <!-- {{#if theme_settings.social_icon_placement_bottom '!==' 'bottom_none'}} -->
                 <div class="footer-trust-col footer-trust-col--social" data-section-type="footer-social">
                     <h3 class="footer-info-heading">{{lang 'footer.follow_us'}}</h3>
                     {{> components/common/social-links}}
                 </div>
-                <!-- {{/if}} -->
             </div>
         </div>
     </div>
 
-    {{!-- Copyright & Legal --}}
-    <div class="footer-legal">
-        <div class="container">
-            {{#if theme_settings.show_copyright_footer}}
-                <p class="footer-copyright-text">&copy; {{moment format="YYYY"}} {{settings.store_name}}</p>
-            {{/if}}
-            {{#if theme_settings.show_powered_by}}
-                <p class="footer-powered-by">{{lang 'footer.powered_by'}} <a href="https://www.bigcommerce.com?utm_source=merchant&amp;utm_medium=poweredbyBC" rel="nofollow">BigCommerce</a></p>
-            {{/if}}
-        </div>
-    </div>
 </footer>
