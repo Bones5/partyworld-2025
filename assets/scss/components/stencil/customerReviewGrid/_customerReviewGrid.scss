@@ -7,6 +7,10 @@
 
 .c-customerReviewGrid {
     @include homepage-section;
+
+    // Improve rendering performance for below-fold content
+    content-visibility: auto;
+    contain-intrinsic-size: 0 350px;
 }
 
 .c-customerReviewGrid__heading {

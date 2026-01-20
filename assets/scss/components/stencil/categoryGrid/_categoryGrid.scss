@@ -8,6 +8,10 @@
 
 .c-categoryGrid {
     @include homepage-section;
+
+    // Improve rendering performance for below-fold content
+    content-visibility: auto;
+    contain-intrinsic-size: 0 400px;
 }
 
 .c-categoryGrid__heading {
