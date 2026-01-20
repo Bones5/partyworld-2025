@@ -2,15 +2,45 @@
 <article class="c-celebrateCard">
   <a href="{{url}}" class="c-celebrateCard__media" aria-label="{{name}}">
     {{#if image.data}}
-      {{!-- Stencil image object - use getImage to resolve {:size} placeholder --}}
-      <img src="{{getImage image '300x300'}}" alt="{{name}}" class="c-celebrateCard__image" />
+      {{!-- Stencil image object - use responsive-img for optimal loading --}}
+      {{> components/common/responsive-img
+          image=image
+          class="c-celebrateCard__image"
+          fallback_size="300w"
+          lazyload="lazyload"
+          otherAttributes='decoding="async" sizes="(min-width: 1024px) 150px, (min-width: 768px) 120px, 100px"'
+      }}
     {{else if image.url}}
-      <img src="{{image.url}}" alt="{{name}}" class="c-celebrateCard__image" />
+      <img 
+        src="{{image.url}}" 
+        srcset="{{image.url}} 150w, {{image.url}} 300w"
+        sizes="(min-width: 1024px) 150px, (min-width: 768px) 120px, 100px"
+        alt="{{name}}" 
+        class="c-celebrateCard__image lazyload" 
+        loading="lazy"
+        decoding="async"
+      />
     {{else if image.source}}
-      <img src="{{image.source}}" alt="{{name}}" class="c-celebrateCard__image" />
+      <img 
+        src="{{image.source}}" 
+        srcset="{{image.source}} 150w, {{image.source}} 300w"
+        sizes="(min-width: 1024px) 150px, (min-width: 768px) 120px, 100px"
+        alt="{{name}}" 
+        class="c-celebrateCard__image lazyload" 
+        loading="lazy"
+        decoding="async"
+      />
     {{else if image}}
-      {{!-- Could be a string URL or stencil image - try getImage first --}}
-      <img src="{{getImage image '300x300'}}" alt="{{name}}" class="c-celebrateCard__image" />
+      {{!-- Static image from theme_settings --}}
+      <img 
+        src="{{getImage image '300x300'}}" 
+        srcset="{{getImage image '150x150'}} 150w, {{getImage image '300x300'}} 300w"
+        sizes="(min-width: 1024px) 150px, (min-width: 768px) 120px, 100px"
+        alt="{{name}}" 
+        class="c-celebrateCard__image lazyload" 
+        loading="lazy"
+        decoding="async"
+      />
     {{else}}
       {{!-- Placeholder colored disc when no image --}}
       <span class="c-celebrateCard__placeholder" aria-hidden="true"></span>

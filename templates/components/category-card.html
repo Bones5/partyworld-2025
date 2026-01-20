@@ -14,38 +14,44 @@
 --}}
 <article class="c-categoryCard{{#if modifier}} c-categoryCard--{{modifier}}{{/if}}">
   <a href="{{url}}" class="c-categoryCard__media" aria-label="{{title}}">
-    {{!-- Support Stencil image objects with {:size} placeholder --}}
+    {{!-- Support Stencil image objects with responsive srcset --}}
     {{#if image.data}}
-      <img 
-        src="{{getImage image '400x300'}}" 
-        alt="{{title}}" 
-        class="lazyload"
-        loading="lazy"
-        data-sizes="auto"
-      />
+      {{> components/common/responsive-img
+          image=image
+          class="c-categoryCard__image"
+          fallback_size="400w"
+          lazyload="lazyload"
+          otherAttributes='decoding="async" sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"'
+      }}
     {{else if image.url}}
       <img 
         src="{{image.url}}" 
+        srcset="{{image.url}} 200w, {{image.url}} 400w"
+        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
         alt="{{title}}" 
-        class="lazyload"
+        class="c-categoryCard__image lazyload"
         loading="lazy"
-        data-sizes="auto"
+        decoding="async"
       />
     {{else if image.source}}
       <img 
         src="{{image.source}}" 
+        srcset="{{image.source}} 200w, {{image.source}} 400w"
+        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
         alt="{{title}}" 
-        class="lazyload"
+        class="c-categoryCard__image lazyload"
         loading="lazy"
-        data-sizes="auto"
+        decoding="async"
       />
     {{else if image}}
       <img 
         src="{{getImage image '400x300'}}" 
+        srcset="{{getImage image '200x150'}} 200w, {{getImage image '400x300'}} 400w"
+        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
         alt="{{title}}" 
-        class="lazyload"
+        class="c-categoryCard__image lazyload"
         loading="lazy"
-        data-sizes="auto"
+        decoding="async"
       />
     {{else}}
       {{!-- Colorful placeholder when no image --}}

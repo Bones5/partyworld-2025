@@ -20,31 +20,38 @@
                     fallback_size="640w"
                     lazyload="lazyload"
                     default_image=theme_settings.default_image
+                    otherAttributes='decoding="async" sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"'
                 }}
             {{else if image.url}}
                 <img 
                     src="{{image.url}}" 
+                    srcset="{{image.url}} 320w, {{image.url}} 640w"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                     alt="{{#if heading}}{{heading}}{{else}}Theme card{{/if}}" 
                     class="heroThemeSlider-card__image lazyload"
                     loading="lazy"
-                    data-sizes="auto"
+                    decoding="async"
                 />
             {{else if image.source}}
                 <img 
                     src="{{image.source}}" 
+                    srcset="{{image.source}} 320w, {{image.source}} 640w"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                     alt="{{#if heading}}{{heading}}{{else}}Theme card{{/if}}" 
                     class="heroThemeSlider-card__image lazyload"
                     loading="lazy"
-                    data-sizes="auto"
+                    decoding="async"
                 />
             {{else}}
                 {{!-- Support direct string URL (from theme_settings) --}}
                 <img 
                     src="{{cdn image}}" 
+                    srcset="{{cdn image}} 320w, {{cdn image}} 640w"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                     alt="{{#if heading}}{{heading}}{{else}}Theme card{{/if}}" 
                     class="heroThemeSlider-card__image lazyload"
                     loading="lazy"
-                    data-sizes="auto"
+                    decoding="async"
                 />
             {{/if}}
         </div>
