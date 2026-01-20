@@ -110,7 +110,6 @@
     text-transform: uppercase;
 
     &:hover,
-    &:focus,
     &.is-open {
         color: stencilColor("navUser-color-hover");
 
@@ -231,7 +230,7 @@
 
 .navUser-item--cart {
     display: block;
-    position: relative; // for absolute positioned countPill
+    position: relative; // for absolute positioned countPill and dropdown
 
     // Cart icon always visible on mobile (removed __hidden-s behavior)
 
@@ -244,13 +243,20 @@
     }
 
     .dropdown-menu {
-        max-width: remCalc(320px);
-        z-index: zIndex("higher"); // ensure dropdown appears above other content
+        max-width: remCalc(290);
+        min-width: remCalc(290); // ensure consistent width while loading
+        position: absolute;
+        z-index: zIndex("highest"); // ensure dropdown appears above all content
+
+        // Loading spinner padding to match cart preview content width
+        &.is-loading .loadingOverlay {
+            padding: spacing("double") remCalc(140px);
+        }
 
         &.is-open {
             left: auto !important; // 7
             right: remCalc(5px); // 7
-            top: auto !important; // 7
+            top: 100%; // position below the cart icon
 
             @include breakpoint("medium") {
                 right: 0; // 7
@@ -428,7 +434,6 @@
 
 // Hover effect for cart pill - match cart icon hover
 .navUser-action:hover,
-.navUser-action:focus,
 .navUser-action.is-open {
     .cart-quantity.countPill {
         background-color: transparent;

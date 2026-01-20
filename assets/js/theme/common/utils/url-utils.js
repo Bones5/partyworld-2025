@@ -4,7 +4,13 @@ const urlUtils = {
     getUrl: () => `${window.location.pathname}${window.location.search}`,
 
     goToUrl: (url) => {
-        window.history.pushState({}, document.title, url);
+        // Ensure we only use the pathname and search (relative URL) to avoid cross-origin errors
+        let safeUrl = url;
+        if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+            const parsed = Url.parse(url);
+            safeUrl = parsed.pathname + (parsed.search || '');
+        }
+        window.history.pushState({}, document.title, safeUrl);
         $(window).trigger('statechange');
     },
 

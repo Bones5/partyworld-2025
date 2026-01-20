@@ -549,6 +549,7 @@ $card-preview-zoom-bottom-offset:       6rem;
 .previewCartWrapper {
     max-height: calc(100vh - #{$card-preview-zoom-bottom-offset});
     overflow: auto;
+    z-index: zIndex("highest");
 }
 
 .previewCartList {
@@ -678,6 +679,15 @@ $card-preview-zoom-bottom-offset:       6rem;
     @extend %additionalCheckoutButtons;
     padding-bottom: spacing("single");
     padding-right: spacing("single");
+
+    // Center align "or use" label (override BigCommerce injected inline styles)
+    .FloatRight p {
+        text-align: center !important;
+    }
+
+    .or-use-label {
+        text-align: center !important;
+    }
 }
 
 .shipping-estimate-value #shipping-cost-discounted {

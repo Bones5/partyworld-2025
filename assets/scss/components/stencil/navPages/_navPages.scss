@@ -57,6 +57,7 @@
         padding: 0 spacing("single");
         position: relative;
         top: auto;
+        z-index: auto; // Reset z-index on desktop so cart preview can appear above
     }
 
     @include breakpoint("large") {

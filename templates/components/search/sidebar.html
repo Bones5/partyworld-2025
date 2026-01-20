@@ -1,5 +1,45 @@
-<nav>
+{{!--
+    Search Sidebar - Uses same structure as category sidebar for consistency
+--}}
+<nav class="category-sidebar" aria-label="{{lang 'search.faceted.label'}}">
     {{#if product_results.faceted_search_enabled}}
-        {{> components/faceted-search/index product_results}}
+        <div id="facetedSearch" class="facetedSearch sidebarBlock" role="region">
+            {{!-- Mobile toggle --}}
+            <a href="#facetedSearch-navList" role="button" class="facetedSearch-toggle toggleLink" data-collapsible aria-expanded="false" aria-controls="facetedSearch-navList">
+                <span class="facetedSearch-toggle-text">
+                    {{lang 'search.faceted.filters'}}
+                </span>
+                <span class="facetedSearch-toggle-indicator">
+                    <span class="toggleLink-text toggleLink-text--on">
+                        {{lang 'search.faceted.hide-filters'}}
+                        <i class="icon c-icon--sm" aria-hidden="true">
+                            <svg><use href="#icon-keyboard-arrow-up"/></svg>
+                        </i>
+                    </span>
+                    <span class="toggleLink-text toggleLink-text--off">
+                        {{lang 'search.faceted.show-filters'}}
+                        <i class="icon c-icon--sm" aria-hidden="true">
+                            <svg><use href="#icon-keyboard-arrow-down"/></svg>
+                        </i>
+                    </span>
+                </span>
+            </a>
+
+            <div id="facetedSearch-navList" class="facetedSearch-navList">
+                {{!-- Selected Filters --}}
+                {{> components/faceted-search/selected-facets product_results.selected}}
+
+                <div class="accordion accordion--navList accordion--sidebar">
+                    {{!-- Render all visible facets --}}
+                    {{#each product_results.facets}}
+                        {{#if visible}}
+                            {{{dynamicComponent 'components/faceted-search/facets' collapsed=true}}}
+                        {{/if}}
+                    {{/each}}
+                </div>
+
+                <div class="blocker" hidden></div>
+            </div>
+        </div>
     {{/if}}
 </nav>

@@ -1,0 +1,52 @@
+{{!--
+    Mobile Navigation - Simplified version without dropdown functionality.
+    Cart icon links directly to cart page (no preview dropdown).
+--}}
+<nav class="navUser navUser--mobile">
+    <ul class="navUser-section navUser-section--alt">
+        <li class="navUser-item navUser-item--wishlist">
+            <a class="navUser-action navUser-action--wishlist" href="{{urls.account.wishlists.all}}">
+                <svg class="navUser-icon" aria-hidden="true" focusable="false">
+                    <use href="#icon-HeartStraight"></use>
+                </svg>
+                <span class="u-hiddenVisually">{{lang 'common.wishlist'}}</span>
+            </a>
+        </li>
+        <li class="navUser-item navUser-item--account">
+            {{#if customer}}
+                <a class="navUser-action navUser-action--account"
+                   href="{{urls.account.index}}"
+                   aria-label="{{lang 'common.account'}}"
+                >
+                    <svg class="navUser-icon" aria-hidden="true" focusable="false">
+                        <use href="#icon-account"></use>
+                    </svg>
+                    <span class="u-hiddenVisually">{{lang 'common.account'}}</span>
+                </a>
+            {{else}}
+                <a class="navUser-action navUser-action--account"
+                   href="{{urls.auth.login}}"
+                   aria-label="{{lang 'common.login'}}"
+                >
+                    <svg class="navUser-icon" aria-hidden="true" focusable="false">
+                        <use href="#icon-User"></use>
+                    </svg>
+                    <span class="u-hiddenVisually">{{lang 'common.login'}}</span>
+                </a>
+            {{/if}}
+        </li>
+        <li class="navUser-item navUser-item--cart">
+            {{!-- Mobile cart: direct link, no dropdown preview --}}
+            <a class="navUser-action navUser-action--cart"
+               href="{{urls.cart}}"
+               aria-label="{{lang 'cart.nav_aria_label'}}"
+            >
+                <svg class="navUser-icon" aria-hidden="true" focusable="false">
+                    <use href="#icon-ShoppingCart"></use>
+                </svg>
+                <span class="u-hiddenVisually">{{lang 'common.cart'}}</span>
+                <span class="countPill cart-quantity"></span>
+            </a>
+        </li>
+    </ul>
+</nav>
