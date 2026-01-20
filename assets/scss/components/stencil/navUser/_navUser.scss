@@ -102,6 +102,7 @@
     font-weight: stencilFontWeight("headings-font");
     font-family: $fontFamily-headings;
     padding: 0;
+
     @include breakpoint("medium") {
         padding: spacing("base") spacing("quarter");
     }
@@ -230,6 +231,7 @@
 
 .navUser-item--cart {
     display: block;
+    position: relative; // for absolute positioned countPill
 
     // Cart icon always visible on mobile (removed __hidden-s behavior)
 
@@ -243,6 +245,7 @@
 
     .dropdown-menu {
         max-width: remCalc(320px);
+        z-index: zIndex("higher"); // ensure dropdown appears above other content
 
         &.is-open {
             left: auto !important; // 7
@@ -401,9 +404,9 @@
 // -----------------------------------------------------------------------------
 
 .countPill {
-    background-color: stencilColor("navUser-indicator-backgroundColor");
+    background-color: color("whites", "bright");
     border-radius: 50%;
-    color: color("whites", "bright");
+    color: stencilColor("navUser-indicator-backgroundColor");
     display: none;
     font-size: fontSize("tiny");
     font-weight: fontWeight("bold");
@@ -412,6 +415,25 @@
     margin-left: spacing("eighth");
     text-align: center;
     width: 20px; // 1
+}
+
+// Cart quantity pill - positioned alongside cart icon
+.cart-quantity.countPill {
+    position: absolute;
+    top: 10px;
+    right: -5px;
+    margin-left: 0;
+    transition: all 0.15s ease;
+}
+
+// Hover effect for cart pill - match cart icon hover
+.navUser-action:hover,
+.navUser-action:focus,
+.navUser-action.is-open {
+    .cart-quantity.countPill {
+        background-color: transparent;
+        color: color("whites", "bright");
+    }
 }
 
 .countPill--positive {
