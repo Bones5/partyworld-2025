@@ -6,11 +6,36 @@
  * Uses DOM-based templates for maintainability and consistency with theme markup.
  */
 
-// TEMPORARY: Import production to staging ID mapping for local development
-// TODO: Remove this import once Clerk.io is configured for staging
-import { PRODUCTION_TO_STAGING_ID_MAP } from './product-id-mapping';
-
 const GRAPHQL_ENDPOINT = '/graphql';
+
+// Production to staging ID mapping - only used in non-production environments
+// This avoids bundling the large mapping file in production builds
+let PRODUCTION_TO_STAGING_ID_MAP = {};
+
+// Detect if we're on staging/local by checking the hostname
+const isNonProduction = () => {
+    if (typeof window === 'undefined') return false;
+    const { hostname } = window.location;
+    return hostname.includes('localhost') ||
+           hostname.includes('staging') ||
+           hostname.includes('.mybigcommerce.com') ||
+           hostname.includes('ngrok');
+};
+
+// Lazy-load the mapping only in non-production environments
+const loadIdMapping = async () => {
+    if (!isNonProduction()) return;
+    try {
+        const module = await import('./product-id-mapping');
+        PRODUCTION_TO_STAGING_ID_MAP = module.PRODUCTION_TO_STAGING_ID_MAP || {};
+    } catch (e) {
+        // Mapping file may not exist in production, that's OK
+        console.debug('Product ID mapping not available');
+    }
+};
+
+// Initialize mapping load
+loadIdMapping();
 
 /**
  * GraphQL query to fetch products by their IDs

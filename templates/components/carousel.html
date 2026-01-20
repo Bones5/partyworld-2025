@@ -27,7 +27,7 @@
                     class="heroCarousel-image"
                     fallback_size='800w'
                     lazyload='disabled'
-                    otherAttributes='fetchpriority="high" decoding="async"'
+                    otherAttributes='fetchpriority="high" decoding="async" sizes="100vw"'
                 }}
             {{else}}
                 {{> components/common/responsive-img
@@ -35,7 +35,7 @@
                     class="heroCarousel-image"
                     fallback_size='800w'
                     lazyload='lazyload'
-                    otherAttributes='decoding="async"'
+                    otherAttributes='decoding="async" sizes="100vw"'
                 }}
             {{/if}}
             {{#if button_text}}

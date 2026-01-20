@@ -20,7 +20,7 @@
 
         {{!-- Preload first carousel image for faster LCP --}}
         {{#if carousel.slides.[0].stencil_image}}
-            <link rel="preload" as="image" fetchpriority="high" href="{{getImageSrcset carousel.slides.[0].stencil_image 1x='800w'}}">
+            <link rel="preload" as="image" fetchpriority="high" imagesrcset="{{getImageSrcset carousel.slides.[0].stencil_image use_default_sizes=true}}" imagesizes="100vw">
         {{/if}}
 
         <link href="{{{ head.favicon }}}" rel="shortcut icon">

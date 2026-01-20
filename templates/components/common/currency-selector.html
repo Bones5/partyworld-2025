@@ -1,7 +1,7 @@
 {{#if currency_selector.currencies.length '>' 1}}
 <div data-currency-selector class="form--hiddenLabels">
     {{#> components/common/forms/select
-        id="currencySelector"
+        id=(concat 'currencySelector' (default suffix ''))
         label=(lang 'common.currency' code=currency_selector.active_currency_code)
         name="currencySelector"
     }}
@@ -23,8 +23,8 @@
 {{else}}
 <div class="form--hiddenLabels" aria-hidden="true">
     <div class="form-field">
-        <label class="form-label" for="currencySelectorMock">{{lang 'common.currency'}}</label>
-        <select id="currencySelectorMock" class="form-select" disabled>
+        <label class="form-label" for="currencySelectorMock{{default suffix ''}}">{{lang 'common.currency'}}</label>
+        <select id="currencySelectorMock{{default suffix ''}}" class="form-select" disabled>
             <option selected>GBP · Pound Sterling</option>
         </select>
     </div>

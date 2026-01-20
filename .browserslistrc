@@ -1,1 +1,11 @@
->2%, last 2 versions, Firefox ESR
+# Modern browsers only - no IE11 support
+# This significantly reduces core-js polyfill bundle size
+last 2 Chrome versions
+last 2 Firefox versions
+last 2 Safari versions
+last 2 Edge versions
+last 2 iOS versions
+last 2 ChromeAndroid versions
+not dead
+not IE 11
+not op_mini all

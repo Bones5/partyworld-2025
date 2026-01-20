@@ -6,8 +6,16 @@ import compareProducts from './global/compare-products';
 import urlUtils from './common/utils/url-utils';
 import Url from 'url';
 import collapsibleFactory from './common/collapsible';
-import 'jstree';
 import nod from './common/nod';
+
+// Lazy-load jstree only when needed (saves ~142KB from initial bundle)
+let jstreeLoaded = false;
+const loadJsTree = () => {
+    if (jstreeLoaded) return Promise.resolve();
+    return import('jstree').then(() => {
+        jstreeLoaded = true;
+    });
+};
 
 const leftArrowKey = 37;
 const rightArrowKey = 39;
@@ -185,7 +193,8 @@ export default class Search extends CatalogPage {
         this.createCategoryTree($categoryTreeContainer);
 
         $searchForm.on('submit', event => {
-            const selectedCategoryIds = $categoryTreeContainer.jstree().get_selected();
+            // Check if jstree is initialized before accessing it\n            const jstreeInstance = $categoryTreeContainer.jstree && $categoryTreeContainer.jstree(true);
+            const selectedCategoryIds = jstreeInstance ? jstreeInstance.get_selected() : [];
 
             if (!validator.check()) {
                 return event.preventDefault();
@@ -260,7 +269,10 @@ export default class Search extends CatalogPage {
             ],
         };
 
-        $container.jstree(treeOptions);
+        // Load jstree dynamically before initializing
+        loadJsTree().then(() => {
+            $container.jstree(treeOptions);
+        });
     }
 
     initFacetedSearch() {

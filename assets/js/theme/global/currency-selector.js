@@ -89,7 +89,7 @@ export default function (cartId) {
         });
     };
 
-    $(document).on('change', '[data-currency-selector-input], #currencySelector_select', event => {
+    $(document).on('change', '[data-currency-selector] select', event => {
         const $select = $(event.currentTarget);
         const $selectedOption = $select.find(':selected');
 
