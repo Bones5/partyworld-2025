@@ -15,6 +15,7 @@ import svgInjector from './global/svg-injector';
 import { initNewsletter } from './global/newsletter';
 import { initAllClerkRecommendations } from './common/clerk-recommendations';
 import riveLogo from './global/rive-logo';
+import klaviyoNewsletter from './common/klaviyo-newsletter';
 
 export default class Global extends PageManager {
     onReady() {
@@ -39,5 +40,8 @@ export default class Global extends PageManager {
         if (this.context.clerkEnabled) {
             initAllClerkRecommendations(this.context);
         }
+
+        // Initialize Klaviyo newsletter form (when using native form)
+        klaviyoNewsletter();
     }
 }

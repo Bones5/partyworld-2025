@@ -7,40 +7,83 @@
     <h3 class="newsletter-heading">{{lang 'newsletter.subscribe'}}</h3>
     <p class="newsletter-description">{{lang 'newsletter.subscribe_intro'}}</p>
 
-    <form class="newsletter-form" action="{{urls.subscribe.action}}" method="post" data-newsletter-form-element novalidate>
-        <fieldset class="newsletter-form-fieldset">
-            <input type="hidden" name="action" value="subscribe">
-            <input type="hidden" name="nl_first_name" value="bc">
-            <input type="hidden" name="check" value="1">
-            <div class="newsletter-form-field" data-newsletter-field>
-                <label class="u-hiddenVisually" for="nl_email">{{lang 'common.email_address'}}</label>
-                <div class="newsletter-input-group">
-                    <input class="newsletter-input"
-                           id="nl_email"
-                           name="nl_email"
-                           type="email"
-                           value="{{customer.email}}"
-                           placeholder="{{lang 'newsletter.email_placeholder'}}"
-                           aria-describedby="newsletter-message"
-                           aria-required="true"
-                           aria-invalid="false"
-                           autocomplete="email"
-                           required
-                    >
-                    <button class="newsletter-button"
-                            type="submit"
-                            aria-label="{{lang 'newsletter.subscribe_submit'}}">
-                        Subscribe
-                    </button>
-                </div>
-                <span class="newsletter-message" id="newsletter-message" role="alert" aria-live="polite" data-newsletter-message></span>
-            </div>
-        </fieldset>
-    </form>
+    {{!-- Klaviyo Embedded Form (when enabled in Theme Editor) --}}
+    {{#if theme_settings.klaviyo_enabled}}
+        {{#if theme_settings.klaviyo_newsletter_form_type '===' 'embedded'}}
+            {{#if theme_settings.klaviyo_form_id}}
+                <div class="klaviyo-form-{{theme_settings.klaviyo_form_id}}"></div>
+            {{/if}}
+        {{else}}
+            {{!-- Native form with Klaviyo API integration --}}
+            <form class="newsletter-form" id="klaviyoNewsletterForm" data-klaviyo-newsletter-form novalidate>
+                <fieldset class="newsletter-form-fieldset">
+                    <div class="newsletter-form-field" data-newsletter-field>
+                        <label class="u-hiddenVisually" for="klaviyo_email">{{lang 'common.email_address'}}</label>
+                        <div class="newsletter-input-group">
+                            <input class="newsletter-input"
+                                   id="klaviyo_email"
+                                   name="email"
+                                   type="email"
+                                   value="{{customer.email}}"
+                                   placeholder="{{lang 'newsletter.email_placeholder'}}"
+                                   aria-describedby="newsletter-message"
+                                   aria-required="true"
+                                   aria-invalid="false"
+                                   autocomplete="email"
+                                   required
+                            >
+                            <button class="newsletter-button"
+                                    type="submit"
+                                    aria-label="{{lang 'newsletter.subscribe_submit'}}">
+                                Subscribe
+                            </button>
+                        </div>
+                        <span class="newsletter-message" id="newsletter-message" role="alert" aria-live="polite" data-newsletter-message></span>
+                    </div>
+                </fieldset>
+            </form>
 
-    <div class="newsletter-success" data-newsletter-success aria-live="polite">
-        <p>{{lang 'newsletter.subscribe_success'}}</p>
-    </div>
+            <div class="newsletter-success" data-newsletter-success aria-live="polite" style="display: none;">
+                <p>{{lang 'newsletter.subscribe_success'}}</p>
+            </div>
+        {{/if}}
+    {{else}}
+        {{!-- Default BigCommerce newsletter form --}}
+        <form class="newsletter-form" action="{{urls.subscribe.action}}" method="post" data-newsletter-form-element novalidate>
+            <fieldset class="newsletter-form-fieldset">
+                <input type="hidden" name="action" value="subscribe">
+                <input type="hidden" name="nl_first_name" value="bc">
+                <input type="hidden" name="check" value="1">
+                <div class="newsletter-form-field" data-newsletter-field>
+                    <label class="u-hiddenVisually" for="nl_email">{{lang 'common.email_address'}}</label>
+                    <div class="newsletter-input-group">
+                        <input class="newsletter-input"
+                               id="nl_email"
+                               name="nl_email"
+                               type="email"
+                               value="{{customer.email}}"
+                               placeholder="{{lang 'newsletter.email_placeholder'}}"
+                               aria-describedby="newsletter-message"
+                               aria-required="true"
+                               aria-invalid="false"
+                               autocomplete="email"
+                               required
+                        >
+                        <button class="newsletter-button"
+                                type="submit"
+                                aria-label="{{lang 'newsletter.subscribe_submit'}}">
+                            Subscribe
+                        </button>
+                    </div>
+                    <span class="newsletter-message" id="newsletter-message" role="alert" aria-live="polite" data-newsletter-message></span>
+                </div>
+            </fieldset>
+        </form>
+
+        <div class="newsletter-success" data-newsletter-success aria-live="polite">
+            <p>{{lang 'newsletter.subscribe_success'}}</p>
+        </div>
+    {{/if}}
 
     {{#if settings.show_newsletter_summary }}
         <div class="footer-newsletter-summary">{{settings.newsletter_summary}}</div>

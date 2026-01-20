@@ -1,0 +1,29 @@
+{{!-- 
+  Klaviyo Integration Script
+  Loads the Klaviyo JavaScript SDK when enabled in Theme Editor.
+  
+  This script should be included in base.html before the closing </body> tag.
+  The Klaviyo SDK enables:
+  - Newsletter subscription tracking
+  - Product view tracking  
+  - Add to cart tracking
+  - Identify logged-in customers
+--}}
+{{#if theme_settings.klaviyo_enabled}}
+{{#if theme_settings.klaviyo_public_key}}
+<script type="text/javascript" async src="https://static.klaviyo.com/onsite/js/klaviyo.js?company_id={{theme_settings.klaviyo_public_key}}"></script>
+<script nonce="{{nonce}}">
+    // Initialize Klaviyo queue
+    var _learnq = _learnq || [];
+
+    {{!-- Identify logged-in customers --}}
+    {{#if customer}}
+    _learnq.push(['identify', {
+        '$email': '{{customer.email}}',
+        '$first_name': '{{customer.name}}',
+        'Customer ID': '{{customer.id}}'
+    }]);
+    {{/if}}
+</script>
+{{/if}}
+{{/if}}

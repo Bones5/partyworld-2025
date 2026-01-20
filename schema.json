@@ -3142,6 +3142,84 @@
     ]
   },
   {
+    "name": "LinkedIn Insight Tag",
+    "settings": [
+      {
+        "type": "checkbox",
+        "label": "Enable LinkedIn Insight Tag",
+        "id": "show_linkedin_tag",
+        "force_reload": true
+      },
+      {
+        "type": "paragraph",
+        "content": "LinkedIn Insight Tag enables conversion tracking and retargeting for LinkedIn Ads. Partner ID: 4466482"
+      }
+    ]
+  },
+  {
+    "name": "Klaviyo Integration",
+    "settings": [
+      {
+        "type": "heading",
+        "content": "Klaviyo Configuration"
+      },
+      {
+        "type": "checkbox",
+        "label": "Enable Klaviyo",
+        "id": "klaviyo_enabled",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Klaviyo Public API Key (Company ID)",
+        "id": "klaviyo_public_key",
+        "force_reload": true
+      },
+      {
+        "type": "heading",
+        "content": "Newsletter Form"
+      },
+      {
+        "type": "select",
+        "label": "Newsletter Form Type",
+        "id": "klaviyo_newsletter_form_type",
+        "force_reload": true,
+        "options": [
+          {
+            "value": "native",
+            "label": "Native Theme Form (API integration)"
+          },
+          {
+            "value": "embedded",
+            "label": "Klaviyo Embedded Form"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "label": "Klaviyo Embedded Form ID (if using embedded form)",
+        "id": "klaviyo_form_id",
+        "force_reload": true
+      },
+      {
+        "type": "heading",
+        "content": "Tracking Features"
+      },
+      {
+        "type": "checkbox",
+        "label": "Enable Product View Tracking",
+        "id": "klaviyo_track_product_views",
+        "force_reload": true
+      },
+      {
+        "type": "checkbox",
+        "label": "Enable Add to Cart Tracking",
+        "id": "klaviyo_track_add_to_cart",
+        "force_reload": true
+      }
+    ]
+  },
+  {
     "name": "i18n.PaymentButtons",
     "enable": "smartButtons",
     "settings": [

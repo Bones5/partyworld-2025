@@ -1,0 +1,52 @@
+{{!-- 
+  Klaviyo Product View Tracking
+  
+  Tracks product views for Klaviyo's personalization and email flows.
+  This should be included on the product page when Klaviyo tracking is enabled.
+  
+  Based on original theme implementation with data structure for:
+  - Viewed Product event
+  - trackViewedItem for browse abandonment
+--}}
+{{#if theme_settings.klaviyo_enabled}}
+{{#if theme_settings.klaviyo_track_product_views}}
+<script type="text/javascript" nonce="{{nonce}}">
+var _learnq = _learnq || [];
+
+// Build product categories array
+var productCategories = [];
+{{#each product.category}}
+productCategories.push('{{this}}');
+{{/each}}
+
+// Product data object
+var klaviyoItem = {
+    Name: "{{jsescapeString product.title}}",
+    ProductID: "{{product.id}}",
+    ImageURL: "{{getImage product.main_image 'product_size' (cdn theme_settings.default_image_product)}}",
+    URL: "{{product.url}}",
+    Brand: "{{jsescapeString product.brand.name}}",
+    Categories: productCategories,
+    Price: "{{product.price.without_tax.value}}",
+    CompareAtPrice: "{{product.price.rrp_without_tax.value}}"
+};
+
+// Track Viewed Product event
+_learnq.push(['track', 'Viewed Product', klaviyoItem]);
+
+// Track for browse abandonment flows
+_learnq.push(['trackViewedItem', {
+    Title: klaviyoItem.Name,
+    ItemId: klaviyoItem.ProductID,
+    Categories: klaviyoItem.Categories,
+    ImageUrl: klaviyoItem.ImageURL,
+    Url: klaviyoItem.URL,
+    Metadata: {
+        Brand: klaviyoItem.Brand,
+        Price: klaviyoItem.Price,
+        CompareAtPrice: klaviyoItem.CompareAtPrice
+    }
+}]);
+</script>
+{{/if}}
+{{/if}}

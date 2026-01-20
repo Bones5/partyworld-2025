@@ -436,7 +436,14 @@
     "clerk_product_recommendations_enabled": true,
     "clerk_category_recommendations_enabled": true,
     "clerk_homepage_recommendations_enabled": true,
-    "clerk_cart_recommendations_enabled": true
+    "clerk_cart_recommendations_enabled": true,
+    "show_linkedin_tag": true,
+    "klaviyo_enabled": true,
+    "klaviyo_public_key": "",
+    "klaviyo_newsletter_form_type": "embedded",
+    "klaviyo_form_id": "RvtTdb",
+    "klaviyo_track_product_views": true,
+    "klaviyo_track_add_to_cart": true
   },
   "read_only_files": [
     "/assets/scss/components/citadel",
