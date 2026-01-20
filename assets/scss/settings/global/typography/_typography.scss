@@ -43,6 +43,10 @@ $fontSize-small:                stencilNumber("fontSize-h4");
 $fontSize-smaller:              stencilNumber("fontSize-h5");
 $fontSize-smallest:             stencilNumber("fontSize-h6");
 $fontSize-tiny:                 12px;
+$fontSize-micro:                11px;   // Legal text, fine print
+$fontSize-caption:              15px;   // Captions, sub-nav, badges
+$fontSize-body:                 16px;   // Emphasized body text, PDP copy
+$fontSize-subheading:           20px;   // Category cards, recommendations
 $fontSize-logo-large:           stencilNumber("logo_fontSize");
 $fontSize-logo-medium:          2.5vw;
 $fontSize-logo-small:           $fontSize-logo-medium - 0.25vw;
@@ -62,6 +66,10 @@ $lineHeight-small:              30px;
 $lineHeight-smaller:            24px;
 $lineHeight-smallest:           22px;
 $lineHeight-tiny:               18px;
+$lineHeight-micro:              16px;
+$lineHeight-caption:            20px;
+$lineHeight-body:               24px;
+$lineHeight-subheading:         26px;
 
 
 // Font weights

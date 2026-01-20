@@ -1,0 +1,107 @@
+// =============================================================================
+// TYPOGRAPHY TOOLS
+// Fluid typography functions and mixins for responsive font sizing
+// =============================================================================
+
+// Strip unit helper
+// -----------------------------------------------------------------------------
+@function strip-unit($value) {
+    @return $value / ($value * 0 + 1);
+}
+
+// Fluid Type Function
+// -----------------------------------------------------------------------------
+// Creates a fluid font-size using CSS clamp()
+// Scales smoothly between min and max sizes across viewport widths
+//
+// @param $min-size   - Minimum font size (with unit, e.g., 16px)
+// @param $max-size   - Maximum font size (with unit, e.g., 24px)
+// @param $min-vw     - Viewport width where min size applies (default: 320px)
+// @param $max-vw     - Viewport width where max size applies (default: 1200px)
+//
+// @example
+//   font-size: fluid-type(16px, 24px);
+//   font-size: fluid-type(24px, 48px, 480px, 1440px);
+// -----------------------------------------------------------------------------
+@function fluid-type($min-size, $max-size, $min-vw: 320px, $max-vw: 1200px) {
+    $slope: ($max-size - $min-size) / ($max-vw - $min-vw);
+    $y-intercept: $min-size - $slope * $min-vw;
+    $preferred: calc(#{$y-intercept} + #{strip-unit($slope) * 100}vw);
+    
+    @return clamp(#{$min-size}, #{$preferred}, #{$max-size});
+}
+
+// Responsive Font Mixin
+// -----------------------------------------------------------------------------
+// Simple breakpoint-based font sizing for when you need discrete steps
+//
+// @param $mobile     - Font size for mobile/base
+// @param $tablet     - Font size for tablet (optional)
+// @param $desktop    - Font size for desktop
+//
+// @example
+//   @include responsive-font(16px, 20px, 24px);
+//   @include responsive-font(14px, $desktop: 18px);
+// -----------------------------------------------------------------------------
+@mixin responsive-font($mobile, $tablet: null, $desktop: null) {
+    font-size: $mobile;
+    
+    @if $tablet {
+        @include breakpoint("small") {
+            font-size: $tablet;
+        }
+    }
+    
+    @if $desktop {
+        @include breakpoint("medium") {
+            font-size: $desktop;
+        }
+    }
+}
+
+// Fluid Font Mixin
+// -----------------------------------------------------------------------------
+// Applies fluid typography with optional line-height scaling
+//
+// @param $min-size       - Minimum font size
+// @param $max-size       - Maximum font size  
+// @param $line-height    - Line height ratio (default: 1.4)
+// @param $min-vw         - Min viewport (default: 320px)
+// @param $max-vw         - Max viewport (default: 1200px)
+//
+// @example
+//   @include fluid-font(18px, 32px);
+//   @include fluid-font(24px, 48px, 1.2);
+// -----------------------------------------------------------------------------
+@mixin fluid-font($min-size, $max-size, $line-height: 1.4, $min-vw: 320px, $max-vw: 1200px) {
+    font-size: fluid-type($min-size, $max-size, $min-vw, $max-vw);
+    line-height: $line-height;
+}
+
+// =============================================================================
+// FLUID SIZE PRESETS
+// Pre-calculated fluid sizes matching the typography scale
+// =============================================================================
+
+// Display/Hero sizes (marketing headlines)
+$fontSize-displayXL-fluid:  fluid-type(48px, 114px);
+$fontSize-heroLarge-fluid:  fluid-type(36px, 57px);
+$fontSize-hero-fluid:       fluid-type(32px, 50px);
+
+// Heading sizes (h1-h6 equivalents)
+$fontSize-largest-fluid:    fluid-type(28px, 36px);   // h1
+$fontSize-larger-fluid:     fluid-type(24px, 33px);   // h2
+$fontSize-large-fluid:      fluid-type(20px, 26px);   // h3
+$fontSize-small-fluid:      fluid-type(18px, 24px);   // h4
+$fontSize-smaller-fluid:    fluid-type(16px, 19px);   // h5
+$fontSize-smallest-fluid:   fluid-type(14px, 17px);   // h6
+
+// Body/UI sizes
+$fontSize-subheading-fluid: fluid-type(16px, 20px);   // Category cards, recommendations
+$fontSize-body-fluid:       fluid-type(14px, 16px);   // Emphasized body text
+$fontSize-base-fluid:       fluid-type(13px, 14px);   // Base body text
+$fontSize-caption-fluid:    fluid-type(13px, 15px);   // Captions, sub-nav
+$fontSize-tiny-fluid:       fluid-type(11px, 12px);   // Fine print
+
+// Navigation
+$fontSize-nav-fluid:        fluid-type(18px, 24px);   // Main nav items
