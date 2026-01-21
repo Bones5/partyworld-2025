@@ -150,6 +150,7 @@
 // Desktop: show in header
 .c-celebrateGrid__viewAll {
     @include cta-button($full-width: false);
+    font-size: $fontSize-subheading-fluid;  // Fluid: 16px → 20px
     width: fit-content;
     display: none;
 
@@ -161,6 +162,7 @@
 // Mobile: View All button at bottom of component
 .c-celebrateGrid__viewAll--mobile {
     @include cta-button($full-width: false);
+    font-size: $fontSize-subheading-fluid;  // Fluid: 16px → 20px
     width: fit-content;
     display: flex;
     margin: spacing("single") auto 0;

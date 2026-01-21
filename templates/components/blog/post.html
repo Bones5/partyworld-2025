@@ -1,23 +1,33 @@
-<article class="blog">
+<article class="blog{{#if is_blog_post}} blog--single{{/if}}">
     <div class="blog-post-figure">
         {{#if post.thumbnail}}
             <figure class="blog-thumbnail">
-                <a href="{{post.url}}">
+                {{#if is_blog_post}}
                     {{> components/common/responsive-img
                         image=post.thumbnail
                         fallback_size=theme_settings.blog_size
                         lazyload=theme_settings.lazyload_mode
                     }}
-                </a>
+                {{else}}
+                    <a href="{{post.url}}">
+                        {{> components/common/responsive-img
+                            image=post.thumbnail
+                            fallback_size=theme_settings.blog_size
+                            lazyload=theme_settings.lazyload_mode
+                        }}
+                    </a>
+                {{/if}}
             </figure>
         {{/if}}
     </div>
 
     <div class="blog-post-body">
         <header class="blog-header">
-            <h{{#if is_blog_post}}1{{else}}2{{/if}} class="blog-title">
-                <a href="{{post.url}}">{{post.title}}</a>
-            </h{{#if is_blog_post}}1{{else}}2{{/if}}>
+            {{#unless is_blog_post}}
+                <h2 class="blog-title">
+                    <a href="{{post.url}}">{{post.title}}</a>
+                </h2>
+            {{/unless}}
             <p class="blog-date">{{#if post.author}}{{lang 'blog.posted_by' name=post.author}} on {{/if}}{{post.date_published}}</p>
         </header>
 

@@ -5,6 +5,11 @@
 // Uses Citadel tokens and existing Slick carousel infrastructure.
 // -----------------------------------------------------------------------------
 
+// Reserve space to prevent layout shift (CLS)
+// Default 3 cards visible on desktop
+$heroThemeSlider-cards-visible: 3;
+$heroThemeSlider-card-gap: spacing("single");
+
 .heroThemeSlider {
     position: relative;
     margin-bottom: spacing("double");
@@ -34,14 +39,51 @@
         }
     }
 
-    // Show only first 3 slides before initialization to prevent flash
-    &:not(.slick-initialized) .heroThemeSlider-slide {
-        display: inline-block;
-        width: calc(33.333% - #{spacing("single")});
-        vertical-align: top;
+    // Pre-initialization: show first N slides with proper layout to prevent CLS
+    &:not(.slick-initialized) {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: $heroThemeSlider-card-gap;
 
-        &:nth-child(n+4) {
-            display: none;
+        .heroThemeSlider-slide {
+            // Mobile: 1 card visible
+            flex: 0 0 100%;
+            max-width: 100%;
+
+            // Tablet: 2 cards visible
+            @include breakpoint("medium") {
+                flex: 0 0 calc(50% - #{$heroThemeSlider-card-gap / 2});
+                max-width: calc(50% - #{$heroThemeSlider-card-gap / 2});
+            }
+
+            // Desktop: 3 cards visible
+            @include breakpoint("large") {
+                flex: 0 0 calc(33.333% - #{$heroThemeSlider-card-gap * 2 / 3});
+                max-width: calc(33.333% - #{$heroThemeSlider-card-gap * 2 / 3});
+            }
+
+            // Hide cards beyond visible count
+            &:nth-child(n+2) {
+                display: none;
+
+                @include breakpoint("medium") {
+                    display: block;
+                }
+            }
+
+            &:nth-child(n+3) {
+                @include breakpoint("medium") {
+                    display: none;
+                }
+
+                @include breakpoint("large") {
+                    display: block;
+                }
+            }
+
+            &:nth-child(n+4) {
+                display: none;
+            }
         }
     }
 }
@@ -225,6 +267,6 @@
     color: $color-textBase;
 
     @include breakpoint("medium") {
-        margin-bottom: spacing("single") + spacing("half");
+        margin-bottom: spacing("single") ;
     }
 }

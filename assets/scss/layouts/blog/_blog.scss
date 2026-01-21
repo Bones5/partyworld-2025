@@ -66,6 +66,11 @@
     img {
         width: 100%;
     }
+
+    // Full-width on single blog post
+    .blog--single & {
+        max-width: none;
+    }
 }
 
 .blog-post-figure {
@@ -75,6 +80,11 @@
 
     @include breakpoint("medium") {
         width: grid-calc(8, $total-columns);
+    }
+
+    // Full-width on single blog post
+    .blog--single & {
+        width: 100%;
     }
 }
 

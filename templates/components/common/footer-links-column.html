@@ -1,0 +1,18 @@
+{{!--
+    Footer Links Column
+    Renders a column of footer links from language keys.
+    
+    @param langPrefix - The language key prefix (e.g., 'footer.party_items_links')
+--}}
+<ul class="footer-info-list">
+    {{> components/common/footer-links-item langPrefix=(concat langPrefix '.row_1') }}
+    {{> components/common/footer-links-item langPrefix=(concat langPrefix '.row_2') }}
+    {{> components/common/footer-links-item langPrefix=(concat langPrefix '.row_3') }}
+    {{> components/common/footer-links-item langPrefix=(concat langPrefix '.row_4') }}
+    {{> components/common/footer-links-item langPrefix=(concat langPrefix '.row_5') }}
+    {{> components/common/footer-links-item langPrefix=(concat langPrefix '.row_6') }}
+    {{> components/common/footer-links-item langPrefix=(concat langPrefix '.row_7') }}
+    {{> components/common/footer-links-item langPrefix=(concat langPrefix '.row_8') }}
+    {{> components/common/footer-links-item langPrefix=(concat langPrefix '.row_9') }}
+    {{> components/common/footer-links-item langPrefix=(concat langPrefix '.row_10') }}
+</ul>

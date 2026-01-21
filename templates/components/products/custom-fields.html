@@ -1,4 +1,6 @@
 {{#each product.custom_fields}}
+{{#unless (if name '==' 'Theme')}}
 <dt class="productView-info-name">{{name}}:</dt>
 <dd class="productView-info-value">{{{value}}}</dd>
+{{/unless}}
 {{/each}}

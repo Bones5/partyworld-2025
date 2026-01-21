@@ -10,23 +10,26 @@
     .c-categoryCard {
         padding: spacing("quarter");
         border-radius: remCalc(1px);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
     }
 
+    // Media grows to fill available space, image centered vertically
     .c-categoryCard__media {
         border-radius: inherit;
-    }
-
-    // Ensure consistent image heights in the carousel.
-    // Category cards are reused in multiple contexts, so scope this to Shop by Category.
-    .c-categoryCard__media {
-        height: spacing("double") * 4;
+        flex: 1 1 auto;
+        min-height: spacing("double") * 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         @include breakpoint("medium") {
-            height: spacing("double") * 5;
+            min-height: spacing("double") * 5;
         }
 
         @include breakpoint("large") {
-            height: spacing("double") * 6;
+            min-height: spacing("double") * 6;
         }
     }
 
@@ -43,6 +46,15 @@
         height: 100%;
         max-width: none;
         aspect-ratio: auto;
+    }
+
+    // Body layout: title at top, CTA below with gap - does not grow
+    .c-categoryCard__body {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: spacing("half");
+        margin-top: spacing("half");
     }
 }
 

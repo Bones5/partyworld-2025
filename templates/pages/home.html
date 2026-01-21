@@ -30,7 +30,7 @@ categories:
 
     {{#each categories}}
         {{#if name '==' 'Occasions'}}
-            {{> components/page/celebrate-grid heading="Celebrate Every Occasion" occasions=(limit children 5) }}
+            {{> components/page/celebrate-grid heading="Celebrate Every Occasion" occasions=(limit children 5) viewAllUrl=url }}
         {{/if}}
     {{/each}}
 

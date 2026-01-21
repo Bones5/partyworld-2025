@@ -55,13 +55,13 @@
                 {{!-- Party Items --}}
                 <article class="footer-links-col footer-links-col--party-items" data-section-type="footer-party-items">
                     <h3 class="footer-info-heading">{{lang 'footer.party_items'}}</h3>
-                    {{{region name="footer_party_items"}}}
+                    {{> components/common/footer-links-column langPrefix='footer.party_items_links'}}
                 </article>
 
                 {{!-- Hen Party --}}
                 <article class="footer-links-col footer-links-col--hen-party" data-section-type="footer-hen-party">
                     <h3 class="footer-info-heading">{{lang 'footer.hen_party'}}</h3>
-                    {{{region name="footer_hen_party"}}}
+                    {{> components/common/footer-links-column langPrefix='footer.hen_party_links'}}
                 </article>
             </div>
         </div>

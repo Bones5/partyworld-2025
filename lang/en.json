@@ -19,7 +19,91 @@
         "secure_logo": "Secure",
         "socially_safe": "Socially Safe",
         "safe_shopping": "Safe Shopping",
-        "follow_us": "Follow Us"
+        "follow_us": "Follow Us",
+        "party_items_links": {
+            "row_1": {
+                "title": "Birthday",
+                "url": "/party-items/birthday/"
+            },
+            "row_2": {
+                "title": "Balloons",
+                "url": "/party-items/balloons/"
+            },
+            "row_3": {
+                "title": "Tableware",
+                "url": "/party-items/tableware/"
+            },
+            "row_4": {
+                "title": "Decorations",
+                "url": "/party-items/decorations/"
+            },
+            "row_5": {
+                "title": "Party Bags & Fillers",
+                "url": "/party-items/party-bags-fillers/"
+            },
+            "row_6": {
+                "title": "Candles & Cake Toppers",
+                "url": "/party-items/candles-cake-toppers/"
+            },
+            "row_7": {
+                "title": "Party Games",
+                "url": "/party-items/party-games/"
+            },
+            "row_8": {
+                "title": "Confetti & Poppers",
+                "url": "/party-items/confetti-poppers/"
+            },
+            "row_9": {
+                "title": " ",
+                "url": " "
+            },
+            "row_10": {
+                "title": " ",
+                "url": " "
+            }
+        },
+        "hen_party_links": {
+            "row_1": {
+                "title": "Hen Party Accessories",
+                "url": "/hen-party/accessories/"
+            },
+            "row_2": {
+                "title": "Hen Party Sashes",
+                "url": "/hen-party/sashes/"
+            },
+            "row_3": {
+                "title": "Hen Party Games",
+                "url": "/hen-party/games/"
+            },
+            "row_4": {
+                "title": "Hen Party Decorations",
+                "url": "/hen-party/decorations/"
+            },
+            "row_5": {
+                "title": "Hen Party Balloons",
+                "url": "/hen-party/balloons/"
+            },
+            "row_6": {
+                "title": "Hen Party Gifts",
+                "url": "/hen-party/gifts/"
+            },
+            "row_7": {
+                "title": "Bride to Be",
+                "url": "/hen-party/bride-to-be/"
+            },
+            "row_8": {
+                "title": "Hen Party Costumes",
+                "url": "/hen-party/costumes/"
+            },
+            "row_9": {
+                "title": " ",
+                "url": " "
+            },
+            "row_10": {
+                "title": " ",
+                "url": " "
+            }
+        }
     },
     "home": {
         "heading": "Home"

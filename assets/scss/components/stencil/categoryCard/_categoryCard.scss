@@ -27,7 +27,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
+    flex: 1 1 auto;
 
     img {
         width: 100%;
@@ -52,6 +52,11 @@
 }
 
 .c-categoryCard__body {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: spacing("half");
+    margin-top: spacing("half");
     text-align: center;
 }
 
@@ -64,11 +69,7 @@
 
 .c-categoryCard__cta {
     @include cta-button;
-    font-size: remCalc(16px);
-
-    @include breakpoint("medium") {
-        font-size: 20px;
-    }
+    font-size: $fontSize-subheading-fluid;  // Fluid: 16px → 20px
 }
 
 // Colorful placeholder for missing images

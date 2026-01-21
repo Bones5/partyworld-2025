@@ -1,0 +1,9 @@
+{{!--
+    Footer Links Item
+    Renders a single footer link item from language keys.
+    
+    @param langPrefix - The language key prefix (e.g., 'footer.party_items_links.row_1')
+--}}
+{{#if (lang (concat langPrefix '.title')) '!=' ' '}}
+    <li><a href="{{lang (concat langPrefix '.url')}}">{{lang (concat langPrefix '.title')}}</a></li>
+{{/if}}

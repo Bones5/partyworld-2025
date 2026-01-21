@@ -23,13 +23,15 @@
 // @param $padding-x - Horizontal padding (default: spacing("half"))
 // @param $radius - Border radius (default: 5px)
 // @param $full-width - Whether button is full width (default: true)
+// @param $fluid - Whether to use fluid font sizing (default: true)
 @mixin cta-button(
     $bg: stencilColor("button--primary-backgroundColor"),
     $color: $color-white,
     $padding-y: spacing("quarter"),
     $padding-x: spacing("half"),
     $radius: 8px,
-    $full-width: true
+    $full-width: true,
+    $fluid: true
 ) {
     display: inline-block;
     background-color: $bg;
@@ -38,7 +40,11 @@
     border: 0;
     border-radius: $radius;
     font-family: "Inter", sans-serif;
-    font-size: fontSize("small");
+    @if $fluid {
+        font-size: $fontSize-small-fluid;  // Fluid: 18px → 24px
+    } @else {
+        font-size: fontSize("small");
+    }
     font-weight: fontWeight("semibold");
     text-align: center;
     text-decoration: none;

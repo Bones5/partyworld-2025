@@ -15,7 +15,7 @@
             data-warning="{{lang 'common.currency_switch_promotion'}}"
             {{#if is_active}}selected{{/if}}
         >
-            {{name}}
+            {{code}}
         </option>
         {{/each}}
     {{/components/common/forms/select}}
@@ -25,7 +25,7 @@
     <div class="form-field">
         <label class="form-label" for="currencySelectorMock{{default suffix ''}}">{{lang 'common.currency'}}</label>
         <select id="currencySelectorMock{{default suffix ''}}" class="form-select" disabled>
-            <option selected>GBP · Pound Sterling</option>
+            <option selected>£</option>
         </select>
     </div>
 </div>

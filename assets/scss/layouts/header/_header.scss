@@ -327,6 +327,7 @@
     }
 
     // Currency selector on mobile
+    // Currency selector on mobile
     [data-currency-selector] {
         flex-shrink: 0;
 
@@ -343,7 +344,7 @@
             // Match dropdown icon size and color with search icon (24px, color-textBase)
             background-size: remCalc(24px) remCalc(24px);
             background-position: right spacing("quarter") center;
-            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z' fill='%23333333' /%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z' fill='#{str-replace(#{stencilColor("color-textBase")}, "#", "%23")}' /%3E%3C/svg%3E");
         }
     }
 }
