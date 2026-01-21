@@ -51,8 +51,12 @@ const PRODUCTS_BY_IDS_QUERY = `
                         sku
                         path
                         addToCartUrl
-                        prices(currencyCode: $currencyCode) {
+                        prices(currencyCode: $currencyCode, includeTax: true) {
                             price {
+                                value
+                                currencyCode
+                            }
+                            basePrice {
                                 value
                                 currencyCode
                             }
@@ -256,18 +260,36 @@ async function fetchProductsByIds(productIds, token, currencyCode = 'EUR') {
 }
 
 /**
- * Format price for display
+ * Format price for display using Intl.NumberFormat
  * @param {Object} priceObj - Price object from GraphQL
  * @param {Object} currency - Currency display settings
+ * @param {string} currencyCode - Currency code (e.g., 'CAD', 'USD', 'EUR')
  * @returns {string} Formatted price string
  */
-function formatPrice(priceObj, currency) {
-    if (!priceObj || !priceObj.value) return '';
+function formatPrice(priceObj, currency, currencyCode = 'CAD') {
+    if (!priceObj || priceObj.value == null) return '';
 
-    const symbol = currency?.display?.symbol || '€';
-    const decimals = currency?.display?.decimalPlaces ?? 2;
+    // Use the currency code from the price object if available
+    const code = priceObj.currencyCode || currencyCode;
 
-    return `${symbol}${priceObj.value.toFixed(decimals)}`;
+    try {
+        // Use Intl.NumberFormat for proper locale-aware formatting
+        return new Intl.NumberFormat('en-CA', {
+            style: 'currency',
+            currency: code,
+            minimumFractionDigits: currency?.display?.decimalPlaces ?? 2,
+            maximumFractionDigits: currency?.display?.decimalPlaces ?? 2,
+        }).format(priceObj.value);
+    } catch (e) {
+        // Fallback if Intl.NumberFormat fails
+        const symbol = currency?.display?.symbol || '$';
+        const decimals = currency?.display?.decimalPlaces ?? 2;
+        const value = priceObj.value.toFixed(decimals);
+        // Add thousand separators
+        const parts = value.split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return `${symbol}${parts.join('.')}`;
+    }
 }
 
 /**
@@ -320,7 +342,11 @@ function renderProductCard(product, currency, options = {}) {
     const isInStock = product.inventory?.isInStock !== false;
     const stockLevel = product.inventory?.aggregated?.availableToSell ?? 999;
     const prices = product.prices || {};
-    const hasSalePrice = prices.salePrice?.value && prices.salePrice.value < prices.price?.value;
+    // prices now include tax via includeTax: true in GraphQL query
+    const displayPrice = prices.price;
+    const displaySalePrice = prices.salePrice;
+    const displayPriceRange = prices.priceRange;
+    const hasSalePrice = displaySalePrice?.value && displaySalePrice.value < displayPrice?.value;
     const ratingPercentage = calculateRatingPercentage(product.reviewSummary);
     const numberOfReviews = product.reviewSummary?.numberOfReviews || 0;
 
@@ -383,32 +409,33 @@ function renderProductCard(product, currency, options = {}) {
         brandEl.textContent = product.brand.name;
     }
 
-    // Price
+    // Price (using tax-inclusive prices)
     const priceContainer = card.querySelector('.card-price');
     if (hasSalePrice) {
         priceContainer.innerHTML = `
-            <span class="price-section price-section--withoutTax non-sale-price--withoutTax">
-                <span data-product-non-sale-price-without-tax class="price price--non-sale">${formatPrice(prices.price, currency)}</span>
+            <span class="price-section price-section--withTax non-sale-price--withTax">
+                <span data-product-non-sale-price-with-tax class="price price--non-sale">${formatPrice(displayPrice, currency)}</span>
             </span>
-            <span class="price-section price-section--withoutTax">
-                <span data-product-price-without-tax class="price price--withoutTax">${formatPrice(prices.salePrice, currency)}</span>
+            <span class="price-section price-section--withTax">
+                <span data-product-price-with-tax class="price price--withTax">${formatPrice(displaySalePrice, currency)}</span>
             </span>
         `;
-    } else if (prices.price?.value) {
+    } else if (displayPrice?.value) {
         priceContainer.innerHTML = `
-            <span class="price-section price-section--withoutTax">
-                <span data-product-price-without-tax class="price price--withoutTax">${formatPrice(prices.price, currency)}</span>
+            <span class="price-section price-section--withTax">
+                <span data-product-price-with-tax class="price price--withTax">${formatPrice(displayPrice, currency)}</span>
             </span>
         `;
-    } else if (prices.priceRange?.min?.value) {
-        const minPrice = prices.priceRange.min.value;
-        const maxPrice = prices.priceRange.max?.value ?? minPrice;
-        const minFormatted = formatPrice({ value: minPrice }, currency);
-        const maxFormatted = formatPrice({ value: maxPrice }, currency);
+    } else if (displayPriceRange?.min?.value) {
+        const minPrice = displayPriceRange.min.value;
+        const maxPrice = displayPriceRange.max?.value ?? minPrice;
+        const code = displayPrice?.currencyCode || 'CAD';
+        const minFormatted = formatPrice({ value: minPrice, currencyCode: code }, currency);
+        const maxFormatted = formatPrice({ value: maxPrice, currencyCode: code }, currency);
 
         priceContainer.innerHTML = `
-            <span class="price-section price-section--withoutTax">
-                <span data-product-price-without-tax class="price price--withoutTax">${minPrice !== maxPrice ? `${minFormatted} - ${maxFormatted}` : minFormatted}</span>
+            <span class="price-section price-section--withTax">
+                <span data-product-price-with-tax class="price price--withTax">${minPrice !== maxPrice ? `${minFormatted} - ${maxFormatted}` : minFormatted}</span>
             </span>
         `;
     }
@@ -480,7 +507,11 @@ function renderProductCardFallback(product, currency, options = {}) {
     const stockLevel = product.inventory?.aggregated?.availableToSell ?? 999;
 
     const prices = product.prices || {};
-    const hasSalePrice = prices.salePrice?.value && prices.salePrice.value < prices.price?.value;
+    // prices now include tax via includeTax: true in GraphQL query
+    const displayPrice = prices.price;
+    const displaySalePrice = prices.salePrice;
+    const displayPriceRange = prices.priceRange;
+    const hasSalePrice = displaySalePrice?.value && displaySalePrice.value < displayPrice?.value;
 
     const ratingPercentage = calculateRatingPercentage(product.reviewSummary);
     const numberOfReviews = product.reviewSummary?.numberOfReviews || 0;
@@ -522,32 +553,33 @@ function renderProductCardFallback(product, currency, options = {}) {
         brandHtml = `<p class="card-text card-brand" data-test-info-type="brandName">${escapeHtml(product.brand.name)}</p>`;
     }
 
-    // Price HTML
+    // Price HTML (using tax-inclusive prices)
     let priceHtml = '';
     if (hasSalePrice) {
         priceHtml = `
-            <span class="price-section price-section--withoutTax non-sale-price--withoutTax">
-                <span data-product-non-sale-price-without-tax class="price price--non-sale">${formatPrice(prices.price, currency)}</span>
+            <span class="price-section price-section--withTax non-sale-price--withTax">
+                <span data-product-non-sale-price-with-tax class="price price--non-sale">${formatPrice(displayPrice, currency)}</span>
             </span>
-            <span class="price-section price-section--withoutTax">
-                <span data-product-price-without-tax class="price price--withoutTax">${formatPrice(prices.salePrice, currency)}</span>
+            <span class="price-section price-section--withTax">
+                <span data-product-price-with-tax class="price price--withTax">${formatPrice(displaySalePrice, currency)}</span>
             </span>
         `;
-    } else if (prices.price?.value) {
+    } else if (displayPrice?.value) {
         priceHtml = `
-            <span class="price-section price-section--withoutTax">
-                <span data-product-price-without-tax class="price price--withoutTax">${formatPrice(prices.price, currency)}</span>
+            <span class="price-section price-section--withTax">
+                <span data-product-price-with-tax class="price price--withTax">${formatPrice(displayPrice, currency)}</span>
             </span>
         `;
-    } else if (prices.priceRange?.min?.value) {
-        const minPrice = prices.priceRange.min.value;
-        const maxPrice = prices.priceRange.max?.value ?? minPrice;
-        const minFormatted = formatPrice({ value: minPrice }, currency);
-        const maxFormatted = formatPrice({ value: maxPrice }, currency);
+    } else if (displayPriceRange?.min?.value) {
+        const minPrice = displayPriceRange.min.value;
+        const maxPrice = displayPriceRange.max?.value ?? minPrice;
+        const code = displayPrice?.currencyCode || 'CAD';
+        const minFormatted = formatPrice({ value: minPrice, currencyCode: code }, currency);
+        const maxFormatted = formatPrice({ value: maxPrice, currencyCode: code }, currency);
 
         priceHtml = `
-            <span class="price-section price-section--withoutTax">
-                <span data-product-price-without-tax class="price price--withoutTax">${minPrice !== maxPrice ? `${minFormatted} - ${maxFormatted}` : minFormatted}</span>
+            <span class="price-section price-section--withTax">
+                <span data-product-price-with-tax class="price price--withTax">${minPrice !== maxPrice ? `${minFormatted} - ${maxFormatted}` : minFormatted}</span>
             </span>
         `;
     }

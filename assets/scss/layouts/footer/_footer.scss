@@ -388,6 +388,13 @@
     svg {
         fill: stencilColor("icon-color");
     }
+
+    // Light icons in dark footer trust area
+    .footer-trust-social & {
+        svg {
+            fill: stencilColor("color-white");
+        }
+    }
 }
 
 .footer-newsletter-summary {
