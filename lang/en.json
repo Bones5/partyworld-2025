@@ -19,6 +19,10 @@
         "secure_logo": "Secure",
         "socially_safe": "Socially Safe",
         "safe_shopping": "Safe Shopping",
+        "ssl_secure": "SSL Secure",
+        "ssl_checkout": "256-bit Encryption",
+        "verified_secure": "Verified Secure",
+        "malware_free": "Malware-Free Site",
         "follow_us": "Follow Us",
         "party_items_links": {
             "row_1": {

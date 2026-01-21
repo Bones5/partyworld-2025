@@ -6,7 +6,16 @@
 <div class="trustpilot-badge-wrapper{{#if style '===' 'people-love-us'}} trustpilot-badge-wrapper--people-love-us{{/if}}">
   {{#if style '===' 'people-love-us'}}
     <a class="trustpilot-fallback trustpilot-fallback--people-love-us" href="https://uk.trustpilot.com/review/partyworld.ie" target="_blank" rel="noopener">
-      <span class="trustpilot-fallback__text">Read our Trustpilot reviews</span>
+      <div class="trustpilot-fallback__logoCircle" aria-hidden="true">
+        <div class="trustpilot-fallback__text">People love us</div>
+        <img
+          class="trustpilot-fallback__logo"
+          src="https://cdn.trustpilot.net/brand-assets/4.3.0/logo-white.svg"
+          alt=""
+          loading="lazy"
+          decoding="async">
+      </div>
+      <span class="u-hiddenVisually">Trustpilot</span>
     </a>
   {{else}}
     <a class="trustpilot-fallback" href="https://uk.trustpilot.com/review/partyworld.ie" target="_blank" rel="noopener" aria-label="Trustpilot rating: Excellent from 17k reviews" data-trustpilot-badge>

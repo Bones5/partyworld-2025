@@ -24,11 +24,8 @@
     gap: spacing("single");
 
     // Default progression: 2 → 3 → 4 → 5 columns
+    // Switch to 3 columns as early as possible (small breakpoint)
     @include breakpoint("small") {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    @include breakpoint("medium") {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
@@ -40,47 +37,35 @@
         grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 
-    // 3-column variant: 2 → 2 → 3
+    // 3-column variant: 2 → 3
     &.c-categoryGrid__items--col3 {
-        @include breakpoint("medium") {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        @include breakpoint("large") {
+        @include breakpoint("small") {
             grid-template-columns: repeat(3, minmax(0, 1fr));
         }
     }
 
-    // 4-column variant: 2 → 2 → 3 → 4
+    // 4-column variant: 2 → 3 → 4
     &.c-categoryGrid__items--col4 {
-        @include breakpoint("medium") {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        @include breakpoint("large") {
+        @include breakpoint("small") {
             grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
-        @include breakpoint("xlarge") {
+        @include breakpoint("large") {
             grid-template-columns: repeat(4, minmax(0, 1fr));
         }
     }
 
-    // 5-column variant: 2 → 2 → 3 → 4 → 5
+    // 5-column variant: 2 → 3 → 4 → 5
     &.c-categoryGrid__items--col5 {
-        @include breakpoint("medium") {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        @include breakpoint("large") {
+        @include breakpoint("small") {
             grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
-        @include breakpoint("xlarge") {
+        @include breakpoint("large") {
             grid-template-columns: repeat(4, minmax(0, 1fr));
         }
 
-        @include breakpoint("xxlarge") {
+        @include breakpoint("xlarge") {
             grid-template-columns: repeat(5, minmax(0, 1fr));
         }
     }

@@ -74,32 +74,38 @@
 }
 
 .footer-links-row__inner {
-    @include grid-row($behavior: nest);
-    font-size: 0; // 1
-}
-
-.footer-links-col {
-    @include grid-column(12);
-    color: stencilColor("color-greyLighter");
-    display: inline-block;
-    float: none;
-    font-size: fontSize("base"); // 2
-    margin-bottom: spacing("single");
-    overflow-wrap: break-word;
-    text-align: center;
-    vertical-align: top;
-    // TODO: specifically use vendor only for IE11 since overflow-wrap is not supported here
-    -ms-word-break: break-all;
+    display: flex;
+    flex-direction: column;
+    gap: spacing("single");
 
     @include breakpoint("small") {
-        margin-bottom: spacing("half");
-        text-align: left;
-        width: width("6/12");
+        flex-direction: row;
+        flex-wrap: wrap;
     }
 
     @include breakpoint("medium") {
-        margin-bottom: 0;
-        width: width("3/12");
+        flex-wrap: nowrap;
+        gap: spacing("double");
+    }
+}
+
+.footer-links-col {
+    align-items: center;
+    color: stencilColor("color-greyLighter");
+    display: flex;
+    flex: 1 1 100%;
+    flex-direction: column;
+    font-size: fontSize("base");
+    min-width: 0;
+    overflow-wrap: break-word;
+    text-align: center;
+
+    @include breakpoint("small") {
+        flex: 1 1 calc(50% - #{spacing("single")});
+    }
+
+    @include breakpoint("medium") {
+        flex: 1 1 0;
     }
 
     > :first-child {
@@ -119,6 +125,7 @@
     font-size: fontSize("base"); // 2
     margin-bottom: spacing("single");
     overflow-wrap: break-word;
+    word-break: break-all;
     text-align: center;
     vertical-align: top;
     // TODO: specifically use vendor only for IE11 since overflow-wrap is not supported here
@@ -144,24 +151,16 @@
     }
 }
 
-// Column variants for footer links row
-.footer-links-col--about,
-.footer-links-col--costumes,
-.footer-links-col--party-items {
-    @include breakpoint("medium") {
-        width: width("3/12");
-    }
-}
+// Column variants for footer links row (legacy - no longer needed with flexbox)
+// .footer-links-col--about,
+// .footer-links-col--costumes,
+// .footer-links-col--party-items
 
-// Column variants for trust/social row
-.footer-trust-col--reviews,
-.footer-trust-col--secure,
-.footer-trust-col--payment,
-.footer-trust-col--social {
-    @include breakpoint("medium") {
-        flex-basis: auto;
-    }
-}
+// Column variants for trust/social row (legacy - no longer needed with flexbox)
+// .footer-trust-col--reviews,
+// .footer-trust-col--secure,
+// .footer-trust-col--payment,
+// .footer-trust-col--social
 
 // Legacy column support (keep for backwards compatibility)
 .footer-info-col--nav,
@@ -220,6 +219,7 @@
 .footer-info-list {
     list-style: none;
     margin-left: 0;
+    text-align: left;;
 
     li {
         margin-bottom: spacing("quarter");
@@ -284,22 +284,33 @@
     display: flex;
     flex-direction: column;
     gap: spacing("single");
-    justify-content: center;
+
+    @include breakpoint("small") {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
 
     @include breakpoint("medium") {
-        flex-direction: row;
-        justify-content: center;
-        text-align: center;
+        flex-wrap: nowrap;
+        gap: spacing("double");
     }
 }
 
 .footer-trust-col {
+    align-items: center;
     color: stencilColor("color-greyLighter");
-    flex: 1;
+    display: flex;
+    flex: 1 1 100%;
+    flex-direction: column;
     min-width: 0;
+    text-align: center;
+
+    @include breakpoint("small") {
+        flex: 1 1 calc(50% - #{spacing("single")});
+    }
 
     @include breakpoint("medium") {
-        flex-basis: width("3/12");
+        flex: 1 1 0;
     }
 }
 
@@ -360,39 +371,54 @@
 
 // Payment icons
 // -----------------------------------------------------------------------------
+// Styled to match social icons (circular buttons, same size/alignment)
 
 .footer-payment-icons {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    gap: spacing("third");
     justify-content: center;
     list-style-type: none;
-    margin-left: 0;
-    margin-top: spacing("single");
-
-    @include breakpoint("small") {
-        justify-content: normal;
-        margin-top: 0;
-    }
+    margin: 0;
+    padding: 0;
 
     @include breakpoint("medium") {
-        margin-top: 0;
+        justify-content: flex-start;
+    }
+
+    li {
+        display: inline-flex;
     }
 
     .footer-payment-icon {
+        align-items: center;
+        background-color: transparent;
+        display: flex;
         height: remCalc(40);
-        margin: spacing("quarter");
-        vertical-align: middle;
-        width: remCalc(50);
+        justify-content: center;
+        transition: background-color 0.15s ease;
+        width: remCalc(60);
+
+        &:hover {
+            background-color: stencilColor("color-greyLightest");
+        }
     }
 
     svg {
-        fill: stencilColor("icon-color");
+        fill: stencilColor("color-textSecondary");
+        width: remCalc(150);
+        height: auto;
+        padding: 0 0.25em
     }
 
     // Light icons in dark footer trust area
     .footer-trust-social & {
+        .footer-payment-icon:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
         svg {
-            fill: stencilColor("color-white");
+            fill: stencilColor("color-greyLighter");
         }
     }
 }
@@ -444,6 +470,46 @@
     }
 }
 
+.trustpilot-fallback--people-love-us {
+    display: block;
+    max-width: remCalc(440);
+    text-align: center;
+    color: white;
+
+
+    .trustpilot-fallback__text {
+        display: block;
+        font-size: remCalc(18);
+        line-height: 1.15;
+        margin-left: 0;
+        padding-top: spacing("quarter");
+    }
+
+    .u-hiddenVisually {
+        clear: both;
+    }
+}
+
+.trustpilot-fallback__logoCircle {
+    align-items: center;
+    background-color: stencilColor("trustpilot_badge_circle_bg");
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: spacing("half");
+    height: remCalc(100);
+    width: remCalc(100);
+    padding:  spacing("quarter");
+    box-sizing: content-box;
+}
+
+.trustpilot-fallback__logo {
+    display: block;
+    height: remCalc(18);
+    width: auto;
+}
+
 .trustpilot-fallback__stars {
     display: flex;
     gap: 2px;
@@ -462,6 +528,8 @@
     font-weight: fontWeight("semibold");
     margin-left: spacing("quarter");
 }
+
+// Make the people-love-us text wrap around the logo circle
 
 .trustpilot-fallback__brand {
     color: stencilColor("color-white"); // White on mobile

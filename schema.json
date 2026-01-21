@@ -4128,5 +4128,19 @@
         ]
       }
     ]
+  },
+  {
+    "name": "i18n.Trustpilot",
+    "settings": [
+      {
+        "type": "heading",
+        "content": "i18n.TrustpilotBadge"
+      },
+      {
+        "type": "color",
+        "label": "i18n.TrustpilotBadgeCircleBg",
+        "id": "trustpilot_badge_circle_bg"
+      }
+    ]
   }
 ]

@@ -6024,5 +6024,14 @@
     "ko": "Bolt",
     "pl": "Bolt",
     "ja": "Bolt"
+  },
+  "i18n.Trustpilot": {
+    "default": "Trustpilot"
+  },
+  "i18n.TrustpilotBadge": {
+    "default": "Trustpilot badge"
+  },
+  "i18n.TrustpilotBadgeCircleBg": {
+    "default": "Logo circle background"
   }
 }
