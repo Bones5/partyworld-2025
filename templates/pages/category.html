@@ -41,7 +41,18 @@ products:
         {{/unless}}
 
         {{!-- Category Intro Widget Zone (populated via Widgets API or Page Builder) --}}
-        {{{region name="category_below_header"}}}
+        {{!-- If theme setting enabled, show Page Builder region; otherwise show category description --}}
+        {{#if theme_settings.category_use_intro_widget}}
+            <div class="category-intro-region">
+                {{{region name="category_below_header"}}}
+            </div>
+        {{else if category.description}}
+            <section class="category-description category-description--intro">
+                <div class="container">
+                    {{{category.description}}}
+                </div>
+            </section>
+        {{/if}}
 
         {{!-- Shop by Category section: shows subcategories if present --}}
         {{> components/category/shop-by-category}}
@@ -55,13 +66,15 @@ products:
 
         {{> components/category/product-listing}}
 
-        {{!-- Category Description / SEO Content (editable in Products → Categories → Description) --}}
-        {{#if category.description}}
-            <section class="category-description">
-                <div class="container">
-                    {{{category.description}}}
-                </div>
-            </section>
+        {{!-- Category Description / SEO Content - only show at bottom if using Page Builder widget above --}}
+        {{#if theme_settings.category_use_intro_widget}}
+            {{#if category.description}}
+                <section class="category-description category-description--footer">
+                    <div class="container">
+                        {{{category.description}}}
+                    </div>
+                </section>
+            {{/if}}
         {{/if}}
 
         <div class="page-region">

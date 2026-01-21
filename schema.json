@@ -438,6 +438,12 @@
       },
       {
         "type": "checkbox",
+        "label": "i18n.UseCategoryIntroWidget",
+        "force_reload": true,
+        "id": "category_use_intro_widget"
+      },
+      {
+        "type": "checkbox",
         "label": "i18n.HideBlogPageHeading",
         "force_reload": true,
         "id": "hide_blog_page_heading"
