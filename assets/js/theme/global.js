@@ -15,6 +15,7 @@ import svgInjector from './global/svg-injector';
 import { initNewsletter } from './global/newsletter';
 import { initAllClerkRecommendations } from './common/clerk-recommendations';
 import klaviyoNewsletter from './common/klaviyo-newsletter';
+import initTrustpilotBadge from './common/trustpilot-badge';
 
 export default class Global extends PageManager {
     onReady() {
@@ -37,5 +38,8 @@ export default class Global extends PageManager {
 
         // Initialize Klaviyo newsletter form (when using native form)
         klaviyoNewsletter();
+
+        // Best-effort live Trustpilot review count (requires integration/app to inject structured data)
+        initTrustpilotBadge();
     }
 }

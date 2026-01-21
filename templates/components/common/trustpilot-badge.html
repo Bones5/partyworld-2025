@@ -1,14 +1,24 @@
-{{!-- Trustpilot badge slot (BigCommerce Trustpilot integration)
-  This theme provides a consistent placement for the Trustpilot widget/badge.
-  The Trustpilot BigCommerce app (or Script Manager) should inject the TrustBox script globally,
-  and the TrustBox markup can be added via Page Builder into this region.
+{{!-- Trustpilot badge (custom, non-widget)
+  We intentionally keep this as custom markup (stars + review count) rather than a TrustBox widget.
+  This avoids dependency on widget configuration and keeps the header/footer UI consistent.
 --}}
 
 <div class="trustpilot-badge-wrapper{{#if style '===' 'people-love-us'}} trustpilot-badge-wrapper--people-love-us{{/if}}">
-    {{{region name="trustpilot_badge"}}}
-
-    {{!-- Lightweight fallback link if no region content is configured --}}
-    <a class="trustpilot-fallback" href="https://uk.trustpilot.com/review/partyworld.ie" target="_blank" rel="noopener">
-        <span class="trustpilot-fallback__text">Trustpilot</span>
+  {{#if style '===' 'people-love-us'}}
+    <a class="trustpilot-fallback trustpilot-fallback--people-love-us" href="https://uk.trustpilot.com/review/partyworld.ie" target="_blank" rel="noopener">
+      <span class="trustpilot-fallback__text">Read our Trustpilot reviews</span>
     </a>
+  {{else}}
+    <a class="trustpilot-fallback" href="https://uk.trustpilot.com/review/partyworld.ie" target="_blank" rel="noopener" aria-label="Trustpilot rating: Excellent from 17k reviews" data-trustpilot-badge>
+      <span class="trustpilot-fallback__text">Excellent</span>
+      <span class="trustpilot-fallback__stars" aria-hidden="true">
+        <svg class="trustpilot-fallback__star icon" aria-hidden="true" focusable="false"><use href="#icon-StarIcon"></use></svg>
+        <svg class="trustpilot-fallback__star icon" aria-hidden="true" focusable="false"><use href="#icon-StarIcon"></use></svg>
+        <svg class="trustpilot-fallback__star icon" aria-hidden="true" focusable="false"><use href="#icon-StarIcon"></use></svg>
+        <svg class="trustpilot-fallback__star icon" aria-hidden="true" focusable="false"><use href="#icon-StarIcon"></use></svg>
+        <svg class="trustpilot-fallback__star icon" aria-hidden="true" focusable="false"><use href="#icon-StarIcon"></use></svg>
+      </span>
+      <span class="trustpilot-fallback__count" data-trustpilot-review-count>17k reviews</span>
+    </a>
+  {{/if}}
 </div>

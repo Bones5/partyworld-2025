@@ -79,7 +79,8 @@
         <script nonce="{{nonce}}">
             {{!-- Exported in app.js --}}
             function onThemeBundleMain() {
-                window.stencilBootstrap("{{page_type}}", {{jsContext}}).load();
+                window.__PW_CONTEXT__ = {{jsContext}};
+                window.stencilBootstrap("{{page_type}}", window.__PW_CONTEXT__).load();
 
                 function browserSupportsFormData() {
                     return typeof FormData !== 'undefined' 

@@ -209,6 +209,16 @@
     }
 }
 
+// Skeleton pulse animation for colorful placeholders
+@keyframes skeleton-pulse {
+    0%, 100% {
+        opacity: 0.4;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
 // Base skeleton styles
 .skeleton {
     background: linear-gradient(
@@ -222,11 +232,48 @@
     border-radius: $global-radius;
 }
 
-// Skeleton image placeholder
+// Skeleton image placeholder - colorful gradients matching category placeholders
 .skeleton--image {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    padding-bottom: 100%; // 1:1 aspect ratio
-    background-color: stencilColor("color-greyLightest");
+    height: 100%;
+    animation: skeleton-pulse 2s ease-in-out infinite;
+    border-radius: $global-radius;
+}
+
+// Color palette for skeleton images - party colors matching category placeholders
+.clerk-skeleton-grid .card--skeleton:nth-child(8n + 1) .skeleton--image {
+    background: linear-gradient(135deg, #ff6b9d 0%, #ff8a80 100%); // Pink
+}
+
+.clerk-skeleton-grid .card--skeleton:nth-child(8n + 2) .skeleton--image {
+    background: linear-gradient(135deg, #7c4dff 0%, #b388ff 100%); // Purple
+}
+
+.clerk-skeleton-grid .card--skeleton:nth-child(8n + 3) .skeleton--image {
+    background: linear-gradient(135deg, #00bcd4 0%, #4dd0e1 100%); // Cyan
+}
+
+.clerk-skeleton-grid .card--skeleton:nth-child(8n + 4) .skeleton--image {
+    background: linear-gradient(135deg, #ffca28 0%, #ffd54f 100%); // Yellow
+}
+
+.clerk-skeleton-grid .card--skeleton:nth-child(8n + 5) .skeleton--image {
+    background: linear-gradient(135deg, #69f0ae 0%, #b9f6ca 100%); // Green
+}
+
+.clerk-skeleton-grid .card--skeleton:nth-child(8n + 6) .skeleton--image {
+    background: linear-gradient(135deg, #ff7043 0%, #ffab91 100%); // Orange
+}
+
+.clerk-skeleton-grid .card--skeleton:nth-child(8n + 7) .skeleton--image {
+    background: linear-gradient(135deg, #42a5f5 0%, #90caf9 100%); // Blue
+}
+
+.clerk-skeleton-grid .card--skeleton:nth-child(8n + 8) .skeleton--image {
+    background: linear-gradient(135deg, #ec407a 0%, #f48fb1 100%); // Rose
 }
 
 // Skeleton text placeholders
@@ -256,6 +303,13 @@
 .card--skeleton {
     .card-figure {
         margin-bottom: spacing("half");
+    }
+
+    .card-img-container {
+        position: relative;
+        padding-bottom: 100%; // 1:1 aspect ratio
+        overflow: hidden;
+        border-radius: $global-radius;
     }
 
     .card-body {

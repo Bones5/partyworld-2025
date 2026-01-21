@@ -638,6 +638,7 @@ function renderProductCardFallback(product, currency, options = {}) {
                    data-event-type="product-click">
                     <div class="card-img-container">
                         <img class="card-image lazyload" 
+                             src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                              data-src="${imageUrl}" 
                              ${imageSrcset ? `data-srcset="${imageSrcset}"` : ''} 
                              data-sizes="auto"

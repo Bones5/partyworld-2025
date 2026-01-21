@@ -7,6 +7,28 @@
     margin-bottom: spacing("double");
     position: relative;
 
+    // Before slick initializes, show items in a flex grid to prevent full-width images
+    .c-shopByCategory__carousel:not(.slick-initialized) {
+        display: flex;
+        flex-wrap: wrap;
+        overflow: hidden;
+
+        .c-shopByCategory__slide {
+            flex: 0 0 50%; // 2 items on mobile
+            max-width: 50%;
+
+            @include breakpoint("medium") {
+                flex: 0 0 33.333%; // 3 items on tablet
+                max-width: 33.333%;
+            }
+
+            @include breakpoint("large") {
+                flex: 0 0 25%; // 4 items on desktop
+                max-width: 25%;
+            }
+        }
+    }
+
     .c-categoryCard {
         padding: spacing("quarter");
         border-radius: remCalc(1px);

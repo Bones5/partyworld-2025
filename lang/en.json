@@ -22,36 +22,36 @@
         "follow_us": "Follow Us",
         "party_items_links": {
             "row_1": {
-                "title": "Birthday",
-                "url": "/party-items/birthday/"
+                "title": "Balloons",
+                "url": "/balloons/"
             },
             "row_2": {
-                "title": "Balloons",
-                "url": "/party-items/balloons/"
+                "title": "Birthday Decorations",
+                "url": "/birthday-party-decorations/"
             },
             "row_3": {
-                "title": "Tableware",
-                "url": "/party-items/tableware/"
+                "title": "Cake Accessories",
+                "url": "/cake-accessories/"
             },
             "row_4": {
-                "title": "Decorations",
-                "url": "/party-items/decorations/"
+                "title": "Birthday Candles",
+                "url": "/birthday-candles-1/"
             },
             "row_5": {
-                "title": "Party Bags & Fillers",
-                "url": "/party-items/party-bags-fillers/"
+                "title": "Confetti",
+                "url": "/confetti/"
             },
             "row_6": {
-                "title": "Candles & Cake Toppers",
-                "url": "/party-items/candles-cake-toppers/"
+                "title": "Piñatas",
+                "url": "/pinatas/"
             },
             "row_7": {
-                "title": "Party Games",
-                "url": "/party-items/party-games/"
+                "title": "Kids Party Supplies",
+                "url": "/kids-party-supplies/"
             },
             "row_8": {
-                "title": "Confetti & Poppers",
-                "url": "/party-items/confetti-poppers/"
+                "title": "Party Inflatables",
+                "url": "/party-inflatables/"
             },
             "row_9": {
                 "title": " ",
@@ -64,36 +64,36 @@
         },
         "hen_party_links": {
             "row_1": {
-                "title": "Hen Party Accessories",
-                "url": "/hen-party/accessories/"
+                "title": "Hen Party",
+                "url": "/hen-party/"
             },
             "row_2": {
-                "title": "Hen Party Sashes",
-                "url": "/hen-party/sashes/"
+                "title": "Birthday Sashes",
+                "url": "/birthday-sashes/"
             },
             "row_3": {
-                "title": "Hen Party Games",
-                "url": "/hen-party/games/"
+                "title": "Engagement Decorations",
+                "url": "/engagement-party-decorations/"
             },
             "row_4": {
-                "title": "Hen Party Decorations",
-                "url": "/hen-party/decorations/"
+                "title": "Balloon Arch Kits",
+                "url": "/balloon-arch-kits/"
             },
             "row_5": {
-                "title": "Hen Party Balloons",
-                "url": "/hen-party/balloons/"
+                "title": "Balloon Boxes",
+                "url": "/balloon-boxes/"
             },
             "row_6": {
-                "title": "Hen Party Gifts",
-                "url": "/hen-party/gifts/"
+                "title": "Cake Toppers",
+                "url": "/cake-toppers/"
             },
             "row_7": {
-                "title": "Bride to Be",
-                "url": "/hen-party/bride-to-be/"
+                "title": " ",
+                "url": " "
             },
             "row_8": {
-                "title": "Hen Party Costumes",
-                "url": "/hen-party/costumes/"
+                "title": " ",
+                "url": " "
             },
             "row_9": {
                 "title": " ",
