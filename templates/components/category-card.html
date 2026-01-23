@@ -1,73 +1,61 @@
-{{!-- Category Card component partial --}}
-{{!-- 
-  Usage:
-    {{> components/category-card 
-        url="/categories/balloons"
-        image="assets/img/categories/balloons.jpg"
-        title="Balloons"
-        ctaText="Shop Now"
-        modifier="occasion"
-    }}
-  
-  Modifiers:
-    - "occasion": Square aspect ratio for occasion cards
---}}
-<article class="c-categoryCard{{#if modifier}} c-categoryCard--{{modifier}}{{/if}}">
+{{!-- Category Card component partial --}} {{!-- Usage: {{>
+components/category-card url="/categories/balloons"
+image="assets/img/categories/balloons.jpg" title="Balloons" ctaText="Shop Now"
+modifier="occasion" }} Modifiers: - "occasion": Square aspect ratio for occasion
+cards --}}
+<article
+  class="c-categoryCard{{#if modifier}} c-categoryCard--{{modifier}}{{/if}}"
+>
   <a href="{{url}}" class="c-categoryCard__media" aria-label="{{title}}">
-    {{!-- Support Stencil image objects with responsive srcset --}}
-    {{#if image.data}}
-      {{> components/common/responsive-img
-          image=image
-          class="c-categoryCard__image"
-          fallback_size="400w"
-          lazyload="lazyload"
-          otherAttributes='decoding="async" sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw" width="200" height="200"'
-      }}
-    {{else if image.url}}
-      <img 
-        src="{{image.url}}" 
-        srcset="{{image.url}} 200w, {{image.url}} 400w"
-        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
-        alt="{{title}}" 
-        class="c-categoryCard__image lazyload"
-        width="200"
-        height="200"
-        loading="lazy"
-        decoding="async"
-      />
+    {{!-- Support Stencil image objects with responsive srcset --}} {{#if
+    image.data}} {{> components/common/responsive-img image=image
+    class="c-categoryCard__image" fallback_size="400w" lazyload="lazyload"
+    otherAttributes='decoding="async" sizes="(min-width: 1024px) 25vw,
+    (min-width: 768px) 50vw, 100vw" width="200" height="200"' }} {{else if
+    image.url}}
+    <img
+      src="{{image.url}}"
+      srcset="{{image.url}} 200w, {{image.url}} 400w"
+      sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+      alt="{{title}}"
+      class="c-categoryCard__image lazyload"
+      width="200"
+      height="200"
+      loading="lazy"
+      decoding="async"
+    />
     {{else if image.source}}
-      <img 
-        src="{{image.source}}" 
-        srcset="{{image.source}} 200w, {{image.source}} 400w"
-        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
-        alt="{{title}}" 
-        class="c-categoryCard__image lazyload"
-        width="200"
-        height="200"
-        loading="lazy"
-        decoding="async"
-      />
+    <img
+      src="{{image.source}}"
+      srcset="{{image.source}} 200w, {{image.source}} 400w"
+      sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+      alt="{{title}}"
+      class="c-categoryCard__image lazyload"
+      width="200"
+      height="200"
+      loading="lazy"
+      decoding="async"
+    />
     {{else if image}}
-      <img 
-        src="{{getImage image '400x300'}}" 
-        srcset="{{getImage image '200x150'}} 200w, {{getImage image '400x300'}} 400w"
-        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
-        alt="{{title}}" 
-        class="c-categoryCard__image lazyload"
-        width="200"
-        height="200"
-        loading="lazy"
-        decoding="async"
-      />
-    {{else}}
-      {{!-- Colorful placeholder when no image --}}
-      <span class="c-categoryCard__placeholder" aria-hidden="true"></span>
+    <img
+      src="{{getImage image '400x300'}}"
+      srcset="{{getImage image '200x150'}} 200w, {{getImage image '400x300'}} 400w"
+      sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+      alt="{{title}}"
+      class="c-categoryCard__image lazyload"
+      width="200"
+      height="200"
+      loading="lazy"
+      decoding="async"
+    />
+    {{else}} {{!-- Colorful placeholder when no image --}}
+    <span class="c-categoryCard__placeholder" aria-hidden="true"></span>
     {{/if}}
   </a>
   <div class="c-categoryCard__body">
     <h3 class="c-categoryCard__title">{{title}}</h3>
     {{#if ctaText}}
-      <a href="{{url}}" class="c-categoryCard__cta">{{ctaText}}</a>
+    <a href="{{url}}" class="c-categoryCard__cta">{{ctaText}}</a>
     {{/if}}
   </div>
 </article>
