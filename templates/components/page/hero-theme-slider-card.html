@@ -7,6 +7,7 @@
     - heading: Card title/heading text
     - ctaText: Call-to-action button text
     - ctaUrl: Call-to-action link URL
+    - isLCP: Boolean - if true, prioritize this image for LCP (first slide)
 --}}
 {{#if image}}
 <article class="heroThemeSlider-card">
@@ -14,22 +15,37 @@
         <div class="heroThemeSlider-card__media">
             {{#if image.data}}
                 {{!-- Stencil image object (from carousel slides) --}}
-                {{> components/common/responsive-img
-                    image=image
-                    class="heroThemeSlider-card__image"
-                    fallback_size="640w"
-                    lazyload="lazyload"
-                    default_image=theme_settings.default_image
-                    otherAttributes='decoding="async" sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"'
-                }}
+                {{#if isLCP}}
+                    {{!-- First slide: Prioritize for LCP with eager loading --}}
+                    {{> components/common/responsive-img
+                        image=image
+                        class="heroThemeSlider-card__image"
+                        fallback_size="640w"
+                        lazyload="disabled"
+                        default_image=theme_settings.default_image
+                        otherAttributes='fetchpriority="high" decoding="async" sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw" width="640" height="640"'
+                    }}
+                {{else}}
+                    {{!-- Other slides: Lazy load --}}
+                    {{> components/common/responsive-img
+                        image=image
+                        class="heroThemeSlider-card__image"
+                        fallback_size="640w"
+                        lazyload="lazyload"
+                        default_image=theme_settings.default_image
+                        otherAttributes='decoding="async" sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw" width="640" height="640"'
+                    }}
+                {{/if}}
             {{else if image.url}}
                 <img 
                     src="{{image.url}}" 
                     srcset="{{image.url}} 320w, {{image.url}} 640w"
                     sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                     alt="{{#if heading}}{{heading}}{{else}}Theme card{{/if}}" 
-                    class="heroThemeSlider-card__image lazyload"
-                    loading="lazy"
+                    class="heroThemeSlider-card__image{{#unless isLCP}} lazyload{{/unless}}"
+                    width="640"
+                    height="640"
+                    {{#if isLCP}}fetchpriority="high" loading="eager"{{else}}loading="lazy"{{/if}}
                     decoding="async"
                 />
             {{else if image.source}}
@@ -38,8 +54,10 @@
                     srcset="{{image.source}} 320w, {{image.source}} 640w"
                     sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                     alt="{{#if heading}}{{heading}}{{else}}Theme card{{/if}}" 
-                    class="heroThemeSlider-card__image lazyload"
-                    loading="lazy"
+                    class="heroThemeSlider-card__image{{#unless isLCP}} lazyload{{/unless}}"
+                    width="640"
+                    height="640"
+                    {{#if isLCP}}fetchpriority="high" loading="eager"{{else}}loading="lazy"{{/if}}
                     decoding="async"
                 />
             {{else}}
@@ -49,8 +67,10 @@
                     srcset="{{cdn image}} 320w, {{cdn image}} 640w"
                     sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                     alt="{{#if heading}}{{heading}}{{else}}Theme card{{/if}}" 
-                    class="heroThemeSlider-card__image lazyload"
-                    loading="lazy"
+                    class="heroThemeSlider-card__image{{#unless isLCP}} lazyload{{/unless}}"
+                    width="640"
+                    height="640"
+                    {{#if isLCP}}fetchpriority="high" loading="eager"{{else}}loading="lazy"{{/if}}
                     decoding="async"
                 />
             {{/if}}
