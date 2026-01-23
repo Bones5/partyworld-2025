@@ -215,9 +215,11 @@
     @include u-hidden("visually");
 }
 
-// Section wrapper with optional heading
-.heroThemeSlider-section {
-    margin-bottom: spacing("double") + spacing("double");
+@include breakpoint("medium") {
+    // Section wrapper with optional heading
+    .heroThemeSlider-section {
+        margin-bottom: spacing("double") + spacing("double");
+    }
 }
 
 .heroThemeSlider-section__heading {

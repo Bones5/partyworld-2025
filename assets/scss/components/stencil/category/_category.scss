@@ -35,7 +35,9 @@
 // Full description moved to bottom of page for SEO purposes
 
 .category-description {
-    padding: spacing("double") + spacing("single") 0;
+
+    padding-bottom: spacing("double");
+
 
     .container {
         max-width: remCalc(900px);
