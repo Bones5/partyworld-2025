@@ -74,16 +74,21 @@
 //
 // 1. Flex container for inline layout.
 // 2. Gap between input and button.
+// 3. Wrap to new line on mobile.
 //
 // -----------------------------------------------------------------------------
 
 .newsletter-input-group {
     display: flex; // 1
-    flex-wrap: nowrap;
+    flex-wrap: wrap; // 3
     gap: $newsletter-form-gap; // 2
     justify-content: center;
     margin: 0 auto;
     max-width: remCalc(500px);
+
+    @include breakpoint("medium") {
+        flex-wrap: nowrap;
+    }
 }
 
 .newsletter-input {
@@ -170,7 +175,7 @@
 // -----------------------------------------------------------------------------
 //
 // 1. Hidden by default, shown with modifier classes.
-// 2. Positioned below input group.
+// 2. Absolutely positioned to avoid layout shift.
 // 3. Associated with input via aria-describedby.
 //
 // -----------------------------------------------------------------------------
@@ -179,12 +184,16 @@
     display: none; // 1
     font-size: fontSize("smallest");
     line-height: $lineHeight-smallest;
+    position: absolute; // 2
+    top: 100%;
     margin-top: spacing("quarter");
     padding-left: spacing("quarter");
+    width: 100%;
+    text-align: center
 }
 
 .newsletter-message--error {
-    color: $newsletter-error-color;
+    color: $color-white;
     display: block;
 }
 
