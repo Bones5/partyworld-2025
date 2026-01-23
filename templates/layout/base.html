@@ -68,6 +68,9 @@
         {{~inject 'giftWrappingRemoveMessage' (lang 'cart.gift_wrapping.remove_confirm')}}
     </head>
     <body>
+        {{!-- Google Tag Manager (deferred loading for performance) --}}
+        {{> components/common/gtm-script }}
+
         {{!-- Inline SVG sprite for icon symbols - avoids CORS issues with external references --}}
         {{> components/common/icons/icon-defs }}
 

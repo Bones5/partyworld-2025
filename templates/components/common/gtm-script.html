@@ -1,0 +1,92 @@
+{{!--
+    Google Tag Manager - Delayed Loading
+    
+    Defers GTM loading until after page load to improve Lighthouse performance scores.
+    GTM loads 2 seconds after the window load event, allowing critical content to render first.
+    
+    Configuration:
+    - GTM Container ID: Set in theme_settings.gtm_container_id
+    - Google Ads ID: Set in theme_settings.google_ads_id (optional)
+    - Delay: 2000ms after window load (configurable below)
+    
+    To enable: Add gtm_container_id to config.json settings
+--}}
+
+{{#if theme_settings.gtm_container_id}}
+<script nonce="{{nonce}}">
+(function() {
+    'use strict';
+    
+    // Configuration
+    var GTM_ID = '{{theme_settings.gtm_container_id}}';
+    var GADS_ID = '{{theme_settings.google_ads_id}}';
+    var DELAY_MS = 2000; // Delay after window load
+    
+    // Initialize dataLayer early for any pre-GTM events
+    window.dataLayer = window.dataLayer || [];
+    
+    function loadGTM() {
+        // Google Tag Manager
+        (function(w,d,s,l,i){
+            w[l]=w[l]||[];
+            w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+            var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),
+                dl=l!='dataLayer'?'&l='+l:'';
+            j.async=true;
+            j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+            f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer', GTM_ID);
+        
+        {{#if theme_settings.google_ads_id}}
+        // Google Ads (gtag.js) - only if configured separately from GTM
+        var gtagScript = document.createElement('script');
+        gtagScript.async = true;
+        gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + GADS_ID;
+        document.head.appendChild(gtagScript);
+        
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', GADS_ID);
+        window.gtag = gtag;
+        {{/if}}
+    }
+    
+    // Load immediately if user interacts (scroll, click, touch)
+    // Otherwise wait for delay after load
+    var loaded = false;
+    
+    function triggerLoad() {
+        if (loaded) return;
+        loaded = true;
+        loadGTM();
+        // Clean up listeners
+        document.removeEventListener('scroll', triggerLoad);
+        document.removeEventListener('click', triggerLoad);
+        document.removeEventListener('touchstart', triggerLoad);
+        document.removeEventListener('keydown', triggerLoad);
+    }
+    
+    // User interaction triggers immediate load
+    document.addEventListener('scroll', triggerLoad, {once: true, passive: true});
+    document.addEventListener('click', triggerLoad, {once: true});
+    document.addEventListener('touchstart', triggerLoad, {once: true, passive: true});
+    document.addEventListener('keydown', triggerLoad, {once: true});
+    
+    // Fallback: Load after delay post-window-load
+    if (document.readyState === 'complete') {
+        setTimeout(triggerLoad, DELAY_MS);
+    } else {
+        window.addEventListener('load', function() {
+            setTimeout(triggerLoad, DELAY_MS);
+        });
+    }
+})();
+</script>
+
+<!-- Google Tag Manager (noscript) - for users without JavaScript -->
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id={{theme_settings.gtm_container_id}}"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+{{/if}}
