@@ -37,11 +37,7 @@
   },
   "css_compiler": "scss",
   "autoprefixer_cascade": true,
-  "autoprefixer_browsers": [
-    "> 1%",
-    "last 2 versions",
-    "Firefox ESR"
-  ],
+  "autoprefixer_browsers": ["> 1%", "last 2 versions", "Firefox ESR"],
   "settings": {
     "channels": [
       {
@@ -137,7 +133,7 @@
     "show_accept_googlepay": true,
     "show_accept_klarna": false,
     "show_product_details_tabs": true,
-      "trustpilot_badge_circle_bg": "#3E67F8",
+    "trustpilot_badge_circle_bg": "#3E67F8",
     "show_quick_payment_buttons": true,
     "show_custom_fields_tabs": false,
     "show_product_weight": true,
@@ -416,11 +412,7 @@
       "unionpay",
       "visa"
     ],
-    "supported_payment_methods": [
-      "card",
-      "paypal",
-      "bank"
-    ],
+    "supported_payment_methods": ["card", "paypal", "bank"],
     "lazyload_mode": "lazyload+lqip",
     "checkout-paymentbuttons-paypal-color": "black",
     "checkout-paymentbuttons-paypal-shape": "rect",
@@ -432,7 +424,7 @@
     "amazon-button-color": "Gold",
     "masterpass-button-color": "black",
     "paymentbuttons-provider-sorting": [],
-    "clerk_enabled": true,
+    "clerk_enabled": false,
     "clerk_public_key": "2Pus2KzgWUf7wjGBN2NrklOYtqdVsGbO",
     "clerk_product_recommendations_enabled": true,
     "clerk_category_recommendations_enabled": true,
@@ -444,9 +436,8 @@
     "clerk_search_page_template": "@search-page",
     "clerk_search_facets": "[\"price\",\"categories\",\"brand\"]",
     "clerk_currency_symbol": "€",
-    "show_linkedin_tag": true,
+    "show_linkedin_tag": false,
     "gtm_container_id": "GTM-NWRLGW2T",
-    "google_ads_id": "AW-1038618682",
     "klaviyo_enabled": false,
     "klaviyo_public_key": "",
     "klaviyo_newsletter_form_type": "native",
@@ -479,7 +470,11 @@
         "desktop_screenshot": "desktop_light.png",
         "mobile_screenshot": "mobile_light.png",
         "description": "Partyworld party supplies theme",
-        "optimized_for": ["multi_purpose", "mobile_tablet_desktop", "large_catalog"],
+        "optimized_for": [
+          "multi_purpose",
+          "mobile_tablet_desktop",
+          "large_catalog"
+        ],
         "industries": ["toys_games"]
       }
     }
