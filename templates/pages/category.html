@@ -70,10 +70,19 @@ products:
         {{!-- Shop by Category section: shows subcategories if present --}}
         {{> components/category/shop-by-category}}
 
-        {{!-- Clerk.io Category Best Sellers --}}
-        {{> components/category/clerk-recommendations 
+        {{!-- Fast Simon Category Best Sellers --}}
+        {{> components/category/fastsimon-recommendations 
             heading="Category Best Sellers"
+            widgetType="bestsellers"
             ctaText="Buy Now"
+            limit=8
+        }}
+
+        {{!-- Fast Simon Category Trending Products --}}
+        {{> components/category/fastsimon-recommendations 
+            heading="Trending Products"
+            widgetType="trending"
+            ctaText="Shop Now"
             limit=8
         }}
 

@@ -1,0 +1,98 @@
+{{!--
+  Fast Simon Category Recommendations Component
+  
+  Displays product recommendations powered by Fast Simon on category pages.
+  Supports two widgets: "bestsellers" and "trending".
+  Uses BigCommerce Storefront GraphQL API for full product data to render native theme cards.
+  
+  Parameters:
+  - heading: Optional heading for the section
+  - limit: Number of products to show (default: 8)
+  - widgetType: Which widget to use — "bestsellers" (default) or "trending"
+  - ctaText: Text for the CTA button (default: "Shop Now")
+  - showBrand: Whether to show product brand (default: false)
+  
+  Usage:
+    {{> components/category/fastsimon-recommendations 
+        heading="Category Best Sellers"
+        widgetType="bestsellers"
+        ctaText="Buy Now"
+        limit=8
+    }}
+    {{> components/category/fastsimon-recommendations 
+        heading="Trending Products"
+        widgetType="trending"
+        ctaText="Shop Now"
+        limit=8
+    }}
+  
+  Configuration:
+  - theme_settings.fastsimon_enabled: Master toggle for Fast Simon
+  - theme_settings.fastsimon_category_enabled: Enable category page recommendations
+  - theme_settings.fastsimon_category_widget_id: Widget ID for best sellers
+  - theme_settings.fastsimon_category_trending_widget_id: Widget ID for trending products
+--}}
+
+{{#all theme_settings.fastsimon_enabled theme_settings.fastsimon_category_enabled}}
+
+  {{#if (if widgetType '===' 'trending')}}
+    {{#if theme_settings.fastsimon_category_trending_widget_id}}
+      <section class="c-fsRecommendations c-fsRecommendations--homepage c-fsRecommendations--category" data-fastsimon-section="category-trending">
+        <h2 class="c-fsRecommendations__heading">{{default heading 'Trending Products'}}</h2>
+        
+        <div class="c-fsRecommendations__container"
+             data-fastsimon-container
+             data-fastsimon-widget-id="{{theme_settings.fastsimon_category_trending_widget_id}}"
+             data-fastsimon-category-id="{{category.id}}"
+             data-fastsimon-limit="{{default limit 8}}"
+             data-fastsimon-cta-text="{{default ctaText 'Shop Now'}}">
+          <div class="productGrid fs-product-grid fs-skeleton-grid" aria-hidden="true">
+            {{#for 1 4}}
+            <article class="card card--skeleton">
+              <figure class="card-figure">
+                <div class="card-img-container">
+                  <div class="skeleton skeleton--image"></div>
+                </div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton skeleton--text skeleton--title"></div>
+                <div class="skeleton skeleton--text skeleton--price"></div>
+              </div>
+            </article>
+            {{/for}}
+          </div>
+        </div>
+      </section>
+    {{/if}}
+  {{else}}
+    {{#if theme_settings.fastsimon_category_widget_id}}
+      <section class="c-fsRecommendations c-fsRecommendations--homepage c-fsRecommendations--category" data-fastsimon-section="category-bestsellers">
+        <h2 class="c-fsRecommendations__heading">{{default heading 'Category Best Sellers'}}</h2>
+        
+        <div class="c-fsRecommendations__container"
+             data-fastsimon-container
+             data-fastsimon-widget-id="{{theme_settings.fastsimon_category_widget_id}}"
+             data-fastsimon-category-id="{{category.id}}"
+             data-fastsimon-limit="{{default limit 8}}"
+             data-fastsimon-cta-text="{{default ctaText 'Shop Now'}}">
+          <div class="productGrid fs-product-grid fs-skeleton-grid" aria-hidden="true">
+            {{#for 1 4}}
+            <article class="card card--skeleton">
+              <figure class="card-figure">
+                <div class="card-img-container">
+                  <div class="skeleton skeleton--image"></div>
+                </div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton skeleton--text skeleton--title"></div>
+                <div class="skeleton skeleton--text skeleton--price"></div>
+              </div>
+            </article>
+            {{/for}}
+          </div>
+        </div>
+      </section>
+    {{/if}}
+  {{/if}}
+
+{{/all}}

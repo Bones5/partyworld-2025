@@ -40,9 +40,9 @@
 
 
     .container {
-        max-width: remCalc(900px);
+        max-width: 100%;
         margin: 0 auto;
-        padding: 0 spacing("half");
+        padding: 0;
     }
 
     h2, h3, h4 {

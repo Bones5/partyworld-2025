@@ -1,0 +1,94 @@
+{{!--
+  Fast Simon Cart Recommendations Component
+  
+  Displays product recommendations powered by Fast Simon on the cart page.
+  Supports two widgets: "also-bought" and "cross-sell".
+  Uses BigCommerce Storefront GraphQL API for full product data to render native theme cards.
+  
+  Parameters:
+  - heading: Optional heading for the section (default: "Complete Your Order")
+  - limit: Number of products to show (default: 8)
+  - widgetType: Which widget to use — "alsobought" or "crosssell" (default: "alsobought")
+  
+  Usage:
+    {{> components/cart/fastsimon-recommendations 
+        heading="Customers Also Bought"
+        widgetType="alsobought"
+        limit=8
+    }}
+    {{> components/cart/fastsimon-recommendations 
+        heading="You Might Also Like"
+        widgetType="crosssell"
+        limit=8
+    }}
+  
+  Configuration:
+  - theme_settings.fastsimon_enabled: Master toggle for Fast Simon
+  - theme_settings.fastsimon_cart_enabled: Enable cart page recommendations
+  - theme_settings.fastsimon_cart_widget_id: Widget ID for "also bought"
+  - theme_settings.fastsimon_cart_crosssell_widget_id: Widget ID for "cross-sell"
+--}}
+
+{{#if theme_settings.fastsimon_enabled}}
+  {{#if theme_settings.fastsimon_cart_enabled}}
+
+    {{#if (if widgetType '===' 'crosssell')}}
+      {{#if theme_settings.fastsimon_cart_crosssell_widget_id}}
+        <section class="c-fsRecommendations" data-fastsimon-section="cart-crosssell">
+          <h2 class="c-fsRecommendations__heading">{{default heading 'You Might Also Like'}}</h2>
+
+          <div class="c-fsRecommendations__container"
+               data-fastsimon-container
+               data-fastsimon-widget-id="{{theme_settings.fastsimon_cart_crosssell_widget_id}}"
+               data-fastsimon-limit="{{default limit 8}}"
+               data-fastsimon-cta-text="{{default ctaText 'Shop Now'}}">
+            <div class="productGrid fs-product-grid fs-skeleton-grid" aria-hidden="true">
+              {{#for 1 4}}
+              <article class="card card--skeleton">
+                <figure class="card-figure">
+                  <div class="card-img-container">
+                    <div class="skeleton skeleton--image"></div>
+                  </div>
+                </figure>
+                <div class="card-body">
+                  <div class="skeleton skeleton--text skeleton--title"></div>
+                  <div class="skeleton skeleton--text skeleton--price"></div>
+                </div>
+              </article>
+              {{/for}}
+            </div>
+          </div>
+        </section>
+      {{/if}}
+    {{else}}
+      {{#if theme_settings.fastsimon_cart_widget_id}}
+        <section class="c-fsRecommendations" data-fastsimon-section="cart-alsobought">
+          <h2 class="c-fsRecommendations__heading">{{default heading 'Complete Your Order'}}</h2>
+
+          <div class="c-fsRecommendations__container"
+               data-fastsimon-container
+               data-fastsimon-widget-id="{{theme_settings.fastsimon_cart_widget_id}}"
+               data-fastsimon-limit="{{default limit 8}}"
+               data-fastsimon-cta-text="{{default ctaText 'Shop Now'}}">
+            <div class="productGrid fs-product-grid fs-skeleton-grid" aria-hidden="true">
+              {{#for 1 4}}
+              <article class="card card--skeleton">
+                <figure class="card-figure">
+                  <div class="card-img-container">
+                    <div class="skeleton skeleton--image"></div>
+                  </div>
+                </figure>
+                <div class="card-body">
+                  <div class="skeleton skeleton--text skeleton--title"></div>
+                  <div class="skeleton skeleton--text skeleton--price"></div>
+                </div>
+              </article>
+              {{/for}}
+            </div>
+          </div>
+        </section>
+      {{/if}}
+    {{/if}}
+
+  {{/if}}
+{{/if}}

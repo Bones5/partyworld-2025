@@ -149,11 +149,8 @@
 // Cross-Sell Sections (PDP)
 @import "stencil/crossSell/component";
 
-// Clerk.io Recommendations
-@import "stencil/clerkRecommendations/component";
-
-// Clerk.io Search
-@import "stencil/clerkSearch/clerk-search";
+// Fast Simon Recommendations
+@import "stencil/fsRecommendations/fsRecommendations";
 
 // Price
 @import "stencil/price/component";

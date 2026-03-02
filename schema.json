@@ -3099,22 +3099,28 @@
     ]
   },
   {
-    "name": "Clerk.io Integration",
+    "name": "Fast Simon Integration",
     "settings": [
       {
         "type": "heading",
-        "content": "Clerk.io Configuration"
+        "content": "Fast Simon Configuration"
       },
       {
         "type": "checkbox",
-        "label": "Enable Clerk.io",
-        "id": "clerk_enabled",
+        "label": "Enable Fast Simon",
+        "id": "fastsimon_enabled",
         "force_reload": true
       },
       {
         "type": "text",
-        "label": "Clerk.io Public Key",
-        "id": "clerk_public_key",
+        "label": "Fast Simon Store ID",
+        "id": "fastsimon_store_id",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Fast Simon UUID",
+        "id": "fastsimon_uuid",
         "force_reload": true
       },
       {
@@ -3123,74 +3129,68 @@
       },
       {
         "type": "checkbox",
+        "label": "Enable Homepage Recommendations",
+        "id": "fastsimon_homepage_enabled",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Homepage Widget ID",
+        "id": "fastsimon_homepage_widget_id",
+        "force_reload": true
+      },
+      {
+        "type": "checkbox",
         "label": "Enable Product Page Recommendations",
-        "id": "clerk_product_recommendations_enabled",
+        "id": "fastsimon_product_enabled",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Product Page Alternatives Widget ID",
+        "id": "fastsimon_product_widget_id",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Product Page Cross-Sell Widget ID",
+        "id": "fastsimon_product_crosssell_widget_id",
         "force_reload": true
       },
       {
         "type": "checkbox",
         "label": "Enable Category Recommendations",
-        "id": "clerk_category_recommendations_enabled",
-        "force_reload": true
-      },
-      {
-        "type": "checkbox",
-        "label": "Enable Homepage Recommendations",
-        "id": "clerk_homepage_recommendations_enabled",
-        "force_reload": true
-      },
-      {
-        "type": "checkbox",
-        "label": "Enable Cart Page Recommendations",
-        "id": "clerk_cart_recommendations_enabled",
-        "force_reload": true
-      },
-      {
-        "type": "heading",
-        "content": "Clerk.io Search"
-      },
-      {
-        "type": "checkbox",
-        "label": "Enable Clerk.io Instant Search",
-        "id": "clerk_instant_search_enabled",
-        "force_reload": true
-      },
-      {
-        "type": "paragraph",
-        "content": "Shows AI-powered live search suggestions as customers type in the search box."
-      },
-      {
-        "type": "checkbox",
-        "label": "Enable Clerk.io Search Page",
-        "id": "clerk_search_page_enabled",
-        "force_reload": true
-      },
-      {
-        "type": "paragraph",
-        "content": "Replaces the native BigCommerce search results page with Clerk.io AI-powered search."
-      },
-      {
-        "type": "text",
-        "label": "Instant Search Template",
-        "id": "clerk_instant_search_template",
+        "id": "fastsimon_category_enabled",
         "force_reload": true
       },
       {
         "type": "text",
-        "label": "Search Page Template",
-        "id": "clerk_search_page_template",
+        "label": "Category Best Sellers Widget ID",
+        "id": "fastsimon_category_widget_id",
         "force_reload": true
       },
       {
         "type": "text",
-        "label": "Search Facets (JSON array)",
-        "id": "clerk_search_facets",
+        "label": "Category Trending Widget ID",
+        "id": "fastsimon_category_trending_widget_id",
+        "force_reload": true
+      },
+      {
+        "type": "checkbox",
+        "label": "Enable Cart Recommendations",
+        "id": "fastsimon_cart_enabled",
         "force_reload": true
       },
       {
         "type": "text",
-        "label": "Currency Symbol (for facet price)",
-        "id": "clerk_currency_symbol",
+        "label": "Cart Also Bought Widget ID",
+        "id": "fastsimon_cart_widget_id",
+        "force_reload": true
+      },
+      {
+        "type": "text",
+        "label": "Cart Cross-Sell Widget ID",
+        "id": "fastsimon_cart_crosssell_widget_id",
         "force_reload": true
       }
     ]

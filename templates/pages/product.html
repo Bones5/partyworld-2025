@@ -24,8 +24,15 @@ product:
 
         {{{region name="product_below_content"}}}
         
-        {{!-- Clerk.io Product Recommendations --}}
-        {{> components/products/clerk-recommendations}}
+        {{!-- Fast Simon Product Recommendations --}}
+        {{> components/products/fastsimon-recommendations
+            heading="You May Also Like"
+            widgetType="alternatives"
+        }}
+        {{> components/products/fastsimon-recommendations
+            heading="Goes Well With"
+            widgetType="crosssell"
+        }}
 
         {{#all settings.show_product_reviews theme_settings.show_product_reviews (if theme_settings.show_product_details_tabs '!==' true)}}
             {{> components/products/reviews reviews=product.reviews product=product urls=urls}}

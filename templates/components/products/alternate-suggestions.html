@@ -1,9 +1,0 @@
-{{!-- Alternate Suggestions: "Not what you are looking for?" cross-sell section --}}
-{{#if product.related_products.length}}
-<section class="c-alternateSuggestions">
-    <h3 class="c-alternateSuggestions__heading">{{default heading 'Not what you are looking for? Try one of these instead'}}</h3>
-    <div class="c-alternateSuggestions__products">
-        {{> components/products/carousel products=product.related_products columns=4 list="Alternate Suggestions"}}
-    </div>
-</section>
-{{/if}}
