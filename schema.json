@@ -3165,12 +3165,6 @@
       },
       {
         "type": "text",
-        "label": "Category Best Sellers Widget ID",
-        "id": "fastsimon_category_widget_id",
-        "force_reload": true
-      },
-      {
-        "type": "text",
         "label": "Category Trending Widget ID",
         "id": "fastsimon_category_trending_widget_id",
         "force_reload": true

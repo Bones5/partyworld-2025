@@ -1,74 +1,62 @@
 ---
 category:
-    products:
-        limit: {{theme_settings.categorypage_products_per_page}}
-    metafields:
-        namespace: theme
-        include_fields:
-            - use_intro_widget
+  products:
+    limit: {{theme_settings.categorypage_products_per_page}}
+  metafields:
+    namespace: theme
+    include_fields:
+      - use_intro_widget
 products:
-    top_sellers:
-        limit: {{theme_settings.category_bestsellers_count}}
+  top_sellers:
+    limit: {{theme_settings.category_bestsellers_count}}
 ---
-{{inject "categoryProductsPerPage" theme_settings.categorypage_products_per_page}}
-{{#partial "head"}}
-    {{#if pagination.category.previous}}
-        <link rel="prev" href="{{{pagination.category.previous}}}">
-    {{/if}}
-    {{#if pagination.category.next}}
-        <link rel="next" href="{{{pagination.category.next}}}">
-    {{/if}}
-{{/partial}}
 
-{{#partial "page"}}
+{{inject "categoryProductsPerPage"
+theme_settings.categorypage_products_per_page}} {{#partial "head"}} {{#if
+pagination.category.previous}}
+<link rel="prev" href="{{{pagination.category.previous}}}" />
+{{/if}} {{#if pagination.category.next}}
+<link rel="next" href="{{{pagination.category.next}}}" />
+{{/if}} {{/partial}} {{#partial "page"}}
 
 <div class="page category-page">
-    {{#if category.faceted_search_enabled}}
-        <aside class="page-sidebar" id="faceted-search-container">
-            {{> components/category/sidebar}}
-        </aside>
-    {{else if category.subcategories}}
-        <aside class="page-sidebar" id="faceted-search-container">
-            {{> components/category/sidebar}}
-        </aside>
-    {{else if theme_settings.shop_by_price_visibility}}
-        <aside class="page-sidebar" id="faceted-search-container">
-            {{> components/category/sidebar}}
-        </aside>
-    {{/if}}
+  {{#if category.faceted_search_enabled}}
+  <aside class="page-sidebar" id="faceted-search-container">
+    {{> components/category/sidebar}}
+  </aside>
+  {{else if category.subcategories}}
+  <aside class="page-sidebar" id="faceted-search-container">
+    {{> components/category/sidebar}}
+  </aside>
+  {{else if theme_settings.shop_by_price_visibility}}
+  <aside class="page-sidebar" id="faceted-search-container">
+    {{> components/category/sidebar}}
+  </aside>
+  {{/if}}
 
-    <main class="page-content" id="product-listing-container">
-        {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
-        
-        {{#unless theme_settings.hide_category_page_heading }}
-            <h1 class="page-heading">{{category.name}}</h1>
-        {{/unless}}
-
-        {{!-- Category Intro Widget Zone (populated via Widgets API or Page Builder) --}}
-        {{!-- Check category metafield to determine if Page Builder region has content --}}
-        {{#if category.metafields.theme.use_intro_widget}}
-            <div class="category-intro-region">
-                {{{region name="category_below_header"}}}
-            </div>
-            {{!-- Show description at bottom when using widget --}}
-            {{#if category.description}}
-                <section class="category-description category-description--footer">
-                    <div class="container">
-                        {{{category.description}}}
-                    </div>
-                </section>
-            {{/if}}
-        {{else if category.description}}
-            {{!-- No widget, show description at top --}}
-            <section class="category-description category-description--intro">
-                <div class="container">
-                    {{{category.description}}}
-                </div>
-            </section>
-        {{/if}}
-
-        {{!-- Shop by Category section: shows subcategories if present --}}
-        {{> components/category/shop-by-category}}
+  <main class="page-content" id="product-listing-container">
+    {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}} {{#unless
+    theme_settings.hide_category_page_heading }}
+    <h1 class="page-heading">{{category.name}}</h1>
+    {{/unless}} {{!-- Category Intro Widget Zone (populated via Widgets API or
+    Page Builder) --}} {{!-- Check category metafield to determine if Page
+    Builder region has content --}} {{#if
+    category.metafields.theme.use_intro_widget}}
+    <div class="category-intro-region">
+      {{{region name="category_below_header"}}}
+    </div>
+    {{!-- Show description at bottom when using widget --}} {{#if
+    category.description}}
+    <section class="category-description category-description--footer">
+      <div class="container">{{{category.description}}}</div>
+    </section>
+    {{/if}} {{else if category.description}} {{!-- No widget, show description
+    at top --}}
+    <section class="category-description category-description--intro">
+      <div class="container">{{{category.description}}}</div>
+    </section>
+    {{/if}} {{!-- Shop by Category section: shows subcategories if present --}}
+    {{> components/category/shop-by-category}}
 
         {{!-- Fast Simon Category Best Sellers --}}
         {{> components/category/fastsimon-recommendations 
@@ -78,7 +66,7 @@ products:
             limit=8
         }}
 
-        {{!-- Fast Simon Category Trending Products --}}
+        {{!-- Fast Simon Trending Products --}}
         {{> components/category/fastsimon-recommendations 
             heading="Trending Products"
             widgetType="trending"
@@ -88,12 +76,8 @@ products:
 
         {{> components/category/product-listing}}
 
-        <div class="page-region">
-            {{{region name="category_below_content"}}}
-        </div>
-
-    </main>
+    <div class="page-region">{{{region name="category_below_content"}}}</div>
+  </main>
 </div>
 
-{{/partial}}
-{{> layout/base}}
+{{/partial}} {{> layout/base}}

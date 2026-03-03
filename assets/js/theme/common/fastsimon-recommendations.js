@@ -194,6 +194,61 @@ async function callFastSimonRecommendations(params) {
 }
 
 /**
+ * Call Fast Simon Categories Navigation (Smart Collection) API
+ * Returns AI-ranked products for a specific category.
+ * @param {Object} params - API parameters
+ * @param {string} params.storeId - Fast Simon Store ID
+ * @param {string} params.uuid - Fast Simon UUID
+ * @param {string|number} params.categoryId - BigCommerce category ID
+ * @param {number} [params.numProducts=8] - Number of products to return
+ * @param {number} [params.pageNum=1] - Page number (use different pages for distinct product sets)
+ * @returns {Promise<Object>} API response with items[]
+ */
+async function callFastSimonCollection(params) {
+    const {
+        storeId, uuid, categoryId, numProducts = 8, pageNum = 1,
+    } = params;
+
+    const url = new URL(`${FASTSIMON_API_URL}/categories_navigation`);
+    url.searchParams.set('store_id', storeId);
+    url.searchParams.set('UUID', uuid);
+    url.searchParams.set('category_id', categoryId.toString());
+    url.searchParams.set('num_of_products', numProducts.toString());
+    url.searchParams.set('page_num', pageNum.toString());
+
+    try {
+        const response = await fetch(url.toString());
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('[FastSimon Collection API] Error response:', errorText);
+            throw new Error(`Fast Simon Collection API error: ${response.status} - ${errorText}`);
+        }
+
+        return response.json();
+    } catch (error) {
+        console.error('[FastSimon Collection API] Request failed:', error);
+        throw error;
+    }
+}
+
+/**
+ * Extract product IDs from a Fast Simon collection (categories_navigation) response
+ * @param {Object} collectionResponse - The API response
+ * @returns {number[]} Array of product IDs
+ */
+function extractProductIdsFromCollectionResponse(collectionResponse) {
+    const items = collectionResponse?.items || collectionResponse?.products || [];
+
+    return items
+        .map(item => {
+            const id = parseInt(item.id || item.product_id || item.entityId, 10);
+            return Number.isNaN(id) ? null : id;
+        })
+        .filter(Boolean);
+}
+
+/**
  * Extract product IDs from Fast Simon widget response
  * Fast Simon returns full product objects — we extract IDs to hydrate via GraphQL.
  * @param {Object} widgetResponse - A single widget_response from the API
@@ -704,7 +759,115 @@ function reportWidgetViewed(context, productId, sources) {
 }
 
 /**
- * Initialize a Fast Simon recommendation container
+ * Render product IDs into a container: hydrate via GraphQL, build cards, init carousel.
+ * @param {HTMLElement} container - Target container element
+ * @param {number[]} productIds - Product entity IDs to render
+ * @param {Object} context - Theme context
+ * @param {Object} options - Rendering options
+ * @param {string} [options.ctaText='Shop Now'] - CTA button text
+ * @param {string} [options.widgetId] - Widget ID for event reporting
+ * @param {string} [options.productId] - Seed product ID for event reporting
+ */
+async function renderContainerProducts(container, productIds, context, options = {}) {
+    const { ctaText = 'Shop Now', widgetId, productId } = options;
+
+    if (!productIds || productIds.length === 0) {
+        container.innerHTML = '';
+        container.classList.remove('is-loading');
+        container.classList.add('is-empty');
+        container.closest('.c-fsRecommendations')?.classList.add('is-empty');
+        return;
+    }
+
+    // Fetch full product data from BigCommerce GraphQL
+    const { products, currency } = await fetchProductsByIds(
+        productIds,
+        context.storefrontApiToken,
+        context.currencyCode || 'EUR',
+    );
+
+    if (products.length === 0) {
+        container.innerHTML = '';
+        container.classList.remove('is-loading');
+        container.classList.add('is-empty');
+        container.closest('.c-fsRecommendations')?.classList.add('is-empty');
+        return;
+    }
+
+    // Create product grid
+    const productGrid = document.createElement('div');
+    productGrid.className = 'productGrid fs-product-grid';
+
+    // Render product cards
+    products.forEach(product => {
+        const cardEl = renderProductCard(product, currency, {
+            showRating: true,
+            showQuickView: context.showQuickView !== false,
+            ctaText,
+        });
+        productGrid.appendChild(cardEl);
+    });
+
+    // Remove skeleton, add product grid
+    const skeletonGrid = container.querySelector('.fs-skeleton-grid');
+    if (skeletonGrid) {
+        skeletonGrid.remove();
+    }
+    container.appendChild(productGrid);
+
+    container.classList.remove('is-loading');
+    container.classList.add('is-loaded');
+    container.closest('.c-fsRecommendations')?.classList.add('is-loaded');
+
+    // Initialize slick carousel if jQuery + slick available
+    if (window.jQuery && window.jQuery.fn.slick) {
+        window.jQuery(productGrid).slick({
+            infinite: false,
+            mobileFirst: true,
+            slidesToShow: 2,
+            slidesToScroll: 2,
+            arrows: true,
+            dots: false,
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 4,
+                        slidesToScroll: 4,
+                    },
+                },
+                {
+                    breakpoint: 800,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                    },
+                },
+                {
+                    breakpoint: 550,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                    },
+                },
+            ],
+        });
+    }
+
+    // Trigger lazysizes if available
+    if (window.lazySizes) {
+        window.lazySizes.init();
+    }
+
+    // Report widget viewed event to Fast Simon
+    if (widgetId) {
+        reportWidgetViewed(context, productId, widgetId);
+    }
+}
+
+/**
+ * Initialize a single Fast Simon recommendation container (non-widget or standalone widget).
+ * Used for collection-based containers and any single-widget containers.
  * @param {HTMLElement} container - Container element with data-fastsimon-* attributes
  * @param {Object} context - Theme context
  */
@@ -713,6 +876,7 @@ async function initFastSimonRecommendation(container, context) {
         fastsimonWidgetId,
         fastsimonProductId,
         fastsimonCategoryId,
+        fastsimonPage,
         fastsimonProducts,
         fastsimonLimit = '8',
         fastsimonCtaText = 'Shop Now',
@@ -724,8 +888,8 @@ async function initFastSimonRecommendation(container, context) {
         return;
     }
 
-    if (!fastsimonWidgetId) {
-        console.warn('[FastSimon] No widget ID specified on container');
+    if (!fastsimonWidgetId && !fastsimonCategoryId) {
+        console.warn('[FastSimon] No widget ID or category ID specified on container');
         return;
     }
 
@@ -757,106 +921,35 @@ async function initFastSimonRecommendation(container, context) {
             apiParams.products = fastsimonProducts.split(',').map(id => id.trim());
         }
 
-        // Call Fast Simon API
-        const fsResponse = await callFastSimonRecommendations(apiParams);
+        // Use widget API when a widget ID is present, collection API for category-only containers
+        let productIds;
 
-        // Extract product IDs from the first widget response
-        const widgetResponse = fsResponse?.widget_responses?.[0];
-        let productIds = extractProductIdsFromWidgetResponse(widgetResponse);
-
-        if (productIds.length === 0) {
-            container.innerHTML = '';
-            container.classList.remove('is-loading');
-            container.classList.add('is-empty');
-            container.closest('.c-fsRecommendations')?.classList.add('is-empty');
-            return;
+        if (fastsimonWidgetId) {
+            // Widget-based: use /upsell_cross_sell_recommendation
+            const fsResponse = await callFastSimonRecommendations(apiParams);
+            const widgetResponse = fsResponse?.widget_responses?.[0];
+            productIds = extractProductIdsFromWidgetResponse(widgetResponse);
+        } else if (fastsimonCategoryId) {
+            // Category pages without widget: use /categories_navigation
+            const pageNum = parseInt(fastsimonPage || '1', 10);
+            const collectionResponse = await callFastSimonCollection({
+                storeId: context.fastsimonStoreId,
+                uuid: context.fastsimonUuid,
+                categoryId: fastsimonCategoryId,
+                numProducts: limit,
+                pageNum,
+            });
+            productIds = extractProductIdsFromCollectionResponse(collectionResponse);
         }
 
         // Limit results
-        productIds = productIds.slice(0, limit);
+        productIds = (productIds || []).slice(0, limit);
 
-        // Fetch full product data from BigCommerce GraphQL
-        const { products, currency } = await fetchProductsByIds(
-            productIds,
-            context.storefrontApiToken,
-            context.currencyCode || 'EUR',
-        );
-
-        if (products.length === 0) {
-            container.innerHTML = '';
-            container.classList.remove('is-loading');
-            container.classList.add('is-empty');
-            container.closest('.c-fsRecommendations')?.classList.add('is-empty');
-            return;
-        }
-
-        // Create product grid
-        const productGrid = document.createElement('div');
-        productGrid.className = 'productGrid fs-product-grid';
-
-        // Render product cards
-        products.forEach(product => {
-            const cardEl = renderProductCard(product, currency, {
-                showRating: true,
-                showQuickView: context.showQuickView !== false,
-                ctaText: fastsimonCtaText,
-            });
-            productGrid.appendChild(cardEl);
+        await renderContainerProducts(container, productIds, context, {
+            ctaText: fastsimonCtaText,
+            widgetId: fastsimonWidgetId,
+            productId: fastsimonProductId,
         });
-
-        // Remove skeleton, add product grid
-        const skeletonGrid = container.querySelector('.fs-skeleton-grid');
-        if (skeletonGrid) {
-            skeletonGrid.remove();
-        }
-        container.appendChild(productGrid);
-
-        container.classList.remove('is-loading');
-        container.classList.add('is-loaded');
-        container.closest('.c-fsRecommendations')?.classList.add('is-loaded');
-
-        // Initialize slick carousel if jQuery + slick available
-        if (window.jQuery && window.jQuery.fn.slick) {
-            window.jQuery(productGrid).slick({
-                infinite: false,
-                mobileFirst: true,
-                slidesToShow: 2,
-                slidesToScroll: 2,
-                arrows: true,
-                dots: false,
-                responsive: [
-                    {
-                        breakpoint: 1024,
-                        settings: {
-                            slidesToShow: 4,
-                            slidesToScroll: 4,
-                        },
-                    },
-                    {
-                        breakpoint: 800,
-                        settings: {
-                            slidesToShow: 3,
-                            slidesToScroll: 3,
-                        },
-                    },
-                    {
-                        breakpoint: 550,
-                        settings: {
-                            slidesToShow: 2,
-                            slidesToScroll: 2,
-                        },
-                    },
-                ],
-            });
-        }
-
-        // Trigger lazysizes if available
-        if (window.lazySizes) {
-            window.lazySizes.init();
-        }
-
-        // Report widget viewed event to Fast Simon
-        reportWidgetViewed(context, fastsimonProductId, fastsimonWidgetId);
     } catch (error) {
         console.error('[FastSimon] Error loading recommendations:', error);
         container.innerHTML = '';
@@ -867,7 +960,97 @@ async function initFastSimonRecommendation(container, context) {
 }
 
 /**
- * Initialize all Fast Simon recommendation containers on the page
+ * Batch-initialise widget containers that share the same product/category context.
+ * Sends all widget IDs in a single API call so Fast Simon can deduplicate results,
+ * ensuring "alternatives" and "cross-sell" return different products.
+ * @param {HTMLElement[]} containers - Widget containers sharing the same context
+ * @param {Object} context - Theme context
+ */
+async function initBatchedWidgetContainers(containers, context) {
+    // Collect widget IDs and map them back to containers
+    const widgetMap = new Map(); // widgetId → { container, limit, ctaText }
+    const widgetIds = [];
+    let productId = null;
+    let categoryId = null;
+    let products = null;
+
+    containers.forEach(c => {
+        const wid = c.dataset.fastsimonWidgetId;
+        if (!wid) return;
+        widgetIds.push(wid);
+        widgetMap.set(wid, {
+            container: c,
+            limit: parseInt(c.dataset.fastsimonLimit || '8', 10),
+            ctaText: c.dataset.fastsimonCtaText || 'Shop Now',
+        });
+        // All containers in the batch share the same product/category context
+        if (c.dataset.fastsimonProductId) productId = c.dataset.fastsimonProductId;
+        if (c.dataset.fastsimonCategoryId) categoryId = c.dataset.fastsimonCategoryId;
+        if (c.dataset.fastsimonProducts) products = c.dataset.fastsimonProducts;
+        c.classList.add('is-loading');
+    });
+
+    if (widgetIds.length === 0) return;
+
+    try {
+        // Build single API call with ALL widget IDs
+        const apiParams = {
+            storeId: context.fastsimonStoreId,
+            uuid: context.fastsimonUuid,
+            widgetIds,
+        };
+        if (productId) apiParams.productId = productId;
+        if (categoryId) apiParams.categoryId = categoryId;
+        if (products) {
+            apiParams.products = products.split(',').map(id => id.trim());
+        }
+
+        const fsResponse = await callFastSimonRecommendations(apiParams);
+        const widgetResponses = fsResponse?.widget_responses || [];
+
+        // Dispatch each widget response to its container
+        const renderPromises = widgetResponses.map(wr => {
+            const wid = String(wr.widget_id);
+            const entry = widgetMap.get(wid);
+            if (!entry) return Promise.resolve();
+
+            let pids = extractProductIdsFromWidgetResponse(wr);
+            pids = pids.slice(0, entry.limit);
+
+            return renderContainerProducts(entry.container, pids, context, {
+                ctaText: entry.ctaText,
+                widgetId: wid,
+                productId,
+            });
+        });
+
+        await Promise.all(renderPromises);
+
+        // Mark any widget containers that didn't receive a response as empty
+        widgetMap.forEach((entry, wid) => {
+            const hasResponse = widgetResponses.some(wr => String(wr.widget_id) === wid);
+            if (!hasResponse) {
+                entry.container.innerHTML = '';
+                entry.container.classList.remove('is-loading');
+                entry.container.classList.add('is-empty');
+                entry.container.closest('.c-fsRecommendations')?.classList.add('is-empty');
+            }
+        });
+    } catch (error) {
+        console.error('[FastSimon] Error loading batched widget recommendations:', error);
+        containers.forEach(c => {
+            c.innerHTML = '';
+            c.classList.remove('is-loading');
+            c.classList.add('is-error');
+            c.closest('.c-fsRecommendations')?.classList.add('is-error');
+        });
+    }
+}
+
+/**
+ * Initialize all Fast Simon recommendation containers on the page.
+ * Widget containers sharing the same product context are batched into a single
+ * API call so Fast Simon can deduplicate and diversify results across widgets.
  * @param {Object} context - Theme context
  */
 function initAllFastSimonRecommendations(context) {
@@ -876,7 +1059,44 @@ function initAllFastSimonRecommendations(context) {
     }
 
     const containers = document.querySelectorAll('[data-fastsimon-container]');
+
+    // Separate widget-based containers (can be batched) from collection-only containers
+    const widgetGroups = new Map(); // contextKey → [containers]
+    const standaloneContainers = [];
+
     containers.forEach(container => {
+        const wid = container.dataset.fastsimonWidgetId;
+        const catId = container.dataset.fastsimonCategoryId;
+
+        if (wid) {
+            // Group widget containers by their shared context (product/category/products)
+            const pid = container.dataset.fastsimonProductId || '';
+            const prods = container.dataset.fastsimonProducts || '';
+            const contextKey = `${pid}|${catId || ''}|${prods}`;
+
+            if (!widgetGroups.has(contextKey)) {
+                widgetGroups.set(contextKey, []);
+            }
+            widgetGroups.get(contextKey).push(container);
+        } else if (catId) {
+            // Collection-only container — always standalone
+            standaloneContainers.push(container);
+        }
+    });
+
+    // Batch-init grouped widget containers (single API call per group)
+    widgetGroups.forEach(group => {
+        if (group.length > 1) {
+            // Multiple widgets sharing context → batch into one API call
+            initBatchedWidgetContainers(group, context);
+        } else {
+            // Single widget → use existing per-container init
+            initFastSimonRecommendation(group[0], context);
+        }
+    });
+
+    // Init collection-only containers individually
+    standaloneContainers.forEach(container => {
         initFastSimonRecommendation(container, context);
     });
 }
@@ -887,6 +1107,7 @@ export {
     fetchProductsByIds,
     renderProductCard,
     callFastSimonRecommendations,
+    callFastSimonCollection,
     getOrCreateIspToken,
     getSessionTimestamp,
 };
