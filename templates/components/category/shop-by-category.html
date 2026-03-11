@@ -40,7 +40,7 @@
             ]
         }'
     >
-        {{#each category.subcategories}}
+        {{#each (limit category.subcategories 12)}}
         <div data-category-slide class="c-shopByCategory__slide">
             {{> components/category-card
                 url=url

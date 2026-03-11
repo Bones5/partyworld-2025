@@ -1,14 +1,14 @@
 ---
 category:
   products:
-    limit: {{theme_settings.categorypage_products_per_page}}
+    limit: { { theme_settings.categorypage_products_per_page } }
   metafields:
     namespace: theme
     include_fields:
       - use_intro_widget
 products:
   top_sellers:
-    limit: {{theme_settings.category_bestsellers_count}}
+    limit: { { theme_settings.category_bestsellers_count } }
 ---
 
 {{inject "categoryProductsPerPage"
@@ -38,44 +38,26 @@ pagination.category.previous}}
     {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}} {{#unless
     theme_settings.hide_category_page_heading }}
     <h1 class="page-heading">{{category.name}}</h1>
-    {{/unless}} {{!-- Category Intro Widget Zone (populated via Widgets API or
-    Page Builder) --}} {{!-- Check category metafield to determine if Page
-    Builder region has content --}} {{#if
-    category.metafields.theme.use_intro_widget}}
+    {{/unless}} {{!-- Category Intro Widget Zone — always render the region so
+    Page Builder widgets display regardless of metafield state. The region is
+    invisible when no widget is placed. --}}
     <div class="category-intro-region">
       {{{region name="category_below_header"}}}
     </div>
-    {{!-- Show description at bottom when using widget --}} {{#if
-    category.description}}
+
+    {{!-- Shop by Category section: shows subcategories if present --}} {{>
+    components/category/shop-by-category}} {{!-- Fast Simon Category Best
+    Sellers --}} {{> components/category/fastsimon-recommendations
+    heading="Category Best Sellers" widgetType="bestsellers" ctaText="Buy Now"
+    limit=8 }} {{!-- Fast Simon Trending Products - temporarily disabled {{>
+    components/category/fastsimon-recommendations heading="Trending Products"
+    widgetType="trending" ctaText="Shop Now" limit=8 }} --}} {{>
+    components/category/product-listing}} {{!-- Category description (h2
+    sections / SEO text) --}} {{#if category.description}}
     <section class="category-description category-description--footer">
       <div class="container">{{{category.description}}}</div>
     </section>
-    {{/if}} {{else if category.description}} {{!-- No widget, show description
-    at top --}}
-    <section class="category-description category-description--intro">
-      <div class="container">{{{category.description}}}</div>
-    </section>
-    {{/if}} {{!-- Shop by Category section: shows subcategories if present --}}
-    {{> components/category/shop-by-category}}
-
-        {{!-- Fast Simon Category Best Sellers --}}
-        {{> components/category/fastsimon-recommendations 
-            heading="Category Best Sellers"
-            widgetType="bestsellers"
-            ctaText="Buy Now"
-            limit=8
-        }}
-
-        {{!-- Fast Simon Trending Products - temporarily disabled
-        {{> components/category/fastsimon-recommendations 
-            heading="Trending Products"
-            widgetType="trending"
-            ctaText="Shop Now"
-            limit=8
-        }}
-        --}}
-
-        {{> components/category/product-listing}}
+    {{/if}}
 
     <div class="page-region">{{{region name="category_below_content"}}}</div>
   </main>
