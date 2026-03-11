@@ -1,14 +1,14 @@
 ---
 category:
   products:
-    limit: { { theme_settings.categorypage_products_per_page } }
+    limit: {{theme_settings.categorypage_products_per_page}}
   metafields:
     namespace: theme
     include_fields:
       - use_intro_widget
 products:
   top_sellers:
-    limit: { { theme_settings.category_bestsellers_count } }
+    limit: {{theme_settings.category_bestsellers_count}}
 ---
 
 {{inject "categoryProductsPerPage"
