@@ -7,10 +7,10 @@
 
 {{{head.scripts}}}
 
-<!-- Google Ads Conversion Tracking (Order Confirmation) -->
+<!-- Google Ads + GA4 Conversion Tracking (Order Confirmation) -->
 <script
   async
-  src="https://www.googletagmanager.com/gtag/js?id=AW-1038618682"
+  src="https://www.googletagmanager.com/gtag/js?id=G-JVHEFVSJ49"
 ></script>
 <script nonce="{{nonce}}">
   (function () {
@@ -21,11 +21,24 @@
         dataLayer.push(arguments);
       };
 
+    /* Consent defaults — must come BEFORE any config calls so gtag.js
+       processes them first. CookieYes (loaded via GTM) will update these. */
+    gtag("consent", "default", {
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+      analytics_storage: "denied",
+      functionality_storage: "denied",
+      personalization_storage: "denied",
+      security_storage: "granted",
+      wait_for_update: 500,
+    });
+
     gtag("js", new Date());
-    gtag("config", "AW-1038618682", {
+    gtag("config", "G-JVHEFVSJ49", {
       send_page_view: false,
     });
-    gtag("config", "G-JVHEFVSJ49", {
+    gtag("config", "AW-1038618682", {
       send_page_view: false,
     });
 

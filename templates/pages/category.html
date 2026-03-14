@@ -1,66 +1,115 @@
 ---
 category:
-  products:
-    limit: {{theme_settings.categorypage_products_per_page}}
-  metafields:
-    namespace: theme
-    include_fields:
-      - use_intro_widget
+    products:
+        limit: {{theme_settings.categorypage_products_per_page}}
 products:
-  top_sellers:
-    limit: {{theme_settings.category_bestsellers_count}}
+    top_sellers:
+        limit: {{theme_settings.category_bestsellers_count}}
 ---
+{{inject "categoryProductsPerPage" theme_settings.categorypage_products_per_page}}
 
-{{inject "categoryProductsPerPage"
-theme_settings.categorypage_products_per_page}} {{#partial "head"}} {{#if
-pagination.category.previous}}
-<link rel="prev" href="{{{pagination.category.previous}}}" />
-{{/if}} {{#if pagination.category.next}}
-<link rel="next" href="{{{pagination.category.next}}}" />
-{{/if}} {{/partial}} {{#partial "page"}}
+{{#partial "head"}}
+    {{#if pagination.category.previous}}
+        <link rel="prev" href="{{{pagination.category.previous}}}">
+    {{/if}}
+    {{#if pagination.category.next}}
+        <link rel="next" href="{{{pagination.category.next}}}">
+    {{/if}}
+{{/partial}}
+
+{{#partial "page"}}
 
 <div class="page category-page">
-  {{#if category.faceted_search_enabled}}
-  <aside class="page-sidebar" id="faceted-search-container">
-    {{> components/category/sidebar}}
-  </aside>
-  {{else if category.subcategories}}
-  <aside class="page-sidebar" id="faceted-search-container">
-    {{> components/category/sidebar}}
-  </aside>
-  {{else if theme_settings.shop_by_price_visibility}}
-  <aside class="page-sidebar" id="faceted-search-container">
-    {{> components/category/sidebar}}
-  </aside>
-  {{/if}}
-
-  <main class="page-content" id="product-listing-container">
-    {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}} {{#unless
-    theme_settings.hide_category_page_heading }}
-    <h1 class="page-heading">{{category.name}}</h1>
-    {{/unless}} {{!-- Category Intro Widget Zone — always render the region so
-    Page Builder widgets display regardless of metafield state. The region is
-    invisible when no widget is placed. --}}
-    <div class="category-intro-region">
-      {{{region name="category_below_header"}}}
-    </div>
-
-    {{!-- Shop by Category section: shows subcategories if present --}} {{>
-    components/category/shop-by-category}} {{!-- Fast Simon Category Best
-    Sellers --}} {{> components/category/fastsimon-recommendations
-    heading="Category Best Sellers" widgetType="bestsellers" ctaText="Buy Now"
-    limit=8 }} {{!-- Fast Simon Trending Products - temporarily disabled {{>
-    components/category/fastsimon-recommendations heading="Trending Products"
-    widgetType="trending" ctaText="Shop Now" limit=8 }} --}} {{>
-    components/category/product-listing}} {{!-- Category description (h2
-    sections / SEO text) --}} {{#if category.description}}
-    <section class="category-description category-description--footer">
-      <div class="container">{{{category.description}}}</div>
-    </section>
+    {{#if category.faceted_search_enabled}}
+        <aside class="page-sidebar" id="faceted-search-container">
+            {{> components/category/sidebar}}
+        </aside>
+    {{else if category.subcategories}}
+        <aside class="page-sidebar" id="faceted-search-container">
+            {{> components/category/sidebar}}
+        </aside>
+    {{else if theme_settings.shop_by_price_visibility}}
+        <aside class="page-sidebar" id="faceted-search-container">
+            {{> components/category/sidebar}}
+        </aside>
     {{/if}}
 
-    <div class="page-region">{{{region name="category_below_content"}}}</div>
-  </main>
+    <main class="page-content" id="product-listing-container">
+        {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
+
+        {{#unless theme_settings.hide_category_page_heading }}
+            <h1 class="page-heading">{{category.name}}</h1>
+        {{/unless}}
+
+        {{!-- Page Builder intro region (invisible when no widget is placed) --}}
+        <div class="category-intro-region" id="categoryIntroRegion">
+            {{{region name="category_below_header"}}}
+        </div>
+
+        {{!-- Description above products — visible only when NO intro widget is present --}}
+        {{#if category.description}}
+            <section class="category-description category-description--intro" id="categoryDescAbove">
+                <div class="container">
+                    {{{category.description}}}
+                </div>
+            </section>
+        {{/if}}
+
+        {{!-- Shop by Category section: shows subcategories if present --}}
+        {{> components/category/shop-by-category}}
+
+        {{!-- Fast Simon Category Best Sellers --}}
+        {{> components/category/fastsimon-recommendations
+            heading="Category Best Sellers"
+            widgetType="bestsellers"
+            ctaText="Buy Now"
+            limit=8
+        }}
+
+        {{!-- Fast Simon Trending Products - temporarily disabled
+        {{> components/category/fastsimon-recommendations
+            heading="Trending Products"
+            widgetType="trending"
+            ctaText="Shop Now"
+            limit=8
+        }}
+        --}}
+
+        {{> components/category/product-listing}}
+
+        {{!-- Description below products — visible only when intro widget IS present --}}
+        {{#if category.description}}
+            <section class="category-description category-description--footer u-hiddenVisually" id="categoryDescBelow">
+                <div class="container">
+                    {{{category.description}}}
+                </div>
+            </section>
+        {{/if}}
+
+        <div class="page-region">
+            {{{region name="category_below_content"}}}
+        </div>
+
+        {{!-- Toggle description position: if intro region has widget content,
+             hide description above and show it below instead --}}
+        <script>
+            (function() {
+                var intro = document.getElementById('categoryIntroRegion');
+                var above = document.getElementById('categoryDescAbove');
+                var below = document.getElementById('categoryDescBelow');
+                if (!intro || !above || !below) return;
+                // The Page Builder region always renders a wrapper
+                // <div data-content-region="...">; check if THAT has children
+                var region = intro.querySelector('[data-content-region]');
+                var hasWidget = region ? region.children.length > 0 : intro.textContent.trim().length > 0;
+                if (hasWidget) {
+                    above.style.display = 'none';
+                    below.classList.remove('u-hiddenVisually');
+                }
+            })();
+        </script>
+    </main>
 </div>
 
-{{/partial}} {{> layout/base}}
+{{/partial}}
+{{> layout/base}}
