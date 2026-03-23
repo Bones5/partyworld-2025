@@ -439,7 +439,7 @@
     "fastsimon_cart_crosssell_widget_id": "17724616398482987",
     "show_linkedin_tag": false,
     "gtm_container_id": "GTM-NWRLGW2T",
-    "klaviyo_enabled": false,
+    "klaviyo_enabled": true,
     "klaviyo_public_key": "",
     "klaviyo_newsletter_form_type": "native",
     "klaviyo_form_id": "RvtTdb",
