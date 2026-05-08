@@ -1,24 +1,32 @@
 {{#if currency_selector.currencies.length '>' 1}}
 <div data-currency-selector class="form--hiddenLabels">
-    {{#> components/common/forms/select
-        id=(concat 'currencySelector' (default suffix ''))
-        label=(lang 'common.currency' code=currency_selector.active_currency_code)
-        name="currencySelector"
-    }}
-        {{#each currency_selector.currencies}}
-        <option
-            value="{{{switch_url}}}"
-            data-currency-code="{{{code}}}"
-            {{#if cart_currency_switch_url.length '>' 0}}
-            data-cart-currency-switch-url="{{{cart_currency_switch_url}}}"
-            {{/if}}
-            data-warning="{{lang 'common.currency_switch_promotion'}}"
-            {{#if is_active}}selected{{/if}}
+    <div class="form-field" id="{{concat 'currencySelector' (default suffix '')}}">
+        <label class="form-label" for="{{concat 'currencySelector' (default suffix '')}}_select">
+            {{lang 'common.currency' code=currency_selector.active_currency_code}}
+        </label>
+        <select
+            class="form-select"
+            id="{{concat 'currencySelector' (default suffix '')}}_select"
+            data-label="{{lang 'common.currency' code=currency_selector.active_currency_code}}"
+            data-input
+            aria-live="polite"
+            name="currencySelector"
         >
-            {{code}}
-        </option>
-        {{/each}}
-    {{/components/common/forms/select}}
+            {{#each currency_selector.currencies}}
+            <option
+                value="{{{switch_url}}}"
+                data-currency-code="{{{code}}}"
+                {{#if cart_currency_switch_url.length '>' 0}}
+                data-cart-currency-switch-url="{{{cart_currency_switch_url}}}"
+                {{/if}}
+                data-warning="{{lang 'common.currency_switch_promotion'}}"
+                {{#if is_active}}selected{{/if}}
+            >
+                {{code}}
+            </option>
+            {{/each}}
+        </select>
+    </div>
 </div>
 {{else}}
 <div class="form--hiddenLabels" aria-hidden="true">
