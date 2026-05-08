@@ -28,18 +28,14 @@
             </span>
         </button>
     </h2>
+    <div class="reset-filters">
+        <a href="{{category.url}}" class="navList-action reset-btn">
+            {{lang 'category.reset'}}
+        </a>
+    </div>
 
     <div id="sidebar-content--price" class="accordion-content{{#unless collapsed}} is-open{{/unless}}">
         {{> components/faceted-search/range-form shop_by_price=theme_settings.shop_by_price_visibility}}
-
-        <div class="reset-filters">
-            <a href="{{category.url}}" class="navList-action reset-btn">
-                {{lang 'category.reset'}}
-            </a>
-            <span class="reset-message aria-description--hidden">
-                {{lang 'category.filter_reset_announcement'}}
-            </span>
-        </div>
     </div>
 </div>
 {{/if}}

@@ -91,6 +91,7 @@
             border-radius: 0;
             margin-bottom: spacing("quarter");
             overflow: hidden;
+            position: relative;
 
             &:first-child {
                 margin-top: 0;
@@ -176,6 +177,10 @@
             &.is-open {
                 display: block;
             }
+
+            .form-fieldset {
+                padding-bottom: spacing("half");
+            }
         }
 
         .accordion-nav-clear-holder {
@@ -186,10 +191,8 @@
                 right: remCalc(40px);
                 top: 50%;
                 transform: translateY(-50%);
-                padding: spacing("quarter") spacing("half");
-                font-size: fontSize("smallest");
+                padding: spacing("quarter") spacing("single");
                 color: stencilColor("color-textLink");
-                text-decoration: none;
                 white-space: nowrap;
 
                 @include breakpoint("medium") {
@@ -314,20 +317,31 @@
         }
 
         // Reset filters link
+        // Reset filters link — absolutely positioned to overlay the accordion heading row
         .reset-filters {
-            margin-top: spacing("single");
-            padding-top: spacing("single");
-            border-top: 1px solid stencilColor("container-border-global");
+            position: absolute;
+            top: 0;
+            right: remCalc(20px);
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+            padding: spacing("quarter") remCalc(40px) spacing("quarter") spacing("half");
+
+            @include breakpoint("medium") {
+                padding-right: remCalc(20px);
+            }
         }
 
         .reset-btn {
+            pointer-events: auto;
             font-size: inherit;
             color: stencilColor("color-textLink");
-            text-decoration: none;
+            white-space: nowrap;
 
-            &:hover {
-                text-decoration: underline;
-            }
+            text-decoration: underline;
+            
         }
     }
 }
+

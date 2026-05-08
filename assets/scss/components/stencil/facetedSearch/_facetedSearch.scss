@@ -128,7 +128,16 @@
 
     @include breakpoint("medium") {
         display: block; // 1
+
     }
+}
+
+.facetedSearch-refineFilters-clearAll {
+    text-align: right;
+    display: block;
+    padding: spacing("half") 0;
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 // Facted search ratings
@@ -192,5 +201,30 @@
     &:focus-visible {
         outline: $facetedSearch-focus-outline-width solid $facetedSearch-focus-outline-color;
         outline-offset: $facetedSearch-focus-outline-offset;
+    }
+}
+
+
+// Price range currency prefix
+// -----------------------------------------------------------------------------
+//
+// Positions a currency symbol (e.g. "$") to the left of the min/max inputs.
+//
+// -----------------------------------------------------------------------------
+.form-field--prefixed {
+    position: relative;
+
+    .form-currencyPrefix {
+        position: absolute;
+        left: spacing("quarter");
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        line-height: 1;
+        color: inherit;
+    }
+
+    .form-input {
+        padding-left: remCalc(18px);
     }
 }

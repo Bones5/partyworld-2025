@@ -25,12 +25,12 @@
                 </svg>
             </span>
         </button>
-        {{#if selected}}
-            <a href="{{remove_url}}" class="facetedSearch-clearLink" data-faceted-search-facet>
-                {{lang 'search.faceted.clear'}}
-            </a>
-        {{/if}}
     </h2>
+    {{#if selected}}
+        <a href="{{remove_url}}" class="facetedSearch-clearLink" data-faceted-search-facet>
+            {{lang 'search.faceted.clear'}}
+        </a>
+    {{/if}}
 
     <div id="sidebar-content--{{dashcase facet}}" class="accordion-content{{#unless collapsed}} is-open{{/unless}}">
         {{!-- Range/Price Filter --}}

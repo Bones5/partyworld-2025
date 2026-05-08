@@ -1,11 +1,12 @@
-<form id="facet-range-form" class="form" method="get" data-faceted-search-range novalidate>
+<form id="facet-range-form" class="form" method="get" data-faceted-search-range data-currency-code="{{currency_selector.active_currency_code}}" novalidate>
     <input type="hidden" name="search_query" value="{{search_query}}">
     {{#if this.sort}}
         <input type="hidden" name="sort" value="{{this.sort}}">
     {{/if}}
     <fieldset class="form-fieldset">
         <div class="form-minMaxRow">
-            <div class="form-field">
+            <div class="form-field form-field--prefixed">
+                <span class="form-currencyPrefix" aria-hidden="true"></span>
                 <input
                     name="{{#if shop_by_price}}price_min{{else}}min_price{{/if}}"
                     placeholder="{{lang 'search.faceted.range.min-placeholder'}}"
@@ -20,7 +21,8 @@
                 <span id="min_price_description" class="aria-description--hidden">{{lang 'search.faceted.range.min-description'}}</span>
             </div>
 
-            <div class="form-field">
+            <div class="form-field form-field--prefixed">
+                <span class="form-currencyPrefix" aria-hidden="true"></span>
                 <input
                     name="{{#if shop_by_price}}price_max{{else}}max_price{{/if}}"
                     placeholder="{{lang 'search.faceted.range.max-placeholder'}}"
