@@ -1,5 +1,11 @@
 <nav class="category-sidebar" aria-label="{{lang 'search.faceted.label'}}">
     {{#if category.faceted_search_enabled}}
+        {{#if category.subcategories}}
+            <div class="accordion accordion--navList accordion--sidebar">
+                {{> components/category/sidebar-subcategories collapsed=true}}
+            </div>
+        {{/if}}
+
         <div id="facetedSearch" class="facetedSearch sidebarBlock" role="region">
             {{!-- Mobile toggle --}}
             <a href="#facetedSearch-navList" role="button" class="facetedSearch-toggle toggleLink" data-collapsible aria-expanded="false" aria-controls="facetedSearch-navList">
@@ -27,13 +33,9 @@
                 {{> components/faceted-search/selected-facets category.selected}}
 
                 <div class="accordion accordion--navList accordion--sidebar">
-                        {{#if category.subcategories}}
-                {{> components/category/sidebar-subcategories collapsed=true}}
-        {{/if}}
-
-        {{#if theme_settings.shop_by_price_visibility}}
-                {{> components/category/sidebar-price-filter collapsed=true}}
-        {{/if}}
+                    {{#if theme_settings.shop_by_price_visibility}}
+                    {{> components/category/sidebar-price-filter collapsed=true}}
+                    {{/if}}
 
                     {{!-- Render all visible facets using the dynamic component --}}
                     {{#each category.facets}}
