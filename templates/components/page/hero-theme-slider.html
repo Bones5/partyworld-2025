@@ -25,7 +25,7 @@
 
     <div class="heroThemeSlider" 
          data-slick='{
-            "infinite": false,
+            "infinite": true,
             "mobileFirst": true,
             "adaptiveHeight": true,
             "dots": false,
@@ -56,6 +56,7 @@
         </div>
 
         {{!-- Render each carousel slide as a card --}}
+        {{!-- First slide is prioritized for LCP (Largest Contentful Paint) --}}
         {{#each carousel.slides}}
         <div class="heroThemeSlider-slide" role="group" aria-roledescription="slide" aria-label="{{lang 'carousel.slide_number' slide_number=(add @index 1)}}">
             {{> components/page/hero-theme-slider-card
@@ -63,8 +64,7 @@
                 heading=heading
                 ctaText=button_text
                 ctaUrl=url
-                index=@index
-                preload=(if @index '<' 3)
+                isLCP=@first
             }}
         </div>
         {{/each}}

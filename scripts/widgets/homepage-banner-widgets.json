@@ -194,6 +194,31 @@
         }
       ],
       "template": "<section class=\"c-introPromise\"><div class=\"c-introPromise__container\"><div class=\"c-introPromise__intro\">{{#if heading}}<h2 class=\"c-introPromise__heading\">{{heading}}</h2>{{/if}}{{#if introText}}<div class=\"c-introPromise__text\">{{{introText}}}</div>{{/if}}</div><div class=\"c-introPromise__promises\">{{#if promisesHeading}}<h3 class=\"c-introPromise__promisesHeading\">{{promisesHeading}}</h3>{{/if}}<ul class=\"c-introPromise__list\">{{#if promise1}}<li class=\"c-introPromise__item\"><svg class=\"c-introPromise__icon\" width=\"24\" height=\"24\" aria-hidden=\"true\"><use href=\"#icon-Check\"></use></svg><span class=\"c-introPromise__itemText\">{{promise1}}</span></li>{{/if}}{{#if promise2}}<li class=\"c-introPromise__item\"><svg class=\"c-introPromise__icon\" width=\"24\" height=\"24\" aria-hidden=\"true\"><use href=\"#icon-Check\"></use></svg><span class=\"c-introPromise__itemText\">{{promise2}}</span></li>{{/if}}{{#if promise3}}<li class=\"c-introPromise__item\"><svg class=\"c-introPromise__icon\" width=\"24\" height=\"24\" aria-hidden=\"true\"><use href=\"#icon-Check\"></use></svg><span class=\"c-introPromise__itemText\">{{promise3}}</span></li>{{/if}}{{#if promise4}}<li class=\"c-introPromise__item\"><svg class=\"c-introPromise__icon\" width=\"24\" height=\"24\" aria-hidden=\"true\"><use href=\"#icon-Check\"></use></svg><span class=\"c-introPromise__itemText\">{{promise4}}</span></li>{{/if}}{{#if promise5}}<li class=\"c-introPromise__item\"><svg class=\"c-introPromise__icon\" width=\"24\" height=\"24\" aria-hidden=\"true\"><use href=\"#icon-Check\"></use></svg><span class=\"c-introPromise__itemText\">{{promise5}}</span></li>{{/if}}{{#if promise6}}<li class=\"c-introPromise__item\"><svg class=\"c-introPromise__icon\" width=\"24\" height=\"24\" aria-hidden=\"true\"><use href=\"#icon-Check\"></use></svg><span class=\"c-introPromise__itemText\">{{promise6}}</span></li>{{/if}}</ul></div></div></section>"
+    },
+    {
+      "name": "Category Intro",
+      "kind": "custom",
+      "description": "Short intro paragraph for category pages. Place in the category_below_header region.",
+      "schema": [
+        {
+          "type": "tab",
+          "label": "Content",
+          "sections": [
+            {
+              "label": "Intro Text",
+              "settings": [
+                {
+                  "type": "text",
+                  "label": "Intro Text",
+                  "id": "introText",
+                  "default": ""
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "template": "{{#if introText}}<div class=\"category-intro\"><p>{{introText}}</p></div>{{/if}}"
     }
   ]
 }

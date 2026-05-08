@@ -1,6 +1,6 @@
 .c-introPromise {
     margin-bottom: spacing("double");
-    padding: spacing("double") 0;
+    padding: spacing("double") spacing("single");
     background: stencilColor("container-fill-dark");
 
     // All text uses the headline font per spec
@@ -58,8 +58,9 @@
 
 .c-introPromise__text {
     margin: 0;
-    font-size: $fontSize-base;
-    line-height: $lineHeight-base;
+    font-size: remCalc(17px);
+    line-height: lineHeight("base");
+    font-weight: $fontWeight-normal;
     color: $color-textBase;
 }
 
@@ -72,8 +73,8 @@
 .c-introPromise__listItem {
     padding: spacing("quarter") 0;
     border-bottom: 1px solid stencilColor("container-border-global-color-base");
-    font-size: $fontSize-base;
-    line-height: $lineHeight-base;
+    font-size: remCalc(17px);
+    line-height: lineHeight("base");
     color: $color-textBase;
 
     &:last-child {

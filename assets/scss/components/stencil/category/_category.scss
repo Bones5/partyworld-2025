@@ -20,7 +20,6 @@
     line-height: lineHeight("base");
     color: stencilColor("color-textBase");
     margin-bottom: spacing("double");
-    max-width: remCalc(800px);
 
     p {
         margin-bottom: spacing("single");
@@ -36,12 +35,14 @@
 // Full description moved to bottom of page for SEO purposes
 
 .category-description {
-    padding: spacing("double") + spacing("single") 0;
+
+    padding-bottom: spacing("double");
+
 
     .container {
-        max-width: remCalc(900px);
+        max-width: 100%;
         margin: 0 auto;
-        padding: 0 spacing("half");
+        padding: 0;
     }
 
     h2, h3, h4 {

@@ -1,0 +1,90 @@
+{{!--
+  Fast Simon Homepage Recommendations Component
+  
+  Displays product recommendations powered by Fast Simon on the homepage.
+  Uses BigCommerce Storefront GraphQL API for full product data to render native theme cards.
+  
+  Parameters:
+  - heading: Optional heading for the section (default: "Recommended For You")
+  - subheading: Optional subheading text
+  - limit: Number of products to show (default: 8)
+  - showBrand: Whether to show product brand (default: true)
+  - ctaText: CTA link text on each card (default: "Shop Now")
+  
+  Usage:
+    {{> components/page/fastsimon-recommendations 
+        heading="Our Top Picks for You"
+        limit=8
+        showBrand="false"
+    }}
+  
+  Configuration:
+  - theme_settings.fastsimon_enabled: Master toggle for Fast Simon
+  - theme_settings.fastsimon_homepage_enabled: Enable homepage recommendations
+  - theme_settings.fastsimon_homepage_widget_id: Widget ID from Fast Simon dashboard
+--}}
+
+{{#all theme_settings.fastsimon_enabled theme_settings.fastsimon_homepage_enabled}}
+  <section class="c-fsRecommendations c-fsRecommendations--homepage" data-fastsimon-section="homepage">
+    <h2 class="c-fsRecommendations__heading">{{default heading 'Recommended For You'}}</h2>
+    
+    {{#if subheading}}
+      <p class="c-fsRecommendations__subheading">{{subheading}}</p>
+    {{/if}}
+    
+    <div class="c-fsRecommendations__container"
+         data-fastsimon-container
+         data-fastsimon-widget-id="{{theme_settings.fastsimon_homepage_widget_id}}"
+         data-fastsimon-limit="{{default limit 8}}"
+         data-fastsimon-cta-text="{{default ctaText 'Shop Now'}}">
+      {{!-- Skeleton loader to reserve space and minimize layout shift --}}
+      <div class="productGrid fs-product-grid fs-skeleton-grid" aria-hidden="true">
+        {{#for 1 4}}
+        <article class="card card--skeleton">
+          <figure class="card-figure">
+            <div class="card-img-container">
+              <div class="skeleton skeleton--image"></div>
+            </div>
+          </figure>
+          <div class="card-body">
+            <div class="skeleton skeleton--text skeleton--title"></div>
+            <div class="skeleton skeleton--text skeleton--price"></div>
+          </div>
+        </article>
+        {{/for}}
+      </div>
+    </div>
+  </section>
+
+  {{!-- Client-side template for Fast Simon product cards --}}
+  <template id="fastsimon-product-card-template">
+    <article class="card" data-test="" data-event-type="list" data-entity-id="" data-name="" data-product-brand="">
+      <figure class="card-figure">
+        <div class="card-badge-container"></div>
+        <a href="" class="card-figure__link" aria-label="" data-event-type="product-click">
+          <div class="card-img-container">
+            <img class="card-image lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="" data-srcset="" data-sizes="auto" alt="" title="">
+          </div>
+        </a>
+        <figcaption class="card-figcaption">
+          <div class="card-figcaption-body"></div>
+        </figcaption>
+      </figure>
+      <div class="card-body">
+        <p class="card-text card-rating" data-test-info-type="productRating" hidden>
+          <span class="rating--small">
+            <span class="rating" role="img" aria-label="">
+              <span class="rating-background"></span>
+              <span class="rating-fill" style="width: 0%;"></span>
+            </span>
+          </span>
+        </p>
+        <h3 class="card-title">
+          <a href="" data-event-type="product-click"></a>
+        </h3>
+        <div class="card-text card-price" data-test-info-type="price"></div>
+        <a href="" class="card-cta" data-event-type="product-click">Shop Now</a>
+      </div>
+    </article>
+  </template>
+{{/all}}

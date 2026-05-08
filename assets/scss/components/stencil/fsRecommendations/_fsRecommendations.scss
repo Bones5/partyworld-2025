@@ -1,0 +1,307 @@
+// Fast Simon Recommendations Component
+// -----------------------------------------------------------------------------
+// Fast Simon powered product recommendation sections
+// Used on product, category, cart, and home pages
+// Includes skeleton loading states to minimize layout shift (CLS)
+// 
+// Styled to match the native theme product card layout
+// -----------------------------------------------------------------------------
+
+// =============================================================================
+// LAYOUT SHIFT PREVENTION
+// Reserve space for the recommendations section before content loads
+// =============================================================================
+
+.c-fsRecommendations {
+    padding: spacing("single") 0;
+    border-top: container("border");
+    // Reserve minimum height to prevent layout shift
+    min-height: 400px;
+
+    @include breakpoint("medium") {
+        padding: spacing("single") + spacing("half") 0;
+        min-height: 500px;
+    }
+
+    // When loaded, allow natural height
+    &.is-loaded {
+        min-height: auto;
+    }
+
+    // Hide section entirely if no products loaded (error state)
+    &.is-error,
+    &.is-empty {
+        min-height: 0;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        display: none;
+    }
+}
+
+// Remove top border for homepage variant and use standard section spacing
+.c-fsRecommendations--homepage {
+    @include homepage-section;
+
+    border-top: 0;
+    margin-top: 0;
+    padding: 0;
+    min-height: auto;
+}
+
+// Category page variant
+.c-fsRecommendations--category {
+    margin-bottom: 0;
+
+    .c-fsRecommendations__container {
+        margin-top: 0;
+    }
+}
+
+// =============================================================================
+// HEADING STYLES
+// =============================================================================
+
+.c-fsRecommendations__heading {
+    @include homepage-section-heading;
+}
+
+// Subheading styles
+.c-fsRecommendations__subheading {
+    font-size: fontSize("smaller");
+    color: stencilColor("color-textSecondary");
+    text-align: center;
+    margin-bottom: spacing("single");
+
+    @include breakpoint("medium") {
+        font-size: fontSize("base");
+        margin-bottom: spacing("double");
+    }
+}
+
+// =============================================================================
+// CONTAINER & GRID
+// =============================================================================
+
+.c-fsRecommendations__container {
+    margin-top: spacing("single");
+    position: relative;
+
+    @include breakpoint("medium") {
+        margin-top: spacing("double");
+    }
+}
+
+// Restore font-size for recommendation grids (productGrid uses font-size: 0)
+.fs-product-grid {
+    font-size: fontSize("base");
+}
+
+// Static grid fallback when slick is not initialized
+.fs-product-grid:not(.slick-initialized) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: spacing("single");
+
+    @include breakpoint("small") {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    @include breakpoint("medium") {
+        grid-template-columns: repeat(4, 1fr);
+        gap: spacing("single") + spacing("half");
+    }
+
+    @include breakpoint("large") {
+        gap: spacing("double");
+    }
+}
+
+// =============================================================================
+// SLICK CAROUSEL STYLES
+// =============================================================================
+
+.fs-product-grid.slick-initialized {
+    .slick-list {
+        overflow: hidden;
+        margin: 0 spacing("half") * -1;
+    }
+
+    .slick-track {
+        display: flex;
+    }
+
+    .slick-slide {
+        height: auto;
+        padding: 0 spacing("half");
+
+        > div {
+            height: 100%;
+        }
+
+        .card {
+            height: 100%;
+            margin-bottom: 0;
+        }
+    }
+
+    // Slick arrow positioning
+    .slick-prev,
+    .slick-next {
+        top: 40%;
+        transform: translateY(-50%);
+        margin: 0;
+    }
+
+    .slick-prev {
+        left: -22px;
+
+        @include breakpoint("large") {
+            left: -50px;
+        }
+    }
+
+    .slick-next {
+        right: -22px;
+
+        @include breakpoint("large") {
+            right: -50px;
+        }
+    }
+
+    // Hide arrows on mobile when not enough items
+    @media (max-width: 549px) {
+        .slick-prev,
+        .slick-next {
+            display: none !important;
+        }
+    }
+}
+
+// =============================================================================
+// SKELETON LOADING STATES
+// Animated placeholders that reserve space before content loads
+// Fade-in animation for loaded content
+// =============================================================================
+
+// Fast Simon skeleton grid color palette (party colors)
+.fs-skeleton-grid .card--skeleton:nth-child(8n + 1) .skeleton--image {
+    background: linear-gradient(135deg, #ff6b9d 0%, #ff8a80 100%); // Pink
+}
+
+.fs-skeleton-grid .card--skeleton:nth-child(8n + 2) .skeleton--image {
+    background: linear-gradient(135deg, #7c4dff 0%, #b388ff 100%); // Purple
+}
+
+.fs-skeleton-grid .card--skeleton:nth-child(8n + 3) .skeleton--image {
+    background: linear-gradient(135deg, #00bcd4 0%, #4dd0e1 100%); // Cyan
+}
+
+.fs-skeleton-grid .card--skeleton:nth-child(8n + 4) .skeleton--image {
+    background: linear-gradient(135deg, #ffca28 0%, #ffd54f 100%); // Yellow
+}
+
+.fs-skeleton-grid .card--skeleton:nth-child(8n + 5) .skeleton--image {
+    background: linear-gradient(135deg, #69f0ae 0%, #b9f6ca 100%); // Green
+}
+
+.fs-skeleton-grid .card--skeleton:nth-child(8n + 6) .skeleton--image {
+    background: linear-gradient(135deg, #ff7043 0%, #ffab91 100%); // Orange
+}
+
+.fs-skeleton-grid .card--skeleton:nth-child(8n + 7) .skeleton--image {
+    background: linear-gradient(135deg, #42a5f5 0%, #90caf9 100%); // Blue
+}
+
+.fs-skeleton-grid .card--skeleton:nth-child(8n + 8) .skeleton--image {
+    background: linear-gradient(135deg, #ec407a 0%, #f48fb1 100%); // Rose
+}
+
+// Hide skeleton when loaded
+.c-fsRecommendations__container.is-loaded .fs-skeleton-grid,
+.c-fsRecommendations__container .fs-skeleton-grid:has(+ .fs-product-grid:not(.fs-skeleton-grid)) {
+    display: none;
+}
+
+// Fade in animation for loaded content
+.c-fsRecommendations__container.is-loaded .fs-product-grid:not(.fs-skeleton-grid) {
+    animation: fs-fade-in 0.3s ease-out;
+}
+
+@keyframes fs-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+// =============================================================================
+// PRODUCT CARD OVERRIDES
+// Ensure consistent styling for dynamically rendered cards
+// =============================================================================
+
+.fs-product-grid .card {
+    font-family: $fontFamily-sans;
+    font-size: fontSize("base");
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+
+    .card-img-container {
+        position: relative;
+        padding-bottom: 100%; // 1:1 aspect ratio
+        overflow: hidden;
+    }
+
+    .card-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-height: 0;
+        gap: spacing("eighth");
+        text-align: center;
+    }
+
+    .card-title {
+        flex: 1 1 auto;
+    }
+
+    // Price styling
+    .card-price {
+        display: block;
+        margin-top: spacing("quarter");
+        margin-bottom: spacing("half");
+        text-align: center;
+        flex-shrink: 0;
+
+        .price {
+            color: stencilColor("color-error");
+        }
+    }
+
+    // CTA button
+    .card-cta {
+        @include cta-button;
+
+        margin-top: auto;
+        flex-shrink: 0;
+        font-size: remCalc(12px);
+
+        @include breakpoint("medium") {
+            font-size: 20px;
+        }
+    }
+}

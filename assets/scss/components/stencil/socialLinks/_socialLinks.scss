@@ -120,4 +120,21 @@
             }
         }
     }
+
+    // Light icons in dark footer trust area
+    .footer-trust-social & {
+        .socialLinks-item .icon {
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.15);
+            }
+
+            svg {
+                fill: stencilColor("color-greyLighter");
+            }
+
+            &:hover svg {
+                fill: stencilColor("color-white");
+            }
+        }
+    }
 }

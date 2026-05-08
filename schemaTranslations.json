@@ -1006,6 +1006,25 @@
     "pl": "Ukryj nagłówek strony kategorii",
     "ja": "カテゴリページの見出しを非表示にする"
   },
+  "i18n.UseCategoryIntroWidget": {
+    "default": "Use Page Builder intro widget (instead of category description)",
+    "fr": "Utiliser le widget d'introduction Page Builder",
+    "it": "Usa widget introduzione Page Builder",
+    "zh": "使用页面构建器简介小部件",
+    "de": "Page Builder-Intro-Widget verwenden",
+    "es": "Usar widget de introducción de Page Builder",
+    "nl": "Page Builder-introwidget gebruiken",
+    "pt": "Usar widget de introdução do Page Builder",
+    "pt-BR": "Usar widget de introdução do Page Builder",
+    "sv": "Använd Page Builder intro-widget",
+    "es-MX": "Usar widget de introducción de Page Builder",
+    "es-419": "Usar widget de introducción de Page Builder",
+    "da": "Brug Page Builder intro-widget",
+    "no": "Bruk Page Builder intro-widget",
+    "ko": "페이지 빌더 소개 위젯 사용",
+    "pl": "Użyj widżetu intro Page Builder",
+    "ja": "Page Builderイントロウィジェットを使用"
+  },
   "i18n.HideBlogPageHeading": {
     "default": "Hide blog page heading",
     "fr": "Masquer l'en-tête du blog",
@@ -6024,5 +6043,14 @@
     "ko": "Bolt",
     "pl": "Bolt",
     "ja": "Bolt"
+  },
+  "i18n.Trustpilot": {
+    "default": "Trustpilot"
+  },
+  "i18n.TrustpilotBadge": {
+    "default": "Trustpilot badge"
+  },
+  "i18n.TrustpilotBadgeCircleBg": {
+    "default": "Logo circle background"
   }
 }

@@ -1,17 +1,15 @@
 // Cross-Sell Sections (Product Page)
 // -----------------------------------------------------------------------------
-// Alternate Suggestions & Also Bought sections
+// Also Bought section
 // -----------------------------------------------------------------------------
 
 // Common styles for cross-sell sections
-.c-alternateSuggestions,
 .c-alsoBought {
     margin-top: spacing("double");
     padding-top: spacing("single");
     border-top: container("border");
 }
 
-.c-alternateSuggestions__heading,
 .c-alsoBought__heading {
     font-size: fontSize("larger");
     margin-bottom: spacing("quarter");
@@ -24,18 +22,6 @@
     }
 }
 
-.c-alternateSuggestions__subheading {
-    font-size: fontSize("smaller");
-    color: stencilColor("color-textSecondary");
-    text-align: center;
-    margin-bottom: spacing("single");
-
-    @include breakpoint("medium") {
-        font-size: fontSize("base");
-    }
-}
-
-.c-alternateSuggestions__products,
 .c-alsoBought__products {
     margin-top: spacing("single");
 }

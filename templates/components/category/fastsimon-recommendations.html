@@ -1,0 +1,80 @@
+{{!--
+  Fast Simon Category Recommendations Component
+
+  Two category recommendation sections with different data sources:
+  - "bestsellers": /categories_navigation endpoint (AI-ranked by current category)
+  - "trending": /upsell_cross_sell_recommendation widget (dashboard-configured)
+
+  Parameters:
+  - heading: Section heading (default varies by widgetType)
+  - limit: Number of products to show (default: 8)
+  - widgetType: "bestsellers" (default) or "trending"
+  - ctaText: CTA button text (default: "Shop Now")
+
+  Configuration:
+  - theme_settings.fastsimon_enabled: Master toggle for Fast Simon
+  - theme_settings.fastsimon_category_enabled: Enable category page recommendations
+  - theme_settings.fastsimon_category_trending_widget_id: Widget ID for trending (from FS dashboard)
+--}}
+
+{{#all theme_settings.fastsimon_enabled theme_settings.fastsimon_category_enabled}}
+
+  {{#if (if widgetType '===' 'trending')}}
+    {{#if theme_settings.fastsimon_category_trending_widget_id}}
+    <section class="c-fsRecommendations c-fsRecommendations--homepage c-fsRecommendations--category" data-fastsimon-section="category-trending">
+      <h2 class="c-fsRecommendations__heading">{{default heading 'Trending Products'}}</h2>
+
+      <div class="c-fsRecommendations__container"
+           data-fastsimon-container
+           data-fastsimon-widget-id="{{theme_settings.fastsimon_category_trending_widget_id}}"
+           data-fastsimon-category-id="{{category.id}}"
+           data-fastsimon-limit="{{default limit 8}}"
+           data-fastsimon-cta-text="{{default ctaText 'Shop Now'}}">
+        <div class="productGrid fs-product-grid fs-skeleton-grid" aria-hidden="true">
+          {{#for 1 4}}
+          <article class="card card--skeleton">
+            <figure class="card-figure">
+              <div class="card-img-container">
+                <div class="skeleton skeleton--image"></div>
+              </div>
+            </figure>
+            <div class="card-body">
+              <div class="skeleton skeleton--text skeleton--title"></div>
+              <div class="skeleton skeleton--text skeleton--price"></div>
+            </div>
+          </article>
+          {{/for}}
+        </div>
+      </div>
+    </section>
+    {{/if}}
+  {{else}}
+    <section class="c-fsRecommendations c-fsRecommendations--homepage c-fsRecommendations--category" data-fastsimon-section="category-bestsellers">
+      <h2 class="c-fsRecommendations__heading">{{default heading 'Category Best Sellers'}}</h2>
+
+      <div class="c-fsRecommendations__container"
+           data-fastsimon-container
+           data-fastsimon-category-id="{{category.id}}"
+           data-fastsimon-page="1"
+           data-fastsimon-limit="{{default limit 8}}"
+           data-fastsimon-cta-text="{{default ctaText 'Shop Now'}}">
+        <div class="productGrid fs-product-grid fs-skeleton-grid" aria-hidden="true">
+          {{#for 1 4}}
+          <article class="card card--skeleton">
+            <figure class="card-figure">
+              <div class="card-img-container">
+                <div class="skeleton skeleton--image"></div>
+              </div>
+            </figure>
+            <div class="card-body">
+              <div class="skeleton skeleton--text skeleton--title"></div>
+              <div class="skeleton skeleton--text skeleton--price"></div>
+            </div>
+          </article>
+          {{/for}}
+        </div>
+      </div>
+    </section>
+  {{/if}}
+
+{{/all}}

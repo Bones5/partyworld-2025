@@ -8,15 +8,10 @@
         {{#block "head"}} {{/block}}
 
         {{!-- Preconnect to third-party origins for faster resource loading --}}
-        {{#if theme_settings.clerk_enabled}}
-            <link rel="preconnect" href="https://cdn.clerk.io" crossorigin>
-        {{/if}}
         {{#if theme_settings.klaviyo_enabled}}
             <link rel="preconnect" href="https://static.klaviyo.com" crossorigin>
         {{/if}}
-        {{#if theme_settings.show_trustpilot_widget}}
-            <link rel="dns-prefetch" href="https://widget.trustpilot.com">
-        {{/if}}
+        {{!-- Trustpilot script is injected by BigCommerce integration (Script Manager/App) --}}
 
         {{!-- Preload first carousel image for faster LCP --}}
         {{#if carousel.slides.[0].stencil_image}}
@@ -59,8 +54,13 @@
         {{~inject 'template' template}}
         {{~inject 'storefrontApiToken' settings.storefront_api.token}}
         {{~inject 'currencyCode' currency_selector.active_currency_code}}
-        {{~inject 'clerkEnabled' theme_settings.clerk_enabled}}
-        {{~inject 'clerkPublicKey' theme_settings.clerk_public_key}}
+        {{~inject 'fastsimonEnabled' theme_settings.fastsimon_enabled}}
+        {{~inject 'fastsimonStoreId' theme_settings.fastsimon_store_id}}
+        {{~inject 'fastsimonUuid' theme_settings.fastsimon_uuid}}
+        {{~inject 'fastsimonHomepageEnabled' theme_settings.fastsimon_homepage_enabled}}
+        {{~inject 'fastsimonProductEnabled' theme_settings.fastsimon_product_enabled}}
+        {{~inject 'fastsimonCategoryEnabled' theme_settings.fastsimon_category_enabled}}
+        {{~inject 'fastsimonCartEnabled' theme_settings.fastsimon_cart_enabled}}
         {{~inject 'validationDictionaryJSON' (langJson 'validation_messages')}}
         {{~inject 'validationFallbackDictionaryJSON' (langJson 'validation_fallback_messages')}}
         {{~inject 'validationDefaultDictionaryJSON' (langJson 'validation_default_messages')}}
@@ -70,6 +70,9 @@
         {{~inject 'giftWrappingRemoveMessage' (lang 'cart.gift_wrapping.remove_confirm')}}
     </head>
     <body>
+        {{!-- Google Tag Manager (deferred loading for performance) --}}
+        {{> components/common/gtm-script }}
+
         {{!-- Inline SVG sprite for icon symbols - avoids CORS issues with external references --}}
         {{> components/common/icons/icon-defs }}
 
@@ -81,7 +84,8 @@
         <script nonce="{{nonce}}">
             {{!-- Exported in app.js --}}
             function onThemeBundleMain() {
-                window.stencilBootstrap("{{page_type}}", {{jsContext}}).load();
+                window.__PW_CONTEXT__ = {{jsContext}};
+                window.stencilBootstrap("{{page_type}}", window.__PW_CONTEXT__).load();
 
                 function browserSupportsFormData() {
                     return typeof FormData !== 'undefined' 
@@ -113,19 +117,9 @@
         </script>
 
         {{{footer.scripts}}}
-        {{!-- Trustpilot Widget Loader - enable in Theme Editor for production --}}
-        {{#if theme_settings.show_trustpilot_widget}}
-        <script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
-        {{/if}}
 
         {{!-- Klaviyo Script Loader --}}
         {{> components/common/klaviyo-script}}
-
-        {{!-- Clerk.io Script Loader --}}
-        {{> components/common/clerk-script}}
-
-        {{!-- Clerk.io Instant Search (attaches to search inputs) --}}
-        {{> components/common/clerk-instant-search}}
 
         {{!-- LinkedIn Insight Tag --}}
         {{> components/common/linkedin-tag}}

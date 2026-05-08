@@ -51,7 +51,7 @@ categories:
     {{#if categories}}
         {{> components/page/category-grid 
             heading="Shop by Category"
-            columns=5
+            columns=3
             categories=(limit categories 10)
         }}
     {{/if}}
@@ -62,9 +62,8 @@ categories:
         {{{region name="home_banner_after_categories"}}}
     </div>
 
-    {{> components/page/clerk-recommendations
+    {{> components/page/fastsimon-recommendations
         heading="Our Top Picks for You"
-        template="@custom-template"
         showBrand="false"
     }}
 

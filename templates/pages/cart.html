@@ -66,6 +66,16 @@ cart: true
             <h3 tabindex="0">{{lang 'cart.checkout.empty_cart'}}</h3>
         {{/if}}
 
+        {{!-- Fast Simon Cart Recommendations --}}
+        {{> components/cart/fastsimon-recommendations
+            heading="Customers Also Bought"
+            widgetType="alsobought"
+        }}
+        {{> components/cart/fastsimon-recommendations
+            heading="You Might Also Like"
+            widgetType="crosssell"
+        }}
+
     </div>
 </div>
 {{/partial}}

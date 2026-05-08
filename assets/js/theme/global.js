@@ -13,8 +13,9 @@ import cartPreview from './global/cart-preview';
 import carousel from './common/carousel';
 import svgInjector from './global/svg-injector';
 import { initNewsletter } from './global/newsletter';
-import { initAllClerkRecommendations } from './common/clerk-recommendations';
+import { initAllFastSimonRecommendations } from './common/fastsimon-recommendations';
 import klaviyoNewsletter from './common/klaviyo-newsletter';
+import initTrustpilotBadge from './common/trustpilot-badge';
 
 export default class Global extends PageManager {
     onReady() {
@@ -30,12 +31,15 @@ export default class Global extends PageManager {
         svgInjector();
         initNewsletter();
 
-        // Initialize Clerk.io recommendations if enabled
-        if (this.context.clerkEnabled) {
-            initAllClerkRecommendations(this.context);
+        // Initialize Fast Simon recommendations if enabled
+        if (this.context.fastsimonEnabled) {
+            initAllFastSimonRecommendations(this.context);
         }
 
         // Initialize Klaviyo newsletter form (when using native form)
         klaviyoNewsletter();
+
+        // Best-effort live Trustpilot review count (requires integration/app to inject structured data)
+        initTrustpilotBadge();
     }
 }

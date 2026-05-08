@@ -4,7 +4,7 @@
   Tracks product views for Klaviyo's personalization and email flows.
   This should be included on the product page when Klaviyo tracking is enabled.
   
-  Based on original theme implementation with data structure for:
+  Events fired:
   - Viewed Product event
   - trackViewedItem for browse abandonment
 --}}
@@ -16,19 +16,25 @@ var _learnq = _learnq || [];
 // Build product categories array
 var productCategories = [];
 {{#each product.category}}
-productCategories.push('{{this}}');
+productCategories.push({{{json this}}});
 {{/each}}
+
+// Resolve price - prefer without_tax, fall back to with_tax
+var klaviyoPrice = {{#if product.price.without_tax}}{{product.price.without_tax.value}}{{else}}{{#if product.price.with_tax}}{{product.price.with_tax.value}}{{else}}0{{/if}}{{/if}};
+var klaviyoComparePrice = {{#if product.price.rrp_without_tax}}{{product.price.rrp_without_tax.value}}{{else}}{{#if product.price.rrp_with_tax}}{{product.price.rrp_with_tax.value}}{{else}}0{{/if}}{{/if}};
 
 // Product data object
 var klaviyoItem = {
-    Name: "{{jsescapeString product.title}}",
-    ProductID: "{{product.id}}",
+    ProductName: {{#if product.title}}{{{json product.title}}}{{else}}""{{/if}},
+    ProductID: {{product.id}},
+    SKU: {{#if product.sku}}{{{json product.sku}}}{{else}}""{{/if}},
     ImageURL: "{{getImage product.main_image 'product_size' (cdn theme_settings.default_image_product)}}",
-    URL: "{{product.url}}",
-    Brand: "{{jsescapeString product.brand.name}}",
+    URL: window.location.href,
+    Brand: {{#if product.brand.name}}{{{json product.brand.name}}}{{else}}""{{/if}},
     Categories: productCategories,
-    Price: "{{product.price.without_tax.value}}",
-    CompareAtPrice: "{{product.price.rrp_without_tax.value}}"
+    Price: klaviyoPrice,
+    CompareAtPrice: klaviyoComparePrice,
+    $value: klaviyoPrice
 };
 
 // Track Viewed Product event
@@ -36,8 +42,8 @@ _learnq.push(['track', 'Viewed Product', klaviyoItem]);
 
 // Track for browse abandonment flows
 _learnq.push(['trackViewedItem', {
-    Title: klaviyoItem.Name,
-    ItemId: klaviyoItem.ProductID,
+    Title: klaviyoItem.ProductName,
+    ItemId: String(klaviyoItem.ProductID),
     Categories: klaviyoItem.Categories,
     ImageUrl: klaviyoItem.ImageURL,
     Url: klaviyoItem.URL,

@@ -1,0 +1,107 @@
+{{!-- Google Tag Manager - Delayed Loading with Consent Mode v2 Defers GTM
+loading until after page load to improve Lighthouse performance scores. GTM
+loads 2 seconds after the window load event, allowing critical content to render
+first. Google Consent Mode v2 defaults are set BEFORE GTM loads. CookieYes (or
+another CMP) will update consent states after user interaction. All analytics
+tags (GA4, Google Ads, etc.) should be configured inside GTM. Note: This partial
+is included in layout/base.html which does NOT render on the order confirmation
+page (which uses layout/empty.html). Conversion tracking for the order
+confirmation page must be added via Script Manager. Configuration: - GTM
+Container ID: Set in theme_settings.gtm_container_id - Delay: 2000ms after
+window load (configurable below) To enable: Add gtm_container_id to config.json
+settings --}} {{#if theme_settings.gtm_container_id}}
+<script nonce="{{nonce}}">
+  (function () {
+    "use strict";
+
+    // Configuration
+    var GTM_ID = "{{theme_settings.gtm_container_id}}";
+    var DELAY_MS = 2000; // Delay after window load
+
+    // Google Consent Mode v2 - Set defaults BEFORE GTM loads
+    // CookieYes will update these based on user consent choices
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag("consent", "default", {
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+      analytics_storage: "denied",
+      functionality_storage: "denied",
+      personalization_storage: "denied",
+      security_storage: "granted",
+      wait_for_update: 500,
+    });
+
+    // Enable URL passthrough so ad click info is preserved even when
+    // ad_storage is denied (important for Google Ads attribution)
+    gtag("set", "url_passthrough", true);
+
+    // Enable ads_data_redaction when ad_storage is denied
+    gtag("set", "ads_data_redaction", true);
+
+    function loadGTM() {
+      // Google Tag Manager
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", GTM_ID);
+    }
+
+    // Load immediately if user interacts (scroll, click, touch)
+    // Otherwise wait for delay after load
+    var loaded = false;
+
+    function triggerLoad() {
+      if (loaded) return;
+      loaded = true;
+      loadGTM();
+      // Clean up listeners
+      document.removeEventListener("scroll", triggerLoad);
+      document.removeEventListener("click", triggerLoad);
+      document.removeEventListener("touchstart", triggerLoad);
+      document.removeEventListener("keydown", triggerLoad);
+    }
+
+    // User interaction triggers immediate load
+    document.addEventListener("scroll", triggerLoad, {
+      once: true,
+      passive: true,
+    });
+    document.addEventListener("click", triggerLoad, { once: true });
+    document.addEventListener("touchstart", triggerLoad, {
+      once: true,
+      passive: true,
+    });
+    document.addEventListener("keydown", triggerLoad, { once: true });
+
+    // Fallback: Load after delay post-window-load
+    if (document.readyState === "complete") {
+      setTimeout(triggerLoad, DELAY_MS);
+    } else {
+      window.addEventListener("load", function () {
+        setTimeout(triggerLoad, DELAY_MS);
+      });
+    }
+  })();
+</script>
+
+<!-- Google Tag Manager (noscript) - for users without JavaScript -->
+<noscript>
+  <iframe
+    src="https://www.googletagmanager.com/ns.html?id={{theme_settings.gtm_container_id}}"
+    height="0"
+    width="0"
+    style="display: none; visibility: hidden"
+  ></iframe>
+</noscript>
+{{/if}}

@@ -61,6 +61,7 @@
     .form-input {
         flex: 1;
         border-radius: $global-radius;
+        padding-left: spacing("half");
         padding-right: spacing("double") + spacing("quarter");
 
         &:focus {
