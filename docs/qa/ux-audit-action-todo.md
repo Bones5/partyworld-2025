@@ -228,8 +228,8 @@ Source feedback was consolidated from these PDFs in `/Users/bones/Downloads/uxfi
   Status: in progress
       Branch: `ux/product-card-cta-standardize`
       Worktree: `/Users/bones/Sites/partyworld-2025-worktrees/ux-product-card-cta-standardize`
-  Progress note: normalized the category Fast Simon best-sellers CTA copy to match the rest of the recommendation cards and added a visible shared `Shop Now` CTA to the standard category product cards so the default listing now exposes the same primary action pattern.
-  Validation note: editor diagnostics pass for the touched category template, shared product card template, and shared card SCSS; browser review is still needed to confirm spacing and CTA consistency across all category card variants.
+  Progress note: normalized the category Fast Simon best-sellers CTA copy to match the rest of the recommendation cards and remove mixed mobile CTA labels.
+  Validation note: editor diagnostics pass for the touched category template; further browser review is still needed to confirm no category card variant is missing its primary CTA.
       Page: Category page mobile
       Why: Inconsistent CTAs create hesitation and missed purchase opportunities.
       Acceptance criteria:
@@ -238,11 +238,9 @@ Source feedback was consolidated from these PDFs in `/Users/bones/Downloads/uxfi
   - No purchasable product card is missing its primary action.
 
 - [ ] Turn the homepage clearance-sale banner into a real CTA or remove it.
-  Status: in progress
+      Status: queued in local worktree
       Branch: `ux/home-sale-banner-cta`
       Worktree: `/Users/bones/Sites/partyworld-2025-worktrees/ux-home-sale-banner-cta`
-  Progress note: replaced the generic homepage banner slot after recommendations with the dedicated sale-banner component and added the missing Theme Editor settings that power its image, copy, and CTA destination.
-  Validation note: editor diagnostics pass for the touched homepage template and schema; browser verification is still needed, and the new banner will remain hidden until sale-banner Theme Editor values are configured.
       Page: Homepage desktop
       Why: A promotional banner that looks clickable but is not clickable creates friction.
       Acceptance criteria:
@@ -251,11 +249,9 @@ Source feedback was consolidated from these PDFs in `/Users/bones/Downloads/uxfi
   - Hover, focus, and tap behavior match the visual cue.
 
 - [ ] Fix broken homepage imagery.
-  Status: in progress
+      Status: queued in local worktree
       Branch: `ux/homepage-broken-images`
       Worktree: `/Users/bones/Sites/partyworld-2025-worktrees/ux-homepage-broken-images`
-  Progress note: homepage theme cards now render Stencil image objects through the shared responsive image partial, preserve string and source URL fallbacks, use the passed card title consistently, and show a neutral placeholder when an image is missing.
-  Validation note: editor diagnostics pass for the touched theme-card template and homepage grids SCSS; browser verification against production-like homepage content is still needed.
       Page: Homepage desktop
       Why: Broken images reduce trust and make the page feel unreliable.
       Acceptance criteria:
@@ -266,11 +262,9 @@ Source feedback was consolidated from these PDFs in `/Users/bones/Downloads/uxfi
 ### P2 - Visual consistency and polish
 
 - [ ] Normalize category grid image sizing and aspect-ratio handling.
-  Status: in progress
+      Status: queued in local worktree
       Branch: `ux/category-image-sizing`
       Worktree: `/Users/bones/Sites/partyworld-2025-worktrees/ux-category-image-sizing`
-  Progress note: added a category-page-only image override so standard and Fast Simon product cards fill the existing square media frame consistently instead of letterboxing within it.
-  Validation note: editor diagnostics pass for the touched category SCSS; browser verification is still needed to confirm the crop stays acceptable across real category assortments.
       Page: Category page desktop
       Why: Oversized or inconsistent images disrupt scanning.
       Acceptance criteria:

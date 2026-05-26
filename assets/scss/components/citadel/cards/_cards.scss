@@ -75,10 +75,11 @@
     @include lazy-loaded-img;
     border: 0;
     /* Object-fit polyfill */
-    font-family: "object-fit: contain;";
-    max-height: 100%;
-    object-fit: contain;
+    font-family: "object-fit: cover;";
+    height: 100%;
+    object-fit: cover;
     width: 100%;
+    padding:1rem;
 }
 
 .card-title {

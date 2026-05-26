@@ -37,18 +37,18 @@ const defaultOptions = {
  * @returns {string} e.g. "$", "£", "€"
  */
 function getCurrencySymbol(currencyCode) {
-  if (!currencyCode) return '';
+  if (!currencyCode) return "";
   try {
-    const parts = Intl.NumberFormat('en', {
-      style: 'currency',
+    const parts = Intl.NumberFormat("en", {
+      style: "currency",
       currency: currencyCode,
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).formatToParts(0);
-    const part = parts.find(function(p) { return p.type === 'currency'; });
-    return part ? part.value : '';
+    const part = parts.find((p) => p.type === "currency");
+    return part ? part.value : "";
   } catch (e) {
-    return '';
+    return "";
   }
 }
 
@@ -91,7 +91,7 @@ class FacetedSearch {
     this.initPriceValidator();
 
     // Derive currency symbol from ISO code stored in the range form's data attribute.
-    const currencyCode = $('#facet-range-form').data('currencyCode') || '';
+    const currencyCode = $("#facet-range-form").data("currencyCode") || "";
     this.currencySymbol = getCurrencySymbol(currencyCode);
     this.applyCurrencyPrefixSymbol();
 
@@ -215,7 +215,7 @@ class FacetedSearch {
    */
   applyCurrencyPrefixSymbol() {
     if (this.currencySymbol) {
-      $('.form-currencyPrefix').text(this.currencySymbol);
+      $(".form-currencyPrefix").text(this.currencySymbol);
     }
   }
 
@@ -388,7 +388,7 @@ class FacetedSearch {
     });
 
     const rangeLabel = (() => {
-      const currencySymbol = this.currencySymbol || '';
+      const currencySymbol = this.currencySymbol || "";
 
       if (minPrice && maxPrice) {
         return `${currencySymbol}${minPrice} - ${currencySymbol}${maxPrice}`;
