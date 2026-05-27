@@ -7,6 +7,9 @@
 
     <link href="{{ head.favicon }}" rel="shortcut icon">
     {{#block "head"}}{{/block}}
+
+    {{!-- Sentry error monitoring (also runs on order confirmation page) --}}
+    {{> components/common/sentry-script }}
 </head>
 <body>
     {{#block "page"}}{{/block}}

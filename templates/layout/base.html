@@ -29,6 +29,9 @@
         {{> components/common/polyfill-script }}
         <script nonce="{{nonce}}">window.consentManagerTranslations = `{{{langJson 'consent_manager'}}}`;</script>
 
+        {{!-- Sentry error monitoring - load early to capture bootstrap errors --}}
+        {{> components/common/sentry-script }}
+
         {{!-- Load Lazysizes script ASAP so images will appear --}}
         <script nonce="{{nonce}}">
             {{!-- Only load visible elements until the onload event fires, after which preload nearby elements. --}}

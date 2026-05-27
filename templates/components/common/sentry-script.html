@@ -1,0 +1,135 @@
+{{!--
+    Sentry Browser SDK - Loader Script (CDN)
+
+    Loaded from js.sentry-cdn.com so the SDK is delivered async with zero
+    webpack/bundle impact. Loader installs lightweight error/unhandledrejection
+    listeners immediately, then lazy-loads the full SDK on first error or when
+    Sentry.onLoad() is called below to configure it.
+
+    Placed in <head> BEFORE GTM so it can capture errors thrown during
+    consent-manager / GTM bootstrap.
+
+    Errors are always captured (legitimate interest, no PII by default).
+    Session Replay is gated on analytics_storage consent via Consent Mode v2.
+
+    Configuration (config.json -> settings):
+      sentry_enabled                       boolean  master switch
+      sentry_loader_url                    string   full https://js.sentry-cdn.com/<key>.min.js URL
+    sentry_environment                   string   auto | production | staging | development
+      sentry_release                       string   optional, e.g. "partyworld-2025@6.17.0"
+      sentry_traces_sample_rate            number   0.0 - 1.0 (perf tracing)
+      sentry_replays_session_sample_rate   number   0.0 - 1.0 (background replays)
+      sentry_replays_on_error_sample_rate  number   0.0 - 1.0 (replays on error)
+--}}
+{{#if theme_settings.sentry_enabled}}{{#if theme_settings.sentry_loader_url}}
+<script nonce="{{nonce}}" src="{{theme_settings.sentry_loader_url}}" crossorigin="anonymous"></script>
+<script nonce="{{nonce}}">
+    (function () {
+        "use strict";
+        if (typeof window.Sentry === "undefined" || typeof window.Sentry.onLoad !== "function") {
+            return;
+        }
+
+        var ENVIRONMENT = "{{theme_settings.sentry_environment}}" || "auto";
+        var RELEASE = "{{theme_settings.sentry_release}}";
+        var TRACES_RATE = parseFloat("{{theme_settings.sentry_traces_sample_rate}}");
+        var REPLAY_SESSION_RATE = parseFloat("{{theme_settings.sentry_replays_session_sample_rate}}");
+        var REPLAY_ERROR_RATE = parseFloat("{{theme_settings.sentry_replays_on_error_sample_rate}}");
+
+        if (!ENVIRONMENT || ENVIRONMENT === "auto") {
+            var hostname = window.location.hostname || "";
+
+            if (hostname === "localhost" || hostname === "127.0.0.1") {
+                ENVIRONMENT = "development";
+            } else if (/mybigcommerce\.com$/i.test(hostname) || /sandbox/i.test(hostname)) {
+                ENVIRONMENT = "staging";
+            } else {
+                ENVIRONMENT = "production";
+            }
+        }
+
+        if (isNaN(TRACES_RATE)) TRACES_RATE = 0.1;
+        if (isNaN(REPLAY_SESSION_RATE)) REPLAY_SESSION_RATE = 0.0;
+        if (isNaN(REPLAY_ERROR_RATE)) REPLAY_ERROR_RATE = 1.0;
+
+        {{!-- Respect Consent Mode v2: only enable Replay when analytics_storage granted. --}}
+        function analyticsGranted() {
+            try {
+                var dl = window.dataLayer || [];
+                for (var i = dl.length - 1; i >= 0; i--) {
+                    var ev = dl[i];
+                    if (ev && ev[0] === "consent" && ev[2] && ev[2].analytics_storage) {
+                        return ev[2].analytics_storage === "granted";
+                    }
+                }
+            } catch (e) { /* noop */ }
+            return false;
+        }
+
+        var replayEnabled = analyticsGranted();
+
+        window.Sentry.onLoad(function () {
+            var integrations = [];
+            if (replayEnabled && typeof window.Sentry.replayIntegration === "function") {
+                integrations.push(window.Sentry.replayIntegration({
+                    maskAllText: true,
+                    blockAllMedia: true
+                }));
+            }
+
+            window.Sentry.init({
+                environment: ENVIRONMENT,
+                release: RELEASE || undefined,
+                tracesSampleRate: TRACES_RATE,
+                replaysSessionSampleRate: replayEnabled ? REPLAY_SESSION_RATE : 0,
+                replaysOnErrorSampleRate: replayEnabled ? REPLAY_ERROR_RATE : 0,
+                integrations: integrations,
+                {{!-- Drop noisy errors from 3rd-party scripts we can't fix --}}
+                ignoreErrors: [
+                    "ResizeObserver loop limit exceeded",
+                    "ResizeObserver loop completed with undelivered notifications",
+                    "Non-Error promise rejection captured",
+                    /^Script error\.?$/,
+                    /gtag is not defined/i,
+                    /fbq is not defined/i,
+                    /klaviyo/i
+                ],
+                denyUrls: [
+                    /extensions\//i,
+                    /^chrome:\/\//i,
+                    /^chrome-extension:\/\//i,
+                    /^moz-extension:\/\//i,
+                    /googletagmanager\.com/i,
+                    /google-analytics\.com/i
+                ]
+            });
+
+            {{!-- Tag every event with page_type for fast filtering in Sentry. --}}
+            try {
+                window.Sentry.setTag("page_type", "{{page_type}}");
+                window.Sentry.setTag("channel_id", "{{settings.channel_id}}");
+            } catch (e) { /* noop */ }
+
+            {{!-- Identify logged-in customer (id only, no PII). --}}
+            {{#if customer.id}}
+            try {
+                window.Sentry.setUser({ id: "{{customer.id}}" });
+            } catch (e) { /* noop */ }
+            {{/if}}
+        });
+
+        {{!-- If consent is granted later, lazily enable Replay. --}}
+        window.addEventListener("cookieyes_consent_update", function () {
+            if (!replayEnabled && analyticsGranted() && window.Sentry && window.Sentry.addIntegration && window.Sentry.replayIntegration) {
+                replayEnabled = true;
+                try {
+                    window.Sentry.addIntegration(window.Sentry.replayIntegration({
+                        maskAllText: true,
+                        blockAllMedia: true
+                    }));
+                } catch (e) { /* noop */ }
+            }
+        });
+    })();
+</script>
+{{/if}}{{/if}}
