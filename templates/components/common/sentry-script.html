@@ -108,11 +108,18 @@
             errors that we can't fix (ad pixels, analytics, chat widgets, A/B,
             consent). Reporting them just creates noise (see PARTYWORLD-STOREFRONT-B/-E
             which alone produce ~780 events/4h). Skip capture entirely for these.
+            Fast Simon is intentionally NOT in this list so its bugs stay visible.
         --}}
-        var NOISY_SCRIPT_HOST_PATTERN = /(^|\.)(doubleclick\.net|googleadservices\.com|googlesyndication\.com|googletagmanager\.com|google-analytics\.com|g\.doubleclick\.net|facebook\.net|facebook\.com|connect\.facebook\.net|klaviyo\.com|hotjar\.com|fastsimon\.com|trustpilot\.com|cookieyes\.com|clerk\.(?:com|dev|accounts\.dev)|cdn\.clerk\.io|tiktok\.com|analytics\.tiktok\.com|bing\.com|bat\.bing\.com|hs-scripts\.com|hubspot\.com)$/i;
+        var NOISY_SCRIPT_HOST_PATTERN = /(^|\.)(doubleclick\.net|googleadservices\.com|googlesyndication\.com|googletagmanager\.com|google-analytics\.com|g\.doubleclick\.net|facebook\.net|facebook\.com|connect\.facebook\.net|klaviyo\.com|hotjar\.com|trustpilot\.com|cookieyes\.com|clerk\.(?:com|dev|accounts\.dev)|cdn\.clerk\.io|tiktok\.com|analytics\.tiktok\.com|bing\.com|bat\.bing\.com|hs-scripts\.com|hubspot\.com)$/i;
+        var FAST_SIMON_PATTERN = /fastsimon\.com|fast-simon/i;
+        var IS_LOGGED_IN = {{#if customer.id}}true{{else}}false{{/if}};
 
         function isNoisyScriptHost(host) {
             return !!host && NOISY_SCRIPT_HOST_PATTERN.test(host);
+        }
+
+        function isFastSimonValue(value) {
+            return !!value && FAST_SIMON_PATTERN.test(String(value));
         }
 
         function recordMetric(name, type, value, options) {
@@ -171,6 +178,11 @@
                         scope.setLevel("error");
                         scope.setTag("failure_type", "head_script");
                         scope.setTag("resource_kind", "script");
+
+                        if (extra && isFastSimonValue(extra.script_host || extra.script_src)) {
+                            scope.setTag("vendor", "fastsimon");
+                            scope.setTag("error_owner", "third_party");
+                        }
 
                         if (extra && extra.script_origin) {
                             scope.setTag("script_origin", extra.script_origin);
@@ -312,7 +324,6 @@
                     /widget\.trustpilot\.com/i,
                     /cdn\.cookieyes\.com/i,
                     /cdn\.clerk\.io/i,
-                    /fastsimon\.com/i,
                     /analytics\.tiktok\.com/i,
                     /bat\.bing\.com/i
                 ],
@@ -329,6 +340,8 @@
                         var type = exception && exception.type;
                         var value = exception && exception.value;
                         var frames = exception && exception.stacktrace && exception.stacktrace.frames;
+                        var requestUrl = event && event.request && event.request.url || "";
+                        var originalException = hint && hint.originalException ? String(hint.originalException) : "";
 
                         {{!-- Drop synthetic test events even if title is wrapped --}}
                         var message = event && event.message;
@@ -338,6 +351,7 @@
 
                         {{!-- Drop the "<unknown>" issue cluster (no message + no frames) --}}
                         var titleish = (value || message || "").toString().trim();
+                        var combined = [titleish, value || "", message || "", requestUrl, originalException].join("\n");
                         if ((!titleish || titleish === "<unknown>") && (!frames || frames.length === 0)) {
                             return null;
                         }
@@ -348,16 +362,32 @@
                         }
 
                         {{!--
+                            Fast Simon requests /customer/current.jwt for guest
+                            sessions. BigCommerce returns 404 there, which is
+                            expected and not actionable.
+                        --}}
+                        if (!IS_LOGGED_IN && /customer\/current\.jwt/i.test(combined) && /(^|\b)404(\b|$)|status of 404/i.test(combined)) {
+                            return null;
+                        }
+
+                        {{!--
                             Drop errors whose only in-app frame is a denied CDN.
                             Browsers sometimes surface third-party errors as
                             window.onerror with no useful frame; this trims them.
                         --}}
+                        var topUrl = "";
                         if (frames && frames.length) {
                             var topFrame = frames[frames.length - 1];
-                            var topUrl = topFrame && (topFrame.filename || topFrame.abs_path) || "";
+                            topUrl = topFrame && (topFrame.filename || topFrame.abs_path) || "";
                             if (NOISY_SCRIPT_HOST_PATTERN.test(topUrl)) {
                                 return null;
                             }
+                        }
+
+                        if (isFastSimonValue(combined) || isFastSimonValue(topUrl)) {
+                            event.tags = event.tags || {};
+                            event.tags.vendor = "fastsimon";
+                            event.tags.error_owner = "third_party";
                         }
                     } catch (e) { /* fall through and send */ }
                     return event;
