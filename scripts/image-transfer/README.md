@@ -2,6 +2,8 @@
 
 Scripts for downloading product images from BigCommerce export CSV and re-uploading them to a new environment.
 
+Note: the main theme workflow in this repo is local-only. We do not maintain a dedicated BigCommerce staging store for routine development. The store-to-store examples in this directory are legacy migration utilities for one-off transfers, not the default day-to-day workflow.
+
 ## Overview
 
 When migrating products between BigCommerce stores (e.g., staging → production), product images are hosted on BigCommerce's CDN and tied to the source store. These scripts help you:
@@ -26,17 +28,20 @@ npm install
 
 ## Environment Setup
 
-The scripts integrate with the project's multi-environment system. Set up your environments first:
+The scripts integrate with the project's environment switcher. Set up the stores you actually plan to transfer between:
 
 ```bash
 # From project root
 npm run env:init
 
-# Edit environments/staging.config.json and environments/production.config.json
-# Add your store URLs
+# Edit environments/production.config.json
+# Add your primary store URL
 
-# Edit environments/staging.secrets.json and environments/production.secrets.json  
-# Add your API tokens
+# Edit environments/production.secrets.json
+# Add your API token
+
+# If you need a second store for a one-off migration,
+# create matching *.config.json and *.secrets.json files manually.
 ```
 
 ## Quick Start (Environment-Aware)
@@ -66,10 +71,12 @@ node download-images.js path/to/products.csv ./downloaded-images
 ```
 
 Options:
+
 - `--concurrent <n>` - Number of parallel downloads (default: 5)
 - `--retries <n>` - Retry attempts per image (default: 3)
 
 This creates:
+
 - `downloaded-images/` - Images organized by SKU
 - `downloaded-images/manifest.json` - Mapping of SKUs to local files
 - `downloaded-images/errors.json` - Any failed downloads
@@ -77,6 +84,7 @@ This creates:
 ### Step 3: Upload to Cloud Storage
 
 Upload to Google Cloud Storage:
+
 ```bash
 # Authenticate first (one-time)
 gcloud auth login
@@ -88,6 +96,7 @@ node upload-to-cdn.js ./downloaded-images gs://your-bucket/products \
 ```
 
 Upload to AWS S3:
+
 ```bash
 AWS_ACCESS_KEY_ID=xxx AWS_SECRET_ACCESS_KEY=yyy \
 node upload-to-cdn.js ./downloaded-images s3://your-bucket/products \
@@ -96,6 +105,7 @@ node upload-to-cdn.js ./downloaded-images s3://your-bucket/products \
 ```
 
 Upload to Cloudflare R2:
+
 ```bash
 AWS_ACCESS_KEY_ID=xxx AWS_SECRET_ACCESS_KEY=yyy \
 node upload-to-cdn.js ./downloaded-images s3://your-bucket/products \
@@ -133,6 +143,7 @@ image-transfer/
 ## Image URL Columns
 
 The scripts process these BigCommerce CSV columns:
+
 - `Product Image URL - 1` through `Product Image URL - n`
 - Multiple images per product are supported
 
@@ -141,6 +152,7 @@ The scripts process these BigCommerce CSV columns:
 ### Download Failures
 
 Check `errors.json` for failed downloads. Common issues:
+
 - **403 Forbidden**: Image no longer exists or is private
 - **Network timeout**: Increase `--retries` or run again
 
@@ -149,22 +161,26 @@ Re-run the download script - it will skip already-downloaded images.
 ### Upload Issues
 
 For Google Cloud Storage, ensure gcloud is installed and authenticated:
+
 ```bash
 brew install google-cloud-sdk
 gcloud auth login
 ```
 
 Verify GCS access:
+
 ```bash
 gsutil ls gs://your-bucket
 ```
 
 For AWS/S3, ensure AWS CLI is installed:
+
 ```bash
 brew install awscli
 ```
 
 Verify AWS credentials:
+
 ```bash
 aws sts get-caller-identity
 ```
@@ -172,6 +188,7 @@ aws sts get-caller-identity
 ### CSV Parse Errors
 
 Ensure your CSV is properly formatted:
+
 - UTF-8 encoding
 - Standard comma delimiter
 - Quoted fields containing commas
@@ -228,4 +245,3 @@ npm run pages:transfer -- --from staging --to production --dry-run
 - Duplicate pages (same URL) are automatically skipped
 - Image URLs in content need to be updated separately (use image transfer scripts)
 - Creates mapping files for reference (page IDs, widget UUIDs)
-

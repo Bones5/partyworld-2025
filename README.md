@@ -1,8 +1,11 @@
 # Partyworld 2025
+
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/bigcommerce/cornerstone)
 ![tests](https://github.com/bigcommerce/cornerstone/workflows/Theme%20Bundling%20Test/badge.svg?branch=master)
 
 Partyworld 2025 is a customized BigCommerce theme based on Cornerstone.
+
+Development in this repo is local-only. We do not maintain a BigCommerce staging store for theme work; use the local Stencil server against the configured store credentials described in [docs/ENVIRONMENTS.md](docs/ENVIRONMENTS.md).
 
 ## Documentation
 
@@ -10,7 +13,7 @@ Partyworld 2025 is a customized BigCommerce theme based on Cornerstone.
 - [Playwright Testing Guide](docs/PLAYWRIGHT_TESTING.md) - E2E testing documentation
 - [Theme Map](docs/THEME_MAP.md) - Visual guide to template structure and component organization
 - [Design System Rules](docs/design-system/design_system_rules.md) - Design tokens, components, and patterns
-- [Environments](docs/ENVIRONMENTS.md) - Environment configuration and deployment
+- [Environments](docs/ENVIRONMENTS.md) - Local development store configuration
 - [SVG Styling](docs/SVG_STYLING.md) - SVG icon system and styling guidelines
 
 ## Content Setup
@@ -34,24 +37,30 @@ Setting up your store with this theme? See our comprehensive content guides:
 ## Testing
 
 ### Unit Tests (Jest)
+
 Run JavaScript unit tests:
+
 ```bash
 npm test
 ```
 
 ### E2E Tests (Playwright)
+
 Run end-to-end regression tests for design system validation:
+
 ```bash
 npm run test:e2e
 ```
 
 See [Playwright Testing Guide](docs/PLAYWRIGHT_TESTING.md) for detailed information on:
+
 - Running tests against local or deployed stores
 - Writing new tests
 - CI/CD integration
 - Debugging test failures
 
 The E2E tests validate:
+
 - Icon system implementation
 - Accessibility requirements (WCAG)
 - Component patterns and BEM naming
@@ -61,58 +70,61 @@ The E2E tests validate:
 - SCSS token usage
 
 ### Stencil Utils
+
 [Stencil-utils](https://github.com/bigcommerce/stencil-utils) is our supporting library for our events and remote interactions.
 
 ## JS API
+
 When writing theme JavaScript (JS) there is an API in place for running JS on a per page basis. To properly write JS for your theme, the following page types are available to you:
 
-* "pages/account/addresses"
-* "pages/account/add-address"
-* "pages/account/add-return"
-* "pages/account/add-wishlist"
-* "pages/account/recent-items"
-* "pages/account/download-item"
-* "pages/account/edit"
-* "pages/account/return-saved"
-* "pages/account/returns"
-* "pages/account/payment-methods"
-* "pages/auth/login"
-* "pages/auth/account-created"
-* "pages/auth/create-account"
-* "pages/auth/new-password"
-* "pages/blog"
-* "pages/blog-post"
-* "pages/brand"
-* "pages/brands"
-* "pages/cart"
-* "pages/category"
-* "pages/compare"
-* "pages/errors"
-* "pages/gift-certificate/purchase"
-* "pages/gift-certificate/balance"
-* "pages/gift-certificate/redeem"
-* "global"
-* "pages/home"
-* "pages/order-complete"
-* "pages/page"
-* "pages/product"
-* "pages/search"
-* "pages/sitemap"
-* "pages/subscribed"
-* "pages/account/wishlist-details"
-* "pages/account/wishlists"
+- "pages/account/addresses"
+- "pages/account/add-address"
+- "pages/account/add-return"
+- "pages/account/add-wishlist"
+- "pages/account/recent-items"
+- "pages/account/download-item"
+- "pages/account/edit"
+- "pages/account/return-saved"
+- "pages/account/returns"
+- "pages/account/payment-methods"
+- "pages/auth/login"
+- "pages/auth/account-created"
+- "pages/auth/create-account"
+- "pages/auth/new-password"
+- "pages/blog"
+- "pages/blog-post"
+- "pages/brand"
+- "pages/brands"
+- "pages/cart"
+- "pages/category"
+- "pages/compare"
+- "pages/errors"
+- "pages/gift-certificate/purchase"
+- "pages/gift-certificate/balance"
+- "pages/gift-certificate/redeem"
+- "global"
+- "pages/home"
+- "pages/order-complete"
+- "pages/page"
+- "pages/product"
+- "pages/search"
+- "pages/sitemap"
+- "pages/subscribed"
+- "pages/account/wishlist-details"
+- "pages/account/wishlists"
 
 These page types will correspond to the pages within your theme. Each one of these page types map to an ES6 module that extends the base `PageManager` abstract class.
 
 ```javascript
-    export default class Auth extends PageManager {
-        constructor() {
-            // Set up code goes here; attach to internals and use internals as you would 'this'
-        }
-    }
+export default class Auth extends PageManager {
+  constructor() {
+    // Set up code goes here; attach to internals and use internals as you would 'this'
+  }
+}
 ```
 
 ### JS Template Context Injection
+
 Occasionally you may need to use dynamic data from the template context within your client-side theme application code.
 
 Two helpers are provided to help achieve this.
@@ -131,10 +143,10 @@ For example, to setup the product name in your client-side app, you can do the f
 {{inject "myProductName" product.title}}
 
 <script>
-// Note the lack of quotes around the jsContext handlebars helper, it becomes a string automatically.
-var jsContext = JSON.parse({{jsContext}}); // jsContext would output "{\"myProductName\": \"Sample Product\"}" which can feed directly into your JavaScript
+  // Note the lack of quotes around the jsContext handlebars helper, it becomes a string automatically.
+  var jsContext = JSON.parse({{jsContext}}); // jsContext would output "{\"myProductName\": \"Sample Product\"}" which can feed directly into your JavaScript
 
-console.log(jsContext.myProductName); // Will output: Sample Product
+  console.log(jsContext.myProductName); // Will output: Sample Product
 </script>
 ```
 
@@ -143,15 +155,17 @@ You can compose your JSON object across multiple pages to create a different set
 The stencil theme makes the jsContext available on both the active page scoped and global PageManager objects as `this.context`.
 
 ## Polyfilling via Feature Detection
+
 Cornerstone implements [this strategy](https://philipwalton.com/articles/loading-polyfills-only-when-needed/) for polyfilling.
 
 In `templates/components/common/polyfill-script.html` there is a simple feature detection script which can be extended to detect any recent JS features you intend to use in your theme code.
 
-If any one of the conditions is not met, an additional blocking JS bundle configured in `assets/js/polyfills.js` will be loaded to polyfill modern JS features before the main bundle executes. 
+If any one of the conditions is not met, an additional blocking JS bundle configured in `assets/js/polyfills.js` will be loaded to polyfill modern JS features before the main bundle executes.
 
 This intentionally prioritizes the experience of the 90%+ of shoppers who are on modern browsers in terms of performance, while maintaining compatibility (at the expense of additional JS download+parse for the polyfills) for users on legacy browsers.
 
 ## Static assets
+
 Some static assets in the Stencil theme are handled with Grunt if required. This
 means you have some dependencies on grunt and npm. To get started:
 
@@ -169,10 +183,10 @@ npm install
 
 Note: package-lock.json file was generated by Node version 20 and npm version 10. The app supports Node 20 as well as multiple versions of npm, but we should always use those versions when updating package-lock.json, unless it is decided to upgrade those, and in this case the readme should be updated as well. If using a different version for node OR npm, please delete the package-lock.json file prior to installing node packages and also prior to pushing to github.
 
-If updating or adding a dependency, please double check that you are working on Node version 20 and npm version 10 and run ```npm update <package_name>```  or ```npm install <package_name>``` (avoid running npm install for updating a package). After updating the package, please make sure that the changes in the package-lock.json reflect only the updated/new package prior to pushing the changes to github.
-
+If updating or adding a dependency, please double check that you are working on Node version 20 and npm version 10 and run `npm update <package_name>` or `npm install <package_name>` (avoid running npm install for updating a package). After updating the package, please make sure that the changes in the package-lock.json reflect only the updated/new package prior to pushing the changes to github.
 
 ### Icons
+
 Icons are delivered via a single SVG sprite, which is embedded on the page in
 `templates/layout/base.html`. It is generated via a grunt task `grunt svgstore`.
 

@@ -86,9 +86,73 @@
         <script nonce="{{nonce}}">window.__webpack_public_path__ = "{{cdn 'assets/dist/'}}";</script>
         <script nonce="{{nonce}}">
             {{!-- Exported in app.js --}}
+            function reportThemeBundleFailure(message, error, extra) {
+                try {
+                    if (typeof window.__PWRecordMetric === 'function') {
+                        window.__PWRecordMetric('partyworld.theme.bootstrap.failure', 'count', 1, {
+                            attributes: {
+                                page_type: (extra && extra.page_type) || '{{page_type}}',
+                                failure_mode: (extra && extra.failure_mode) || 'unknown'
+                            }
+                        });
+                    }
+
+                    if (window.Sentry) {
+                        if (typeof window.Sentry.withScope === 'function') {
+                            window.Sentry.withScope(function (scope) {
+                                scope.setLevel('error');
+                                scope.setTag('failure_type', 'theme_bundle');
+                                if (extra) {
+                                    scope.setContext('theme_bundle', extra);
+                                }
+
+                                if (error && typeof window.Sentry.captureException === 'function') {
+                                    window.Sentry.captureException(error);
+                                    return;
+                                }
+
+                                if (typeof window.Sentry.captureMessage === 'function') {
+                                    window.Sentry.captureMessage(message);
+                                }
+                            });
+                        } else if (error && typeof window.Sentry.captureException === 'function') {
+                            window.Sentry.captureException(error);
+                        } else if (typeof window.Sentry.captureMessage === 'function') {
+                            window.Sentry.captureMessage(message);
+                        }
+                    }
+                } catch (captureError) {
+                    console.error('Failed to report theme bundle failure', captureError);
+                }
+            }
+
             function onThemeBundleMain() {
                 window.__PW_CONTEXT__ = {{jsContext}};
                 window.stencilBootstrap("{{page_type}}", window.__PW_CONTEXT__).load();
+                window.__PW_THEME_BOOTSTRAP_LOADED__ = true;
+
+                if (typeof window.__PWRecordMetric === 'function') {
+                    var bootstrapFinishedAt = window.performance && typeof window.performance.now === 'function'
+                        ? window.performance.now()
+                        : Date.now();
+                    var bootstrapStartedAt = typeof window.__PWBootstrapMetricStart === 'number'
+                        ? window.__PWBootstrapMetricStart
+                        : bootstrapFinishedAt;
+                    var bootstrapDuration = Math.max(0, bootstrapFinishedAt - bootstrapStartedAt);
+
+                    window.__PWRecordMetric('partyworld.theme.bootstrap.success', 'count', 1, {
+                        attributes: {
+                            page_type: '{{page_type}}'
+                        }
+                    });
+
+                    window.__PWRecordMetric('partyworld.theme.bootstrap.duration', 'distribution', bootstrapDuration, {
+                        unit: 'millisecond',
+                        attributes: {
+                            page_type: '{{page_type}}'
+                        }
+                    });
+                }
 
                 function browserSupportsFormData() {
                     return typeof FormData !== 'undefined' 
@@ -98,6 +162,11 @@
                     var formDataPolyfillScript = document.createElement('script');
                     formDataPolyfillScript.src = src;
                     formDataPolyfillScript.onerror = function () {
+                        reportThemeBundleFailure('Failed to load formData polyfill script ' + src, null, {
+                            script_src: src,
+                            page_type: '{{page_type}}',
+                            failure_mode: 'polyfill_load_error'
+                        });
                         console.error('Failed to load formData polyfill script ' + src);
                     };
                     document.body.appendChild(formDataPolyfillScript);
@@ -113,8 +182,43 @@
             const scriptElement = document.getElementById('theme-bundle-main');
 
             if (scriptElement) {
-                addEventListener('load', onThemeBundleMain);
+                scriptElement.addEventListener('load', function () {
+                    try {
+                        onThemeBundleMain();
+                    } catch (error) {
+                        reportThemeBundleFailure('Theme bundle bootstrap threw before startup completed', error, {
+                            script_src: scriptElement.src,
+                            page_type: '{{page_type}}',
+                            failure_mode: 'bootstrap_exception'
+                        });
+
+                        throw error;
+                    }
+                });
+
+                scriptElement.addEventListener('error', function () {
+                    reportThemeBundleFailure('Failed to load theme-bundle.main.js', null, {
+                        script_src: scriptElement.src,
+                        page_type: '{{page_type}}',
+                        failure_mode: 'bundle_load_error'
+                    });
+                });
+
+                window.setTimeout(function () {
+                    if (!window.__PW_THEME_BOOTSTRAP_LOADED__) {
+                        reportThemeBundleFailure('Theme bundle did not finish bootstrapping before watchdog timeout', null, {
+                            script_src: scriptElement.src,
+                            page_type: '{{page_type}}',
+                            failure_mode: 'watchdog_timeout',
+                            ready_state: document.readyState
+                        });
+                    }
+                }, 15000);
             } else {
+                reportThemeBundleFailure('Could not find script element with id "theme-bundle-main"', null, {
+                    page_type: '{{page_type}}',
+                    failure_mode: 'missing_script_tag'
+                });
                 console.error('Could not find script element with id "theme-bundle-main"');
             }
         </script>

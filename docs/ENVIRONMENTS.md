@@ -1,104 +1,96 @@
-# Multi-Environment Setup
+# Local Development Setup
 
-This project supports multiple BigCommerce store environments (staging, production, etc.) with easy switching.
+This repo is local-first. We do not maintain a BigCommerce staging store for this theme, and the default workflow is to run Stencil locally against a single configured store.
 
 ## Quick Reference
 
 ```bash
-# Switch environments
-npm run env:staging      # Switch to staging store
-npm run env:prod         # Switch to production store
-npm run env:list         # List all environments
-npm run env:current      # Show current environment
+# Configure the default store
+npm run env:init         # Create the production config template
+npm run env:prod         # Copy production store credentials into the root stencil files
+npm run env:list         # List all configured environments
+npm run env:current      # Show the active environment
 
-# Start with specific environment
-npm run start:staging    # Switch to staging + start Stencil
-npm run start:prod       # Switch to production + start Stencil
-npm run start            # Start with current environment
+# Start local development
+npm run start            # Start Stencil with the current config
+npm run start:prod       # Switch to production config + start Stencil
 ```
 
-## Setup
+## Default Setup
 
-### 1. Initialize Environment Configs
+### 1. Initialize the Store Config
 
 ```bash
 npm run env:init
 ```
 
-This creates template files in `/environments/`:
-- `staging.config.json` - Staging store URL and settings
-- `staging.secrets.json` - Staging API token (gitignored)
-- `production.config.json` - Production store URL and settings
-- `production.secrets.json` - Production API token (gitignored)
+This creates the default files in `/environments/`:
 
-### 2. Configure Your Stores
+- `production.config.json` - Store URL and Stencil settings
+- `production.secrets.json` - Store API token (gitignored)
 
-Edit `environments/staging.config.json`:
+### 2. Configure the Store Used for Local Development
+
+Edit `environments/production.config.json`:
+
 ```json
 {
-  "normalStoreUrl": "https://your-staging-store.mybigcommerce.com/",
+  "normalStoreUrl": "https://your-production-store.mybigcommerce.com/",
   "port": 3000
 }
 ```
 
-Edit `environments/staging.secrets.json`:
+Edit `environments/production.secrets.json`:
+
 ```json
 {
-  "accessToken": "your-staging-api-token"
+  "accessToken": "your-production-api-token"
 }
 ```
 
-Repeat for `production.config.json` and `production.secrets.json`.
-
-### 3. Get API Tokens
+### 3. Get an API Token
 
 1. Go to your BigCommerce admin → Settings → API Accounts
 2. Create a new API account with:
    - **OAuth Scopes**: Store Content (read-only minimum)
    - **Token Type**: Legacy V2/V3 API Token
-3. Copy the Access Token to your secrets file
+3. Copy the access token into `environments/production.secrets.json`
+
+### 4. Start the Local Storefront
+
+```bash
+npm run env:prod
+npm start
+```
 
 ## How It Works
 
 The `env-switch.js` script:
+
 1. Reads the selected environment config from `/environments/`
-2. Writes to `config.stencil.json` and `secrets.stencil.json` in the root
-3. These root files are gitignored and used by Stencil CLI
+2. Writes to `config.stencil.json` and `secrets.stencil.json` in the repo root
+3. Leaves the checked-in config templates untouched while Stencil CLI uses the generated root files locally
 
-## Adding More Environments
+## Additional Environments
 
-Create new config files:
-```
+The repo no longer advertises staging as a standard workflow. If you truly need an extra environment, create matching files manually:
+
+```text
 environments/
-├── staging.config.json
-├── staging.secrets.json
 ├── production.config.json
 ├── production.secrets.json
-├── qa.config.json          # Add more environments
+├── qa.config.json
 └── qa.secrets.json
 ```
 
 Then switch with:
+
 ```bash
 node scripts/env-switch.js qa
 ```
 
 ## Security Notes
 
-- **Never commit** `*.secrets.json` files (they're gitignored)
-- **Safe to commit** `*.config.json` files (no sensitive data)
+- **Never commit** `*.secrets.json` files; they are gitignored
+- **Safe to commit** `*.config.json` files; they contain no secrets
 - Root `config.stencil.json` and `secrets.stencil.json` are also gitignored
-
-## Image Transfer Between Environments
-
-See `scripts/image-transfer/README.md` for transferring product images between stores.
-
-Quick example:
-```bash
-npm run images:transfer -- \
-  --from staging \
-  --to production \
-  --csv ./products.csv \
-  --bucket s3://bucket/path \
-  --public-url https://cdn.example.com
-```

@@ -1,10 +1,13 @@
-# Product Image Migration Guide
+# Legacy Product Image Migration Guide
+
+Note: this document describes an older staging-based promotion workflow. The current repo workflow is local-only, and we do not maintain a dedicated BigCommerce staging store for normal theme development.
 
 **Goal:** Duplicate product images from production to staging, then re-upload to production at launch to ensure proper image isolation and clean promotion workflow.
 
 ## Overview
 
 This guide covers the complete workflow for managing product images when preparing a BigCommerce staging site for the Partyworld 2025 theme. This approach ensures:
+
 - Image isolation between environments
 - Accurate preview capabilities
 - Clean promotion with no staging/production hotlinks
@@ -191,22 +194,26 @@ This guide covers the complete workflow for managing product images when prepari
 ## Important Notes
 
 ### Image Isolation
+
 - This workflow ensures complete image isolation between environments
 - No hotlinks tie production to staging
 - Each store hosts its own image assets on its CDN
 - Prevents issues if staging store is deactivated
 
 ### Accurate Previews
+
 - Staging environment accurately reflects production
 - Clients can review without seeing production URLs
 - Testing can proceed without affecting live store
 
 ### Clean Promotion
+
 - All image updates are documented
 - Version-controlled for future theme/content iterations
 - Repeatable process for ongoing updates
 
 ### Best Practices
+
 1. **Always use original source images** - Don't rely on CDN URLs
 2. **Document everything** - Maintain image inventory spreadsheet
 3. **Test thoroughly** - Check all viewports and contexts
@@ -218,22 +225,26 @@ This guide covers the complete workflow for managing product images when prepari
 ## Troubleshooting
 
 ### Images not appearing after import
+
 - Verify CSV image URLs are publicly accessible
 - Check BigCommerce import log for errors
 - Confirm image file formats are supported (JPEG, PNG, WebP, GIF)
 - Test URLs in browser directly
 
 ### CDN caching issues
+
 - Use cache-busting parameters if needed
 - Clear CloudFlare or BigCommerce CDN cache
 - Hard refresh browser (Ctrl+Shift+R / Cmd+Shift+R)
 
 ### Duplicate or orphaned images
+
 - Use BigCommerce's bulk image cleanup tools
 - Audit via API or export to identify unused images
 - Remove via control panel or API
 
 ### Performance issues
+
 - Ensure images are appropriately sized
 - Use image optimization tools (TinyPNG, ImageOptim)
 - Enable BigCommerce's built-in image optimization

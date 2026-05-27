@@ -66,7 +66,185 @@
             return false;
         }
 
+        function normalizeUrl(url) {
+            try {
+                return new URL(url, window.location.href).href;
+            } catch (e) {
+                return url || "";
+            }
+        }
+
+        function isHeadScriptElement(target) {
+            return !!(
+                target &&
+                String(target.tagName || "").toUpperCase() === "SCRIPT" &&
+                target.src &&
+                target.ownerDocument &&
+                target.ownerDocument.head &&
+                target.ownerDocument.head.contains(target)
+            );
+        }
+
+        function scriptOrigin(src) {
+            try {
+                return new URL(src, window.location.href).origin === window.location.origin
+                    ? "first_party"
+                    : "third_party";
+            } catch (e) {
+                return "unknown";
+            }
+        }
+
+        function scriptHost(src) {
+            try {
+                return new URL(src, window.location.href).hostname || "unknown";
+            } catch (e) {
+                return "unknown";
+            }
+        }
+
+        {{!--
+            Hosts we know throw "Failed to load header script" / opaque runtime
+            errors that we can't fix (ad pixels, analytics, chat widgets, A/B,
+            consent). Reporting them just creates noise (see PARTYWORLD-STOREFRONT-B/-E
+            which alone produce ~780 events/4h). Skip capture entirely for these.
+        --}}
+        var NOISY_SCRIPT_HOST_PATTERN = /(^|\.)(doubleclick\.net|googleadservices\.com|googlesyndication\.com|googletagmanager\.com|google-analytics\.com|g\.doubleclick\.net|facebook\.net|facebook\.com|connect\.facebook\.net|klaviyo\.com|hotjar\.com|fastsimon\.com|trustpilot\.com|cookieyes\.com|clerk\.(?:com|dev|accounts\.dev)|cdn\.clerk\.io|tiktok\.com|analytics\.tiktok\.com|bing\.com|bat\.bing\.com|hs-scripts\.com|hubspot\.com)$/i;
+
+        function isNoisyScriptHost(host) {
+            return !!host && NOISY_SCRIPT_HOST_PATTERN.test(host);
+        }
+
+        function recordMetric(name, type, value, options) {
+            try {
+                if (!window.Sentry || !window.Sentry.metrics) {
+                    return;
+                }
+
+                if (type === "count" && typeof window.Sentry.metrics.count === "function") {
+                    window.Sentry.metrics.count(name, value, options || {});
+                    return;
+                }
+
+                if (type === "distribution" && typeof window.Sentry.metrics.distribution === "function") {
+                    window.Sentry.metrics.distribution(name, value, options || {});
+                    return;
+                }
+
+                if (type === "gauge" && typeof window.Sentry.metrics.gauge === "function") {
+                    window.Sentry.metrics.gauge(name, value, options || {});
+                }
+            } catch (e) { /* noop */ }
+        }
+
+        window.__PWRecordMetric = recordMetric;
+        window.__PWBootstrapMetricStart = window.performance && typeof window.performance.now === "function"
+            ? window.performance.now()
+            : Date.now();
+
+        function captureHeaderScriptFailure(message, extra) {
+            try {
+                if (!window.Sentry || typeof window.Sentry.captureMessage !== "function") {
+                    return;
+                }
+
+                recordMetric("partyworld.head_script.failure", "count", 1, {
+                    attributes: {
+                        page_type: extra && extra.page_type ? extra.page_type : "unknown",
+                        script_origin: extra && extra.script_origin ? extra.script_origin : "unknown",
+                        script_host: extra && extra.script_host ? extra.script_host : "unknown",
+                        failure_mode: extra && extra.failure_mode ? extra.failure_mode : "unknown"
+                    }
+                });
+
+                {{!--
+                    Don't raise a Sentry event for known-noisy 3rd-party hosts;
+                    the metric above is enough to track health without flooding
+                    Issues. Keep first-party + unknown hosts captured.
+                --}}
+                if (extra && isNoisyScriptHost(extra.script_host)) {
+                    return;
+                }
+
+                if (typeof window.Sentry.withScope === "function") {
+                    window.Sentry.withScope(function (scope) {
+                        scope.setLevel("error");
+                        scope.setTag("failure_type", "head_script");
+                        scope.setTag("resource_kind", "script");
+
+                        if (extra && extra.script_origin) {
+                            scope.setTag("script_origin", extra.script_origin);
+                        }
+
+                        if (extra) {
+                            scope.setContext("head_script", extra);
+                        }
+
+                        window.Sentry.captureMessage(message);
+                    });
+                    return;
+                }
+
+                window.Sentry.captureMessage(message);
+            } catch (e) { /* noop */ }
+        }
+
         var replayEnabled = analyticsGranted();
+
+        window.addEventListener("error", function (event) {
+            var target = event && event.target;
+
+            if (isHeadScriptElement(target)) {
+                if (target.__pwSentryReported) {
+                    return;
+                }
+
+                target.__pwSentryReported = true;
+                captureHeaderScriptFailure("Failed to load header script " + target.src, {
+                    script_src: normalizeUrl(target.src),
+                    script_origin: scriptOrigin(target.src),
+                    script_host: scriptHost(target.src),
+                    script_id: target.id || null,
+                    script_async: !!target.async,
+                    script_defer: !!target.defer,
+                    page_type: "{{page_type}}",
+                    failure_mode: "load_error"
+                });
+                return;
+            }
+
+            if (!event || event.target !== window) {
+                return;
+            }
+
+            if (!/^Script error\.?$/i.test(event.message || "")) {
+                return;
+            }
+
+            var runtimeScriptUrl = normalizeUrl(event.filename || "");
+            if (!runtimeScriptUrl) {
+                return;
+            }
+
+            var headScripts = document.head ? document.head.getElementsByTagName("script") : [];
+            for (var scriptIndex = 0; scriptIndex < headScripts.length; scriptIndex++) {
+                var headScript = headScripts[scriptIndex];
+                if (normalizeUrl(headScript.src) !== runtimeScriptUrl) {
+                    continue;
+                }
+
+                captureHeaderScriptFailure("Opaque runtime error in header script " + runtimeScriptUrl, {
+                    script_src: runtimeScriptUrl,
+                    script_origin: scriptOrigin(runtimeScriptUrl),
+                    script_host: scriptHost(runtimeScriptUrl),
+                    script_id: headScript.id || null,
+                    page_type: "{{page_type}}",
+                    failure_mode: "opaque_runtime_error",
+                    original_message: event.message || null
+                });
+                break;
+            }
+        }, true);
 
         window.Sentry.onLoad(function () {
             var integrations = [];
@@ -92,16 +270,103 @@
                     /^Script error\.?$/,
                     /gtag is not defined/i,
                     /fbq is not defined/i,
-                    /klaviyo/i
+                    /klaviyo/i,
+                    {{!-- iOS WebView / in-app browsers (FB, IG, TikTok) --}}
+                    /window\.webkit\.messageHandlers/i,
+                    /undefined is not an object \(evaluating 'window\.webkit/i,
+                    {{!-- Synthetic monitoring & smoke tests, not real users --}}
+                    /partyworld-.*-verification-/i,
+                    /partyworld-theme-bundle-reporting-smoke/i,
+                    {{!-- Cancelled requests on navigation (Safari + Chromium) --}}
+                    "AbortError",
+                    /The operation was aborted/i,
+                    /The user aborted a request/i,
+                    /cancelled$/i,
+                    /^canceled$/i,
+                    {{!-- Browser extensions / translators --}}
+                    /atomicFindClose/i,
+                    /vid_mate_check is not defined/i,
+                    /__gCrWeb/i,
+                    /Can't find variable: ZiteReader/i,
+                    {{!-- Already-handled head script failures (we keep the metric only) --}}
+                    /^Failed to load header script /,
+                    /^Opaque runtime error in header script /
                 ],
                 denyUrls: [
                     /extensions\//i,
                     /^chrome:\/\//i,
                     /^chrome-extension:\/\//i,
                     /^moz-extension:\/\//i,
+                    /^safari-(?:web-)?extension:\/\//i,
                     /googletagmanager\.com/i,
-                    /google-analytics\.com/i
-                ]
+                    /google-analytics\.com/i,
+                    /doubleclick\.net/i,
+                    /googleadservices\.com/i,
+                    /googlesyndication\.com/i,
+                    /connect\.facebook\.net/i,
+                    /facebook\.com\/tr/i,
+                    /static\.klaviyo\.com/i,
+                    /a\.klaviyo\.com/i,
+                    /static\.hotjar\.com/i,
+                    /script\.hotjar\.com/i,
+                    /widget\.trustpilot\.com/i,
+                    /cdn\.cookieyes\.com/i,
+                    /cdn\.clerk\.io/i,
+                    /fastsimon\.com/i,
+                    /analytics\.tiktok\.com/i,
+                    /bat\.bing\.com/i
+                ],
+                {{!--
+                    beforeSend: last line of defence. Drops events that slip
+                    past ignoreErrors/denyUrls but provide no signal:
+                      - <unknown> / empty titles with no stack frames
+                      - exceptions whose only frame is a 3rd-party CDN
+                      - AbortError variants raised as TypeErrors
+                --}}
+                beforeSend: function (event, hint) {
+                    try {
+                        var exception = event && event.exception && event.exception.values && event.exception.values[0];
+                        var type = exception && exception.type;
+                        var value = exception && exception.value;
+                        var frames = exception && exception.stacktrace && exception.stacktrace.frames;
+
+                        {{!-- Drop synthetic test events even if title is wrapped --}}
+                        var message = event && event.message;
+                        if (typeof message === "string" && /partyworld-.*-(verification|reporting-smoke)/i.test(message)) {
+                            return null;
+                        }
+
+                        {{!-- Drop the "<unknown>" issue cluster (no message + no frames) --}}
+                        var titleish = (value || message || "").toString().trim();
+                        if ((!titleish || titleish === "<unknown>") && (!frames || frames.length === 0)) {
+                            return null;
+                        }
+
+                        {{!-- Drop cancelled fetches that Sentry catches before ignoreErrors --}}
+                        if (type === "AbortError" || /The (operation|user) (was )?aborted/i.test(value || "")) {
+                            return null;
+                        }
+
+                        {{!--
+                            Drop errors whose only in-app frame is a denied CDN.
+                            Browsers sometimes surface third-party errors as
+                            window.onerror with no useful frame; this trims them.
+                        --}}
+                        if (frames && frames.length) {
+                            var topFrame = frames[frames.length - 1];
+                            var topUrl = topFrame && (topFrame.filename || topFrame.abs_path) || "";
+                            if (NOISY_SCRIPT_HOST_PATTERN.test(topUrl)) {
+                                return null;
+                            }
+                        }
+                    } catch (e) { /* fall through and send */ }
+                    return event;
+                },
+                {{!--
+                    Keep breadcrumb spam in check. Most fetch breadcrumbs are
+                    just product list re-fetches and dominate replay size.
+                --}}
+                maxBreadcrumbs: 50
             });
 
             {{!-- Tag every event with page_type for fast filtering in Sentry. --}}
