@@ -227,6 +227,7 @@
             });
 
             mergeCorrelationIds(ids, readCorrelationFromObject(window.__PWCorrelationIds));
+            mergeCorrelationIds(ids, readCorrelationFromObject(window.__PW_CONTEXT__));
             mergeCorrelationIds(ids, readCorrelationFromUrl());
             mergeCorrelationIds(ids, readCorrelationFromDataLayer());
 
