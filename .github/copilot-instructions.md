@@ -4,6 +4,16 @@ Context
 
 This is a BigCommerce Cornerstone (Stencil) theme. Prefer reusing Cornerstone primitives and classes over inventing new ones.
 Build: Webpack 5; Styles: SCSS + Citadel; JS: jQuery + @bigcommerce/stencil-utils + PageManager pattern.
+
+Sentry Mapping
+
+- Organization: `bonesdev`
+- Use the Partyworld 2025 storefront/browser Sentry project for theme and client-side error work.
+- Canonical files: `config.json`, `templates/components/common/sentry-script.html`, `templates/layout/base.html`, `templates/layout/empty.html`
+- Theme settings drive the Sentry setup: `sentry_enabled`, `sentry_loader_url`, `sentry_environment`, `sentry_release`, `sentry_traces_sample_rate`, `sentry_replays_session_sample_rate`, `sentry_replays_on_error_sample_rate`
+- Release naming currently follows `partyworld-2025@<version>` from theme config.
+- When triaging storefront issues, inspect the browser-side tags added in the Sentry script such as `page_type`, `channel_id`, and customer context before changing code.
+
 Guardrails
 
 Use token functions and Theme Editor-backed variables:

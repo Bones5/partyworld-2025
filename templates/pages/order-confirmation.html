@@ -5,6 +5,14 @@
   window.language = {{{langJson 'optimized_checkout'}}};
 </script>
 
+<script type="text/javascript" nonce="{{nonce}}">
+  window.__PWCorrelationIds = window.__PWCorrelationIds || {};
+  window.__PWCorrelationIds.cart_id = "{{#if cart_id}}{{cart_id}}{{/if}}";
+  window.__PWCorrelationIds.checkout_id =
+    "{{#if checkout.id}}{{checkout.id}}{{else}}{{#if checkout.checkout_id}}{{checkout.checkout_id}}{{/if}}{{/if}}";
+  window.__PWCorrelationIds.order_id = "{{#if checkout.order.id}}{{checkout.order.id}}{{/if}}";
+</script>
+
 {{{head.scripts}}}
 
 <!-- Google Ads + GA4 Conversion Tracking (Order Confirmation) -->

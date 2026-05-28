@@ -34,3 +34,6 @@ scripts/image-transfer/transfer-production-to-staging/images/
 test-results/
 playwright-report/
 playwright/.cache/
+docs/qa/bigcommerce-checkout-issue4-events.tsv
+docs/qa/bigcommerce-checkout-issueS-events.tsv
+docs/qa/bigcommerce-checkout-ticket-evidence-2026-05-28.md

@@ -113,6 +113,166 @@
         var NOISY_SCRIPT_HOST_PATTERN = /(^|\.)(doubleclick\.net|googleadservices\.com|googlesyndication\.com|googletagmanager\.com|google-analytics\.com|g\.doubleclick\.net|facebook\.net|facebook\.com|connect\.facebook\.net|klaviyo\.com|hotjar\.com|trustpilot\.com|cookieyes\.com|clerk\.(?:com|dev|accounts\.dev)|cdn\.clerk\.io|tiktok\.com|analytics\.tiktok\.com|bing\.com|bat\.bing\.com|hs-scripts\.com|hubspot\.com)$/i;
         var FAST_SIMON_PATTERN = /fastsimon\.com|fast-simon/i;
         var IS_LOGGED_IN = {{#if customer.id}}true{{else}}false{{/if}};
+        var TEMPLATE_CART_ID = "{{#if cart_id}}{{cart_id}}{{/if}}";
+        var TEMPLATE_CHECKOUT_ID = "{{#if checkout.id}}{{checkout.id}}{{else}}{{#if checkout.checkout_id}}{{checkout.checkout_id}}{{/if}}{{/if}}";
+        var TEMPLATE_ORDER_ID = "{{#if checkout.order.id}}{{checkout.order.id}}{{/if}}";
+
+        function cleanCorrelationValue(value) {
+            if (value === null || value === undefined) {
+                return "";
+            }
+
+            var normalized = String(value).trim();
+            if (!normalized || normalized === "undefined" || normalized === "null") {
+                return "";
+            }
+
+            return normalized;
+        }
+
+        function hasOwnKeys(object) {
+            if (!object) {
+                return false;
+            }
+
+            for (var key in object) {
+                if (Object.prototype.hasOwnProperty.call(object, key)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        function readCorrelationFromObject(source) {
+            if (!source || typeof source !== "object") {
+                return {};
+            }
+
+            return {
+                cart_id: cleanCorrelationValue(source.cart_id || source.cartId),
+                checkout_id: cleanCorrelationValue(source.checkout_id || source.checkoutId),
+                order_id: cleanCorrelationValue(source.order_id || source.orderId || source.transaction_id || source.transactionId)
+            };
+        }
+
+        function mergeCorrelationIds(target, source) {
+            if (!source) {
+                return;
+            }
+
+            if (!target.cart_id && source.cart_id) {
+                target.cart_id = source.cart_id;
+            }
+
+            if (!target.checkout_id && source.checkout_id) {
+                target.checkout_id = source.checkout_id;
+            }
+
+            if (!target.order_id && source.order_id) {
+                target.order_id = source.order_id;
+            }
+        }
+
+        function readCorrelationFromUrl() {
+            var ids = { cart_id: "", checkout_id: "", order_id: "" };
+
+            try {
+                var params = new URLSearchParams(window.location.search || "");
+                ids.cart_id = cleanCorrelationValue(params.get("cart_id") || params.get("cartId"));
+                ids.checkout_id = cleanCorrelationValue(params.get("checkout_id") || params.get("checkoutId"));
+                ids.order_id = cleanCorrelationValue(params.get("order_id") || params.get("orderId"));
+            } catch (e) { /* noop */ }
+
+            return ids;
+        }
+
+        function readCorrelationFromDataLayer() {
+            var ids = { cart_id: "", checkout_id: "", order_id: "" };
+
+            try {
+                var dl = window.dataLayer || [];
+                for (var index = dl.length - 1; index >= 0; index--) {
+                    var entry = dl[index];
+                    if (!entry || typeof entry !== "object") {
+                        continue;
+                    }
+
+                    mergeCorrelationIds(ids, readCorrelationFromObject(entry));
+
+                    if (entry.ecommerce && typeof entry.ecommerce === "object") {
+                        mergeCorrelationIds(ids, readCorrelationFromObject(entry.ecommerce));
+                    }
+
+                    if (ids.cart_id && ids.checkout_id && ids.order_id) {
+                        break;
+                    }
+                }
+            } catch (e) { /* noop */ }
+
+            return ids;
+        }
+
+        function getCorrelationIds() {
+            var ids = {
+                cart_id: "",
+                checkout_id: "",
+                order_id: ""
+            };
+
+            mergeCorrelationIds(ids, {
+                cart_id: cleanCorrelationValue(TEMPLATE_CART_ID),
+                checkout_id: cleanCorrelationValue(TEMPLATE_CHECKOUT_ID),
+                order_id: cleanCorrelationValue(TEMPLATE_ORDER_ID)
+            });
+
+            mergeCorrelationIds(ids, readCorrelationFromObject(window.__PWCorrelationIds));
+            mergeCorrelationIds(ids, readCorrelationFromUrl());
+            mergeCorrelationIds(ids, readCorrelationFromDataLayer());
+
+            return ids;
+        }
+
+        function correlationIdTags(ids) {
+            var tags = {};
+
+            if (ids && ids.cart_id) {
+                tags.cart_id = ids.cart_id;
+            }
+
+            if (ids && ids.checkout_id) {
+                tags.checkout_id = ids.checkout_id;
+            }
+
+            if (ids && ids.order_id) {
+                tags.order_id = ids.order_id;
+            }
+
+            return tags;
+        }
+
+        function applyCorrelationIdsToScope(ids) {
+            if (!window.Sentry || !ids) {
+                return;
+            }
+
+            try {
+                var tags = correlationIdTags(ids);
+                if (!hasOwnKeys(tags)) {
+                    return;
+                }
+
+                for (var key in tags) {
+                    if (Object.prototype.hasOwnProperty.call(tags, key)) {
+                        window.Sentry.setTag(key, tags[key]);
+                    }
+                }
+
+                if (typeof window.Sentry.setContext === "function") {
+                    window.Sentry.setContext("checkout_correlation", tags);
+                }
+            } catch (e) { /* noop */ }
+        }
 
         function isNoisyScriptHost(host) {
             return !!host && NOISY_SCRIPT_HOST_PATTERN.test(host);
@@ -260,6 +420,17 @@
 
         window.Sentry.onLoad(function () {
             var integrations = [];
+            var correlationIds = getCorrelationIds();
+            var initialScope = {};
+            var initialCorrelationTags = correlationIdTags(correlationIds);
+
+            if (hasOwnKeys(initialCorrelationTags)) {
+                initialScope.tags = initialCorrelationTags;
+                initialScope.contexts = {
+                    checkout_correlation: initialCorrelationTags
+                };
+            }
+
             if (replayEnabled && typeof window.Sentry.replayIntegration === "function") {
                 integrations.push(window.Sentry.replayIntegration({
                     maskAllText: true,
@@ -273,6 +444,7 @@
                 tracesSampleRate: TRACES_RATE,
                 replaysSessionSampleRate: replayEnabled ? REPLAY_SESSION_RATE : 0,
                 replaysOnErrorSampleRate: replayEnabled ? REPLAY_ERROR_RATE : 0,
+                initialScope: hasOwnKeys(initialScope) ? initialScope : undefined,
                 integrations: integrations,
                 {{!-- Drop noisy errors from 3rd-party scripts we can't fix --}}
                 ignoreErrors: [
@@ -342,6 +514,26 @@
                         var frames = exception && exception.stacktrace && exception.stacktrace.frames;
                         var requestUrl = event && event.request && event.request.url || "";
                         var originalException = hint && hint.originalException ? String(hint.originalException) : "";
+                        var latestCorrelationIds = getCorrelationIds();
+
+                        if (latestCorrelationIds.cart_id || latestCorrelationIds.checkout_id || latestCorrelationIds.order_id) {
+                            event.tags = event.tags || {};
+
+                            if (latestCorrelationIds.cart_id) {
+                                event.tags.cart_id = latestCorrelationIds.cart_id;
+                            }
+
+                            if (latestCorrelationIds.checkout_id) {
+                                event.tags.checkout_id = latestCorrelationIds.checkout_id;
+                            }
+
+                            if (latestCorrelationIds.order_id) {
+                                event.tags.order_id = latestCorrelationIds.order_id;
+                            }
+
+                            event.contexts = event.contexts || {};
+                            event.contexts.checkout_correlation = correlationIdTags(latestCorrelationIds);
+                        }
 
                         {{!-- Drop synthetic test events even if title is wrapped --}}
                         var message = event && event.message;
@@ -403,6 +595,11 @@
             try {
                 window.Sentry.setTag("page_type", "{{page_type}}");
                 window.Sentry.setTag("channel_id", "{{settings.channel_id}}");
+                applyCorrelationIdsToScope(correlationIds);
+
+                window.setTimeout(function () {
+                    applyCorrelationIdsToScope(getCorrelationIds());
+                }, 1500);
             } catch (e) { /* noop */ }
 
             {{!-- Identify logged-in customer (id only, no PII). --}}
