@@ -112,7 +112,13 @@
         --}}
         var NOISY_SCRIPT_HOST_PATTERN = /(^|\.)(doubleclick\.net|googleadservices\.com|googlesyndication\.com|googletagmanager\.com|google-analytics\.com|g\.doubleclick\.net|facebook\.net|facebook\.com|connect\.facebook\.net|klaviyo\.com|hotjar\.com|trustpilot\.com|cookieyes\.com|clerk\.(?:com|dev|accounts\.dev)|cdn\.clerk\.io|tiktok\.com|analytics\.tiktok\.com|bing\.com|bat\.bing\.com|hs-scripts\.com|hubspot\.com)$/i;
         var FAST_SIMON_PATTERN = /fastsimon\.com|fast-simon/i;
+        var QUICK_PAY_PATTERN = /braintree|paypal|paypalobjects|venmo|apple[\s-]?pay|google[\s-]?pay|paymentrequest|payment-request|wallet-buttons/i;
+        var PAGE_TYPE = "{{page_type}}";
         var IS_LOGGED_IN = {{#if customer.id}}true{{else}}false{{/if}};
+        var FASTSIMON_THEME_ENABLED = {{#if theme_settings.fastsimon_enabled}}true{{else}}false{{/if}};
+        var FASTSIMON_PRODUCT_ENABLED = {{#if theme_settings.fastsimon_product_enabled}}true{{else}}false{{/if}};
+        var FASTSIMON_CATEGORY_ENABLED = {{#if theme_settings.fastsimon_category_enabled}}true{{else}}false{{/if}};
+        var FASTSIMON_CART_ENABLED = {{#if theme_settings.fastsimon_cart_enabled}}true{{else}}false{{/if}};
         var TEMPLATE_CART_ID = "{{#if cart_id}}{{cart_id}}{{/if}}";
         var TEMPLATE_CHECKOUT_ID = "{{#if checkout.id}}{{checkout.id}}{{else}}{{#if checkout.checkout_id}}{{checkout.checkout_id}}{{/if}}{{/if}}";
         var TEMPLATE_ORDER_ID = "{{#if checkout.order.id}}{{checkout.order.id}}{{/if}}";
@@ -283,6 +289,837 @@
             return !!value && FAST_SIMON_PATTERN.test(String(value));
         }
 
+        function isQuickPayValue(value) {
+            return !!value && QUICK_PAY_PATTERN.test(String(value));
+        }
+
+        function shortText(value, maxLength) {
+            var normalized = cleanCorrelationValue(value);
+
+            if (!normalized) {
+                return "";
+            }
+
+            normalized = normalized.replace(/\s+/g, " ");
+
+            if (!maxLength || normalized.length <= maxLength) {
+                return normalized;
+            }
+
+            return normalized.slice(0, maxLength);
+        }
+
+        function quickPayProvider(value) {
+            var normalized = String(value || "").toLowerCase();
+
+            if (!normalized) {
+                return "";
+            }
+
+            if (/venmo/.test(normalized)) {
+                return "venmo";
+            }
+
+            if (/apple[\s-]?pay/.test(normalized)) {
+                return "applepay";
+            }
+
+            if (/google[\s-]?pay/.test(normalized)) {
+                return "googlepay";
+            }
+
+            if (/paypal/.test(normalized)) {
+                return "paypal";
+            }
+
+            if (/braintree/.test(normalized)) {
+                return "braintree";
+            }
+
+            if (/paymentrequest|payment-request/.test(normalized)) {
+                return "paymentrequest";
+            }
+
+            return "";
+        }
+
+        var recentQuickPayFailures = [];
+
+        function pruneRecentQuickPayFailures() {
+            var cutoff = Date.now() - 300000;
+            var nextFailures = [];
+
+            for (var index = 0; index < recentQuickPayFailures.length; index++) {
+                var failure = recentQuickPayFailures[index];
+
+                if (failure && failure.recorded_at_ms >= cutoff) {
+                    nextFailures.push(failure);
+                }
+            }
+
+            recentQuickPayFailures = nextFailures.slice(-10);
+        }
+
+        function rememberQuickPayFailure(kind, details) {
+            var provider = quickPayProvider(
+                (details && details.resource_url)
+                || (details && details.message)
+                || (details && details.source)
+                || ""
+            ) || (details && details.provider) || "unknown";
+
+            pruneRecentQuickPayFailures();
+
+            recentQuickPayFailures.push({
+                kind: kind || "unknown",
+                provider: provider,
+                resource_kind: details && details.resource_kind ? details.resource_kind : "",
+                resource_url: details && details.resource_url ? details.resource_url : "",
+                host: details && details.host ? details.host : "",
+                message: shortText(details && details.message ? details.message : "", 180),
+                source: details && details.source ? details.source : "",
+                recorded_at: new Date().toISOString(),
+                recorded_at_ms: Date.now()
+            });
+
+            pruneRecentQuickPayFailures();
+        }
+
+        function getRecentQuickPayFailures() {
+            var failures = [];
+
+            pruneRecentQuickPayFailures();
+
+            for (var index = 0; index < recentQuickPayFailures.length; index++) {
+                var failure = recentQuickPayFailures[index];
+
+                failures.push({
+                    kind: failure.kind,
+                    provider: failure.provider,
+                    resource_kind: failure.resource_kind,
+                    resource_url: failure.resource_url,
+                    host: failure.host,
+                    message: failure.message,
+                    source: failure.source,
+                    recorded_at: failure.recorded_at
+                });
+            }
+
+            return failures;
+        }
+
+        function collectQuickPayProviders(list, value) {
+            var provider = quickPayProvider(value);
+
+            if (provider) {
+                pushUnique(list, provider);
+            }
+        }
+
+        function collectQuickPayProvidersFromElement(list, element) {
+            if (!element) {
+                return;
+            }
+
+            collectQuickPayProviders(list, element.className || "");
+            collectQuickPayProviders(list, element.id || "");
+            collectQuickPayProviders(list, element.getAttribute && element.getAttribute("src"));
+            collectQuickPayProviders(list, element.getAttribute && element.getAttribute("href"));
+            collectQuickPayProviders(list, element.getAttribute && element.getAttribute("title"));
+            collectQuickPayProviders(list, element.getAttribute && element.getAttribute("aria-label"));
+            collectQuickPayProviders(list, element.textContent || "");
+        }
+
+        function quickPayIframeHosts(elements) {
+            var hosts = [];
+
+            for (var index = 0; index < elements.length; index++) {
+                var iframe = elements[index];
+                var host = normalizeHostLabel(iframe && iframe.src ? iframe.src : "");
+
+                if (host) {
+                    pushUnique(hosts, host);
+                }
+            }
+
+            return hosts;
+        }
+
+        function inspectQuickPaySurface(surface, selector) {
+            var element = document.querySelector ? document.querySelector(selector) : null;
+            var computedStyle;
+            var interactiveElements;
+            var iframeElements;
+            var scriptElements;
+            var providers = [];
+
+            if (!element) {
+                return {
+                    surface: surface,
+                    selector: selector,
+                    exists: false
+                };
+            }
+
+            try {
+                computedStyle = window.getComputedStyle ? window.getComputedStyle(element) : null;
+            } catch (e) {
+                computedStyle = null;
+            }
+
+            interactiveElements = element.querySelectorAll
+                ? element.querySelectorAll("button, iframe, [role='button'], a")
+                : [];
+            iframeElements = element.querySelectorAll ? element.querySelectorAll("iframe") : [];
+            scriptElements = element.querySelectorAll ? element.querySelectorAll("script") : [];
+
+            collectQuickPayProviders(providers, element.innerHTML || "");
+            collectQuickPayProviders(providers, element.textContent || "");
+
+            for (var index = 0; index < interactiveElements.length; index++) {
+                collectQuickPayProvidersFromElement(providers, interactiveElements[index]);
+            }
+
+            for (var scriptIndex = 0; scriptIndex < scriptElements.length; scriptIndex++) {
+                collectQuickPayProvidersFromElement(providers, scriptElements[scriptIndex]);
+            }
+
+            return {
+                surface: surface,
+                selector: selector,
+                exists: true,
+                hidden: !!(
+                    element.hidden
+                    || element.getAttribute("aria-hidden") === "true"
+                    || (computedStyle && (computedStyle.display === "none" || computedStyle.visibility === "hidden"))
+                ),
+                child_count: element.children ? element.children.length : 0,
+                interactive_count: interactiveElements.length,
+                iframe_count: iframeElements.length,
+                script_count: scriptElements.length,
+                html_length: (element.innerHTML || "").length,
+                text_excerpt: shortText(element.textContent || "", 180),
+                providers: providers,
+                iframe_hosts: quickPayIframeHosts(iframeElements)
+            };
+        }
+
+        function getRecentQuickPayResources() {
+            var entries = window.performance && typeof window.performance.getEntriesByType === "function"
+                ? window.performance.getEntriesByType("resource")
+                : [];
+            var now = window.performance && typeof window.performance.now === "function"
+                ? window.performance.now()
+                : 0;
+            var resources = [];
+
+            for (var index = entries.length - 1; index >= 0; index--) {
+                var entry = entries[index];
+
+                if (!entry || !isQuickPayValue(entry.name)) {
+                    continue;
+                }
+
+                if (now && typeof entry.responseEnd === "number" && now - entry.responseEnd > 120000) {
+                    continue;
+                }
+
+                resources.push({
+                    name: entry.name,
+                    provider: quickPayProvider(entry.name) || "unknown",
+                    initiator_type: entry.initiatorType || "",
+                    duration_ms: typeof entry.duration === "number" ? Math.round(entry.duration) : 0,
+                    transfer_size: typeof entry.transferSize === "number" ? entry.transferSize : null,
+                    response_status: typeof entry.responseStatus === "number" && entry.responseStatus > 0
+                        ? entry.responseStatus
+                        : null
+                });
+
+                if (resources.length >= 6) {
+                    break;
+                }
+            }
+
+            return resources;
+        }
+
+        function getQuickPayDiagnostics() {
+            var surfaces = [
+                inspectQuickPaySurface("product", "[data-add-to-cart-wallet-buttons]"),
+                inspectQuickPaySurface("cart", "[data-cart-additional-checkout-buttons]"),
+                inspectQuickPaySurface("cart_preview", ".previewCart-additionalCheckoutButtons"),
+                inspectQuickPaySurface("cart_modal", ".previewCartCheckout-additionalCheckoutButtons")
+            ];
+            var providers = [];
+            var recentFailures = getRecentQuickPayFailures();
+            var recentResources = getRecentQuickPayResources();
+            var primarySurface = "none";
+            var latestFailure = recentFailures.length ? recentFailures[recentFailures.length - 1] : null;
+
+            for (var surfaceIndex = 0; surfaceIndex < surfaces.length; surfaceIndex++) {
+                var surface = surfaces[surfaceIndex];
+
+                if (surface.exists && primarySurface === "none") {
+                    primarySurface = surface.surface;
+                }
+
+                if (surface.providers && surface.providers.length) {
+                    for (var providerIndex = 0; providerIndex < surface.providers.length; providerIndex++) {
+                        pushUnique(providers, surface.providers[providerIndex]);
+                    }
+                }
+            }
+
+            for (var resourceIndex = 0; resourceIndex < recentResources.length; resourceIndex++) {
+                pushUnique(providers, recentResources[resourceIndex].provider);
+            }
+
+            if (latestFailure && latestFailure.provider) {
+                pushUnique(providers, latestFailure.provider);
+            }
+
+            return {
+                page_type: PAGE_TYPE,
+                apple_pay_supported: !!window.ApplePaySession,
+                primary_surface: primarySurface,
+                providers_detected: providers,
+                recent_failures: recentFailures,
+                recent_resources: recentResources,
+                surfaces: surfaces
+            };
+        }
+
+        function isQuickPayIssue(type, value, message, requestUrl, originalException, topUrl) {
+            var combined = [type || "", value || "", message || "", requestUrl || "", originalException || "", topUrl || ""].join("\n");
+
+            return isQuickPayValue(combined) || /Cannot contact the gateway at this time/i.test(combined);
+        }
+
+        function applyQuickPayDiagnostics(event, diagnostics) {
+            var latestFailure = diagnostics && diagnostics.recent_failures && diagnostics.recent_failures.length
+                ? diagnostics.recent_failures[diagnostics.recent_failures.length - 1]
+                : null;
+            var primaryProvider = diagnostics && diagnostics.providers_detected && diagnostics.providers_detected.length
+                ? diagnostics.providers_detected[0]
+                : "";
+
+            if (!event || !diagnostics) {
+                return;
+            }
+
+            event.tags = event.tags || {};
+            event.tags.quickpay_issue = "yes";
+            event.tags.quickpay_surface = diagnostics.primary_surface || "none";
+            event.tags.quickpay_provider = primaryProvider || (latestFailure && latestFailure.provider) || "unknown";
+            event.tags.quickpay_recent_failure = latestFailure ? "yes" : "no";
+
+            if (latestFailure && latestFailure.kind) {
+                event.tags.quickpay_recent_failure_kind = latestFailure.kind;
+            }
+
+            if (latestFailure && latestFailure.provider) {
+                event.tags.quickpay_recent_failure_provider = latestFailure.provider;
+            }
+
+            event.contexts = event.contexts || {};
+            event.contexts.quick_pay = diagnostics;
+        }
+
+        function booleanTag(value) {
+            return value ? "yes" : "no";
+        }
+
+        function pushUnique(list, value) {
+            if (!value) {
+                return;
+            }
+
+            for (var index = 0; index < list.length; index++) {
+                if (list[index] === value) {
+                    return;
+                }
+            }
+
+            list.push(value);
+        }
+
+        function fastSimonThemeSurfaceEnabled(pageType) {
+            if (!FASTSIMON_THEME_ENABLED) {
+                return false;
+            }
+
+            if (pageType === "product") {
+                return FASTSIMON_PRODUCT_ENABLED;
+            }
+
+            if (pageType === "category") {
+                return FASTSIMON_CATEGORY_ENABLED;
+            }
+
+            if (pageType === "cart") {
+                return FASTSIMON_CART_ENABLED;
+            }
+
+            return false;
+        }
+
+        function fastSimonRequestKind(url) {
+            var normalized = String(url || "").toLowerCase();
+
+            if (!normalized) {
+                return "";
+            }
+
+            if (/static-grid\.fastsimon\.com/.test(normalized)) {
+                return "grid";
+            }
+
+            if (/autocomplete/.test(normalized)) {
+                return "autocomplete";
+            }
+
+            if (/upsell_cross_sell_recommendation|recommendation/.test(normalized)) {
+                return "recommendation";
+            }
+
+            if (/settings\.fastsimon\.com/.test(normalized)) {
+                return "settings";
+            }
+
+            if (/ping\.fastsimon\.com/.test(normalized)) {
+                return "beacon";
+            }
+
+            if (/api\.fastsimon\.com/.test(normalized)) {
+                return "api";
+            }
+
+            return "other";
+        }
+
+        function countFastSimonScripts(root) {
+            var count = 0;
+            var scripts = root && root.getElementsByTagName ? root.getElementsByTagName("script") : [];
+
+            for (var index = 0; index < scripts.length; index++) {
+                var script = scripts[index];
+                var inlineText = script && !script.src ? script.textContent || "" : "";
+
+                if (isFastSimonValue(script && script.src) || /FAST_CONFIG/.test(inlineText)) {
+                    count += 1;
+                }
+            }
+
+            return count;
+        }
+
+        function getFastSimonSignals() {
+            var now = window.performance && typeof window.performance.now === "function"
+                ? window.performance.now()
+                : 0;
+            var recentKinds = [];
+            var recentExamples = [];
+            var recentRequestCount = 0;
+            var performanceEntries = window.performance && typeof window.performance.getEntriesByType === "function"
+                ? window.performance.getEntriesByType("resource")
+                : [];
+            var headScriptCount = countFastSimonScripts(document.head);
+            var bodyScriptCount = countFastSimonScripts(document.body);
+            var widgetContainerCount = document.querySelectorAll
+                ? document.querySelectorAll("[data-fastsimon-container]").length
+                : 0;
+
+            for (var index = performanceEntries.length - 1; index >= 0; index--) {
+                var entry = performanceEntries[index];
+
+                if (!entry || !isFastSimonValue(entry.name)) {
+                    continue;
+                }
+
+                if (now && typeof entry.responseEnd === "number" && now - entry.responseEnd > 15000) {
+                    continue;
+                }
+
+                recentRequestCount += 1;
+                pushUnique(recentKinds, fastSimonRequestKind(entry.name));
+
+                if (recentExamples.length < 3) {
+                    recentExamples.push(entry.name);
+                }
+            }
+
+            var runtimeSurface = "none";
+            if ((headScriptCount > 0 || bodyScriptCount > 0) && widgetContainerCount > 0) {
+                runtimeSurface = "both";
+            } else if (headScriptCount > 0 || bodyScriptCount > 0) {
+                runtimeSurface = "app_injected";
+            } else if (widgetContainerCount > 0) {
+                runtimeSurface = "theme_widget";
+            }
+
+            var themeSurfaceEnabled = fastSimonThemeSurfaceEnabled(PAGE_TYPE);
+
+            return {
+                present: FASTSIMON_THEME_ENABLED || runtimeSurface !== "none",
+                theme_enabled: FASTSIMON_THEME_ENABLED,
+                theme_surface_enabled: themeSurfaceEnabled,
+                runtime_surface: runtimeSurface,
+                recent_activity: recentRequestCount > 0,
+                recent_request_kinds: recentKinds,
+                head_script_count: headScriptCount,
+                body_script_count: bodyScriptCount,
+                widget_container_count: widgetContainerCount,
+                recent_request_count: recentRequestCount,
+                recent_request_examples: recentExamples
+            };
+        }
+
+        function applyFastSimonSignalsToScope(signals) {
+            if (!window.Sentry || !signals) {
+                return;
+            }
+
+            try {
+                window.Sentry.setTag("fastsimon_present", booleanTag(signals.present));
+                window.Sentry.setTag("fastsimon_surface", signals.runtime_surface || "none");
+                window.Sentry.setTag("fastsimon_recent_activity", booleanTag(signals.recent_activity));
+                window.Sentry.setTag("fastsimon_theme_surface", signals.theme_surface_enabled ? "enabled" : "disabled");
+
+                if (typeof window.Sentry.setContext === "function") {
+                    window.Sentry.setContext("fastsimon", {
+                        theme_enabled: signals.theme_enabled,
+                        theme_surface_enabled: signals.theme_surface_enabled,
+                        runtime_surface: signals.runtime_surface,
+                        recent_activity: signals.recent_activity,
+                        recent_request_kinds: signals.recent_request_kinds,
+                        head_script_count: signals.head_script_count,
+                        body_script_count: signals.body_script_count,
+                        widget_container_count: signals.widget_container_count,
+                        recent_request_count: signals.recent_request_count,
+                        recent_request_examples: signals.recent_request_examples
+                    });
+                }
+            } catch (e) { /* noop */ }
+        }
+
+        function displayPageType(pageType) {
+            if (pageType === "default") {
+                return "home";
+            }
+
+            if (pageType === "product") {
+                return "product";
+            }
+
+            return pageType || "unknown";
+        }
+
+        function normalizeHostLabel(url) {
+            var host = scriptHost(url);
+
+            if (!host || host === "unknown") {
+                return "";
+            }
+
+            return host.replace(/^www\./i, "");
+        }
+
+        function normalizeIssuePathSegment(segment) {
+            var normalized = String(segment || "").trim().toLowerCase();
+
+            if (!normalized) {
+                return "";
+            }
+
+            if (/^[0-9]+$/.test(normalized)) {
+                return ":id";
+            }
+
+            if (/^[0-9a-f]{8,}$/.test(normalized) || /^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(normalized)) {
+                return ":id";
+            }
+
+            if (/^[a-z0-9_-]{20,}$/.test(normalized)) {
+                return ":id";
+            }
+
+            return normalized;
+        }
+
+        function normalizeIssueTarget(url) {
+            var parsedUrl;
+            var hostLabel = normalizeHostLabel(url);
+            var pathname = "";
+            var segments;
+            var compactPath = "";
+            var label = "";
+            var kind = "resource";
+
+            if (!url) {
+                return {
+                    kind: kind,
+                    host: hostLabel,
+                    path: "",
+                    label: ""
+                };
+            }
+
+            try {
+                parsedUrl = new URL(url, window.location.href);
+                pathname = parsedUrl.pathname || "";
+            } catch (e) {
+                pathname = "";
+            }
+
+            segments = pathname.split("/").filter(Boolean).slice(0, 4).map(normalizeIssuePathSegment).filter(Boolean);
+            compactPath = segments.length ? "/" + segments.join("/") : "";
+
+            if (/\.(js|css|png|jpe?g|gif|svg|webp|woff2?|ttf|eot)(?:$|\?)/i.test(pathname)) {
+                kind = "resource";
+            } else if (compactPath) {
+                kind = "request";
+            }
+
+            if (compactPath) {
+                if (hostLabel && hostLabel !== "partyworld.ie" && !FAST_SIMON_PATTERN.test(hostLabel)) {
+                    label = hostLabel + compactPath;
+                } else {
+                    label = compactPath;
+                }
+            } else if (hostLabel && hostLabel !== "partyworld.ie" && !FAST_SIMON_PATTERN.test(hostLabel)) {
+                label = hostLabel;
+            }
+
+            return {
+                kind: kind,
+                host: hostLabel,
+                path: compactPath,
+                label: label
+            };
+        }
+
+        function firstIssueString(values) {
+            for (var index = 0; index < values.length; index++) {
+                var normalized = cleanCorrelationValue(values[index]);
+
+                if (normalized) {
+                    return normalized;
+                }
+            }
+
+            return "";
+        }
+
+        function normalizeIssueStatus(value) {
+            var normalized = cleanCorrelationValue(value);
+
+            if (!normalized) {
+                return "";
+            }
+
+            if (!/^[0-9]{3}$/.test(normalized)) {
+                return "";
+            }
+
+            return normalized;
+        }
+
+        function extractRejectedResponseDetails(originalException) {
+            var source = originalException && typeof originalException === "object"
+                ? originalException
+                : null;
+            var sourceBody = source && source.body && typeof source.body === "object"
+                ? source.body
+                : null;
+            var sourceResponse = source && source.response && typeof source.response === "object"
+                ? source.response
+                : null;
+            var sourceRequest = source && source.request && typeof source.request === "object"
+                ? source.request
+                : null;
+            var status;
+            var statusText;
+            var sourceUrl;
+            var target;
+
+            if (!source) {
+                return null;
+            }
+
+            status = normalizeIssueStatus(
+                source.status
+                || source.statusCode
+                || (sourceResponse && (sourceResponse.status || sourceResponse.statusCode))
+                || (sourceBody && (sourceBody.status || sourceBody.statusCode))
+            );
+
+            statusText = firstIssueString([
+                source.statusText,
+                sourceResponse && sourceResponse.statusText,
+                sourceBody && sourceBody.statusText
+            ]);
+
+            sourceUrl = firstIssueString([
+                source.url,
+                source.responseURL,
+                sourceRequest && sourceRequest.url,
+                sourceRequest && sourceRequest.responseURL,
+                sourceResponse && sourceResponse.url,
+                source.config && source.config.url,
+                sourceBody && sourceBody.url,
+                sourceBody && sourceBody.path,
+                sourceBody && sourceBody.endpoint
+            ]);
+
+            if (!status
+                && !statusText
+                && !sourceUrl
+                && !Object.prototype.hasOwnProperty.call(source, "headers")
+                && !Object.prototype.hasOwnProperty.call(source, "body")) {
+                return null;
+            }
+
+            target = normalizeIssueTarget(sourceUrl);
+
+            return {
+                status: status,
+                status_text: statusText,
+                source_url: sourceUrl,
+                target: target
+            };
+        }
+
+        function vagueErrorBucket(type, titleish) {
+            var normalized = String(titleish || "").trim();
+
+            if (!normalized || normalized === "<unknown>") {
+                return "unknown_client_error";
+            }
+
+            if (/network error/i.test(normalized) || /^(TypeError|AxiosError):\s*Failed to fetch$/i.test([type, normalized].filter(Boolean).join(": "))) {
+                return "network_error";
+            }
+
+            if (/^load failed(?:\s*\([^)]*\))?$/i.test(normalized)) {
+                return "load_failed";
+            }
+
+            return "";
+        }
+
+        function buildRejectedResponseIssueName(pageType, details) {
+            var surface = displayPageType(pageType);
+            var qualifier = details && details.target && details.target.label
+                ? details.target.label
+                : "";
+
+            if (details && details.status) {
+                return qualifier
+                    ? "Request returned HTTP " + details.status + " on " + surface + " page with " + qualifier
+                    : "Request returned HTTP " + details.status + " on " + surface + " page";
+            }
+
+            if (details && details.status_text) {
+                return qualifier
+                    ? "Request was rejected on " + surface + " page with " + qualifier
+                    : "Request was rejected on " + surface + " page";
+            }
+
+            return qualifier
+                ? "Response-like promise rejection on " + surface + " page with " + qualifier
+                : "Response-like promise rejection on " + surface + " page";
+        }
+
+        function vagueErrorQualifier(hostLabel, target) {
+            if (target && target.label) {
+                return target.label;
+            }
+
+            if (hostLabel && hostLabel !== "partyworld.ie" && !FAST_SIMON_PATTERN.test(hostLabel)) {
+                return hostLabel;
+            }
+
+            return "";
+        }
+
+        function buildReadableIssueName(bucket, pageType, qualifier) {
+            var surface = displayPageType(pageType);
+
+            if (bucket === "unknown_client_error") {
+                return qualifier
+                    ? "Unknown client error on " + surface + " page with " + qualifier
+                    : "Unknown client error on " + surface + " page";
+            }
+
+            if (bucket === "network_error") {
+                return qualifier
+                    ? "Network request failed on " + surface + " page with " + qualifier
+                    : "Network request failed on " + surface + " page";
+            }
+
+            if (bucket === "load_failed") {
+                return qualifier
+                    ? "Resource load failed on " + surface + " page with " + qualifier
+                    : "Resource load failed on " + surface + " page";
+            }
+
+            return "";
+        }
+
+        function applyReadableIssueName(event, details) {
+            var exception = details && details.exception;
+            var bucket = details && details.bucket;
+            var readableName = details && details.readable_name;
+            var fingerprintParts;
+
+            if (!event || !bucket || !readableName) {
+                return;
+            }
+
+            event.tags = event.tags || {};
+            event.tags.error_bucket = bucket;
+            if (details.status) {
+                event.tags.error_http_status = details.status;
+            }
+            if (details.target_host) {
+                event.tags.error_target_host = details.target_host;
+            }
+            if (details.target_kind) {
+                event.tags.error_target_kind = details.target_kind;
+            }
+
+            event.contexts = event.contexts || {};
+            event.contexts.error_normalization = {
+                bucket: bucket,
+                page_type: details.page_type,
+                qualifier: details.qualifier || "",
+                host: details.host || "",
+                status: details.status || "",
+                status_text: details.status_text || "",
+                target_kind: details.target_kind || "",
+                target_host: details.target_host || "",
+                target_path: details.target_path || "",
+                target_label: details.target_label || ""
+            };
+
+            if (exception) {
+                exception.type = exception.type || "Error";
+                exception.value = readableName;
+            }
+
+            event.message = readableName;
+
+            fingerprintParts = [
+                "partyworld-readable-issue",
+                bucket,
+                details.page_type || "unknown",
+                details.status || "",
+                details.target_label || details.qualifier || details.host || "generic"
+            ];
+
+            event.fingerprint = fingerprintParts;
+        }
+
         function recordMetric(name, type, value, options) {
             try {
                 if (!window.Sentry || !window.Sentry.metrics) {
@@ -367,6 +1204,20 @@
         window.addEventListener("error", function (event) {
             var target = event && event.target;
 
+            if (target && target !== window) {
+                var resourceUrl = normalizeUrl(target.src || target.href || "");
+                var resourceKind = String(target.tagName || "resource").toLowerCase();
+
+                if (resourceUrl && isQuickPayValue(resourceUrl)) {
+                    rememberQuickPayFailure("resource_load_error", {
+                        resource_kind: resourceKind,
+                        resource_url: resourceUrl,
+                        host: scriptHost(resourceUrl),
+                        source: "window_error_target"
+                    });
+                }
+            }
+
             if (isHeadScriptElement(target)) {
                 if (target.__pwSentryReported) {
                     return;
@@ -399,6 +1250,16 @@
                 return;
             }
 
+            if (isQuickPayValue(runtimeScriptUrl) || isQuickPayValue(event.message || "")) {
+                rememberQuickPayFailure("runtime_error", {
+                    resource_kind: "script",
+                    resource_url: runtimeScriptUrl,
+                    host: scriptHost(runtimeScriptUrl),
+                    message: event.message || "",
+                    source: "window_error"
+                });
+            }
+
             var headScripts = document.head ? document.head.getElementsByTagName("script") : [];
             for (var scriptIndex = 0; scriptIndex < headScripts.length; scriptIndex++) {
                 var headScript = headScripts[scriptIndex];
@@ -419,9 +1280,42 @@
             }
         }, true);
 
+        window.addEventListener("unhandledrejection", function (event) {
+            var reason = event && Object.prototype.hasOwnProperty.call(event, "reason") ? event.reason : null;
+            var summary = shortText(
+                firstIssueString([
+                    reason && reason.message,
+                    reason && reason.type,
+                    reason && reason.name,
+                    typeof reason === "string" ? reason : ""
+                ]),
+                180
+            );
+            var sourceUrl = firstIssueString([
+                reason && reason.url,
+                reason && reason.responseURL,
+                reason && reason.request && reason.request.url,
+                reason && reason.config && reason.config.url
+            ]);
+            var combined = [summary, sourceUrl].join("\n");
+
+            if (!isQuickPayValue(combined) && !/Cannot contact the gateway at this time/i.test(combined)) {
+                return;
+            }
+
+            rememberQuickPayFailure("promise_rejection", {
+                resource_kind: "promise",
+                resource_url: sourceUrl,
+                host: scriptHost(sourceUrl),
+                message: summary,
+                source: "unhandledrejection"
+            });
+        }, true);
+
         window.Sentry.onLoad(function () {
             var integrations = [];
             var correlationIds = getCorrelationIds();
+            var fastSimonSignals = getFastSimonSignals();
             var initialScope = {};
             var initialCorrelationTags = correlationIdTags(correlationIds);
 
@@ -514,8 +1408,13 @@
                         var value = exception && exception.value;
                         var frames = exception && exception.stacktrace && exception.stacktrace.frames;
                         var requestUrl = event && event.request && event.request.url || "";
-                        var originalException = hint && hint.originalException ? String(hint.originalException) : "";
+                        var rawOriginalException = hint && hint.originalException ? hint.originalException : null;
+                        var originalException = rawOriginalException ? String(rawOriginalException) : "";
                         var latestCorrelationIds = getCorrelationIds();
+                        var latestFastSimonSignals = getFastSimonSignals();
+                        var fastSimonRoute = "none";
+                        var rejectedResponseDetails = extractRejectedResponseDetails(rawOriginalException);
+                        var quickPayDiagnostics = null;
 
                         if (latestCorrelationIds.cart_id || latestCorrelationIds.checkout_id || latestCorrelationIds.order_id) {
                             event.tags = event.tags || {};
@@ -581,6 +1480,75 @@
                             event.tags = event.tags || {};
                             event.tags.vendor = "fastsimon";
                             event.tags.error_owner = "third_party";
+                            event.tags.fastsimon_route = "direct";
+                            fastSimonRoute = "direct";
+                        } else {
+                            event.tags = event.tags || {};
+                            if (latestFastSimonSignals.present) {
+                                event.tags.fastsimon_route = latestFastSimonSignals.recent_activity ? "active" : "present";
+                            } else {
+                                event.tags.fastsimon_route = "none";
+                            }
+
+                            fastSimonRoute = event.tags.fastsimon_route;
+                        }
+
+                        event.tags = event.tags || {};
+                        event.tags.fastsimon_present = booleanTag(latestFastSimonSignals.present);
+                        event.tags.fastsimon_surface = latestFastSimonSignals.runtime_surface || "none";
+                        event.tags.fastsimon_recent_activity = booleanTag(latestFastSimonSignals.recent_activity);
+                        event.tags.fastsimon_theme_surface = latestFastSimonSignals.theme_surface_enabled ? "enabled" : "disabled";
+
+                        if (latestFastSimonSignals.present) {
+                            event.contexts = event.contexts || {};
+                            event.contexts.fastsimon = {
+                                theme_enabled: latestFastSimonSignals.theme_enabled,
+                                theme_surface_enabled: latestFastSimonSignals.theme_surface_enabled,
+                                runtime_surface: latestFastSimonSignals.runtime_surface,
+                                recent_activity: latestFastSimonSignals.recent_activity,
+                                recent_request_kinds: latestFastSimonSignals.recent_request_kinds,
+                                head_script_count: latestFastSimonSignals.head_script_count,
+                                body_script_count: latestFastSimonSignals.body_script_count,
+                                widget_container_count: latestFastSimonSignals.widget_container_count,
+                                recent_request_count: latestFastSimonSignals.recent_request_count,
+                                recent_request_examples: latestFastSimonSignals.recent_request_examples
+                            };
+                        }
+
+                        if (isQuickPayIssue(type, value, message, requestUrl, originalException, topUrl)) {
+                            quickPayDiagnostics = getQuickPayDiagnostics();
+                            applyQuickPayDiagnostics(event, quickPayDiagnostics);
+                        }
+
+                        var normalizedTitleish = (value || message || "").toString().trim();
+                        var normalizedBucket = rejectedResponseDetails ? "response_rejection" : vagueErrorBucket(type, normalizedTitleish);
+                        if (normalizedBucket) {
+                            var normalizationSourceUrl = normalizedBucket === "load_failed"
+                                ? (topUrl || requestUrl)
+                                : (requestUrl || topUrl);
+                            var normalizedTarget = rejectedResponseDetails && rejectedResponseDetails.target
+                                ? rejectedResponseDetails.target
+                                : normalizeIssueTarget(normalizationSourceUrl);
+                            var normalizedHost = normalizedTarget.host || normalizeHostLabel(topUrl) || normalizeHostLabel(requestUrl);
+                            var normalizedQualifier = vagueErrorQualifier(normalizedHost, normalizedTarget);
+                            var readableName = normalizedBucket === "response_rejection"
+                                ? buildRejectedResponseIssueName(PAGE_TYPE, rejectedResponseDetails)
+                                : buildReadableIssueName(normalizedBucket, PAGE_TYPE, normalizedQualifier);
+
+                            applyReadableIssueName(event, {
+                                exception: exception,
+                                bucket: normalizedBucket,
+                                readable_name: readableName,
+                                page_type: PAGE_TYPE,
+                                qualifier: normalizedQualifier,
+                                host: normalizedHost,
+                                status: rejectedResponseDetails && rejectedResponseDetails.status,
+                                status_text: rejectedResponseDetails && rejectedResponseDetails.status_text,
+                                target_kind: normalizedTarget.kind,
+                                target_host: normalizedTarget.host,
+                                target_path: normalizedTarget.path,
+                                target_label: normalizedTarget.label
+                            });
                         }
                     } catch (e) { /* fall through and send */ }
                     return event;
@@ -594,12 +1562,14 @@
 
             {{!-- Tag every event with page_type for fast filtering in Sentry. --}}
             try {
-                window.Sentry.setTag("page_type", "{{page_type}}");
+                window.Sentry.setTag("page_type", PAGE_TYPE);
                 window.Sentry.setTag("channel_id", "{{settings.channel_id}}");
                 applyCorrelationIdsToScope(correlationIds);
+                applyFastSimonSignalsToScope(fastSimonSignals);
 
                 window.setTimeout(function () {
                     applyCorrelationIdsToScope(getCorrelationIds());
+                    applyFastSimonSignalsToScope(getFastSimonSignals());
                 }, 1500);
             } catch (e) { /* noop */ }
 
