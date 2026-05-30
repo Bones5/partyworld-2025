@@ -33,6 +33,7 @@
     "@babel/preset-env": "^7.12.17",
     "@bigcommerce/citadel": "^2.15.1",
     "@playwright/test": "^1.57.0",
+    "@sentry/webpack-plugin": "^5.3.0",
     "@stylistic/stylelint-plugin": "^3.1.2",
     "babel-jest": "^30.0.5",
     "babel-loader": "^8.2.2",

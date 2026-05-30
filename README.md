@@ -69,6 +69,29 @@ The E2E tests validate:
 - Typography scale
 - SCSS token usage
 
+## Sentry Source Maps
+
+Production webpack builds can upload JavaScript source maps to Sentry for the storefront project so minified browser errors resolve back to the original source.
+
+The upload runs automatically during `npm run build` when one of these auth variables is present:
+
+- `SENTRY_PT`
+- `SENTRY_AUTH_TOKEN`
+
+Optional overrides:
+
+- `SENTRY_ORG` defaults to `bonesdev`
+- `SENTRY_PROJECT` defaults to `partyworld-storefront`
+- `SENTRY_RELEASE` defaults to `partyworld-2025@<package.json version>`
+
+Example:
+
+```bash
+SENTRY_PT=... npm run build
+```
+
+If no Sentry auth token is set, the production build still succeeds and logs that source map upload was skipped.
+
 ### Stencil Utils
 
 [Stencil-utils](https://github.com/bigcommerce/stencil-utils) is our supporting library for our events and remote interactions.
