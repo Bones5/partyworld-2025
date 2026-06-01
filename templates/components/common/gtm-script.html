@@ -17,6 +17,39 @@ settings --}} {{#if theme_settings.gtm_container_id}}
     // Configuration
     var GTM_ID = "{{theme_settings.gtm_container_id}}";
     var DELAY_MS = 2000; // Delay after window load
+    var loaded = false;
+    var gtmScriptEl = null;
+
+    function emitMetric(name, type, value, options) {
+      if (typeof window.__PWEmitMetric === "function") {
+        window.__PWEmitMetric(name, type, value, options || {});
+      }
+    }
+
+    function emitDurationMetric(name, duration, attributes) {
+      emitMetric(name, "distribution", duration, {
+        unit: "millisecond",
+        attributes: attributes || {},
+      });
+    }
+
+    function measureDuration(name, startMark, endMark) {
+      try {
+        var duration = performance.measure(name, startMark, endMark).duration;
+        performance.clearMeasures(name);
+        performance.clearMarks(startMark);
+        performance.clearMarks(endMark);
+        return duration;
+      } catch (error) {
+        return 0;
+      }
+    }
+
+    try {
+      performance.mark("pw-gtm-loader-start");
+    } catch (error) {
+      // noop
+    }
 
     // Google Consent Mode v2 - Set defaults BEFORE GTM loads
     // CookieYes will update these based on user consent choices
@@ -43,53 +76,149 @@ settings --}} {{#if theme_settings.gtm_container_id}}
     // Enable ads_data_redaction when ad_storage is denied
     gtag("set", "ads_data_redaction", true);
 
-    function loadGTM() {
-      // Google Tag Manager
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
-        j.async = true;
-        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", GTM_ID);
+    function loadGTM(triggerSource) {
+      var firstScript = document.getElementsByTagName("script")[0];
+      var dl = "";
+      var trigger = triggerSource || "unknown";
+
+      try {
+        performance.mark("pw-gtm-inject-start");
+      } catch (error) {
+        // noop
+      }
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+
+      gtmScriptEl = document.createElement("script");
+      gtmScriptEl.async = true;
+      gtmScriptEl.src = "https://www.googletagmanager.com/gtm.js?id=" + GTM_ID + dl;
+
+      gtmScriptEl.addEventListener("load", function () {
+        var loadDuration = 0;
+
+        try {
+          performance.mark("pw-gtm-load-end");
+        } catch (error) {
+          // noop
+        }
+
+        loadDuration = measureDuration("pw-gtm-load-duration", "pw-gtm-inject-start", "pw-gtm-load-end");
+        if (loadDuration > 0) {
+          emitDurationMetric("partyworld.script_loader.duration", loadDuration, {
+            script_block: "gtm_loader",
+            phase: "network_load",
+            trigger_source: trigger,
+          });
+        }
+      });
+
+      gtmScriptEl.addEventListener("error", function () {
+        emitMetric("partyworld.script_loader.failure", "count", 1, {
+          attributes: {
+            script_block: "gtm_loader",
+            trigger_source: trigger,
+            failure_mode: "script_error",
+          },
+        });
+      });
+
+      if (firstScript && firstScript.parentNode) {
+        firstScript.parentNode.insertBefore(gtmScriptEl, firstScript);
+      }
+
+      try {
+        performance.mark("pw-gtm-inject-end");
+      } catch (error) {
+        // noop
+      }
+
+      emitDurationMetric(
+        "partyworld.script_loader.duration",
+        measureDuration("pw-gtm-inject-duration", "pw-gtm-inject-start", "pw-gtm-inject-end"),
+        {
+          script_block: "gtm_loader",
+          phase: "inject",
+          trigger_source: trigger,
+        }
+      );
+
+      emitMetric("partyworld.script_loader.trigger", "count", 1, {
+        attributes: {
+          script_block: "gtm_loader",
+          trigger_source: trigger,
+        },
+      });
     }
 
     // Load immediately if user interacts (scroll, click, touch)
     // Otherwise wait for delay after load
-    var loaded = false;
+    function triggerLoad(triggerSource) {
+      var waitDuration = 0;
 
-    function triggerLoad() {
       if (loaded) return;
       loaded = true;
-      loadGTM();
+
+      try {
+        performance.mark("pw-gtm-trigger");
+      } catch (error) {
+        // noop
+      }
+
+      waitDuration = measureDuration("pw-gtm-wait-duration", "pw-gtm-loader-start", "pw-gtm-trigger");
+      if (waitDuration > 0) {
+        emitDurationMetric("partyworld.script_loader.wait.duration", waitDuration, {
+          script_block: "gtm_loader",
+          trigger_source: triggerSource || "unknown",
+        });
+      }
+
+      loadGTM(triggerSource);
       // Clean up listeners
-      document.removeEventListener("scroll", triggerLoad);
-      document.removeEventListener("click", triggerLoad);
-      document.removeEventListener("touchstart", triggerLoad);
-      document.removeEventListener("keydown", triggerLoad);
+      document.removeEventListener("scroll", onScroll);
+      document.removeEventListener("click", onClick);
+      document.removeEventListener("touchstart", onTouchStart);
+      document.removeEventListener("keydown", onKeyDown);
+    }
+
+    function onScroll() {
+      triggerLoad("scroll");
+    }
+
+    function onClick() {
+      triggerLoad("click");
+    }
+
+    function onTouchStart() {
+      triggerLoad("touchstart");
+    }
+
+    function onKeyDown() {
+      triggerLoad("keydown");
     }
 
     // User interaction triggers immediate load
-    document.addEventListener("scroll", triggerLoad, {
+    document.addEventListener("scroll", onScroll, {
       once: true,
       passive: true,
     });
-    document.addEventListener("click", triggerLoad, { once: true });
-    document.addEventListener("touchstart", triggerLoad, {
+    document.addEventListener("click", onClick, { once: true });
+    document.addEventListener("touchstart", onTouchStart, {
       once: true,
       passive: true,
     });
-    document.addEventListener("keydown", triggerLoad, { once: true });
+    document.addEventListener("keydown", onKeyDown, { once: true });
 
     // Fallback: Load after delay post-window-load
     if (document.readyState === "complete") {
-      setTimeout(triggerLoad, DELAY_MS);
+      setTimeout(function () {
+        triggerLoad("timeout");
+      }, DELAY_MS);
     } else {
       window.addEventListener("load", function () {
-        setTimeout(triggerLoad, DELAY_MS);
+        setTimeout(function () {
+          triggerLoad("timeout");
+        }, DELAY_MS);
       });
     }
   })();

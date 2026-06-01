@@ -824,6 +824,120 @@
             return host.replace(/^www\./i, "");
         }
 
+        function headScriptVendor(host, src) {
+            var normalized = [host || "", src || ""].join("\n").toLowerCase();
+
+            if (!normalized) {
+                return "unknown";
+            }
+
+            if (/partyworld\.ie/.test(normalized)) {
+                return "first_party";
+            }
+
+            if (/fastsimon|fast-simon/.test(normalized)) {
+                return "fastsimon";
+            }
+
+            if (/googletagmanager|gtag/.test(normalized)) {
+                return "google_tag_manager";
+            }
+
+            if (/doubleclick|googleadservices|googlesyndication/.test(normalized)) {
+                return "google_ads";
+            }
+
+            if (/tiktok/.test(normalized)) {
+                return "tiktok";
+            }
+
+            if (/facebook|fbevents/.test(normalized)) {
+                return "meta";
+            }
+
+            if (/klaviyo/.test(normalized)) {
+                return "klaviyo";
+            }
+
+            if (/clarity|bat\.bing|bing\.com/.test(normalized)) {
+                return "microsoft_ads";
+            }
+
+            if (/cookieyes/.test(normalized)) {
+                return "cookieyes";
+            }
+
+            if (/trustpilot/.test(normalized)) {
+                return "trustpilot";
+            }
+
+            if (/clerk/.test(normalized)) {
+                return "clerk";
+            }
+
+            if (/bigcommerce/.test(normalized)) {
+                return "bigcommerce";
+            }
+
+            return "third_party_other";
+        }
+
+        function browserContextLabel() {
+            var ua = "";
+
+            try {
+                ua = navigator && navigator.userAgent ? navigator.userAgent : "";
+            } catch (e) {
+                ua = "";
+            }
+
+            if (!ua) {
+                return "unknown";
+            }
+
+            if (/Tiktok/i.test(ua)) {
+                return "tiktok_in_app";
+            }
+
+            if (/Instagram/i.test(ua)) {
+                return "instagram_in_app";
+            }
+
+            if (/FBAN|FBAV|FB_IAB|FB4A/i.test(ua)) {
+                return "facebook_in_app";
+            }
+
+            if (/; wv\)|\bwv\b|WebView/i.test(ua)) {
+                return "webview";
+            }
+
+            if (/Chrome|CriOS/i.test(ua)) {
+                return "chrome";
+            }
+
+            if (/Firefox|FxiOS/i.test(ua)) {
+                return "firefox";
+            }
+
+            if (/Edg\//i.test(ua)) {
+                return "edge";
+            }
+
+            if (/Safari/i.test(ua) && !/Chrome|CriOS|Edg\//i.test(ua)) {
+                return "safari";
+            }
+
+            return "other_browser";
+        }
+
+        function isInAppBrowserContext(context) {
+            return /_in_app$/.test(context || "") || context === "webview";
+        }
+
+        function isActionableHeadScriptFailure(extra) {
+            return !(extra && isNoisyScriptHost(extra.script_host));
+        }
+
         function normalizeIssuePathSegment(segment) {
             var normalized = String(segment || "").trim().toLowerCase();
 
@@ -1143,31 +1257,73 @@
         }
 
         window.__PWRecordMetric = recordMetric;
+
+        function flushPendingMetrics() {
+            var pending = window.__PWPendingMetrics || [];
+            var index;
+            var metric;
+
+            if (!pending.length) {
+                return;
+            }
+
+            window.__PWPendingMetrics = [];
+
+            for (index = 0; index < pending.length; index++) {
+                metric = pending[index];
+
+                if (!metric || !metric.name) {
+                    continue;
+                }
+
+                recordMetric(metric.name, metric.type, metric.value, metric.options || {});
+            }
+        }
+
+        window.__PWFlushPendingMetrics = flushPendingMetrics;
+        flushPendingMetrics();
+
         window.__PWBootstrapMetricStart = window.performance && typeof window.performance.now === "function"
             ? window.performance.now()
             : Date.now();
 
         function captureHeaderScriptFailure(message, extra) {
+            var details = extra || {};
+            var browserContext = browserContextLabel();
+            var scriptVendor = headScriptVendor(details.script_host, details.script_src);
+            var actionableFailure = isActionableHeadScriptFailure(details);
+            var metricAttributes = {
+                page_type: details.page_type ? details.page_type : "unknown",
+                script_origin: details.script_origin ? details.script_origin : "unknown",
+                script_host: details.script_host ? details.script_host : "unknown",
+                failure_mode: details.failure_mode ? details.failure_mode : "unknown",
+                script_vendor: scriptVendor,
+                browser_context: browserContext,
+                in_app_browser: isInAppBrowserContext(browserContext) ? "yes" : "no",
+                capture_tier: actionableFailure ? "actionable" : "noisy"
+            };
+
             try {
                 if (!window.Sentry || typeof window.Sentry.captureMessage !== "function") {
                     return;
                 }
 
                 recordMetric("partyworld.head_script.failure", "count", 1, {
-                    attributes: {
-                        page_type: extra && extra.page_type ? extra.page_type : "unknown",
-                        script_origin: extra && extra.script_origin ? extra.script_origin : "unknown",
-                        script_host: extra && extra.script_host ? extra.script_host : "unknown",
-                        failure_mode: extra && extra.failure_mode ? extra.failure_mode : "unknown"
-                    }
+                    attributes: metricAttributes
                 });
+
+                if (actionableFailure) {
+                    recordMetric("partyworld.head_script.failure.actionable", "count", 1, {
+                        attributes: metricAttributes
+                    });
+                }
 
                 {{!--
                     Don't raise a Sentry event for known-noisy 3rd-party hosts;
                     the metric above is enough to track health without flooding
                     Issues. Keep first-party + unknown hosts captured.
                 --}}
-                if (extra && isNoisyScriptHost(extra.script_host)) {
+                if (!actionableFailure) {
                     return;
                 }
 
@@ -1176,18 +1332,31 @@
                         scope.setLevel("error");
                         scope.setTag("failure_type", "head_script");
                         scope.setTag("resource_kind", "script");
+                        scope.setTag("script_vendor", scriptVendor);
+                        scope.setTag("browser_context", browserContext);
+                        scope.setTag("capture_tier", "actionable");
 
-                        if (extra && isFastSimonValue(extra.script_host || extra.script_src)) {
+                        if (isInAppBrowserContext(browserContext)) {
+                            scope.setTag("in_app_browser", "yes");
+                        }
+
+                        if (details && isFastSimonValue(details.script_host || details.script_src)) {
                             scope.setTag("vendor", "fastsimon");
                             scope.setTag("error_owner", "third_party");
+                        } else if (details && details.script_origin === "first_party") {
+                            scope.setTag("error_owner", "first_party");
                         }
 
-                        if (extra && extra.script_origin) {
-                            scope.setTag("script_origin", extra.script_origin);
+                        if (details && details.script_origin) {
+                            scope.setTag("script_origin", details.script_origin);
                         }
 
-                        if (extra) {
-                            scope.setContext("head_script", extra);
+                        if (details) {
+                            details.script_vendor = scriptVendor;
+                            details.browser_context = browserContext;
+                            details.capture_tier = "actionable";
+                            details.in_app_browser = isInAppBrowserContext(browserContext);
+                            scope.setContext("head_script", details);
                         }
 
                         window.Sentry.captureMessage(message);

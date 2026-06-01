@@ -32,6 +32,467 @@
         {{!-- Sentry error monitoring - load early to capture bootstrap errors --}}
         {{> components/common/sentry-script }}
 
+        <script nonce="{{nonce}}">
+            window.__PWPendingMetrics = window.__PWPendingMetrics || [];
+            window.__PWEmitMetric = window.__PWEmitMetric || function (name, type, value, metricOptions) {
+                var options = metricOptions || {};
+
+                if (typeof window.__PWRecordMetric === 'function') {
+                    window.__PWRecordMetric(name, type, value, options);
+                    return;
+                }
+
+                window.__PWPendingMetrics.push({
+                    name: name,
+                    type: type,
+                    value: value,
+                    options: options
+                });
+            };
+
+            window.__PWScriptPluginLabel = window.__PWScriptPluginLabel || function (source) {
+                var normalized = String(source || '').toLowerCase();
+
+                if (!normalized) {
+                    return '';
+                }
+
+                if (/fastsimon|fast-simon/.test(normalized)) {
+                    return 'fastsimon';
+                }
+
+                if (/klaviyo/.test(normalized)) {
+                    return 'klaviyo';
+                }
+
+                if (/clarity\.ms/.test(normalized)) {
+                    return 'clarity';
+                }
+
+                if (/bat\.bing\.com|\bbing\.com\b/.test(normalized)) {
+                    return 'bing';
+                }
+
+                if (/trustpilot/.test(normalized)) {
+                    return 'trustpilot';
+                }
+
+                if (/adscale|ascl\.pro/.test(normalized)) {
+                    return 'adscale';
+                }
+
+                if (/googletagmanager\.com/.test(normalized)) {
+                    return 'gtm';
+                }
+
+                if (/google-analytics\.com|googletagmanager\.com\/gtag/.test(normalized)) {
+                    return 'google_analytics';
+                }
+
+                if (/doubleclick|googleadservices|googlesyndication/.test(normalized)) {
+                    return 'google_ads';
+                }
+
+                if (/facebook\.net|facebook\.com|fbevents/.test(normalized)) {
+                    return 'meta';
+                }
+
+                if (/tiktok/.test(normalized)) {
+                    return 'tiktok';
+                }
+
+                if (/cookieyes/.test(normalized)) {
+                    return 'cookieyes';
+                }
+
+                if (/bigcommerce/.test(normalized)) {
+                    return 'bigcommerce';
+                }
+
+                if (/paypal/.test(normalized)) {
+                    return 'paypal';
+                }
+
+                if (/braintree/.test(normalized)) {
+                    return 'braintree';
+                }
+
+                return 'unknown';
+            };
+
+            window.__PWCaptureScriptSnapshot = window.__PWCaptureScriptSnapshot || function (rootElement) {
+                var snapshot = {
+                    total: 0,
+                    inline: 0,
+                    external: 0,
+                    first_party_external: 0,
+                    third_party_external: 0,
+                    inline_bytes: 0,
+                    plugin_counts: {}
+                };
+                var scripts;
+                var index;
+                var script;
+                var text;
+                var normalizedSrc;
+                var isFirstParty;
+                var plugin;
+
+                if (!rootElement || !rootElement.getElementsByTagName) {
+                    return snapshot;
+                }
+
+                scripts = rootElement.getElementsByTagName('script');
+
+                for (index = 0; index < scripts.length; index++) {
+                    script = scripts[index];
+                    snapshot.total += 1;
+
+                    if (script.src) {
+                        snapshot.external += 1;
+                        normalizedSrc = script.src;
+                        isFirstParty = false;
+
+                        try {
+                            normalizedSrc = new URL(script.src, window.location.href).href;
+                            isFirstParty = new URL(normalizedSrc, window.location.href).origin === window.location.origin;
+                        } catch (error) {
+                            isFirstParty = false;
+                        }
+
+                        if (isFirstParty) {
+                            snapshot.first_party_external += 1;
+                        } else {
+                            snapshot.third_party_external += 1;
+                        }
+
+                        plugin = window.__PWScriptPluginLabel(normalizedSrc);
+                    } else {
+                        snapshot.inline += 1;
+                        text = script.textContent || '';
+                        snapshot.inline_bytes += text.length;
+                        plugin = window.__PWScriptPluginLabel(text.slice(0, 600));
+                    }
+
+                    if (!plugin || plugin === 'unknown') {
+                        continue;
+                    }
+
+                    if (!snapshot.plugin_counts[plugin]) {
+                        snapshot.plugin_counts[plugin] = 0;
+                    }
+
+                    snapshot.plugin_counts[plugin] += 1;
+                }
+
+                return snapshot;
+            };
+
+            window.__PWDiffScriptSnapshots = window.__PWDiffScriptSnapshots || function (beforeSnapshot, afterSnapshot) {
+                var before = beforeSnapshot || {};
+                var after = afterSnapshot || {};
+                var diff = {
+                    total: (after.total || 0) - (before.total || 0),
+                    inline: (after.inline || 0) - (before.inline || 0),
+                    external: (after.external || 0) - (before.external || 0),
+                    first_party_external: (after.first_party_external || 0) - (before.first_party_external || 0),
+                    third_party_external: (after.third_party_external || 0) - (before.third_party_external || 0),
+                    inline_bytes: (after.inline_bytes || 0) - (before.inline_bytes || 0),
+                    plugin_counts: {}
+                };
+                var pluginCounts = {};
+                var key;
+
+                if (before.plugin_counts) {
+                    for (key in before.plugin_counts) {
+                        if (Object.prototype.hasOwnProperty.call(before.plugin_counts, key)) {
+                            pluginCounts[key] = (pluginCounts[key] || 0) - before.plugin_counts[key];
+                        }
+                    }
+                }
+
+                if (after.plugin_counts) {
+                    for (key in after.plugin_counts) {
+                        if (Object.prototype.hasOwnProperty.call(after.plugin_counts, key)) {
+                            pluginCounts[key] = (pluginCounts[key] || 0) + after.plugin_counts[key];
+                        }
+                    }
+                }
+
+                for (key in pluginCounts) {
+                    if (Object.prototype.hasOwnProperty.call(pluginCounts, key) && pluginCounts[key] > 0) {
+                        diff.plugin_counts[key] = pluginCounts[key];
+                    }
+                }
+
+                return diff;
+            };
+
+            window.__PWEmitScriptSnapshotMetrics = window.__PWEmitScriptSnapshotMetrics || function (scriptBlock, location, snapshotDiff, duration) {
+                var diff = snapshotDiff || {};
+                var pluginCounts = diff.plugin_counts || {};
+                var plugin;
+
+                if (typeof window.__PWEmitMetric !== 'function') {
+                    return;
+                }
+
+                window.__PWEmitMetric('partyworld.head_script.block.duration', 'distribution', duration || 0, {
+                    unit: 'millisecond',
+                    attributes: {
+                        script_block: scriptBlock,
+                        location: location
+                    }
+                });
+
+                window.__PWEmitMetric('partyworld.script_block.total.count', 'gauge', diff.total || 0, {
+                    attributes: {
+                        script_block: scriptBlock,
+                        location: location
+                    }
+                });
+
+                window.__PWEmitMetric('partyworld.script_block.inline.count', 'gauge', diff.inline || 0, {
+                    attributes: {
+                        script_block: scriptBlock,
+                        location: location
+                    }
+                });
+
+                window.__PWEmitMetric('partyworld.script_block.external.count', 'gauge', diff.external || 0, {
+                    attributes: {
+                        script_block: scriptBlock,
+                        location: location
+                    }
+                });
+
+                window.__PWEmitMetric('partyworld.script_block.external.first_party.count', 'gauge', diff.first_party_external || 0, {
+                    attributes: {
+                        script_block: scriptBlock,
+                        location: location
+                    }
+                });
+
+                window.__PWEmitMetric('partyworld.script_block.external.third_party.count', 'gauge', diff.third_party_external || 0, {
+                    attributes: {
+                        script_block: scriptBlock,
+                        location: location
+                    }
+                });
+
+                window.__PWEmitMetric('partyworld.script_block.inline.bytes', 'gauge', diff.inline_bytes || 0, {
+                    attributes: {
+                        script_block: scriptBlock,
+                        location: location
+                    }
+                });
+
+                for (plugin in pluginCounts) {
+                    if (Object.prototype.hasOwnProperty.call(pluginCounts, plugin)) {
+                        window.__PWEmitMetric('partyworld.script_plugin.count', 'gauge', pluginCounts[plugin], {
+                            attributes: {
+                                script_block: scriptBlock,
+                                location: location,
+                                plugin: plugin
+                            }
+                        });
+                    }
+                }
+            };
+
+            window.__PWGetOriginParty = window.__PWGetOriginParty || function (resourceUrl) {
+                var parsedUrl;
+
+                if (!resourceUrl) {
+                    return 'unknown';
+                }
+
+                try {
+                    parsedUrl = new URL(resourceUrl, window.location.href);
+                    return parsedUrl.origin === window.location.origin ? 'first_party' : 'third_party';
+                } catch (error) {
+                    return 'unknown';
+                }
+            };
+
+            window.__PWStartScriptResourceObserver = window.__PWStartScriptResourceObserver || function () {
+                var supportedEntryTypes;
+                var resourceObserver;
+
+                if (window.__PWScriptResourceObserverStarted) {
+                    return;
+                }
+
+                if (typeof window.PerformanceObserver !== 'function') {
+                    return;
+                }
+
+                supportedEntryTypes = window.PerformanceObserver.supportedEntryTypes || [];
+
+                if (supportedEntryTypes.indexOf('resource') === -1) {
+                    return;
+                }
+
+                resourceObserver = new window.PerformanceObserver(function (list) {
+                    var entries = list.getEntries();
+                    var index;
+                    var entry;
+                    var plugin;
+                    var originParty;
+                    var renderBlockingStatus;
+
+                    if (typeof window.__PWEmitMetric !== 'function') {
+                        return;
+                    }
+
+                    for (index = 0; index < entries.length; index++) {
+                        entry = entries[index];
+
+                        if (!entry || entry.initiatorType !== 'script') {
+                            continue;
+                        }
+
+                        plugin = window.__PWScriptPluginLabel(entry.name || '');
+                        originParty = window.__PWGetOriginParty(entry.name || '');
+                        renderBlockingStatus = entry.renderBlockingStatus || 'unknown';
+
+                        window.__PWEmitMetric('partyworld.script_resource.count', 'count', 1, {
+                            attributes: {
+                                plugin: plugin,
+                                origin_party: originParty,
+                                render_blocking_status: renderBlockingStatus
+                            }
+                        });
+
+                        window.__PWEmitMetric('partyworld.script_resource.duration', 'distribution', entry.duration || 0, {
+                            unit: 'millisecond',
+                            attributes: {
+                                plugin: plugin,
+                                origin_party: originParty,
+                                render_blocking_status: renderBlockingStatus
+                            }
+                        });
+
+                        if (typeof entry.transferSize === 'number') {
+                            window.__PWEmitMetric('partyworld.script_resource.transfer_bytes', 'gauge', entry.transferSize, {
+                                attributes: {
+                                    plugin: plugin,
+                                    origin_party: originParty
+                                }
+                            });
+                        }
+
+                        if (typeof entry.decodedBodySize === 'number') {
+                            window.__PWEmitMetric('partyworld.script_resource.decoded_bytes', 'gauge', entry.decodedBodySize, {
+                                attributes: {
+                                    plugin: plugin,
+                                    origin_party: originParty
+                                }
+                            });
+                        }
+                    }
+                });
+
+                try {
+                    resourceObserver.observe({
+                        type: 'resource',
+                        buffered: true
+                    });
+                    window.__PWScriptResourceObserverStarted = true;
+                } catch (error) {
+                    // noop
+                }
+            };
+
+            window.__PWStartRuntimeObserver = window.__PWStartRuntimeObserver || function () {
+                var supportedEntryTypes;
+                var runtimeObserver;
+
+                if (window.__PWRuntimeObserverStarted) {
+                    return;
+                }
+
+                if (typeof window.PerformanceObserver !== 'function') {
+                    return;
+                }
+
+                supportedEntryTypes = window.PerformanceObserver.supportedEntryTypes || [];
+
+                if (supportedEntryTypes.indexOf('longtask') === -1) {
+                    return;
+                }
+
+                runtimeObserver = new window.PerformanceObserver(function (list) {
+                    var entries = list.getEntries();
+                    var index;
+                    var entry;
+                    var blockingDuration;
+                    var attribution;
+                    var attributionSource = '';
+                    var plugin;
+                    var originParty;
+
+                    if (typeof window.__PWEmitMetric !== 'function') {
+                        return;
+                    }
+
+                    for (index = 0; index < entries.length; index++) {
+                        entry = entries[index];
+
+                        if (!entry) {
+                            continue;
+                        }
+
+                        blockingDuration = Math.max(0, (entry.duration || 0) - 50);
+                        attribution = entry.attribution && entry.attribution.length ? entry.attribution[0] : null;
+
+                        if (attribution) {
+                            attributionSource = attribution.containerSrc || attribution.name || '';
+                        }
+
+                        plugin = window.__PWScriptPluginLabel(attributionSource || entry.name || '');
+                        originParty = window.__PWGetOriginParty(attributionSource);
+
+                        window.__PWEmitMetric('partyworld.runtime.longtask.count', 'count', 1, {
+                            attributes: {
+                                plugin: plugin,
+                                origin_party: originParty
+                            }
+                        });
+
+                        window.__PWEmitMetric('partyworld.runtime.longtask.duration', 'distribution', entry.duration || 0, {
+                            unit: 'millisecond',
+                            attributes: {
+                                plugin: plugin,
+                                origin_party: originParty
+                            }
+                        });
+
+                        window.__PWEmitMetric('partyworld.runtime.longtask.blocking_duration', 'distribution', blockingDuration, {
+                            unit: 'millisecond',
+                            attributes: {
+                                plugin: plugin,
+                                origin_party: originParty
+                            }
+                        });
+                    }
+                });
+
+                try {
+                    runtimeObserver.observe({
+                        type: 'longtask',
+                        buffered: true
+                    });
+                    window.__PWRuntimeObserverStarted = true;
+                } catch (error) {
+                    // noop
+                }
+            };
+
+            window.__PWStartScriptResourceObserver();
+            window.__PWStartRuntimeObserver();
+        </script>
+
         {{!-- Load Lazysizes script ASAP so images will appear --}}
         <script nonce="{{nonce}}">
             {{!-- Only load visible elements until the onload event fires, after which preload nearby elements. --}}
@@ -46,7 +507,56 @@
 
         {{{stylesheet '/assets/css/theme.css'}}}
 
+        <script nonce="{{nonce}}">
+            try {
+                performance.mark('pw-head-scripts-start');
+                window.__PWHeadScriptsSnapshotStart = typeof window.__PWCaptureScriptSnapshot === 'function'
+                    ? window.__PWCaptureScriptSnapshot(document.head)
+                    : null;
+            } catch (error) {
+                // noop
+            }
+        </script>
+
         {{{head.scripts}}}
+
+        <script nonce="{{nonce}}">
+            try {
+                var headScriptBlockDuration = 0;
+                var headScriptsSnapshotEnd = null;
+                var headScriptsDelta = null;
+
+                performance.mark('pw-head-scripts-end');
+                headScriptBlockDuration = performance.measure('pw-head-scripts-duration', 'pw-head-scripts-start', 'pw-head-scripts-end').duration;
+
+                if (typeof window.__PWCaptureScriptSnapshot === 'function') {
+                    headScriptsSnapshotEnd = window.__PWCaptureScriptSnapshot(document.head);
+                }
+
+                if (typeof window.__PWDiffScriptSnapshots === 'function') {
+                    headScriptsDelta = window.__PWDiffScriptSnapshots(window.__PWHeadScriptsSnapshotStart, headScriptsSnapshotEnd);
+                }
+
+                if (typeof window.__PWEmitScriptSnapshotMetrics === 'function') {
+                    window.__PWEmitScriptSnapshotMetrics('head_scripts', 'head', headScriptsDelta, headScriptBlockDuration);
+                }
+
+                if (typeof window.__PWEmitMetric === 'function' && document.head && document.head.getElementsByTagName) {
+                    window.__PWEmitMetric('partyworld.head_script.count', 'gauge', document.head.getElementsByTagName('script').length, {
+                        attributes: {
+                            location: 'head'
+                        }
+                    });
+                }
+
+                window.__PWHeadScriptsSnapshotStart = null;
+                performance.clearMeasures('pw-head-scripts-duration');
+                performance.clearMarks('pw-head-scripts-start');
+                performance.clearMarks('pw-head-scripts-end');
+            } catch (error) {
+                // noop
+            }
+        </script>
 
         {{~inject 'zoomSize' theme_settings.zoom_size}}
         {{~inject 'productSize' theme_settings.product_size}}
@@ -223,10 +733,99 @@
             }
         </script>
 
+        <script nonce="{{nonce}}">
+            try {
+                performance.mark('pw-footer-scripts-start');
+                window.__PWFooterScriptsSnapshotStart = typeof window.__PWCaptureScriptSnapshot === 'function'
+                    ? window.__PWCaptureScriptSnapshot(document.body)
+                    : null;
+            } catch (error) {
+                // noop
+            }
+        </script>
+
         {{{footer.scripts}}}
 
+        <script nonce="{{nonce}}">
+            try {
+                var footerScriptBlockDuration = 0;
+                var footerScriptsSnapshotEnd = null;
+                var footerScriptsDelta = null;
+
+                performance.mark('pw-footer-scripts-end');
+                footerScriptBlockDuration = performance.measure('pw-footer-scripts-duration', 'pw-footer-scripts-start', 'pw-footer-scripts-end').duration;
+
+                if (typeof window.__PWCaptureScriptSnapshot === 'function') {
+                    footerScriptsSnapshotEnd = window.__PWCaptureScriptSnapshot(document.body);
+                }
+
+                if (typeof window.__PWDiffScriptSnapshots === 'function') {
+                    footerScriptsDelta = window.__PWDiffScriptSnapshots(window.__PWFooterScriptsSnapshotStart, footerScriptsSnapshotEnd);
+                }
+
+                if (typeof window.__PWEmitScriptSnapshotMetrics === 'function') {
+                    window.__PWEmitScriptSnapshotMetrics('footer_scripts', 'footer', footerScriptsDelta, footerScriptBlockDuration);
+                }
+
+                if (typeof window.__PWEmitMetric === 'function' && document.body && document.body.getElementsByTagName) {
+                    window.__PWEmitMetric('partyworld.body_script.count', 'gauge', document.body.getElementsByTagName('script').length, {
+                        attributes: {
+                            location: 'footer'
+                        }
+                    });
+                }
+
+                window.__PWFooterScriptsSnapshotStart = null;
+                performance.clearMeasures('pw-footer-scripts-duration');
+                performance.clearMarks('pw-footer-scripts-start');
+                performance.clearMarks('pw-footer-scripts-end');
+            } catch (error) {
+                // noop
+            }
+        </script>
+
         {{!-- Klaviyo Script Loader --}}
+        <script nonce="{{nonce}}">
+            try {
+                performance.mark('pw-klaviyo-loader-start');
+                window.__PWKlaviyoLoaderSnapshotStart = typeof window.__PWCaptureScriptSnapshot === 'function'
+                    ? window.__PWCaptureScriptSnapshot(document.body)
+                    : null;
+            } catch (error) {
+                // noop
+            }
+        </script>
         {{> components/common/klaviyo-script}}
+        <script nonce="{{nonce}}">
+            try {
+                var klaviyoLoaderDuration = 0;
+                var klaviyoLoaderSnapshotEnd = null;
+                var klaviyoLoaderDelta = null;
+
+                performance.mark('pw-klaviyo-loader-end');
+                klaviyoLoaderDuration = performance.measure('pw-klaviyo-loader-duration', 'pw-klaviyo-loader-start', 'pw-klaviyo-loader-end').duration;
+
+                if (typeof window.__PWCaptureScriptSnapshot === 'function') {
+                    klaviyoLoaderSnapshotEnd = window.__PWCaptureScriptSnapshot(document.body);
+                }
+
+                if (typeof window.__PWDiffScriptSnapshots === 'function') {
+                    klaviyoLoaderDelta = window.__PWDiffScriptSnapshots(window.__PWKlaviyoLoaderSnapshotStart, klaviyoLoaderSnapshotEnd);
+                }
+
+                if (typeof window.__PWEmitScriptSnapshotMetrics === 'function') {
+                    window.__PWEmitScriptSnapshotMetrics('klaviyo_loader', 'footer', klaviyoLoaderDelta, klaviyoLoaderDuration);
+                }
+
+                window.__PWKlaviyoLoaderSnapshotStart = null;
+
+                performance.clearMeasures('pw-klaviyo-loader-duration');
+                performance.clearMarks('pw-klaviyo-loader-start');
+                performance.clearMarks('pw-klaviyo-loader-end');
+            } catch (error) {
+                // noop
+            }
+        </script>
 
         {{!-- LinkedIn Insight Tag --}}
         {{> components/common/linkedin-tag}}
