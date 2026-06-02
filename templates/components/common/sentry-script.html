@@ -1570,6 +1570,82 @@
 
         var replayEnabled = analyticsGranted();
 
+        function markQuickPayRemovedOnProductPage() {
+            var walletContainer;
+            var metricAttributes;
+            var sampleRate = 0.01;
+            var shouldSample;
+            var markerKey;
+            var alreadyMarked = false;
+
+            if (PAGE_TYPE !== "product") {
+                return;
+            }
+
+            walletContainer = document.querySelector
+                ? document.querySelector("[data-add-to-cart-wallet-buttons]")
+                : null;
+
+            if (walletContainer) {
+                return;
+            }
+
+            metricAttributes = {
+                page_type: PAGE_TYPE,
+                status: "removed",
+                scope: "product"
+            };
+
+            recordMetric("partyworld.quickpay.product_page.removed", "count", 1, {
+                attributes: metricAttributes
+            });
+
+            shouldSample = Math.random() < sampleRate;
+
+            if (!shouldSample) {
+                return;
+            }
+
+            markerKey = "pw_marker_quickpay_removed_product:" + (RELEASE || "unknown");
+
+            try {
+                alreadyMarked = !!(window.sessionStorage && window.sessionStorage.getItem(markerKey) === "1");
+            } catch (e) {
+                alreadyMarked = false;
+            }
+
+            if (alreadyMarked) {
+                return;
+            }
+
+            try {
+                if (window.Sentry && typeof window.Sentry.withScope === "function") {
+                    window.Sentry.withScope(function (scope) {
+                        scope.setLevel("info");
+                        scope.setTag("change_marker", "quickpay_removed_product");
+                        scope.setTag("change_state", "removed");
+                        scope.setTag("quickpay_surface", "product");
+                        scope.setContext("change_marker", {
+                            marker: "quickpay_removed_product",
+                            page_type: PAGE_TYPE,
+                            release: RELEASE || "unknown",
+                            sampled: true,
+                            sample_rate: sampleRate
+                        });
+                        window.Sentry.captureMessage("Temporary change marker: product quick-pay buttons removed");
+                    });
+                } else if (window.Sentry && typeof window.Sentry.captureMessage === "function") {
+                    window.Sentry.captureMessage("Temporary change marker: product quick-pay buttons removed");
+                }
+            } catch (e) { /* noop */ }
+
+            try {
+                if (window.sessionStorage) {
+                    window.sessionStorage.setItem(markerKey, "1");
+                }
+            } catch (e) { /* noop */ }
+        }
+
         window.addEventListener("error", function (event) {
             var target = event && event.target;
 
@@ -1947,6 +2023,7 @@
                 applyCorrelationIdsToScope(correlationIds);
                 applyFastSimonSignalsToScope(fastSimonSignals);
                 startQuickPayLoadMetricsObserver();
+                markQuickPayRemovedOnProductPage();
 
                 window.setTimeout(function () {
                     applyCorrelationIdsToScope(getCorrelationIds());
