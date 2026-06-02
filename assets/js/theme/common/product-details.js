@@ -15,6 +15,29 @@ import { isBrowserIE, convertIntoArray } from "./utils/ie-helpers";
 import bannerUtils from "./utils/banner-utils";
 import currencySelector from "../global/currency-selector";
 
+function metricNowMs() {
+  if (typeof window !== "undefined" && window.performance?.now) {
+    return window.performance.now();
+  }
+
+  return Date.now();
+}
+
+function emitMetric(name, type, value, options = {}) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  if (typeof window.__PWEmitMetric === "function") {
+    window.__PWEmitMetric(name, type, value, options);
+    return;
+  }
+
+  if (typeof window.__PWRecordMetric === "function") {
+    window.__PWRecordMetric(name, type, value, options);
+  }
+}
+
 export default class ProductDetails extends ProductDetailsBase {
   constructor($scope, context, productAttributesData = {}) {
     super($scope, context);
@@ -492,6 +515,15 @@ export default class ProductDetails extends ProductDetailsBase {
     const $addToCartBtn = $("#form-action-addToCart", $(event.target));
     const originalBtnVal = $addToCartBtn.val();
     const waitMessage = $addToCartBtn.data("waitMessage");
+    const addToCartStartMs = metricNowMs();
+    const surface = this.checkIsQuickViewChild($addToCartBtn)
+      ? "quick_view"
+      : "product";
+    const pageType =
+      this.context?.page_type ||
+      this.context?.pageType ||
+      document.body?.dataset?.pageType ||
+      "unknown";
 
     // Do not do AJAX if browser doesn't support FormData
     if (window.FormData === undefined) {
@@ -519,6 +551,39 @@ export default class ProductDetails extends ProductDetailsBase {
           err ||
           responseData.error ||
           (!cartItem.id && !cartItem.cart_url ? fallbackError : "");
+        const result = errorMessage ? "error" : "success";
+        const durationMs = Math.max(0, metricNowMs() - addToCartStartMs);
+        const metricAttributes = {
+          result,
+          surface,
+          page_type: pageType,
+          flow: this.previewModal ? "preview_modal" : "redirect",
+        };
+
+        emitMetric(
+          "partyworld.add_to_cart.action.duration",
+          "distribution",
+          durationMs,
+          {
+            unit: "millisecond",
+            attributes: metricAttributes,
+          },
+        );
+
+        emitMetric("partyworld.add_to_cart.action.count", "count", 1, {
+          attributes: metricAttributes,
+        });
+
+        if (errorMessage) {
+          emitMetric("partyworld.add_to_cart.action.failure", "count", 1, {
+            attributes: {
+              ...metricAttributes,
+              error_type: responseData.error
+                ? "response_error"
+                : "request_error",
+            },
+          });
+        }
 
         if (responseData.cart_id) {
           currencySelector(responseData.cart_id);

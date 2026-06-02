@@ -489,8 +489,207 @@
                 }
             };
 
+            window.__PWPageLoadAt = typeof window.__PWPageLoadAt === 'number'
+                ? window.__PWPageLoadAt
+                : null;
+
+            window.__PWSetPageLoadAt = window.__PWSetPageLoadAt || function () {
+                if (typeof window.__PWPageLoadAt === 'number') {
+                    return;
+                }
+
+                if (window.performance && typeof window.performance.now === 'function') {
+                    window.__PWPageLoadAt = window.performance.now();
+                    return;
+                }
+
+                window.__PWPageLoadAt = Date.now();
+            };
+
+            if (document.readyState === 'complete') {
+                window.__PWSetPageLoadAt();
+            } else {
+                window.addEventListener('load', window.__PWSetPageLoadAt, { once: true });
+            }
+
+            window.__PWGetLifecyclePhase = window.__PWGetLifecyclePhase || function (startTime) {
+                if (typeof window.__PWPageLoadAt !== 'number') {
+                    return 'pre_load';
+                }
+
+                return Number(startTime || 0) >= window.__PWPageLoadAt ? 'post_load' : 'pre_load';
+            };
+
+            window.__PWStartInpObserver = window.__PWStartInpObserver || function () {
+                var supportedEntryTypes;
+                var inpObserver;
+                var interactionState = {};
+                var inpState;
+
+                if (window.__PWInpObserverStarted) {
+                    return;
+                }
+
+                if (typeof window.PerformanceObserver !== 'function') {
+                    return;
+                }
+
+                supportedEntryTypes = window.PerformanceObserver.supportedEntryTypes || [];
+
+                if (supportedEntryTypes.indexOf('event') === -1) {
+                    return;
+                }
+
+                inpState = {
+                    finalized: false,
+                    maxOverall: null,
+                    maxPostLoad: null,
+                    interactionCount: 0,
+                    postLoadInteractionCount: 0
+                };
+
+                function emitInpMetric(metricName, metricValue, metricAttributes) {
+                    if (typeof window.__PWEmitMetric !== 'function') {
+                        return;
+                    }
+
+                    window.__PWEmitMetric(metricName, 'distribution', metricValue || 0, {
+                        unit: 'millisecond',
+                        attributes: metricAttributes || {}
+                    });
+                }
+
+                function emitInpCount(metricName, metricValue, metricAttributes) {
+                    if (typeof window.__PWEmitMetric !== 'function') {
+                        return;
+                    }
+
+                    window.__PWEmitMetric(metricName, 'gauge', metricValue || 0, {
+                        attributes: metricAttributes || {}
+                    });
+                }
+
+                function finalizeInpMetrics() {
+                    if (inpState.finalized) {
+                        return;
+                    }
+
+                    inpState.finalized = true;
+
+                    if (inpState.maxOverall) {
+                        emitInpMetric('partyworld.web_vitals.inp.max', inpState.maxOverall.duration, {
+                            page_type: '{{page_type}}',
+                            scope: 'overall',
+                            interaction_type: inpState.maxOverall.eventType || 'unknown',
+                            phase: inpState.maxOverall.phase || 'pre_load'
+                        });
+                    }
+
+                    if (inpState.maxPostLoad) {
+                        emitInpMetric('partyworld.web_vitals.inp.max', inpState.maxPostLoad.duration, {
+                            page_type: '{{page_type}}',
+                            scope: 'post_load',
+                            interaction_type: inpState.maxPostLoad.eventType || 'unknown',
+                            phase: 'post_load'
+                        });
+                    }
+
+                    emitInpCount('partyworld.web_vitals.inp.interaction_count', inpState.interactionCount, {
+                        page_type: '{{page_type}}',
+                        scope: 'overall'
+                    });
+
+                    emitInpCount('partyworld.web_vitals.inp.interaction_count', inpState.postLoadInteractionCount, {
+                        page_type: '{{page_type}}',
+                        scope: 'post_load'
+                    });
+                }
+
+                function trackInteractionEntry(entry) {
+                    var interactionId = String(entry.interactionId || '');
+                    var phase = window.__PWGetLifecyclePhase(entry.startTime);
+                    var current = interactionState[interactionId] || {
+                        seen: false,
+                        postLoadSeen: false,
+                        duration: 0,
+                        eventType: 'unknown',
+                        phase: phase
+                    };
+
+                    if (!current.seen) {
+                        inpState.interactionCount += 1;
+                        current.seen = true;
+                    }
+
+                    if (phase === 'post_load' && !current.postLoadSeen) {
+                        inpState.postLoadInteractionCount += 1;
+                        current.postLoadSeen = true;
+                    }
+
+                    if ((entry.duration || 0) >= (current.duration || 0)) {
+                        current.duration = entry.duration || 0;
+                        current.eventType = entry.name || 'unknown';
+                        current.phase = phase;
+                    }
+
+                    interactionState[interactionId] = current;
+
+                    if (!inpState.maxOverall || current.duration > inpState.maxOverall.duration) {
+                        inpState.maxOverall = {
+                            duration: current.duration,
+                            eventType: current.eventType,
+                            phase: current.phase
+                        };
+                    }
+
+                    if (current.postLoadSeen && (!inpState.maxPostLoad || current.duration > inpState.maxPostLoad.duration)) {
+                        inpState.maxPostLoad = {
+                            duration: current.duration,
+                            eventType: current.eventType,
+                            phase: 'post_load'
+                        };
+                    }
+                }
+
+                inpObserver = new window.PerformanceObserver(function (list) {
+                    var entries = list.getEntries();
+                    var index;
+                    var entry;
+
+                    for (index = 0; index < entries.length; index++) {
+                        entry = entries[index];
+
+                        if (!entry || !entry.interactionId || entry.interactionId <= 0) {
+                            continue;
+                        }
+
+                        trackInteractionEntry(entry);
+                    }
+                });
+
+                try {
+                    inpObserver.observe({
+                        type: 'event',
+                        buffered: true,
+                        durationThreshold: 16
+                    });
+                    window.__PWInpObserverStarted = true;
+                } catch (error) {
+                    return;
+                }
+
+                document.addEventListener('visibilitychange', function () {
+                    if (document.visibilityState === 'hidden') {
+                        finalizeInpMetrics();
+                    }
+                });
+
+                window.addEventListener('pagehide', finalizeInpMetrics, { once: true });
+            };
+
             window.__PWStartScriptResourceObserver();
             window.__PWStartRuntimeObserver();
+            window.__PWStartInpObserver();
         </script>
 
         {{!-- Load Lazysizes script ASAP so images will appear --}}
@@ -596,6 +795,103 @@
         <script nonce="{{nonce}}">window.__webpack_public_path__ = "{{cdn 'assets/dist/'}}";</script>
         <script nonce="{{nonce}}">
             {{!-- Exported in app.js --}}
+            var bootstrapMetricStartAt = window.performance && typeof window.performance.now === 'function'
+                ? window.performance.now()
+                : Date.now();
+            var lifecycleMetricState = window.__PWThemeLifecycleMetricsState || {
+                domContentLoaded: false,
+                windowLoad: false
+            };
+
+            window.__PWThemeLifecycleMetricsState = lifecycleMetricState;
+
+            if (typeof window.__PWBootstrapMetricStart === 'number') {
+                bootstrapMetricStartAt = window.__PWBootstrapMetricStart;
+            }
+
+            function recordThemeDurationMetric(name, duration, extraAttributes) {
+                if (typeof window.__PWRecordMetric !== 'function') {
+                    return;
+                }
+
+                window.__PWRecordMetric(name, 'distribution', Math.max(0, duration || 0), {
+                    unit: 'millisecond',
+                    attributes: Object.assign({
+                        page_type: '{{page_type}}'
+                    }, extraAttributes || {})
+                });
+            }
+
+            function readNavigationTiming() {
+                var entries = [];
+
+                try {
+                    if (window.performance && typeof window.performance.getEntriesByType === 'function') {
+                        entries = window.performance.getEntriesByType('navigation') || [];
+                    }
+                } catch (error) {
+                    entries = [];
+                }
+
+                return entries.length ? entries[0] : null;
+            }
+
+            function emitDomContentLoadedMetrics() {
+                var navigationEntry = null;
+                var domContentLoadedAt = 0;
+
+                if (lifecycleMetricState.domContentLoaded) {
+                    return;
+                }
+
+                navigationEntry = readNavigationTiming();
+                domContentLoadedAt = navigationEntry && typeof navigationEntry.domContentLoadedEventEnd === 'number'
+                    ? navigationEntry.domContentLoadedEventEnd
+                    : 0;
+
+                if (domContentLoadedAt <= 0) {
+                    return;
+                }
+
+                recordThemeDurationMetric('partyworld.page.lifecycle.dom_content_loaded.duration', domContentLoadedAt);
+                recordThemeDurationMetric('partyworld.theme.bootstrap.to_dom_content_loaded.duration', domContentLoadedAt - bootstrapMetricStartAt);
+                lifecycleMetricState.domContentLoaded = true;
+            }
+
+            function emitWindowLoadMetrics() {
+                var navigationEntry = null;
+                var windowLoadAt = 0;
+
+                if (lifecycleMetricState.windowLoad) {
+                    return;
+                }
+
+                navigationEntry = readNavigationTiming();
+                windowLoadAt = navigationEntry && typeof navigationEntry.loadEventEnd === 'number'
+                    ? navigationEntry.loadEventEnd
+                    : 0;
+
+                if (windowLoadAt <= 0) {
+                    return;
+                }
+
+                recordThemeDurationMetric('partyworld.page.lifecycle.window_load.duration', windowLoadAt);
+                recordThemeDurationMetric('partyworld.theme.bootstrap.to_window_load.duration', windowLoadAt - bootstrapMetricStartAt);
+                lifecycleMetricState.windowLoad = true;
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', emitDomContentLoadedMetrics, { once: true });
+            } else {
+                emitDomContentLoadedMetrics();
+            }
+
+            if (document.readyState === 'complete') {
+                emitWindowLoadMetrics();
+            } else {
+                window.addEventListener('load', emitWindowLoadMetrics, { once: true });
+            }
+
             function reportThemeBundleFailure(message, error, extra) {
                 try {
                     if (typeof window.__PWRecordMetric === 'function') {
@@ -693,8 +989,45 @@
 
             if (scriptElement) {
                 scriptElement.addEventListener('load', function () {
+                    var bundleLoadedAt = window.performance && typeof window.performance.now === 'function'
+                        ? window.performance.now()
+                        : Date.now();
+                    var bootstrapInvokeStartedAt = bundleLoadedAt;
+
+                    recordThemeDurationMetric('partyworld.theme.main_bundle.wait.duration', bundleLoadedAt - bootstrapMetricStartAt, {
+                        phase: 'bundle_wait'
+                    });
+
                     try {
+                        bootstrapInvokeStartedAt = window.performance && typeof window.performance.now === 'function'
+                            ? window.performance.now()
+                            : Date.now();
+
                         onThemeBundleMain();
+
+                        recordThemeDurationMetric('partyworld.theme.bootstrap.invoke.duration',
+                            (window.performance && typeof window.performance.now === 'function'
+                                ? window.performance.now()
+                                : Date.now()) - bootstrapInvokeStartedAt,
+                            {
+                                phase: 'bootstrap_invoke'
+                            }
+                        );
+
+                        if (typeof window.requestAnimationFrame === 'function') {
+                            window.requestAnimationFrame(function () {
+                                window.requestAnimationFrame(function () {
+                                    recordThemeDurationMetric('partyworld.theme.bootstrap.post_paint.duration',
+                                        (window.performance && typeof window.performance.now === 'function'
+                                            ? window.performance.now()
+                                            : Date.now()) - bootstrapMetricStartAt,
+                                        {
+                                            phase: 'post_paint'
+                                        }
+                                    );
+                                });
+                            });
+                        }
                     } catch (error) {
                         reportThemeBundleFailure('Theme bundle bootstrap threw before startup completed', error, {
                             script_src: scriptElement.src,

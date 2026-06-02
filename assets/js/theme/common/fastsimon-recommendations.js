@@ -15,11 +15,109 @@
 
 /* eslint-disable no-console, no-param-reassign, no-use-before-define */
 
-const GRAPHQL_ENDPOINT = '/graphql';
-const FASTSIMON_API_URL = 'https://api.fastsimon.com';
+const GRAPHQL_ENDPOINT = "/graphql";
+const FASTSIMON_API_URL = "https://api.fastsimon.com";
 
 // Session management for Fast Simon event tracking
 const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+
+function metricNowMs() {
+  if (
+    typeof window !== "undefined" &&
+    window.performance &&
+    typeof window.performance.now === "function"
+  ) {
+    return window.performance.now();
+  }
+
+  return Date.now();
+}
+
+function emitMetric(name, type, value, options = {}) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  if (typeof window.__PWEmitMetric === "function") {
+    window.__PWEmitMetric(name, type, value, options);
+    return;
+  }
+
+  if (typeof window.__PWRecordMetric === "function") {
+    window.__PWRecordMetric(name, type, value, options);
+  }
+}
+
+function pageTypeFromContext(context) {
+  if (context && (context.page_type || context.pageType)) {
+    return context.page_type || context.pageType;
+  }
+
+  if (
+    typeof document !== "undefined" &&
+    document.body &&
+    document.body.dataset
+  ) {
+    return document.body.dataset.pageType || "unknown";
+  }
+
+  return "unknown";
+}
+
+function fastSimonSectionFromContainer(container) {
+  if (!container || !container.closest) {
+    return "unknown";
+  }
+
+  const section = container.closest("[data-fastsimon-section]");
+  return section?.getAttribute("data-fastsimon-section") || "unknown";
+}
+
+function emitFastSimonWidgetLoadMetrics({
+  container,
+  context,
+  startMs,
+  status,
+  renderedCount,
+  source,
+  mode,
+  widgetId,
+  categoryId,
+}) {
+  const duration = Math.max(0, metricNowMs() - startMs);
+  const attributes = {
+    page_type: pageTypeFromContext(context),
+    section: fastSimonSectionFromContainer(container),
+    status: status || "unknown",
+    source: source || "single",
+    mode: mode || "widget",
+    widget_id: widgetId || "none",
+    category_id: categoryId || "none",
+  };
+
+  emitMetric(
+    "partyworld.fastsimon.widget.load.duration",
+    "distribution",
+    duration,
+    {
+      unit: "millisecond",
+      attributes,
+    },
+  );
+
+  emitMetric("partyworld.fastsimon.widget.load.count", "count", 1, {
+    attributes,
+  });
+
+  emitMetric(
+    "partyworld.fastsimon.widget.items.count",
+    "gauge",
+    renderedCount || 0,
+    {
+      attributes,
+    },
+  );
+}
 
 /**
  * GraphQL query to fetch products by their IDs
@@ -103,15 +201,15 @@ const PRODUCTS_BY_IDS_QUERY = `
  * @returns {string} ISP token
  */
 function getOrCreateIspToken() {
-    const storageKey = 'fastsimon_isp_token';
-    let token = localStorage.getItem(storageKey);
+  const storageKey = "fastsimon_isp_token";
+  let token = localStorage.getItem(storageKey);
 
-    if (!token) {
-        token = `fs_${Math.random().toString(36).substring(2, 15)}${Date.now().toString(36)}`;
-        localStorage.setItem(storageKey, token);
-    }
+  if (!token) {
+    token = `fs_${Math.random().toString(36).substring(2, 15)}${Date.now().toString(36)}`;
+    localStorage.setItem(storageKey, token);
+  }
 
-    return token;
+  return token;
 }
 
 /**
@@ -120,21 +218,24 @@ function getOrCreateIspToken() {
  * @returns {number} Session start timestamp in seconds
  */
 function getSessionTimestamp() {
-    const storageKey = 'fastsimon_session';
-    const lastActivityKey = 'fastsimon_last_activity';
-    const now = Math.floor(Date.now() / 1000);
+  const storageKey = "fastsimon_session";
+  const lastActivityKey = "fastsimon_last_activity";
+  const now = Math.floor(Date.now() / 1000);
 
-    const lastActivity = parseInt(localStorage.getItem(lastActivityKey) || '0', 10);
-    let session = parseInt(localStorage.getItem(storageKey) || '0', 10);
+  const lastActivity = parseInt(
+    localStorage.getItem(lastActivityKey) || "0",
+    10,
+  );
+  let session = parseInt(localStorage.getItem(storageKey) || "0", 10);
 
-    // Restart session if inactive for 30+ minutes
-    if (!session || (now - lastActivity) > (SESSION_TIMEOUT / 1000)) {
-        session = now;
-        localStorage.setItem(storageKey, session.toString());
-    }
+  // Restart session if inactive for 30+ minutes
+  if (!session || now - lastActivity > SESSION_TIMEOUT / 1000) {
+    session = now;
+    localStorage.setItem(storageKey, session.toString());
+  }
 
-    localStorage.setItem(lastActivityKey, now.toString());
-    return session;
+  localStorage.setItem(lastActivityKey, now.toString());
+  return session;
 }
 
 /**
@@ -150,47 +251,58 @@ function getSessionTimestamp() {
  * @returns {Promise<Object>} API response with widget_responses
  */
 async function callFastSimonRecommendations(params) {
-    const {
-        storeId, uuid, widgetIds, productId, categoryId, products, cartToken,
-    } = params;
+  const {
+    storeId,
+    uuid,
+    widgetIds,
+    productId,
+    categoryId,
+    products,
+    cartToken,
+  } = params;
 
-    const url = new URL(`${FASTSIMON_API_URL}/upsell_cross_sell_recommendation`);
-    url.searchParams.set('store_id', storeId);
-    url.searchParams.set('UUID', uuid);
+  const url = new URL(`${FASTSIMON_API_URL}/upsell_cross_sell_recommendation`);
+  url.searchParams.set("store_id", storeId);
+  url.searchParams.set("UUID", uuid);
 
-    // Widget IDs as a JSON-encoded array string
-    url.searchParams.set('widgets_ids', JSON.stringify(widgetIds));
+  // Widget IDs as a JSON-encoded array string
+  url.searchParams.set("widgets_ids", JSON.stringify(widgetIds));
 
-    if (productId) {
-        url.searchParams.set('product_id', productId.toString());
+  if (productId) {
+    url.searchParams.set("product_id", productId.toString());
+  }
+
+  if (categoryId) {
+    url.searchParams.set("category_id", categoryId.toString());
+  }
+
+  if (products && products.length > 0) {
+    url.searchParams.set(
+      "products",
+      JSON.stringify(products.map((id) => id.toString())),
+    );
+  }
+
+  if (cartToken) {
+    url.searchParams.set("cart_token", cartToken);
+  }
+
+  try {
+    const response = await fetch(url.toString());
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("[FastSimon API] Error response:", errorText);
+      throw new Error(
+        `Fast Simon API error: ${response.status} - ${errorText}`,
+      );
     }
 
-    if (categoryId) {
-        url.searchParams.set('category_id', categoryId.toString());
-    }
-
-    if (products && products.length > 0) {
-        url.searchParams.set('products', JSON.stringify(products.map(id => id.toString())));
-    }
-
-    if (cartToken) {
-        url.searchParams.set('cart_token', cartToken);
-    }
-
-    try {
-        const response = await fetch(url.toString());
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('[FastSimon API] Error response:', errorText);
-            throw new Error(`Fast Simon API error: ${response.status} - ${errorText}`);
-        }
-
-        return response.json();
-    } catch (error) {
-        console.error('[FastSimon API] Request failed:', error);
-        throw error;
-    }
+    return response.json();
+  } catch (error) {
+    console.error("[FastSimon API] Request failed:", error);
+    throw error;
+  }
 }
 
 /**
@@ -205,31 +317,31 @@ async function callFastSimonRecommendations(params) {
  * @returns {Promise<Object>} API response with items[]
  */
 async function callFastSimonCollection(params) {
-    const {
-        storeId, uuid, categoryId, numProducts = 8, pageNum = 1,
-    } = params;
+  const { storeId, uuid, categoryId, numProducts = 8, pageNum = 1 } = params;
 
-    const url = new URL(`${FASTSIMON_API_URL}/categories_navigation`);
-    url.searchParams.set('store_id', storeId);
-    url.searchParams.set('UUID', uuid);
-    url.searchParams.set('category_id', categoryId.toString());
-    url.searchParams.set('num_of_products', numProducts.toString());
-    url.searchParams.set('page_num', pageNum.toString());
+  const url = new URL(`${FASTSIMON_API_URL}/categories_navigation`);
+  url.searchParams.set("store_id", storeId);
+  url.searchParams.set("UUID", uuid);
+  url.searchParams.set("category_id", categoryId.toString());
+  url.searchParams.set("num_of_products", numProducts.toString());
+  url.searchParams.set("page_num", pageNum.toString());
 
-    try {
-        const response = await fetch(url.toString());
+  try {
+    const response = await fetch(url.toString());
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('[FastSimon Collection API] Error response:', errorText);
-            throw new Error(`Fast Simon Collection API error: ${response.status} - ${errorText}`);
-        }
-
-        return response.json();
-    } catch (error) {
-        console.error('[FastSimon Collection API] Request failed:', error);
-        throw error;
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("[FastSimon Collection API] Error response:", errorText);
+      throw new Error(
+        `Fast Simon Collection API error: ${response.status} - ${errorText}`,
+      );
     }
+
+    return response.json();
+  } catch (error) {
+    console.error("[FastSimon Collection API] Request failed:", error);
+    throw error;
+  }
 }
 
 /**
@@ -238,14 +350,14 @@ async function callFastSimonCollection(params) {
  * @returns {number[]} Array of product IDs
  */
 function extractProductIdsFromCollectionResponse(collectionResponse) {
-    const items = collectionResponse?.items || collectionResponse?.products || [];
+  const items = collectionResponse?.items || collectionResponse?.products || [];
 
-    return items
-        .map(item => {
-            const id = parseInt(item.id || item.product_id || item.entityId, 10);
-            return Number.isNaN(id) ? null : id;
-        })
-        .filter(Boolean);
+  return items
+    .map((item) => {
+      const id = parseInt(item.id || item.product_id || item.entityId, 10);
+      return Number.isNaN(id) ? null : id;
+    })
+    .filter(Boolean);
 }
 
 /**
@@ -255,20 +367,21 @@ function extractProductIdsFromCollectionResponse(collectionResponse) {
  * @returns {number[]} Array of product IDs
  */
 function extractProductIdsFromWidgetResponse(widgetResponse) {
-    // Fast Simon response shape can vary — try all known locations
-    const items = widgetResponse?.payload
-        || widgetResponse?.items
-        || widgetResponse?.products
-        || widgetResponse?.data
-        || [];
+  // Fast Simon response shape can vary — try all known locations
+  const items =
+    widgetResponse?.payload ||
+    widgetResponse?.items ||
+    widgetResponse?.products ||
+    widgetResponse?.data ||
+    [];
 
-    return items
-        .map(item => {
-            // Fast Simon may return `id` as string or number
-            const id = parseInt(item.id || item.product_id || item.entityId, 10);
-            return Number.isNaN(id) ? null : id;
-        })
-        .filter(Boolean);
+  return items
+    .map((item) => {
+      // Fast Simon may return `id` as string or number
+      const id = parseInt(item.id || item.product_id || item.entityId, 10);
+      return Number.isNaN(id) ? null : id;
+    })
+    .filter(Boolean);
 }
 
 /**
@@ -278,52 +391,52 @@ function extractProductIdsFromWidgetResponse(widgetResponse) {
  * @param {string} currencyCode - Currency code (e.g., 'EUR')
  * @returns {Promise<Object>} { products, currency }
  */
-async function fetchProductsByIds(productIds, token, currencyCode = 'EUR') {
-    if (!productIds || productIds.length === 0) {
-        return { products: [], currency: null };
+async function fetchProductsByIds(productIds, token, currencyCode = "EUR") {
+  if (!productIds || productIds.length === 0) {
+    return { products: [], currency: null };
+  }
+
+  try {
+    const response = await fetch(GRAPHQL_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        query: PRODUCTS_BY_IDS_QUERY,
+        variables: {
+          entityIds: productIds.map((id) => parseInt(id, 10)),
+          currencyCode,
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`GraphQL request failed: ${response.status}`);
     }
 
-    try {
-        const response = await fetch(GRAPHQL_ENDPOINT, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                query: PRODUCTS_BY_IDS_QUERY,
-                variables: {
-                    entityIds: productIds.map(id => parseInt(id, 10)),
-                    currencyCode,
-                },
-            }),
-        });
+    const data = await response.json();
 
-        if (!response.ok) {
-            throw new Error(`GraphQL request failed: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data.errors) {
-            console.error('[FastSimon] GraphQL errors:', data.errors);
-            throw new Error('GraphQL query returned errors');
-        }
-
-        const products = data.data.site.products.edges.map(edge => edge.node);
-        const currency = data.data.site.currency;
-
-        // Maintain the order from Fast Simon (most relevant first)
-        const productMap = new Map(products.map(p => [p.entityId, p]));
-        const orderedProducts = productIds
-            .map(id => productMap.get(parseInt(id, 10)))
-            .filter(Boolean);
-
-        return { products: orderedProducts, currency };
-    } catch (error) {
-        console.error('[FastSimon] Error fetching products from GraphQL:', error);
-        return { products: [], currency: null };
+    if (data.errors) {
+      console.error("[FastSimon] GraphQL errors:", data.errors);
+      throw new Error("GraphQL query returned errors");
     }
+
+    const products = data.data.site.products.edges.map((edge) => edge.node);
+    const currency = data.data.site.currency;
+
+    // Maintain the order from Fast Simon (most relevant first)
+    const productMap = new Map(products.map((p) => [p.entityId, p]));
+    const orderedProducts = productIds
+      .map((id) => productMap.get(parseInt(id, 10)))
+      .filter(Boolean);
+
+    return { products: orderedProducts, currency };
+  } catch (error) {
+    console.error("[FastSimon] Error fetching products from GraphQL:", error);
+    return { products: [], currency: null };
+  }
 }
 
 /**
@@ -333,26 +446,26 @@ async function fetchProductsByIds(productIds, token, currencyCode = 'EUR') {
  * @param {string} currencyCode - Currency code
  * @returns {string} Formatted price string
  */
-function formatPrice(priceObj, currency, currencyCode = 'EUR') {
-    if (!priceObj || priceObj.value == null) return '';
+function formatPrice(priceObj, currency, currencyCode = "EUR") {
+  if (!priceObj || priceObj.value == null) return "";
 
-    const code = priceObj.currencyCode || currencyCode;
+  const code = priceObj.currencyCode || currencyCode;
 
-    try {
-        return new Intl.NumberFormat('en-IE', {
-            style: 'currency',
-            currency: code,
-            minimumFractionDigits: currency?.display?.decimalPlaces ?? 2,
-            maximumFractionDigits: currency?.display?.decimalPlaces ?? 2,
-        }).format(priceObj.value);
-    } catch (e) {
-        const symbol = currency?.display?.symbol || '€';
-        const decimals = currency?.display?.decimalPlaces ?? 2;
-        const value = priceObj.value.toFixed(decimals);
-        const parts = value.split('.');
-        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        return `${symbol}${parts.join('.')}`;
-    }
+  try {
+    return new Intl.NumberFormat("en-IE", {
+      style: "currency",
+      currency: code,
+      minimumFractionDigits: currency?.display?.decimalPlaces ?? 2,
+      maximumFractionDigits: currency?.display?.decimalPlaces ?? 2,
+    }).format(priceObj.value);
+  } catch (e) {
+    const symbol = currency?.display?.symbol || "€";
+    const decimals = currency?.display?.decimalPlaces ?? 2;
+    const value = priceObj.value.toFixed(decimals);
+    const parts = value.split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return `${symbol}${parts.join(".")}`;
+  }
 }
 
 /**
@@ -361,11 +474,12 @@ function formatPrice(priceObj, currency, currencyCode = 'EUR') {
  * @returns {number} Rating as percentage (0-100)
  */
 function calculateRatingPercentage(reviewSummary) {
-    if (!reviewSummary || reviewSummary.numberOfReviews === 0) {
-        return 0;
-    }
-    const avgRating = reviewSummary.summationOfRatings / reviewSummary.numberOfReviews;
-    return (avgRating / 5) * 100;
+  if (!reviewSummary || reviewSummary.numberOfReviews === 0) {
+    return 0;
+  }
+  const avgRating =
+    reviewSummary.summationOfRatings / reviewSummary.numberOfReviews;
+  return (avgRating / 5) * 100;
 }
 
 /**
@@ -373,7 +487,7 @@ function calculateRatingPercentage(reviewSummary) {
  * @returns {HTMLTemplateElement|null}
  */
 function getCardTemplate() {
-    return document.getElementById('fastsimon-product-card-template');
+  return document.getElementById("fastsimon-product-card-template");
 }
 
 /**
@@ -382,10 +496,10 @@ function getCardTemplate() {
  * @returns {string} Escaped string
  */
 function escapeHtml(str) {
-    if (!str) return '';
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
+  if (!str) return "";
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
 }
 
 /**
@@ -396,87 +510,95 @@ function escapeHtml(str) {
  * @returns {HTMLElement} Cloned and populated card element
  */
 function renderProductCard(product, currency, options = {}) {
-    const {
-        showRating = true,
-        showQuickView = true,
-        ctaText = 'Shop Now',
-    } = options;
+  const {
+    showRating = true,
+    showQuickView = true,
+    ctaText = "Shop Now",
+  } = options;
 
-    const template = getCardTemplate();
+  const template = getCardTemplate();
 
-    // Fallback to string-based rendering if template not found
-    if (!template) {
-        return renderProductCardFallback(product, currency, options);
-    }
+  // Fallback to string-based rendering if template not found
+  if (!template) {
+    return renderProductCardFallback(product, currency, options);
+  }
 
-    const clone = template.content.cloneNode(true);
-    const card = clone.querySelector('article.card');
+  const clone = template.content.cloneNode(true);
+  const card = clone.querySelector("article.card");
 
-    const hasOptions = product.productOptions?.edges?.length > 0;
-    const isInStock = product.inventory?.isInStock !== false;
-    const stockLevel = product.inventory?.aggregated?.availableToSell ?? 999;
-    const prices = product.prices || {};
-    const displayPrice = prices.price;
-    const displaySalePrice = prices.salePrice;
-    const displayPriceRange = prices.priceRange;
-    const hasSalePrice = displaySalePrice?.value && displaySalePrice.value < displayPrice?.value;
-    const ratingPercentage = calculateRatingPercentage(product.reviewSummary);
-    const numberOfReviews = product.reviewSummary?.numberOfReviews || 0;
+  const hasOptions = product.productOptions?.edges?.length > 0;
+  const isInStock = product.inventory?.isInStock !== false;
+  const stockLevel = product.inventory?.aggregated?.availableToSell ?? 999;
+  const prices = product.prices || {};
+  const displayPrice = prices.price;
+  const displaySalePrice = prices.salePrice;
+  const displayPriceRange = prices.priceRange;
+  const hasSalePrice =
+    displaySalePrice?.value && displaySalePrice.value < displayPrice?.value;
+  const ratingPercentage = calculateRatingPercentage(product.reviewSummary);
+  const numberOfReviews = product.reviewSummary?.numberOfReviews || 0;
 
-    // Set card data attributes
-    card.setAttribute('data-test', `card-${product.entityId}`);
-    card.setAttribute('data-entity-id', product.entityId);
-    card.setAttribute('data-name', product.name);
-    // Image
-    const imageUrl = product.defaultImage?.url320wide || '/assets/img/ProductDefault.gif';
-    const imageAlt = product.defaultImage?.altText || product.name;
-    const img = card.querySelector('.card-image');
-    img.setAttribute('data-src', imageUrl);
-    img.setAttribute('alt', imageAlt);
-    img.setAttribute('title', product.name);
-    if (product.defaultImage?.url640wide) {
-        img.setAttribute('data-srcset', `${product.defaultImage.url320wide} 320w, ${product.defaultImage.url640wide} 640w`);
-    }
+  // Set card data attributes
+  card.setAttribute("data-test", `card-${product.entityId}`);
+  card.setAttribute("data-entity-id", product.entityId);
+  card.setAttribute("data-name", product.name);
+  // Image
+  const imageUrl =
+    product.defaultImage?.url320wide || "/assets/img/ProductDefault.gif";
+  const imageAlt = product.defaultImage?.altText || product.name;
+  const img = card.querySelector(".card-image");
+  img.setAttribute("data-src", imageUrl);
+  img.setAttribute("alt", imageAlt);
+  img.setAttribute("title", product.name);
+  if (product.defaultImage?.url640wide) {
+    img.setAttribute(
+      "data-srcset",
+      `${product.defaultImage.url320wide} 320w, ${product.defaultImage.url640wide} 640w`,
+    );
+  }
 
-    // Links
-    const figureLink = card.querySelector('.card-figure__link');
-    figureLink.setAttribute('href', product.path);
-    figureLink.setAttribute('aria-label', product.name);
+  // Links
+  const figureLink = card.querySelector(".card-figure__link");
+  figureLink.setAttribute("href", product.path);
+  figureLink.setAttribute("aria-label", product.name);
 
-    const titleLink = card.querySelector('.card-title a');
-    titleLink.setAttribute('href', product.path);
-    titleLink.textContent = product.name;
+  const titleLink = card.querySelector(".card-title a");
+  titleLink.setAttribute("href", product.path);
+  titleLink.textContent = product.name;
 
-    // Badge
-    const badgeContainer = card.querySelector('.card-badge-container');
-    if (stockLevel === 0 || !isInStock) {
-        badgeContainer.innerHTML = `
+  // Badge
+  const badgeContainer = card.querySelector(".card-badge-container");
+  if (stockLevel === 0 || !isInStock) {
+    badgeContainer.innerHTML = `
             <div class="product-badge product-badge--sold-out">
                 <span class="product-badge-text">Sold Out</span>
             </div>
         `;
-    } else if (hasSalePrice) {
-        badgeContainer.innerHTML = `
+  } else if (hasSalePrice) {
+    badgeContainer.innerHTML = `
             <div class="product-badge product-badge--sale">
                 <span class="product-badge-text">On Sale!</span>
             </div>
         `;
-    }
+  }
 
-    // Rating
-    const ratingEl = card.querySelector('.card-rating');
-    if (showRating && numberOfReviews > 0) {
-        ratingEl.hidden = false;
-        const ratingFill = ratingEl.querySelector('.rating-fill');
-        const ratingSpan = ratingEl.querySelector('.rating');
-        ratingFill.style.width = `${ratingPercentage}%`;
-        ratingSpan.setAttribute('aria-label', `Rated ${(ratingPercentage / 20).toFixed(1)} out of 5 stars`);
-    }
+  // Rating
+  const ratingEl = card.querySelector(".card-rating");
+  if (showRating && numberOfReviews > 0) {
+    ratingEl.hidden = false;
+    const ratingFill = ratingEl.querySelector(".rating-fill");
+    const ratingSpan = ratingEl.querySelector(".rating");
+    ratingFill.style.width = `${ratingPercentage}%`;
+    ratingSpan.setAttribute(
+      "aria-label",
+      `Rated ${(ratingPercentage / 20).toFixed(1)} out of 5 stars`,
+    );
+  }
 
-    // Price (using tax-inclusive prices)
-    const priceContainer = card.querySelector('.card-price');
-    if (hasSalePrice) {
-        priceContainer.innerHTML = `
+  // Price (using tax-inclusive prices)
+  const priceContainer = card.querySelector(".card-price");
+  if (hasSalePrice) {
+    priceContainer.innerHTML = `
             <span class="price-section price-section--withTax non-sale-price--withTax">
                 <span data-product-non-sale-price-with-tax class="price price--non-sale">${formatPrice(displayPrice, currency)}</span>
             </span>
@@ -484,32 +606,38 @@ function renderProductCard(product, currency, options = {}) {
                 <span data-product-price-with-tax class="price price--withTax">${formatPrice(displaySalePrice, currency)}</span>
             </span>
         `;
-    } else if (displayPrice?.value) {
-        priceContainer.innerHTML = `
+  } else if (displayPrice?.value) {
+    priceContainer.innerHTML = `
             <span class="price-section price-section--withTax">
                 <span data-product-price-with-tax class="price price--withTax">${formatPrice(displayPrice, currency)}</span>
             </span>
         `;
-    } else if (displayPriceRange?.min?.value) {
-        const minPrice = displayPriceRange.min.value;
-        const maxPrice = displayPriceRange.max?.value ?? minPrice;
-        const code = displayPrice?.currencyCode || 'EUR';
-        const minFormatted = formatPrice({ value: minPrice, currencyCode: code }, currency);
-        const maxFormatted = formatPrice({ value: maxPrice, currencyCode: code }, currency);
+  } else if (displayPriceRange?.min?.value) {
+    const minPrice = displayPriceRange.min.value;
+    const maxPrice = displayPriceRange.max?.value ?? minPrice;
+    const code = displayPrice?.currencyCode || "EUR";
+    const minFormatted = formatPrice(
+      { value: minPrice, currencyCode: code },
+      currency,
+    );
+    const maxFormatted = formatPrice(
+      { value: maxPrice, currencyCode: code },
+      currency,
+    );
 
-        priceContainer.innerHTML = `
+    priceContainer.innerHTML = `
             <span class="price-section price-section--withTax">
                 <span data-product-price-with-tax class="price price--withTax">${minPrice !== maxPrice ? `${minFormatted} - ${maxFormatted}` : minFormatted}</span>
             </span>
         `;
-    }
+  }
 
-    // Actions (Quick view, Add to cart, Choose options)
-    const actionsContainer = card.querySelector('.card-figcaption-body');
-    let actionsHtml = '';
+  // Actions (Quick view, Add to cart, Choose options)
+  const actionsContainer = card.querySelector(".card-figcaption-body");
+  let actionsHtml = "";
 
-    if (showQuickView) {
-        actionsHtml += `
+  if (showQuickView) {
+    actionsHtml += `
             <button type="button" class="button button--small card-figcaption-button quickview"
                     data-event-type="product-click"
                     data-product-id="${product.entityId}"
@@ -517,10 +645,10 @@ function renderProductCard(product, currency, options = {}) {
                 Quick view
             </button>
         `;
-    }
+  }
 
-    if (!hasOptions && isInStock && product.addToCartUrl) {
-        actionsHtml += `
+  if (!hasOptions && isInStock && product.addToCartUrl) {
+    actionsHtml += `
             <a href="${product.addToCartUrl}"
                data-event-type="product-click"
                data-button-type="add-cart"
@@ -528,8 +656,8 @@ function renderProductCard(product, currency, options = {}) {
                 Add to Cart
             </a>
         `;
-    } else if (hasOptions) {
-        actionsHtml += `
+  } else if (hasOptions) {
+    actionsHtml += `
             <a href="${product.path}"
                data-event-type="product-click"
                class="button button--small card-figcaption-button"
@@ -537,18 +665,18 @@ function renderProductCard(product, currency, options = {}) {
                 Choose Options
             </a>
         `;
-    }
+  }
 
-    actionsContainer.innerHTML = actionsHtml;
+  actionsContainer.innerHTML = actionsHtml;
 
-    // CTA button link
-    const ctaLink = card.querySelector('.card-cta');
-    if (ctaLink) {
-        ctaLink.setAttribute('href', product.path);
-        ctaLink.textContent = ctaText;
-    }
+  // CTA button link
+  const ctaLink = card.querySelector(".card-cta");
+  if (ctaLink) {
+    ctaLink.setAttribute("href", product.path);
+    ctaLink.textContent = ctaText;
+  }
 
-    return card;
+  return card;
 }
 
 /**
@@ -559,45 +687,46 @@ function renderProductCard(product, currency, options = {}) {
  * @returns {HTMLElement} Card element created from string
  */
 function renderProductCardFallback(product, currency, options = {}) {
-    const {
-        showRating = true,
-        showQuickView = true,
-        ctaText = 'Shop Now',
-    } = options;
+  const {
+    showRating = true,
+    showQuickView = true,
+    ctaText = "Shop Now",
+  } = options;
 
-    const hasOptions = product.productOptions?.edges?.length > 0;
-    const isInStock = product.inventory?.isInStock !== false;
-    const stockLevel = product.inventory?.aggregated?.availableToSell ?? 999;
+  const hasOptions = product.productOptions?.edges?.length > 0;
+  const isInStock = product.inventory?.isInStock !== false;
+  const stockLevel = product.inventory?.aggregated?.availableToSell ?? 999;
 
-    const prices = product.prices || {};
-    const displayPrice = prices.price;
-    const displaySalePrice = prices.salePrice;
-    const displayPriceRange = prices.priceRange;
-    const hasSalePrice = displaySalePrice?.value && displaySalePrice.value < displayPrice?.value;
+  const prices = product.prices || {};
+  const displayPrice = prices.price;
+  const displaySalePrice = prices.salePrice;
+  const displayPriceRange = prices.priceRange;
+  const hasSalePrice =
+    displaySalePrice?.value && displaySalePrice.value < displayPrice?.value;
 
-    const ratingPercentage = calculateRatingPercentage(product.reviewSummary);
-    const numberOfReviews = product.reviewSummary?.numberOfReviews || 0;
+  const ratingPercentage = calculateRatingPercentage(product.reviewSummary);
+  const numberOfReviews = product.reviewSummary?.numberOfReviews || 0;
 
-    // Badge HTML
-    let badgeHtml = '';
-    if (stockLevel === 0 || !isInStock) {
-        badgeHtml = `
+  // Badge HTML
+  let badgeHtml = "";
+  if (stockLevel === 0 || !isInStock) {
+    badgeHtml = `
             <div class="product-badge product-badge--sold-out">
                 <span class="product-badge-text">Sold Out</span>
             </div>
         `;
-    } else if (hasSalePrice) {
-        badgeHtml = `
+  } else if (hasSalePrice) {
+    badgeHtml = `
             <div class="product-badge product-badge--sale">
                 <span class="product-badge-text">On Sale!</span>
             </div>
         `;
-    }
+  }
 
-    // Rating HTML
-    let ratingHtml = '';
-    if (showRating && numberOfReviews > 0) {
-        ratingHtml = `
+  // Rating HTML
+  let ratingHtml = "";
+  if (showRating && numberOfReviews > 0) {
+    ratingHtml = `
             <p class="card-text card-rating" data-test-info-type="productRating">
                 <span class="rating--small">
                     <span class="rating" role="img" aria-label="Rated ${(ratingPercentage / 20).toFixed(1)} out of 5 stars">
@@ -607,12 +736,12 @@ function renderProductCardFallback(product, currency, options = {}) {
                 </span>
             </p>
         `;
-    }
+  }
 
-    // Price HTML
-    let priceHtml = '';
-    if (hasSalePrice) {
-        priceHtml = `
+  // Price HTML
+  let priceHtml = "";
+  if (hasSalePrice) {
+    priceHtml = `
             <span class="price-section price-section--withTax non-sale-price--withTax">
                 <span data-product-non-sale-price-with-tax class="price price--non-sale">${formatPrice(displayPrice, currency)}</span>
             </span>
@@ -620,30 +749,36 @@ function renderProductCardFallback(product, currency, options = {}) {
                 <span data-product-price-with-tax class="price price--withTax">${formatPrice(displaySalePrice, currency)}</span>
             </span>
         `;
-    } else if (displayPrice?.value) {
-        priceHtml = `
+  } else if (displayPrice?.value) {
+    priceHtml = `
             <span class="price-section price-section--withTax">
                 <span data-product-price-with-tax class="price price--withTax">${formatPrice(displayPrice, currency)}</span>
             </span>
         `;
-    } else if (displayPriceRange?.min?.value) {
-        const minPrice = displayPriceRange.min.value;
-        const maxPrice = displayPriceRange.max?.value ?? minPrice;
-        const code = displayPrice?.currencyCode || 'EUR';
-        const minFormatted = formatPrice({ value: minPrice, currencyCode: code }, currency);
-        const maxFormatted = formatPrice({ value: maxPrice, currencyCode: code }, currency);
+  } else if (displayPriceRange?.min?.value) {
+    const minPrice = displayPriceRange.min.value;
+    const maxPrice = displayPriceRange.max?.value ?? minPrice;
+    const code = displayPrice?.currencyCode || "EUR";
+    const minFormatted = formatPrice(
+      { value: minPrice, currencyCode: code },
+      currency,
+    );
+    const maxFormatted = formatPrice(
+      { value: maxPrice, currencyCode: code },
+      currency,
+    );
 
-        priceHtml = `
+    priceHtml = `
             <span class="price-section price-section--withTax">
                 <span data-product-price-with-tax class="price price--withTax">${minPrice !== maxPrice ? `${minFormatted} - ${maxFormatted}` : minFormatted}</span>
             </span>
         `;
-    }
+  }
 
-    // Actions HTML
-    let actionsHtml = '';
-    if (showQuickView) {
-        actionsHtml = `
+  // Actions HTML
+  let actionsHtml = "";
+  if (showQuickView) {
+    actionsHtml = `
             <button type="button" class="button button--small card-figcaption-button quickview"
                     data-event-type="product-click"
                     data-product-id="${product.entityId}"
@@ -651,9 +786,9 @@ function renderProductCardFallback(product, currency, options = {}) {
                 Quick view
             </button>
         `;
-    }
-    if (!hasOptions && isInStock && product.addToCartUrl) {
-        actionsHtml += `
+  }
+  if (!hasOptions && isInStock && product.addToCartUrl) {
+    actionsHtml += `
             <a href="${product.addToCartUrl}"
                data-event-type="product-click"
                data-button-type="add-cart"
@@ -661,8 +796,8 @@ function renderProductCardFallback(product, currency, options = {}) {
                 Add to Cart
             </a>
         `;
-    } else if (hasOptions) {
-        actionsHtml += `
+  } else if (hasOptions) {
+    actionsHtml += `
             <a href="${product.path}"
                data-event-type="product-click"
                class="button button--small card-figcaption-button"
@@ -670,16 +805,17 @@ function renderProductCardFallback(product, currency, options = {}) {
                 Choose Options
             </a>
         `;
-    }
+  }
 
-    // Image
-    const imageUrl = product.defaultImage?.url320wide || '/assets/img/ProductDefault.gif';
-    const imageAlt = product.defaultImage?.altText || product.name;
-    const imageSrcset = product.defaultImage?.url640wide
-        ? `${product.defaultImage.url320wide} 320w, ${product.defaultImage.url640wide} 640w`
-        : '';
+  // Image
+  const imageUrl =
+    product.defaultImage?.url320wide || "/assets/img/ProductDefault.gif";
+  const imageAlt = product.defaultImage?.altText || product.name;
+  const imageSrcset = product.defaultImage?.url640wide
+    ? `${product.defaultImage.url320wide} 320w, ${product.defaultImage.url640wide} 640w`
+    : "";
 
-    const htmlString = `
+  const htmlString = `
         <article class="card"
                  data-test="card-${product.entityId}"
                  data-event-type="list"
@@ -696,7 +832,7 @@ function renderProductCardFallback(product, currency, options = {}) {
                         <img class="card-image lazyload"
                              src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                              data-src="${imageUrl}"
-                             ${imageSrcset ? `data-srcset="${imageSrcset}"` : ''}
+                             ${imageSrcset ? `data-srcset="${imageSrcset}"` : ""}
                              data-sizes="auto"
                              alt="${escapeHtml(imageAlt)}"
                              title="${escapeHtml(product.name)}">
@@ -723,9 +859,9 @@ function renderProductCardFallback(product, currency, options = {}) {
         </article>
     `;
 
-    const temp = document.createElement('div');
-    temp.innerHTML = htmlString.trim();
-    return temp.firstChild;
+  const temp = document.createElement("div");
+  temp.innerHTML = htmlString.trim();
+  return temp.firstChild;
 }
 
 /**
@@ -735,27 +871,27 @@ function renderProductCardFallback(product, currency, options = {}) {
  * @param {string} sources - Recommendation sources string
  */
 function reportWidgetViewed(context, productId, sources) {
-    if (!context.fastsimonStoreId || !context.fastsimonUuid) return;
+  if (!context.fastsimonStoreId || !context.fastsimonUuid) return;
 
-    const token = getOrCreateIspToken();
-    const session = getSessionTimestamp();
+  const token = getOrCreateIspToken();
+  const session = getSessionTimestamp();
 
-    const url = new URL('https://ping.fastsimon.com/post_load');
-    url.searchParams.set('store_id', context.fastsimonStoreId);
-    url.searchParams.set('UUID', context.fastsimonUuid);
-    url.searchParams.set('st', token);
-    url.searchParams.set('session', session.toString());
-    url.searchParams.set('found_related', '1');
+  const url = new URL("https://ping.fastsimon.com/post_load");
+  url.searchParams.set("store_id", context.fastsimonStoreId);
+  url.searchParams.set("UUID", context.fastsimonUuid);
+  url.searchParams.set("st", token);
+  url.searchParams.set("session", session.toString());
+  url.searchParams.set("found_related", "1");
 
-    if (productId) {
-        url.searchParams.set('id', productId.toString());
-    }
-    if (sources) {
-        url.searchParams.set('related_sources', sources);
-    }
+  if (productId) {
+    url.searchParams.set("id", productId.toString());
+  }
+  if (sources) {
+    url.searchParams.set("related_sources", sources);
+  }
 
-    // Fire and forget — non-blocking
-    fetch(url.toString()).catch(() => {});
+  // Fire and forget — non-blocking
+  fetch(url.toString()).catch(() => {});
 }
 
 /**
@@ -768,101 +904,117 @@ function reportWidgetViewed(context, productId, sources) {
  * @param {string} [options.widgetId] - Widget ID for event reporting
  * @param {string} [options.productId] - Seed product ID for event reporting
  */
-async function renderContainerProducts(container, productIds, context, options = {}) {
-    const { ctaText = 'Shop Now', widgetId, productId } = options;
+async function renderContainerProducts(
+  container,
+  productIds,
+  context,
+  options = {},
+) {
+  const { ctaText = "Shop Now", widgetId, productId } = options;
 
-    if (!productIds || productIds.length === 0) {
-        container.innerHTML = '';
-        container.classList.remove('is-loading');
-        container.classList.add('is-empty');
-        container.closest('.c-fsRecommendations')?.classList.add('is-empty');
-        return;
-    }
+  if (!productIds || productIds.length === 0) {
+    container.innerHTML = "";
+    container.classList.remove("is-loading");
+    container.classList.add("is-empty");
+    container.closest(".c-fsRecommendations")?.classList.add("is-empty");
+    return {
+      status: "empty",
+      renderedCount: 0,
+    };
+  }
 
-    // Fetch full product data from BigCommerce GraphQL
-    const { products, currency } = await fetchProductsByIds(
-        productIds,
-        context.storefrontApiToken,
-        context.currencyCode || 'EUR',
-    );
+  // Fetch full product data from BigCommerce GraphQL
+  const { products, currency } = await fetchProductsByIds(
+    productIds,
+    context.storefrontApiToken,
+    context.currencyCode || "EUR",
+  );
 
-    if (products.length === 0) {
-        container.innerHTML = '';
-        container.classList.remove('is-loading');
-        container.classList.add('is-empty');
-        container.closest('.c-fsRecommendations')?.classList.add('is-empty');
-        return;
-    }
+  if (products.length === 0) {
+    container.innerHTML = "";
+    container.classList.remove("is-loading");
+    container.classList.add("is-empty");
+    container.closest(".c-fsRecommendations")?.classList.add("is-empty");
+    return {
+      status: "empty",
+      renderedCount: 0,
+    };
+  }
 
-    // Create product grid
-    const productGrid = document.createElement('div');
-    productGrid.className = 'productGrid fs-product-grid';
+  // Create product grid
+  const productGrid = document.createElement("div");
+  productGrid.className = "productGrid fs-product-grid";
 
-    // Render product cards
-    products.forEach(product => {
-        const cardEl = renderProductCard(product, currency, {
-            showRating: true,
-            showQuickView: context.showQuickView !== false,
-            ctaText,
-        });
-        productGrid.appendChild(cardEl);
+  // Render product cards
+  products.forEach((product) => {
+    const cardEl = renderProductCard(product, currency, {
+      showRating: true,
+      showQuickView: context.showQuickView !== false,
+      ctaText,
     });
+    productGrid.appendChild(cardEl);
+  });
 
-    // Remove skeleton, add product grid
-    const skeletonGrid = container.querySelector('.fs-skeleton-grid');
-    if (skeletonGrid) {
-        skeletonGrid.remove();
-    }
-    container.appendChild(productGrid);
+  // Remove skeleton, add product grid
+  const skeletonGrid = container.querySelector(".fs-skeleton-grid");
+  if (skeletonGrid) {
+    skeletonGrid.remove();
+  }
+  container.appendChild(productGrid);
 
-    container.classList.remove('is-loading');
-    container.classList.add('is-loaded');
-    container.closest('.c-fsRecommendations')?.classList.add('is-loaded');
+  container.classList.remove("is-loading");
+  container.classList.add("is-loaded");
+  container.closest(".c-fsRecommendations")?.classList.add("is-loaded");
 
-    // Initialize slick carousel if jQuery + slick available
-    if (window.jQuery && window.jQuery.fn.slick) {
-        window.jQuery(productGrid).slick({
-            infinite: false,
-            mobileFirst: true,
+  // Initialize slick carousel if jQuery + slick available
+  if (window.jQuery && window.jQuery.fn.slick) {
+    window.jQuery(productGrid).slick({
+      infinite: false,
+      mobileFirst: true,
+      slidesToShow: 2,
+      slidesToScroll: 2,
+      arrows: true,
+      dots: false,
+      responsive: [
+        {
+          breakpoint: 1024,
+          settings: {
+            slidesToShow: 4,
+            slidesToScroll: 4,
+          },
+        },
+        {
+          breakpoint: 800,
+          settings: {
+            slidesToShow: 3,
+            slidesToScroll: 3,
+          },
+        },
+        {
+          breakpoint: 550,
+          settings: {
             slidesToShow: 2,
             slidesToScroll: 2,
-            arrows: true,
-            dots: false,
-            responsive: [
-                {
-                    breakpoint: 1024,
-                    settings: {
-                        slidesToShow: 4,
-                        slidesToScroll: 4,
-                    },
-                },
-                {
-                    breakpoint: 800,
-                    settings: {
-                        slidesToShow: 3,
-                        slidesToScroll: 3,
-                    },
-                },
-                {
-                    breakpoint: 550,
-                    settings: {
-                        slidesToShow: 2,
-                        slidesToScroll: 2,
-                    },
-                },
-            ],
-        });
-    }
+          },
+        },
+      ],
+    });
+  }
 
-    // Trigger lazysizes if available
-    if (window.lazySizes) {
-        window.lazySizes.init();
-    }
+  // Trigger lazysizes if available
+  if (window.lazySizes) {
+    window.lazySizes.init();
+  }
 
-    // Report widget viewed event to Fast Simon
-    if (widgetId) {
-        reportWidgetViewed(context, productId, widgetId);
-    }
+  // Report widget viewed event to Fast Simon
+  if (widgetId) {
+    reportWidgetViewed(context, productId, widgetId);
+  }
+
+  return {
+    status: "success",
+    renderedCount: products.length,
+  };
 }
 
 /**
@@ -872,91 +1024,118 @@ async function renderContainerProducts(container, productIds, context, options =
  * @param {Object} context - Theme context
  */
 async function initFastSimonRecommendation(container, context) {
-    const {
-        fastsimonWidgetId,
-        fastsimonProductId,
-        fastsimonCategoryId,
-        fastsimonPage,
-        fastsimonProducts,
-        fastsimonLimit = '8',
-        fastsimonCtaText = 'Shop Now',
-    } = container.dataset;
-    const limit = parseInt(fastsimonLimit, 10);
+  const {
+    fastsimonWidgetId,
+    fastsimonProductId,
+    fastsimonCategoryId,
+    fastsimonPage,
+    fastsimonProducts,
+    fastsimonLimit = "8",
+    fastsimonCtaText = "Shop Now",
+  } = container.dataset;
+  const limit = parseInt(fastsimonLimit, 10);
+  const loadStartMs = metricNowMs();
+  const mode = fastsimonWidgetId ? "widget" : "category_collection";
+  let loadStatus = "error";
+  let renderedCount = 0;
 
-    if (!context.fastsimonStoreId || !context.fastsimonUuid) {
-        console.warn('[FastSimon] Store ID or UUID not configured');
-        return;
+  if (!context.fastsimonStoreId || !context.fastsimonUuid) {
+    console.warn("[FastSimon] Store ID or UUID not configured");
+    return;
+  }
+
+  if (!fastsimonWidgetId && !fastsimonCategoryId) {
+    console.warn(
+      "[FastSimon] No widget ID or category ID specified on container",
+    );
+    return;
+  }
+
+  if (!context.storefrontApiToken) {
+    console.error("[FastSimon] Storefront API token not available");
+    return;
+  }
+
+  // Show loading state
+  container.classList.add("is-loading");
+
+  try {
+    // Build API params
+    const apiParams = {
+      storeId: context.fastsimonStoreId,
+      uuid: context.fastsimonUuid,
+      widgetIds: [fastsimonWidgetId],
+    };
+
+    if (fastsimonProductId) {
+      apiParams.productId = fastsimonProductId;
     }
 
-    if (!fastsimonWidgetId && !fastsimonCategoryId) {
-        console.warn('[FastSimon] No widget ID or category ID specified on container');
-        return;
+    if (fastsimonCategoryId) {
+      apiParams.categoryId = fastsimonCategoryId;
     }
 
-    if (!context.storefrontApiToken) {
-        console.error('[FastSimon] Storefront API token not available');
-        return;
+    if (fastsimonProducts) {
+      apiParams.products = fastsimonProducts.split(",").map((id) => id.trim());
     }
 
-    // Show loading state
-    container.classList.add('is-loading');
+    // Use widget API when a widget ID is present, collection API for category-only containers
+    let productIds;
 
-    try {
-        // Build API params
-        const apiParams = {
-            storeId: context.fastsimonStoreId,
-            uuid: context.fastsimonUuid,
-            widgetIds: [fastsimonWidgetId],
-        };
-
-        if (fastsimonProductId) {
-            apiParams.productId = fastsimonProductId;
-        }
-
-        if (fastsimonCategoryId) {
-            apiParams.categoryId = fastsimonCategoryId;
-        }
-
-        if (fastsimonProducts) {
-            apiParams.products = fastsimonProducts.split(',').map(id => id.trim());
-        }
-
-        // Use widget API when a widget ID is present, collection API for category-only containers
-        let productIds;
-
-        if (fastsimonWidgetId) {
-            // Widget-based: use /upsell_cross_sell_recommendation
-            const fsResponse = await callFastSimonRecommendations(apiParams);
-            const widgetResponse = fsResponse?.widget_responses?.[0];
-            productIds = extractProductIdsFromWidgetResponse(widgetResponse);
-        } else if (fastsimonCategoryId) {
-            // Category pages without widget: use /categories_navigation
-            const pageNum = parseInt(fastsimonPage || '1', 10);
-            const collectionResponse = await callFastSimonCollection({
-                storeId: context.fastsimonStoreId,
-                uuid: context.fastsimonUuid,
-                categoryId: fastsimonCategoryId,
-                numProducts: limit,
-                pageNum,
-            });
-            productIds = extractProductIdsFromCollectionResponse(collectionResponse);
-        }
-
-        // Limit results
-        productIds = (productIds || []).slice(0, limit);
-
-        await renderContainerProducts(container, productIds, context, {
-            ctaText: fastsimonCtaText,
-            widgetId: fastsimonWidgetId,
-            productId: fastsimonProductId,
-        });
-    } catch (error) {
-        console.error('[FastSimon] Error loading recommendations:', error);
-        container.innerHTML = '';
-        container.classList.remove('is-loading');
-        container.classList.add('is-error');
-        container.closest('.c-fsRecommendations')?.classList.add('is-error');
+    if (fastsimonWidgetId) {
+      // Widget-based: use /upsell_cross_sell_recommendation
+      const fsResponse = await callFastSimonRecommendations(apiParams);
+      const widgetResponse = fsResponse?.widget_responses?.[0];
+      productIds = extractProductIdsFromWidgetResponse(widgetResponse);
+    } else if (fastsimonCategoryId) {
+      // Category pages without widget: use /categories_navigation
+      const pageNum = parseInt(fastsimonPage || "1", 10);
+      const collectionResponse = await callFastSimonCollection({
+        storeId: context.fastsimonStoreId,
+        uuid: context.fastsimonUuid,
+        categoryId: fastsimonCategoryId,
+        numProducts: limit,
+        pageNum,
+      });
+      productIds = extractProductIdsFromCollectionResponse(collectionResponse);
     }
+
+    // Limit results
+    productIds = (productIds || []).slice(0, limit);
+
+    const renderResult = await renderContainerProducts(
+      container,
+      productIds,
+      context,
+      {
+        ctaText: fastsimonCtaText,
+        widgetId: fastsimonWidgetId,
+        productId: fastsimonProductId,
+      },
+    );
+
+    loadStatus = renderResult?.status || "success";
+    renderedCount = renderResult?.renderedCount || 0;
+  } catch (error) {
+    console.error("[FastSimon] Error loading recommendations:", error);
+    container.innerHTML = "";
+    container.classList.remove("is-loading");
+    container.classList.add("is-error");
+    container.closest(".c-fsRecommendations")?.classList.add("is-error");
+    loadStatus = "error";
+  } finally {
+    emitFastSimonWidgetLoadMetrics({
+      container,
+      context,
+      startMs: loadStartMs,
+      status: loadStatus,
+      renderedCount,
+      source: "single",
+      mode,
+      widgetId: fastsimonWidgetId,
+      categoryId: fastsimonCategoryId,
+    });
+  }
 }
 
 /**
@@ -967,84 +1146,145 @@ async function initFastSimonRecommendation(container, context) {
  * @param {Object} context - Theme context
  */
 async function initBatchedWidgetContainers(containers, context) {
-    // Collect widget IDs and map them back to containers
-    const widgetMap = new Map(); // widgetId → { container, limit, ctaText }
-    const widgetIds = [];
-    let productId = null;
-    let categoryId = null;
-    let products = null;
+  // Collect widget IDs and map them back to containers
+  const widgetMap = new Map(); // widgetId → { container, limit, ctaText }
+  const loadStateByWidgetId = new Map(); // widgetId → { startMs, container, categoryId }
+  const emittedWidgetIds = new Set();
+  const widgetIds = [];
+  let productId = null;
+  let categoryId = null;
+  let products = null;
 
-    containers.forEach(c => {
-        const wid = c.dataset.fastsimonWidgetId;
-        if (!wid) return;
-        widgetIds.push(wid);
-        widgetMap.set(wid, {
-            container: c,
-            limit: parseInt(c.dataset.fastsimonLimit || '8', 10),
-            ctaText: c.dataset.fastsimonCtaText || 'Shop Now',
+  containers.forEach((c) => {
+    const wid = c.dataset.fastsimonWidgetId;
+    if (!wid) return;
+    widgetIds.push(wid);
+    widgetMap.set(wid, {
+      container: c,
+      limit: parseInt(c.dataset.fastsimonLimit || "8", 10),
+      ctaText: c.dataset.fastsimonCtaText || "Shop Now",
+    });
+    loadStateByWidgetId.set(String(wid), {
+      startMs: metricNowMs(),
+      container: c,
+      categoryId: c.dataset.fastsimonCategoryId,
+    });
+    // All containers in the batch share the same product/category context
+    if (c.dataset.fastsimonProductId) productId = c.dataset.fastsimonProductId;
+    if (c.dataset.fastsimonCategoryId)
+      categoryId = c.dataset.fastsimonCategoryId;
+    if (c.dataset.fastsimonProducts) products = c.dataset.fastsimonProducts;
+    c.classList.add("is-loading");
+  });
+
+  if (widgetIds.length === 0) return;
+
+  try {
+    // Build single API call with ALL widget IDs
+    const apiParams = {
+      storeId: context.fastsimonStoreId,
+      uuid: context.fastsimonUuid,
+      widgetIds,
+    };
+    if (productId) apiParams.productId = productId;
+    if (categoryId) apiParams.categoryId = categoryId;
+    if (products) {
+      apiParams.products = products.split(",").map((id) => id.trim());
+    }
+
+    const fsResponse = await callFastSimonRecommendations(apiParams);
+    const widgetResponses = fsResponse?.widget_responses || [];
+
+    // Dispatch each widget response to its container
+    const renderPromises = widgetResponses.map((wr) => {
+      const wid = String(wr.widget_id);
+      const entry = widgetMap.get(wid);
+      if (!entry) return Promise.resolve();
+
+      let pids = extractProductIdsFromWidgetResponse(wr);
+      pids = pids.slice(0, entry.limit);
+
+      return renderContainerProducts(entry.container, pids, context, {
+        ctaText: entry.ctaText,
+        widgetId: wid,
+        productId,
+      }).then((renderResult) => {
+        const loadState = loadStateByWidgetId.get(wid);
+
+        emitFastSimonWidgetLoadMetrics({
+          container: loadState?.container || entry.container,
+          context,
+          startMs: loadState?.startMs || metricNowMs(),
+          status: renderResult?.status || "success",
+          renderedCount: renderResult?.renderedCount || 0,
+          source: "batched",
+          mode: "widget",
+          widgetId: wid,
+          categoryId: loadState?.categoryId,
         });
-        // All containers in the batch share the same product/category context
-        if (c.dataset.fastsimonProductId) productId = c.dataset.fastsimonProductId;
-        if (c.dataset.fastsimonCategoryId) categoryId = c.dataset.fastsimonCategoryId;
-        if (c.dataset.fastsimonProducts) products = c.dataset.fastsimonProducts;
-        c.classList.add('is-loading');
+
+        emittedWidgetIds.add(wid);
+      });
     });
 
-    if (widgetIds.length === 0) return;
+    await Promise.all(renderPromises);
 
-    try {
-        // Build single API call with ALL widget IDs
-        const apiParams = {
-            storeId: context.fastsimonStoreId,
-            uuid: context.fastsimonUuid,
-            widgetIds,
-        };
-        if (productId) apiParams.productId = productId;
-        if (categoryId) apiParams.categoryId = categoryId;
-        if (products) {
-            apiParams.products = products.split(',').map(id => id.trim());
+    // Mark any widget containers that didn't receive a response as empty
+    widgetMap.forEach((entry, wid) => {
+      const hasResponse = widgetResponses.some(
+        (wr) => String(wr.widget_id) === wid,
+      );
+      if (!hasResponse) {
+        entry.container.innerHTML = "";
+        entry.container.classList.remove("is-loading");
+        entry.container.classList.add("is-empty");
+        entry.container
+          .closest(".c-fsRecommendations")
+          ?.classList.add("is-empty");
+
+        if (!emittedWidgetIds.has(wid)) {
+          const loadState = loadStateByWidgetId.get(wid);
+
+          emitFastSimonWidgetLoadMetrics({
+            container: loadState?.container || entry.container,
+            context,
+            startMs: loadState?.startMs || metricNowMs(),
+            status: "empty",
+            renderedCount: 0,
+            source: "batched",
+            mode: "widget",
+            widgetId: wid,
+            categoryId: loadState?.categoryId,
+          });
         }
+      }
+    });
+  } catch (error) {
+    console.error(
+      "[FastSimon] Error loading batched widget recommendations:",
+      error,
+    );
+    containers.forEach((c) => {
+      c.innerHTML = "";
+      c.classList.remove("is-loading");
+      c.classList.add("is-error");
+      c.closest(".c-fsRecommendations")?.classList.add("is-error");
+    });
 
-        const fsResponse = await callFastSimonRecommendations(apiParams);
-        const widgetResponses = fsResponse?.widget_responses || [];
-
-        // Dispatch each widget response to its container
-        const renderPromises = widgetResponses.map(wr => {
-            const wid = String(wr.widget_id);
-            const entry = widgetMap.get(wid);
-            if (!entry) return Promise.resolve();
-
-            let pids = extractProductIdsFromWidgetResponse(wr);
-            pids = pids.slice(0, entry.limit);
-
-            return renderContainerProducts(entry.container, pids, context, {
-                ctaText: entry.ctaText,
-                widgetId: wid,
-                productId,
-            });
-        });
-
-        await Promise.all(renderPromises);
-
-        // Mark any widget containers that didn't receive a response as empty
-        widgetMap.forEach((entry, wid) => {
-            const hasResponse = widgetResponses.some(wr => String(wr.widget_id) === wid);
-            if (!hasResponse) {
-                entry.container.innerHTML = '';
-                entry.container.classList.remove('is-loading');
-                entry.container.classList.add('is-empty');
-                entry.container.closest('.c-fsRecommendations')?.classList.add('is-empty');
-            }
-        });
-    } catch (error) {
-        console.error('[FastSimon] Error loading batched widget recommendations:', error);
-        containers.forEach(c => {
-            c.innerHTML = '';
-            c.classList.remove('is-loading');
-            c.classList.add('is-error');
-            c.closest('.c-fsRecommendations')?.classList.add('is-error');
-        });
-    }
+    loadStateByWidgetId.forEach((loadState, wid) => {
+      emitFastSimonWidgetLoadMetrics({
+        container: loadState?.container,
+        context,
+        startMs: loadState?.startMs || metricNowMs(),
+        status: "error",
+        renderedCount: 0,
+        source: "batched",
+        mode: "widget",
+        widgetId: wid,
+        categoryId: loadState?.categoryId,
+      });
+    });
+  }
 }
 
 /**
@@ -1054,60 +1294,60 @@ async function initBatchedWidgetContainers(containers, context) {
  * @param {Object} context - Theme context
  */
 function initAllFastSimonRecommendations(context) {
-    if (!context.fastsimonEnabled) {
-        return;
+  if (!context.fastsimonEnabled) {
+    return;
+  }
+
+  const containers = document.querySelectorAll("[data-fastsimon-container]");
+
+  // Separate widget-based containers (can be batched) from collection-only containers
+  const widgetGroups = new Map(); // contextKey → [containers]
+  const standaloneContainers = [];
+
+  containers.forEach((container) => {
+    const wid = container.dataset.fastsimonWidgetId;
+    const catId = container.dataset.fastsimonCategoryId;
+
+    if (wid) {
+      // Group widget containers by their shared context (product/category/products)
+      const pid = container.dataset.fastsimonProductId || "";
+      const prods = container.dataset.fastsimonProducts || "";
+      const contextKey = `${pid}|${catId || ""}|${prods}`;
+
+      if (!widgetGroups.has(contextKey)) {
+        widgetGroups.set(contextKey, []);
+      }
+      widgetGroups.get(contextKey).push(container);
+    } else if (catId) {
+      // Collection-only container — always standalone
+      standaloneContainers.push(container);
     }
+  });
 
-    const containers = document.querySelectorAll('[data-fastsimon-container]');
+  // Batch-init grouped widget containers (single API call per group)
+  widgetGroups.forEach((group) => {
+    if (group.length > 1) {
+      // Multiple widgets sharing context → batch into one API call
+      initBatchedWidgetContainers(group, context);
+    } else {
+      // Single widget → use existing per-container init
+      initFastSimonRecommendation(group[0], context);
+    }
+  });
 
-    // Separate widget-based containers (can be batched) from collection-only containers
-    const widgetGroups = new Map(); // contextKey → [containers]
-    const standaloneContainers = [];
-
-    containers.forEach(container => {
-        const wid = container.dataset.fastsimonWidgetId;
-        const catId = container.dataset.fastsimonCategoryId;
-
-        if (wid) {
-            // Group widget containers by their shared context (product/category/products)
-            const pid = container.dataset.fastsimonProductId || '';
-            const prods = container.dataset.fastsimonProducts || '';
-            const contextKey = `${pid}|${catId || ''}|${prods}`;
-
-            if (!widgetGroups.has(contextKey)) {
-                widgetGroups.set(contextKey, []);
-            }
-            widgetGroups.get(contextKey).push(container);
-        } else if (catId) {
-            // Collection-only container — always standalone
-            standaloneContainers.push(container);
-        }
-    });
-
-    // Batch-init grouped widget containers (single API call per group)
-    widgetGroups.forEach(group => {
-        if (group.length > 1) {
-            // Multiple widgets sharing context → batch into one API call
-            initBatchedWidgetContainers(group, context);
-        } else {
-            // Single widget → use existing per-container init
-            initFastSimonRecommendation(group[0], context);
-        }
-    });
-
-    // Init collection-only containers individually
-    standaloneContainers.forEach(container => {
-        initFastSimonRecommendation(container, context);
-    });
+  // Init collection-only containers individually
+  standaloneContainers.forEach((container) => {
+    initFastSimonRecommendation(container, context);
+  });
 }
 
 export {
-    initFastSimonRecommendation,
-    initAllFastSimonRecommendations,
-    fetchProductsByIds,
-    renderProductCard,
-    callFastSimonRecommendations,
-    callFastSimonCollection,
-    getOrCreateIspToken,
-    getSessionTimestamp,
+  initFastSimonRecommendation,
+  initAllFastSimonRecommendations,
+  fetchProductsByIds,
+  renderProductCard,
+  callFastSimonRecommendations,
+  callFastSimonCollection,
+  getOrCreateIspToken,
+  getSessionTimestamp,
 };

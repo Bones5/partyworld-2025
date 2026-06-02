@@ -83,6 +83,7 @@ settings --}} {{#if theme_settings.gtm_container_id}}
 
       try {
         performance.mark("pw-gtm-inject-start");
+        performance.mark("pw-gtm-network-start");
       } catch (error) {
         // noop
       }
@@ -103,7 +104,7 @@ settings --}} {{#if theme_settings.gtm_container_id}}
           // noop
         }
 
-        loadDuration = measureDuration("pw-gtm-load-duration", "pw-gtm-inject-start", "pw-gtm-load-end");
+        loadDuration = measureDuration("pw-gtm-load-duration", "pw-gtm-network-start", "pw-gtm-load-end");
         if (loadDuration > 0) {
           emitDurationMetric("partyworld.script_loader.duration", loadDuration, {
             script_block: "gtm_loader",
@@ -117,6 +118,7 @@ settings --}} {{#if theme_settings.gtm_container_id}}
         emitMetric("partyworld.script_loader.failure", "count", 1, {
           attributes: {
             script_block: "gtm_loader",
+            phase: "failure",
             trigger_source: trigger,
             failure_mode: "script_error",
           },
@@ -146,6 +148,7 @@ settings --}} {{#if theme_settings.gtm_container_id}}
       emitMetric("partyworld.script_loader.trigger", "count", 1, {
         attributes: {
           script_block: "gtm_loader",
+          phase: "trigger",
           trigger_source: trigger,
         },
       });
@@ -169,6 +172,7 @@ settings --}} {{#if theme_settings.gtm_container_id}}
       if (waitDuration > 0) {
         emitDurationMetric("partyworld.script_loader.wait.duration", waitDuration, {
           script_block: "gtm_loader",
+          phase: "wait",
           trigger_source: triggerSource || "unknown",
         });
       }

@@ -444,6 +444,7 @@
     "sentry_environment": "auto",
     "sentry_release": "partyworld-2025@6.17.0",
     "sentry_traces_sample_rate": 0.02,
+    "sentry_profile_session_sample_rate": 0,
     "sentry_replays_session_sample_rate": 0.01,
     "sentry_replays_on_error_sample_rate": 1,
     "klaviyo_enabled": true,

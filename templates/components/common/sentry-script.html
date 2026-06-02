@@ -18,6 +18,7 @@
     sentry_environment                   string   auto | production | staging | development
       sentry_release                       string   optional, e.g. "partyworld-2025@6.17.0"
       sentry_traces_sample_rate            number   0.0 - 1.0 (perf tracing)
+    sentry_profile_session_sample_rate   number   0.0 - 1.0 (browser profiling sessions)
       sentry_replays_session_sample_rate   number   0.0 - 1.0 (background replays)
       sentry_replays_on_error_sample_rate  number   0.0 - 1.0 (replays on error)
 --}}
@@ -33,6 +34,7 @@
         var ENVIRONMENT = "{{theme_settings.sentry_environment}}" || "auto";
         var RELEASE = "{{theme_settings.sentry_release}}";
         var TRACES_RATE = parseFloat("{{theme_settings.sentry_traces_sample_rate}}");
+        var PROFILE_SESSION_RATE = parseFloat("{{theme_settings.sentry_profile_session_sample_rate}}");
         var REPLAY_SESSION_RATE = parseFloat("{{theme_settings.sentry_replays_session_sample_rate}}");
         var REPLAY_ERROR_RATE = parseFloat("{{theme_settings.sentry_replays_on_error_sample_rate}}");
 
@@ -49,6 +51,7 @@
         }
 
         if (isNaN(TRACES_RATE)) TRACES_RATE = 0.1;
+        if (isNaN(PROFILE_SESSION_RATE)) PROFILE_SESSION_RATE = 0.0;
         if (isNaN(REPLAY_SESSION_RATE)) REPLAY_SESSION_RATE = 0.0;
         if (isNaN(REPLAY_ERROR_RATE)) REPLAY_ERROR_RATE = 1.0;
 
@@ -587,6 +590,203 @@
                 recent_resources: recentResources,
                 surfaces: surfaces
             };
+        }
+
+        var quickPayLoadMetricState = {};
+        var quickPayLoadObserver = null;
+        var quickPayLoadStopTimer = null;
+        var QUICK_PAY_LOAD_OBSERVER_WINDOW_MS = 120000;
+
+        function quickPayMetricNow() {
+            if (window.performance && typeof window.performance.now === "function") {
+                return window.performance.now();
+            }
+
+            return Date.now();
+        }
+
+        function quickPaySurfaceReady(surface) {
+            if (!surface || !surface.exists || surface.hidden) {
+                return false;
+            }
+
+            if (surface.iframe_count > 0) {
+                return true;
+            }
+
+            if (surface.providers && surface.providers.length > 0) {
+                return true;
+            }
+
+            return false;
+        }
+
+        function emitQuickPayMetric(name, type, value, options) {
+            if (typeof window.__PWEmitMetric === "function") {
+                window.__PWEmitMetric(name, type, value, options || {});
+                return;
+            }
+
+            if (typeof window.__PWRecordMetric === "function") {
+                window.__PWRecordMetric(name, type, value, options || {});
+            }
+        }
+
+        function quickPayPrimaryProvider(surface) {
+            if (!surface) {
+                return "unknown";
+            }
+
+            if (surface.providers && surface.providers.length) {
+                return surface.providers[0];
+            }
+
+            if (surface.iframe_hosts && surface.iframe_hosts.length) {
+                return surface.iframe_hosts[0];
+            }
+
+            return "unknown";
+        }
+
+        function ensureQuickPayLoadState(surfaceName) {
+            if (!quickPayLoadMetricState[surfaceName]) {
+                quickPayLoadMetricState[surfaceName] = {
+                    start_ms: window.__PWBootstrapMetricStart || quickPayMetricNow(),
+                    reported: false
+                };
+            }
+
+            return quickPayLoadMetricState[surfaceName];
+        }
+
+        function checkQuickPayLoadMetrics(trigger) {
+            var diagnostics = getQuickPayDiagnostics();
+            var surfaces = diagnostics && diagnostics.surfaces ? diagnostics.surfaces : [];
+
+            for (var index = 0; index < surfaces.length; index++) {
+                var surface = surfaces[index];
+                var state = ensureQuickPayLoadState(surface.surface);
+
+                if (state.reported) {
+                    continue;
+                }
+
+                if (!quickPaySurfaceReady(surface)) {
+                    continue;
+                }
+
+                var duration = Math.max(0, quickPayMetricNow() - state.start_ms);
+                var provider = quickPayPrimaryProvider(surface);
+                var attributes = {
+                    page_type: PAGE_TYPE,
+                    surface: surface.surface || "unknown",
+                    provider: provider,
+                    trigger: trigger || "unknown"
+                };
+
+                emitQuickPayMetric("partyworld.quickpay.widget.load.duration", "distribution", duration, {
+                    unit: "millisecond",
+                    attributes: attributes
+                });
+
+                emitQuickPayMetric("partyworld.quickpay.widget.load.count", "count", 1, {
+                    attributes: attributes
+                });
+
+                state.reported = true;
+            }
+        }
+
+        function emitQuickPayLoadFailures(trigger) {
+            var diagnostics = getQuickPayDiagnostics();
+            var surfaces = diagnostics && diagnostics.surfaces ? diagnostics.surfaces : [];
+
+            for (var index = 0; index < surfaces.length; index++) {
+                var surface = surfaces[index];
+                var state = ensureQuickPayLoadState(surface.surface);
+
+                if (state.reported) {
+                    continue;
+                }
+
+                if (!surface.exists) {
+                    continue;
+                }
+
+                var duration = Math.max(0, quickPayMetricNow() - state.start_ms);
+                var provider = quickPayPrimaryProvider(surface);
+                var attributes = {
+                    page_type: PAGE_TYPE,
+                    surface: surface.surface || "unknown",
+                    provider: provider,
+                    trigger: trigger || "unknown",
+                    reason: "timeout_unready"
+                };
+
+                emitQuickPayMetric("partyworld.quickpay.widget.load.failure", "count", 1, {
+                    attributes: attributes
+                });
+
+                emitQuickPayMetric("partyworld.quickpay.widget.load.duration", "distribution", duration, {
+                    unit: "millisecond",
+                    attributes: {
+                        page_type: attributes.page_type,
+                        surface: attributes.surface,
+                        provider: attributes.provider,
+                        trigger: attributes.trigger,
+                        status: "timeout"
+                    }
+                });
+
+                state.reported = true;
+            }
+        }
+
+        function stopQuickPayLoadMetricsObserver() {
+            if (quickPayLoadObserver && typeof quickPayLoadObserver.disconnect === "function") {
+                quickPayLoadObserver.disconnect();
+            }
+
+            quickPayLoadObserver = null;
+
+            if (quickPayLoadStopTimer) {
+                window.clearTimeout(quickPayLoadStopTimer);
+            }
+
+            quickPayLoadStopTimer = null;
+        }
+
+        function startQuickPayLoadMetricsObserver() {
+            if (quickPayLoadObserver || !window.MutationObserver || !document.body) {
+                return;
+            }
+
+            checkQuickPayLoadMetrics("init");
+
+            window.setTimeout(function () {
+                checkQuickPayLoadMetrics("1s");
+            }, 1000);
+
+            window.setTimeout(function () {
+                checkQuickPayLoadMetrics("3s");
+            }, 3000);
+
+            quickPayLoadObserver = new MutationObserver(function () {
+                checkQuickPayLoadMetrics("mutation");
+            });
+
+            quickPayLoadObserver.observe(document.body, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ["class", "style", "hidden", "aria-hidden"]
+            });
+
+            quickPayLoadStopTimer = window.setTimeout(function () {
+                checkQuickPayLoadMetrics("timeout");
+                emitQuickPayLoadFailures("timeout");
+                stopQuickPayLoadMetricsObserver();
+            }, QUICK_PAY_LOAD_OBSERVER_WINDOW_MS);
         }
 
         function isQuickPayIssue(type, value, message, requestUrl, originalException, topUrl) {
@@ -1488,11 +1688,20 @@
             var initialScope = {};
             var initialCorrelationTags = correlationIdTags(correlationIds);
 
+
             if (hasOwnKeys(initialCorrelationTags)) {
                 initialScope.tags = initialCorrelationTags;
                 initialScope.contexts = {
                     checkout_correlation: initialCorrelationTags
                 };
+            }
+
+            if (typeof window.Sentry.browserTracingIntegration === "function") {
+                integrations.push(window.Sentry.browserTracingIntegration());
+            }
+
+            if (PROFILE_SESSION_RATE > 0 && typeof window.Sentry.browserProfilingIntegration === "function") {
+                integrations.push(window.Sentry.browserProfilingIntegration());
             }
 
             if (replayEnabled && typeof window.Sentry.replayIntegration === "function") {
@@ -1506,6 +1715,8 @@
                 environment: ENVIRONMENT,
                 release: RELEASE || undefined,
                 tracesSampleRate: TRACES_RATE,
+                profileSessionSampleRate: PROFILE_SESSION_RATE,
+                profileLifecycle: PROFILE_SESSION_RATE > 0 ? "trace" : "manual",
                 replaysSessionSampleRate: replayEnabled ? REPLAY_SESSION_RATE : 0,
                 replaysOnErrorSampleRate: replayEnabled ? REPLAY_ERROR_RATE : 0,
                 initialScope: hasOwnKeys(initialScope) ? initialScope : undefined,
@@ -1735,10 +1946,12 @@
                 window.Sentry.setTag("channel_id", "{{settings.channel_id}}");
                 applyCorrelationIdsToScope(correlationIds);
                 applyFastSimonSignalsToScope(fastSimonSignals);
+                startQuickPayLoadMetricsObserver();
 
                 window.setTimeout(function () {
                     applyCorrelationIdsToScope(getCorrelationIds());
                     applyFastSimonSignalsToScope(getFastSimonSignals());
+                    checkQuickPayLoadMetrics("scope_refresh");
                 }, 1500);
             } catch (e) { /* noop */ }
 
