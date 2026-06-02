@@ -13,11 +13,13 @@
                 </a>
             {{/if}}
 
-            <div class="previewCartCheckout-additionalCheckoutButtons">
-                {{#each cart.additional_checkout_buttons}}
-                    {{{this}}}
-                {{/each}}
-            </div>
+            {{#if theme_settings.show_quick_payment_buttons_in_preview}}
+                <div class="previewCartCheckout-additionalCheckoutButtons">
+                    {{#each cart.additional_checkout_buttons}}
+                        {{{this}}}
+                    {{/each}}
+                </div>
+            {{/if}}
 
             {{#if cart.show_multiple_address_shipping}}
                 <div class="previewCartAction-checkoutMultiple">

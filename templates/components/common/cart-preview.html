@@ -74,7 +74,7 @@
                     </div>
                 {{/if}}
             </div>
-            {{#if cart.additional_checkout_buttons}}
+            {{#if theme_settings.show_quick_payment_buttons_in_preview}}
                 <div class="previewCart-additionalCheckoutButtons">
                     {{#each cart.additional_checkout_buttons}}
                         {{{this}}}

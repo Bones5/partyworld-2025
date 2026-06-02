@@ -135,6 +135,7 @@
     "show_product_details_tabs": true,
     "trustpilot_badge_circle_bg": "#3E67F8",
     "show_quick_payment_buttons": true,
+    "show_quick_payment_buttons_in_preview": false,
     "show_custom_fields_tabs": false,
     "show_product_weight": true,
     "show_product_dimensions": false,
