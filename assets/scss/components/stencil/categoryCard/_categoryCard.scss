@@ -69,7 +69,6 @@
 
 .c-categoryCard__cta {
     @include cta-button;
-    font-size: $fontSize-subheading-fluid;  // Fluid: 16px → 20px
 }
 
 // Colorful placeholder for missing images

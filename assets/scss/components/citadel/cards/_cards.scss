@@ -233,10 +233,10 @@
 
     margin-top: auto;
     flex-shrink: 0;
-    font-size: remCalc(12px);
+    font-size: remCalc(14px);
 
     @include breakpoint("medium") {
-        font-size: 20px;
+        font-size: remCalc(18px);
     }
 }
 
