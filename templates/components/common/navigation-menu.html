@@ -1,4 +1,13 @@
 <nav class="navPages">
+    <div class="navPages-header">
+        <button class="navPages-close" type="button" data-mobile-menu-close>
+            <span class="navPages-close-label">{{lang 'common.close'}}</span>
+            <svg class="icon navPages-close-icon" aria-hidden="true" focusable="false">
+                <use href="#icon-close" />
+            </svg>
+        </button>
+    </div>
+
     <div class="navPages-quickSearch">
         {{> components/common/quick-search name='nav-menu-quick-search'}}
     </div>
