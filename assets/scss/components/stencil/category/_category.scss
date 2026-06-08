@@ -78,6 +78,26 @@
 }
 
 
+// Category product imagery
+// -----------------------------------------------------------------------------
+
+.category-page {
+    .productGrid {
+        .card-img-container {
+            max-width: none;
+            width: 100%;
+        }
+
+        .card-image {
+            font-family: "object-fit: cover;";
+            height: 100%;
+            max-height: none;
+            object-fit: cover;
+        }
+    }
+}
+
+
 // Category Sidebar
 // -----------------------------------------------------------------------------
 
