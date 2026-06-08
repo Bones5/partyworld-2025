@@ -89,10 +89,10 @@
         }
 
         .card-image {
-            font-family: "object-fit: cover;";
+            font-family: "object-fit: contain;";
             height: 100%;
             max-height: none;
-            object-fit: cover;
+            object-fit: contain;
         }
     }
 }
