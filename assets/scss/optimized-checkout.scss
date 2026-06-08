@@ -201,6 +201,13 @@ a {
     background-color: stencilColor("optimizedCheckout-orderSummary-backgroundColor");
     border-color: stencilColor("optimizedCheckout-orderSummary-borderColor");
     box-shadow: 0 4px 8px transparentize(stencilColor("optimizedCheckout-orderSummary-borderColor"), 0.5);
+
+    @media (min-width: 801px) {
+        max-height: calc(100vh - 2rem);
+        overflow: auto;
+        position: sticky;
+        top: 1rem;
+    }
 }
 
 .optimizedCheckout-orderSummary-cartSection {
