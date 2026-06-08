@@ -17,9 +17,8 @@ const optionsTypesMap = {
 
 export function optionChangeDecorator(areDefaultOptionsSet) {
   return (err, response) => {
-    const attributesData = response && response.data ? response.data : {};
-    const attributesContent =
-      response && response.content ? response.content : {};
+    const attributesData = response.data || {};
+    const attributesContent = response.content || {};
 
     this.updateProductAttributes(attributesData);
     if (areDefaultOptionsSet) {
@@ -202,7 +201,7 @@ export default class ProductDetailsBase {
         $value: $("[data-product-upc]", $scope),
       },
       quantity: {
-        $text: $(".incrementTotal", $scope),
+        $text: $(".form-input--incrementTotal", $scope),
         $input: $("[name=qty\\[\\]]", $scope),
       },
       $bulkPricing: $(".productView-info-bulkPricing", $scope),
