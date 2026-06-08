@@ -6,7 +6,9 @@
 {{#if category.subcategories}}
 <section class="c-shopByCategory" aria-labelledby="shop-by-category-heading">
     <h2 id="shop-by-category-heading" class="c-shopByCategory__heading">Shop by Category</h2>
+    <p class="c-shopByCategory__hint" id="shop-by-category-hint">Swipe or use the arrows to browse more categories.</p>
     <div class="c-shopByCategory__carousel"
+        aria-describedby="shop-by-category-hint"
         data-slick='{
             "infinite": false,
             "mobileFirst": true,

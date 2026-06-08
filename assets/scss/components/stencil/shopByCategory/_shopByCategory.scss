@@ -82,50 +82,62 @@
 
 .c-shopByCategory__heading {
     @include homepage-section-heading;
-    
+
     text-align: center;
-    margin-bottom: spacing("single");
+    margin-bottom: spacing("half");
+}
+
+.c-shopByCategory__hint {
+    color: stencilColor("color-textSecondary");
+    margin: 0 0 spacing("single");
+    text-align: center;
 }
 
 .c-shopByCategory__carousel {
     position: relative;
-    
+
     // Slick arrow positioning - inherit base styles, just adjust position
     .slick-prev,
     .slick-next {
         top: 50%;
         transform: translateY(-50%);
         margin: 0;
+
+        @media (max-width: 549px) {
+            display: block;
+            height: 2.5rem;
+            width: 2.5rem;
+        }
     }
-    
+
     .slick-prev {
-        left: -22px;
-        
+        left: spacing("quarter");
+
+        @include breakpoint("medium") {
+            left: -22px;
+        }
+
         @include breakpoint("large") {
             left: -50px;
         }
     }
-    
+
     .slick-next {
-        right: -22px;
-        
+        right: spacing("quarter");
+
+        @include breakpoint("medium") {
+            right: -22px;
+        }
+
         @include breakpoint("large") {
             right: -50px;
-        }
-    }
-    
-    // Hide arrows on mobile when not enough items
-    @media (max-width: 549px) {
-        .slick-prev,
-        .slick-next {
-            display: none !important;
         }
     }
 }
 
 .c-shopByCategory__slide {
     padding: 0 spacing("half");
-    
+
     .c-categoryCard {
         margin-bottom: 0;
     }
@@ -137,14 +149,14 @@
         overflow: hidden;
         margin: 0 spacing("half") * -1;
     }
-    
+
     .slick-track {
         display: flex;
     }
-    
+
     .slick-slide {
         height: auto;
-        
+
         > div {
             height: 100%;
         }
