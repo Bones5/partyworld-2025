@@ -82,7 +82,7 @@
 // -----------------------------------------------------------------------------
 
 .category-page {
-    .productGrid {
+    .productGrid:not(.fs-product-grid) {
         .card-img-container {
             aspect-ratio: 4 / 3;
             max-width: none;
