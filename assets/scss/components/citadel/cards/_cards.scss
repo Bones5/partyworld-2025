@@ -44,14 +44,8 @@
 }
 
 .card-img-container {
-    // Aspect ratio wrapper for consistent image sizing per Figma
-    aspect-ratio: 1 / 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
     background-color: stencilColor("card--alternate-backgroundColor");
-
-    @include lazy-loaded-padding("productgallery_size");
     max-width: get-width(stencilString("productgallery_size"));
 }
 
@@ -72,14 +66,14 @@
 }
 
 .card-image {
-    @include lazy-loaded-img;
+    display: block;
+    margin: 1rem 0;
     border: 0;
-    /* Object-fit polyfill */
-    font-family: "object-fit: cover;";
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    object-fit: contain;
     width: 100%;
     padding:1rem;
+    aspect-ratio: 4/3;
 }
 
 .card-title {
