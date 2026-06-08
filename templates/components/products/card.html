@@ -142,5 +142,12 @@
         </div>
         {{{region name="product_item_below_price"}}}
         {{> components/products/bulk-discount-rates}}
+        {{#if has_options}}
+            <a href="{{url}}" class="card-cta button button--primary" data-event-type="product-click">Shop Now</a>
+        {{else if pre_order}}
+            <a href="{{url}}" class="card-cta button button--primary" data-event-type="product-click">Shop Now</a>
+        {{else if add_to_cart_url}}
+            <a href="{{url}}" class="card-cta button button--primary" data-event-type="product-click">Shop Now</a>
+        {{/if}}
     </div>
 </article>

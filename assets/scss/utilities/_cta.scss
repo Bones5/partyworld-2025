@@ -27,9 +27,9 @@
 @mixin cta-button(
     $bg: stencilColor("button--primary-backgroundColor"),
     $color: $color-white,
-    $padding-y: spacing("quarter"),
+    $padding-y: spacing("third"),
     $padding-x: spacing("half"),
-    $radius: 8px,
+    $radius: 6px,
     $full-width: true,
     $fluid: true
 ) {

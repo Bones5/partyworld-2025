@@ -228,6 +228,18 @@
     text-align: center;
 }
 
+.card-cta {
+    @include cta-button($fluid: false);
+
+    margin-top: auto;
+    flex-shrink: 0;
+    font-size: remCalc(14px);
+
+    @include breakpoint("medium") {
+        font-size: remCalc(18px);
+    }
+}
+
 
 //
 // Alternate card
