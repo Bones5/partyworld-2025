@@ -15,29 +15,6 @@ import { isBrowserIE, convertIntoArray } from "./utils/ie-helpers";
 import bannerUtils from "./utils/banner-utils";
 import currencySelector from "../global/currency-selector";
 
-function metricNowMs() {
-  if (typeof window !== "undefined" && window.performance?.now) {
-    return window.performance.now();
-  }
-
-  return Date.now();
-}
-
-function emitMetric(name, type, value, options = {}) {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  if (typeof window.__PWEmitMetric === "function") {
-    window.__PWEmitMetric(name, type, value, options);
-    return;
-  }
-
-  if (typeof window.__PWRecordMetric === "function") {
-    window.__PWRecordMetric(name, type, value, options);
-  }
-}
-
 export default class ProductDetails extends ProductDetailsBase {
   constructor($scope, context, productAttributesData = {}) {
     super($scope, context);
@@ -359,10 +336,8 @@ export default class ProductDetails extends ProductDetailsBase {
       $form.serialize(),
       "products/bulk-discount-rates",
       (err, response) => {
-        const productAttributesData =
-          response && response.data ? response.data : {};
-        const productAttributesContent =
-          response && response.content ? response.content : {};
+        const productAttributesData = response.data || {};
+        const productAttributesContent = response.content || {};
         this.updateProductAttributes(productAttributesData);
         this.updateView(productAttributesData, productAttributesContent);
         this.updateProductDetailsData();
@@ -468,23 +443,29 @@ export default class ProductDetails extends ProductDetailsBase {
       const $target = $(event.currentTarget);
       const viewModel = this.getViewModel(this.$scope);
       const $input = viewModel.quantity.$input;
-      const quantityMin = parseInt($input.data("quantityMin"), 10);
-      const quantityMax = parseInt($input.data("quantityMax"), 10);
+      const parsedMin = parseInt($input.data("quantityMin"), 10);
+      const parsedMax = parseInt($input.data("quantityMax"), 10);
+      const quantityMin = Number.isNaN(parsedMin) ? 1 : parsedMin;
+      const quantityMax = Number.isNaN(parsedMax) ? 0 : parsedMax;
 
       let qty = forms.numbersOnly($input.val())
         ? parseInt($input.val(), 10)
         : quantityMin;
+
+      if (qty < quantityMin) {
+        qty = quantityMin;
+      }
+
       // If action is incrementing
       if ($target.data("action") === "inc") {
         qty = forms.validateIncreaseAgainstMaxBoundary(qty, quantityMax);
-      } else if (qty > 1) {
+      } else if (qty > quantityMin) {
         qty = forms.validateDecreaseAgainstMinBoundary(qty, quantityMin);
       }
 
-      // update hidden input
+      // update quantity input
       viewModel.quantity.$input.val(qty);
-      // update text
-      viewModel.quantity.$text.text(qty);
+      viewModel.quantity.$text.val(qty);
       // perform validation after updating product quantity
       this.addToCartValidator.performCheck();
 
@@ -515,15 +496,6 @@ export default class ProductDetails extends ProductDetailsBase {
     const $addToCartBtn = $("#form-action-addToCart", $(event.target));
     const originalBtnVal = $addToCartBtn.val();
     const waitMessage = $addToCartBtn.data("waitMessage");
-    const addToCartStartMs = metricNowMs();
-    const surface = this.checkIsQuickViewChild($addToCartBtn)
-      ? "quick_view"
-      : "product";
-    const pageType =
-      this.context?.page_type ||
-      this.context?.pageType ||
-      document.body?.dataset?.pageType ||
-      "unknown";
 
     // Do not do AJAX if browser doesn't support FormData
     if (window.FormData === undefined) {
@@ -541,53 +513,8 @@ export default class ProductDetails extends ProductDetailsBase {
     utils.api.cart.itemAdd(
       normalizeFormData(new FormData(form)),
       (err, response) => {
-        const responseData = response && response.data ? response.data : {};
-        const cartItem = responseData.cart_item || {};
-        const fallbackError =
-          this.context && this.context.genericError
-            ? this.context.genericError
-            : "Something went wrong. Please try again.";
-        const errorMessage =
-          err ||
-          responseData.error ||
-          (!cartItem.id && !cartItem.cart_url ? fallbackError : "");
-        const result = errorMessage ? "error" : "success";
-        const durationMs = Math.max(0, metricNowMs() - addToCartStartMs);
-        const metricAttributes = {
-          result,
-          surface,
-          page_type: pageType,
-          flow: this.previewModal ? "preview_modal" : "redirect",
-        };
-
-        emitMetric(
-          "partyworld.add_to_cart.action.duration",
-          "distribution",
-          durationMs,
-          {
-            unit: "millisecond",
-            attributes: metricAttributes,
-          },
-        );
-
-        emitMetric("partyworld.add_to_cart.action.count", "count", 1, {
-          attributes: metricAttributes,
-        });
-
-        if (errorMessage) {
-          emitMetric("partyworld.add_to_cart.action.failure", "count", 1, {
-            attributes: {
-              ...metricAttributes,
-              error_type: responseData.error
-                ? "response_error"
-                : "request_error",
-            },
-          });
-        }
-
-        if (responseData.cart_id) {
-          currencySelector(responseData.cart_id);
-        }
+        currencySelector(response.data.cart_id);
+        const errorMessage = err || response.data.error;
 
         $addToCartBtn.val(originalBtnVal).prop("disabled", false);
 
@@ -618,11 +545,13 @@ export default class ProductDetails extends ProductDetailsBase {
             this.previewModal.$preModalFocusedEl = $addToCartBtn;
           }
 
-          this.updateCartContent(this.previewModal, cartItem.id);
+          this.updateCartContent(this.previewModal, response.data.cart_item.id);
         } else {
           this.$overlay.show();
           // if no modal, redirect to the cart page
-          this.redirectTo(cartItem.cart_url || this.context.urls.cart);
+          this.redirectTo(
+            response.data.cart_item.cart_url || this.context.urls.cart,
+          );
         }
       },
     );
