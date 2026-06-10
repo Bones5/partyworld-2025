@@ -1,0 +1,67 @@
+name: Deploy Theme and Sync Sentry
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+
+concurrency:
+  group: deploy-theme-master
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Stencil CLI
+        run: npm install -g @bigcommerce/stencil-cli
+
+      - name: Sync Sentry release to theme version
+        id: sentry-release
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+
+          const packageJson = require('./package.json');
+          const release = `partyworld-2025@${packageJson.version}`;
+          const configPath = './config.json';
+          const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+
+          config.sentry_release = release;
+          fs.writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `release=${release}\n`);
+          NODE
+
+      - name: Build theme and upload Sentry sourcemaps
+        env:
+          SENTRY_PT: ${{ secrets.SENTRY_PT }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: bonesdev
+          SENTRY_PROJECT: partyworld-storefront
+          SENTRY_RELEASE: ${{ steps.sentry-release.outputs.release }}
+        run: npm run build
+
+      - name: Connect to store
+        env:
+          URL: ${{ secrets.STENCIL_STORE_URL_PRODUCTION }}
+          TOKEN: ${{ secrets.STENCIL_ACCESS_TOKEN_PRODUCTION }}
+        run: stencil init -u "$URL" -t "$TOKEN" -p 3000 -h https://api.bigcommerce.com
+
+      - name: Push theme live
+        run: stencil push -a -d -c 1
