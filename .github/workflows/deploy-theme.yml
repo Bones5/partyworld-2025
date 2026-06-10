@@ -43,7 +43,11 @@ jobs:
           const configPath = './config.json';
           const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
-          config.sentry_release = release;
+          if (!config.settings || typeof config.settings !== 'object') {
+            throw new Error('config.json is missing settings object');
+          }
+
+          config.settings.sentry_release = release;
           fs.writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
           fs.appendFileSync(process.env.GITHUB_OUTPUT, `release=${release}\n`);
           NODE
