@@ -81,7 +81,7 @@
     background-color: $navPages-backgroundColor;
     height: 100%;
     overflow-y: auto;
-    padding: spacing("single");
+    padding: 0 spacing("single") spacing("single");
 
     @include breakpoint("medium") {
         @include nav($style: "navBar", $wrapper: "nav");
@@ -135,8 +135,8 @@
     align-items: center;
     display: flex;
     justify-content: flex-end;
-    margin-bottom: spacing("half");
-
+    margin-top: spacing("half");
+    background-color: white;
     @include breakpoint("medium") {
         display: none;
     }
@@ -145,18 +145,16 @@
 .navPages-close {
     align-items: center;
     background: transparent;
-    border: 1px solid stencilColor("navPages-subMenu-separatorColor");
-    border-radius: 9999px;
     color: stencilColor("navPages-color");
     cursor: pointer;
     display: inline-flex;
-    gap: spacing("quarter");
-    padding: spacing("quarter") spacing("half");
+    padding: spacing("quarter") spacing("single");
+    margin: spacing("quarter");
+    gap: spacing("single");
 }
 
 .navPages-close:focus-visible,
 .navPages-close:hover {
-    border-color: stencilColor("color-primary");
     box-shadow: 0 0 0 2px transparentize(stencilColor("color-primary"), 0.75);
 }
 
@@ -165,8 +163,8 @@
 }
 
 .navPages-close-icon {
-    height: 1rem;
-    width: 1rem;
+    height: 1.5rem;
+    width: 1.5rem;
 }
 
 .navPages-list {
@@ -272,11 +270,11 @@
 .navPages-action {
     // Mobile: dark text on white background, matching desktop font style
     color: stencilColor("color-textBase");
-    display: block;
+    display: inline;
     font-size: fontSize("small"); // Match desktop size
     font-weight: stencilFontWeight("headings-font");
     font-family: $fontFamily-headings;
-    padding: spacing("half") 0;
+    padding: spacing("quarter") spacing("eighth");
     text-decoration: none;
     text-transform: uppercase;
 
@@ -526,7 +524,7 @@
 }
 
 .navPage-subMenu-item {
-    padding: spacing("half") 0;
+    padding: spacing("quarter") 0;
 
     @include breakpoint("medium") {
         @include grid-column(3);
@@ -573,7 +571,7 @@
 }
 
 .navPage-subMenu-action {
-    padding: spacing("quarter") 0;
+    padding: spacing("quarter") spacing("eighth");
     color: stencilColor("color-textBase");
     font-size: fontSize("small");
     white-space: normal;
@@ -635,7 +633,7 @@
     &:focus,
     &:focus-visible {
         outline: 2px solid lighten(stencilColor("color-primary"), 10%);
-        outline-offset: 2px;
+        outline-offset: 4px;
     }
 }
 
@@ -651,8 +649,7 @@
 // -----------------------------------------------------------------------------
 
 .navPages-quickSearch {
-    border-bottom: container("border");
-    margin-bottom: spacing("half");
+
 
     @include breakpoint("medium") {
         display: none;
