@@ -513,8 +513,13 @@ export default class ProductDetails extends ProductDetailsBase {
     utils.api.cart.itemAdd(
       normalizeFormData(new FormData(form)),
       (err, response) => {
-        currencySelector(response.data.cart_id);
-        const errorMessage = err || response.data.error;
+        const responseData = response && response.data ? response.data : {};
+
+        if (responseData.cart_id) {
+          currencySelector(responseData.cart_id);
+        }
+
+        const errorMessage = err || responseData.error;
 
         $addToCartBtn.val(originalBtnVal).prop("disabled", false);
 
@@ -545,12 +550,12 @@ export default class ProductDetails extends ProductDetailsBase {
             this.previewModal.$preModalFocusedEl = $addToCartBtn;
           }
 
-          this.updateCartContent(this.previewModal, response.data.cart_item.id);
+          this.updateCartContent(this.previewModal, responseData.cart_item.id);
         } else {
           this.$overlay.show();
           // if no modal, redirect to the cart page
           this.redirectTo(
-            response.data.cart_item.cart_url || this.context.urls.cart,
+            responseData.cart_item.cart_url || this.context.urls.cart,
           );
         }
       },

@@ -17,8 +17,8 @@ const optionsTypesMap = {
 
 export function optionChangeDecorator(areDefaultOptionsSet) {
   return (err, response) => {
-    const attributesData = response.data || {};
-    const attributesContent = response.content || {};
+    const attributesData = response && response.data ? response.data : {};
+    const attributesContent = response && response.content ? response.content : {};
 
     this.updateProductAttributes(attributesData);
     if (areDefaultOptionsSet) {
