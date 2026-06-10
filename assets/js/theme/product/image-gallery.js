@@ -61,12 +61,15 @@ export default class ImageGallery {
 
     swapMainImage() {
         const isBrowserIE = navigator.userAgent.includes('Trident');
+        const easyZoom = this.easyzoom && this.easyzoom.data('easyZoom');
 
-        this.easyzoom.data('easyZoom').swap(
-            this.currentImage.mainImageUrl,
-            this.currentImage.zoomImageUrl,
-            this.currentImage.mainImageSrcset,
-        );
+        if (easyZoom && typeof easyZoom.swap === 'function') {
+            easyZoom.swap(
+                this.currentImage.mainImageUrl,
+                this.currentImage.zoomImageUrl,
+                this.currentImage.mainImageSrcset,
+            );
+        }
 
         this.$mainImage.attr({
             'data-zoom-image': this.currentImage.zoomImageUrl,
@@ -93,13 +96,18 @@ export default class ImageGallery {
         const $imageContainer = $('.productView-image');
         const containerHeight = $imageContainer.height();
         const containerWidth = $imageContainer.width();
+        const easyZoom = this.easyzoom && this.easyzoom.data('easyZoom');
 
-        const $image = this.easyzoom.data('easyZoom').$zoom;
+        if (!easyZoom || !easyZoom.$zoom) {
+            return;
+        }
+
+        const $image = easyZoom.$zoom;
         const height = $image.height();
         const width = $image.width();
 
-        if (height < containerHeight || width < containerWidth) {
-            this.easyzoom.data('easyZoom').hide();
+        if ((height < containerHeight || width < containerWidth) && typeof easyZoom.hide === 'function') {
+            easyZoom.hide();
         }
     }
 

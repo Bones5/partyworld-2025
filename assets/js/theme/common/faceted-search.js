@@ -124,7 +124,7 @@ class FacetedSearch {
       const $accordionToggle = $(accordionToggle);
       const collapsible = $accordionToggle.data("collapsibleInstance");
 
-      if (collapsible.isCollapsed) {
+      if (collapsible && collapsible.isCollapsed) {
         this.collapsedFacets.push(collapsible.targetId);
       }
     });
@@ -299,13 +299,17 @@ class FacetedSearch {
   expandFacet($accordionToggle) {
     const collapsible = $accordionToggle.data("collapsibleInstance");
 
-    collapsible.open();
+    if (collapsible && typeof collapsible.open === "function") {
+      collapsible.open();
+    }
   }
 
   collapseFacet($accordionToggle) {
     const collapsible = $accordionToggle.data("collapsibleInstance");
 
-    collapsible.close();
+    if (collapsible && typeof collapsible.close === "function") {
+      collapsible.close();
+    }
   }
 
   collapseAllFacets() {
@@ -483,6 +487,9 @@ class FacetedSearch {
     $accordionToggles.each((index, accordionToggle) => {
       const $accordionToggle = $(accordionToggle);
       const collapsible = $accordionToggle.data("collapsibleInstance");
+      if (!collapsible) {
+        return;
+      }
       const id = collapsible.targetId;
       const shouldCollapse = this.collapsedFacets.includes(id);
 
@@ -646,6 +653,9 @@ class FacetedSearch {
   onAccordionToggle(event) {
     const $accordionToggle = $(event.currentTarget);
     const collapsible = $accordionToggle.data("collapsibleInstance");
+    if (!collapsible) {
+      return;
+    }
     const id = collapsible.targetId;
 
     if (collapsible.isCollapsed) {

@@ -31,7 +31,7 @@ export default (e, carouselObj, context) => {
         $playPauseButton.insertBefore($dots);
     } else $slider.append($playPauseButton);
 
-    const { slidesQuantity } = $slider.data('state');
+    const { slidesQuantity } = $slider.data('state') || { slidesQuantity: 0 };
     $playPauseButton.css('display', slidesQuantity > 1 ? 'block' : 'none');
 
     if (e.type === 'init') updateButtonLabelsWithContext = updateButtonLabels(context);

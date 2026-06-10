@@ -150,7 +150,7 @@ export default function ($form, context) {
     const { field_not_blank: requiredFieldValidationText } = createTranslationDictionary(context);
 
     $form.find('[data-validation]').each((index, input) => {
-        const getLabel = $el => $el.first().data('validation').label;
+        const getLabel = $el => ($el.first().data('validation') || {}).label || '';
         const requiredValidationMessage = getLabel($(input)) + requiredFieldValidationText;
 
         validationsToPerform = validationsToPerform.concat(buildValidation($(input), requiredValidationMessage));

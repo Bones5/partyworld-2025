@@ -336,8 +336,10 @@ export default class ProductDetails extends ProductDetailsBase {
       $form.serialize(),
       "products/bulk-discount-rates",
       (err, response) => {
-        const productAttributesData = response.data || {};
-        const productAttributesContent = response.content || {};
+        const productAttributesData =
+          response && response.data ? response.data : {};
+        const productAttributesContent =
+          response && response.content ? response.content : {};
         this.updateProductAttributes(productAttributesData);
         this.updateView(productAttributesData, productAttributesContent);
         this.updateProductDetailsData();

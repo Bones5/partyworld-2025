@@ -22,7 +22,13 @@ export const setCarouselState = ({ delegateTarget }, carouselObj) => {
 export const onUserCarouselChange = ({ data }, context, $slider) => {
     const $activeSlider = $slider || data;
     const $parentContainer = $activeSlider.hasClass('productView-thumbnails') ? $activeSlider.parent('.productView-images') : $activeSlider;
-    const { activeSlideIdx, slidesQuantity } = $activeSlider.data('state');
+    const state = $activeSlider.data('state');
+
+    if (!state) {
+        return;
+    }
+
+    const { activeSlideIdx, slidesQuantity } = state;
     const $carouselContentElement = $('[data-carousel-content-change-message]', $parentContainer);
     const carouselContentAnnounceMessage = updateTextWithLiveData(context.carouselContentAnnounceMessage, (activeSlideIdx + 1), slidesQuantity);
 
