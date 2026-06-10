@@ -1,10 +1,12 @@
-import $ from 'jquery';
-import carousel from '../../theme/common/carousel';
-import 'slick-carousel';
+import $ from "jquery";
+import carousel from "../../theme/common/carousel";
+import getActiveSlideIdxAndSlidesQuantity from "../../theme/common/carousel/utils/getActiveSlideIdxAndSlidesQuantity";
+import "slick-carousel";
 
-describe('carousel', () => {
-    it('should generate carousel WITH dots if carousel has more than one slide', () => {
-        const multipleSlidesElement = $("<section class='heroCarousel' data-slick='{}'>\
+describe("carousel", () => {
+  it("should generate carousel WITH dots if carousel has more than one slide", () => {
+    const multipleSlidesElement = $(
+      "<section class='heroCarousel' data-slick='{}'>\
 			<a href=''>\
 		        <div class='heroCarousel-slide  heroCarousel-slide--first'>\
 		            <div class='heroCarousel-image-wrapper' style='height: 42.868654311039485vw'>\
@@ -24,21 +26,23 @@ describe('carousel', () => {
 		            </div>\
 		        </div>\
 		    </a>\
-		</section>");
+		</section>",
+    );
 
-	    spyOn(jQuery.fn, 'find').and.returnValue(multipleSlidesElement);
-	    const slickSpy = spyOn(multipleSlidesElement, 'slick');
-	    carousel();
-	    expect(slickSpy).toHaveBeenCalledWith({
-            accessibility: false,
-            arrows: true,
-            customPaging: expect.any(Function),
-            dots: true,
-        });
+    spyOn(jQuery.fn, "find").and.returnValue(multipleSlidesElement);
+    const slickSpy = spyOn(multipleSlidesElement, "slick");
+    carousel();
+    expect(slickSpy).toHaveBeenCalledWith({
+      accessibility: false,
+      arrows: true,
+      customPaging: expect.any(Function),
+      dots: true,
     });
+  });
 
-    it('should generate carousel WITHOUT dots if carousel has one slide', () => {
-        const multipleSlidesElement = $("<section class='heroCarousel' data-slick='{}'>\
+  it("should generate carousel WITHOUT dots if carousel has one slide", () => {
+    const multipleSlidesElement = $(
+      "<section class='heroCarousel' data-slick='{}'>\
 			<a href=''>\
 		        <div class='heroCarousel-slide  heroCarousel-slide--first'>\
 		            <div class='heroCarousel-image-wrapper' style='height: 42.868654311039485vw'>\
@@ -51,16 +55,33 @@ describe('carousel', () => {
 					</div>\
 		        </div>\
 		    </a>\
-		</section>");
+		</section>",
+    );
 
-	    spyOn(jQuery.fn, 'find').and.returnValue(multipleSlidesElement);
-	    const slickSpy = spyOn(multipleSlidesElement, 'slick');
-	    carousel();
-	    expect(slickSpy).toHaveBeenCalledWith({
-            accessibility: false,
-            arrows: false,
-            customPaging: expect.any(Function),
-            dots: false,
-        });
+    spyOn(jQuery.fn, "find").and.returnValue(multipleSlidesElement);
+    const slickSpy = spyOn(multipleSlidesElement, "slick");
+    carousel();
+    expect(slickSpy).toHaveBeenCalledWith({
+      accessibility: false,
+      arrows: false,
+      customPaging: expect.any(Function),
+      dots: false,
     });
+  });
+
+  it("should not throw when carousel slides are missing", () => {
+    const state = getActiveSlideIdxAndSlidesQuantity({
+      slideCount: 0,
+      $slides: null,
+      options: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+      },
+    });
+
+    expect(state).toEqual({
+      activeSlideIdx: 0,
+      slidesQuantity: 0,
+    });
+  });
 });
