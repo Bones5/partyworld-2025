@@ -61,7 +61,12 @@ jobs:
         env:
           URL: ${{ secrets.STENCIL_STORE_URL_PRODUCTION }}
           TOKEN: ${{ secrets.STENCIL_ACCESS_TOKEN_PRODUCTION }}
-        run: stencil init -u "$URL" -t "$TOKEN" -p 3000 -h https://api.bigcommerce.com
+        run: stencil init -u "$URL" -t "$TOKEN" -p 3000 --apiHost https://api.bigcommerce.com --packageManager npm --skipInstall
+
+      - name: Verify stencil config files
+        run: |
+          test -f config.stencil.json
+          test -f secrets.stencil.json
 
       - name: Push theme live
         run: stencil push -a -d -c 1
