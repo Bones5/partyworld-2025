@@ -1344,6 +1344,19 @@
                 : "Response-like promise rejection on " + surface + " page";
         }
 
+        function isNoisyFastSimonSearchRejection(details) {
+            var target = details && details.target;
+            var host = (target && target.host) || "";
+            var path = (target && target.path) || "";
+            var label = (target && target.label) || "";
+
+            if (!isFastSimonValue(host) && !isFastSimonValue(label)) {
+                return false;
+            }
+
+            return /(^|\/)full_text_search(?:$|\?|\/)/i.test(path || label);
+        }
+
         function vagueErrorQualifier(hostLabel, target) {
             if (target && target.label) {
                 return target.label;
@@ -1871,6 +1884,20 @@
                         var fastSimonRoute = "none";
                         var rejectedResponseDetails = extractRejectedResponseDetails(rawOriginalException);
                         var quickPayDiagnostics = null;
+
+                        if (rejectedResponseDetails && isNoisyFastSimonSearchRejection(rejectedResponseDetails)) {
+                            recordMetric("partyworld.sentry.drop.third_party_response_rejection", "count", 1, {
+                                attributes: {
+                                    vendor: "fastsimon",
+                                    target_path: rejectedResponseDetails.target && rejectedResponseDetails.target.path
+                                        ? rejectedResponseDetails.target.path
+                                        : "unknown",
+                                    page_type: PAGE_TYPE || "unknown"
+                                }
+                            });
+
+                            return null;
+                        }
 
                         if (latestCorrelationIds.cart_id || latestCorrelationIds.checkout_id || latestCorrelationIds.order_id) {
                             event.tags = event.tags || {};
